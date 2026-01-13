@@ -25,3 +25,9 @@
 - [x] Criar formulários de entrada de dados mensais
 - [x] Desenvolver dashboard individual com gráficos de evolução
 - [x] Script de migração de dados de dezembro criado
+
+
+## Nova Solicitação - Cadastro de Admin
+- [x] Criar script para promover msm.jur@gmail.com a admin
+- [x] Configurar promoção automática no login
+- [x] Documentar processo de login
