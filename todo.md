@@ -31,3 +31,9 @@
 - [x] Criar script para promover msm.jur@gmail.com a admin
 - [x] Configurar promoção automática no login
 - [x] Documentar processo de login
+
+
+## Correção de SEO
+- [x] Adicionar meta description (155 caracteres)
+- [x] Adicionar palavras-chave relevantes
+- [x] Adicionar Open Graph tags para compartilhamento
