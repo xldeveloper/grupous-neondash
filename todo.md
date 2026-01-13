@@ -63,3 +63,13 @@
 - [ ] Integração com Instagram API
 - [ ] Integração com Google Analytics
 - [ ] Webhook para automações externas
+
+
+## Nova Solicitação - Identidade Visual
+- [x] Analisar manual de identidade visual (cores, tipografia, símbolos)
+- [x] Criar logo SVG (símbolo N + tipografia completa)
+- [x] Atualizar paleta de cores (#112031, #20445B, #AC9469, #D2D0C7)
+- [x] Substituir "NEONDASH" por "NEON" com logo oficial
+- [x] Aplicar identidade visual em todos os componentes
+- [x] Atualizar favicon e título da página
+- [x] Adicionar classes utilitárias para cores da marca

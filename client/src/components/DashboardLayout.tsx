@@ -21,7 +21,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     <div className="min-h-screen bg-slate-50 flex flex-col md:flex-row font-sans text-slate-900">
       {/* Mobile Header */}
       <div className="md:hidden flex items-center justify-between p-4 bg-white border-b border-slate-200 sticky top-0 z-50">
-        <div className="font-bold text-xl text-neon-purple tracking-tight">NEON<span className="text-slate-900">DASH</span></div>
+        <div className="flex items-center gap-2">
+          <img src="/brand/neon-symbol.svg" alt="Neon" className="w-8 h-8" />
+          <span className="font-bold text-xl text-neon-blue-dark tracking-tight">NEON</span>
+        </div>
         <Button variant="ghost" size="icon" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
           {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
         </Button>
@@ -33,8 +36,13 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
       )}>
         <div className="p-6 hidden md:block">
-          <div className="font-bold text-2xl text-neon-purple tracking-tight">NEON<span className="text-slate-900">DASH</span></div>
-          <p className="text-xs text-slate-500 mt-1">Performance Dezembro 2025</p>
+          <div className="flex items-center gap-3 mb-2">
+            <img src="/brand/neon-symbol.svg" alt="Neon" className="w-10 h-10" />
+            <div>
+              <h1 className="text-2xl font-bold text-neon-blue-dark tracking-tight">NEON</h1>
+              <p className="text-[10px] text-neon-blue uppercase tracking-widest font-medium">Mentoria Black</p>
+            </div>
+          </div>
         </div>
 
         <nav className="px-4 py-2 space-y-1">
@@ -46,10 +54,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 <a className={cn(
                   "flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200",
                   isActive 
-                    ? "bg-neon-purple/10 text-neon-purple shadow-sm" 
+                    ? "bg-neon-blue/10 text-neon-blue shadow-sm" 
                     : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
                 )} onClick={() => setIsMobileMenuOpen(false)}>
-                  <Icon className={cn("h-5 w-5", isActive ? "text-neon-purple" : "text-slate-400")} />
+                  <Icon className={cn("h-5 w-5", isActive ? "text-neon-blue" : "text-slate-400")} />
                   {item.label}
                 </a>
               </Link>

@@ -43,25 +43,26 @@
 }
 
 :root {
-  /* Brand Colors - Neon Theme */
-  --color-neon-purple: oklch(0.45 0.25 290);
-  --color-neon-green: oklch(0.75 0.20 145);
-  --color-neon-pink: oklch(0.65 0.25 350);
+  /* Brand Colors - Neon Official Identity */
+  --color-neon-blue-dark: #112031; /* Azul Escuro - Cor principal */
+  --color-neon-blue: #20445B; /* Azul Petróleo - Institucional */
+  --color-neon-gold: #AC9469; /* Dourado - Sofisticação */
+  --color-neon-gray: #D2D0C7; /* Cinza Elegante - Neutro */
   --color-slate-50: oklch(0.98 0.01 240);
   --color-slate-100: oklch(0.95 0.02 240);
   --color-slate-900: oklch(0.20 0.05 240);
 
-  --primary: var(--color-neon-purple);
+  --primary: var(--color-neon-blue);
   --primary-foreground: oklch(1 0 0);
-  --sidebar-primary: var(--color-neon-purple);
+  --sidebar-primary: var(--color-neon-blue-dark);
   --sidebar-primary-foreground: oklch(1 0 0);
   
-  /* Charts using Neon Palette */
-  --chart-1: var(--color-neon-purple);
-  --chart-2: var(--color-neon-green);
-  --chart-3: var(--color-neon-pink);
+  /* Charts using Neon Official Palette */
+  --chart-1: var(--color-neon-blue);
+  --chart-2: var(--color-neon-gold);
+  --chart-3: var(--color-neon-blue-dark);
   --chart-4: oklch(0.60 0.15 250);
-  --chart-5: oklch(0.80 0.15 100);
+  --chart-5: var(--color-neon-gray);
 
   --radius: 1rem;
   
@@ -81,21 +82,21 @@
   --muted-foreground: oklch(0.55 0.05 240);
   
   --accent: var(--color-slate-100);
-  --accent-foreground: var(--color-neon-purple);
+  --accent-foreground: var(--color-neon-blue);
   
   --destructive: oklch(0.6 0.25 20);
   --destructive-foreground: oklch(1 0 0);
   
   --border: oklch(0.90 0.02 240);
   --input: oklch(0.90 0.02 240);
-  --ring: var(--color-neon-purple);
+  --ring: var(--color-neon-blue);
   
   --sidebar: oklch(1 0 0);
   --sidebar-foreground: var(--color-slate-900);
   --sidebar-accent: var(--color-slate-100);
-  --sidebar-accent-foreground: var(--color-neon-purple);
+  --sidebar-accent-foreground: var(--color-neon-blue);
   --sidebar-border: oklch(0.90 0.02 240);
-  --sidebar-ring: var(--color-neon-purple);
+  --sidebar-ring: var(--color-neon-blue);
 }
 
 .dark {
@@ -195,3 +196,43 @@
     }
   }
 }
+  /* Neon Brand Utility Classes */
+  .bg-neon-blue-dark {
+    background-color: var(--color-neon-blue-dark);
+  }
+  
+  .bg-neon-blue {
+    background-color: var(--color-neon-blue);
+  }
+  
+  .bg-neon-gold {
+    background-color: var(--color-neon-gold);
+  }
+  
+  .bg-neon-gray {
+    background-color: var(--color-neon-gray);
+  }
+  
+  .text-neon-blue-dark {
+    color: var(--color-neon-blue-dark);
+  }
+  
+  .text-neon-blue {
+    color: var(--color-neon-blue);
+  }
+  
+  .text-neon-gold {
+    color: var(--color-neon-gold);
+  }
+  
+  .text-neon-gray {
+    color: var(--color-neon-gray);
+  }
+  
+  .border-neon-blue {
+    border-color: var(--color-neon-blue);
+  }
+  
+  .border-neon-gold {
+    border-color: var(--color-neon-gold);
+  }

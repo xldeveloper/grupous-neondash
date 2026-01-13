@@ -67,7 +67,7 @@ export default function Home() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <Card className="border-none shadow-sm bg-white overflow-hidden relative group">
             <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-              <DollarSign className="w-16 h-16 text-neon-green" />
+              <DollarSign className="w-16 h-16 text-neon-gold" />
             </div>
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium text-slate-500 uppercase tracking-wider">Faturamento Total</CardTitle>
@@ -76,15 +76,15 @@ export default function Home() {
               <div className="text-3xl font-bold text-slate-900">
                 {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(faturamentoTotal)}
               </div>
-              <p className="text-xs text-neon-green mt-1 font-medium flex items-center gap-1">
-                <TrendingUp className="w-3 h-3" /> Dezembro 2025
+              <p className="text-xs text-neon-gold mt-1 font-medium flex items-center gap-1">
+                <TrendingUp className="w-3 h-3 text-neon-gold" /> Dezembro 2025
               </p>
             </CardContent>
           </Card>
 
           <Card className="border-none shadow-sm bg-white overflow-hidden relative group">
             <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-              <Users className="w-16 h-16 text-neon-purple" />
+              <Users className="w-16 h-16 text-neon-blue" />
             </div>
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium text-slate-500 uppercase tracking-wider">Mentorados Ativos</CardTitle>
@@ -92,15 +92,15 @@ export default function Home() {
             <CardContent>
               <div className="text-3xl font-bold text-slate-900">{totalMentorados}</div>
               <div className="flex gap-2 mt-1 text-xs">
-                <span className="bg-neon-purple/10 text-neon-purple px-2 py-0.5 rounded-full font-medium">5 Estrutura</span>
-                <span className="bg-blue-50 text-blue-600 px-2 py-0.5 rounded-full font-medium">9 Escala</span>
+                <span className="bg-neon-gold/20 text-neon-blue-dark px-2 py-0.5 rounded-full font-medium">5 Estrutura</span>
+                <span className="bg-neon-blue/10 text-neon-blue px-2 py-0.5 rounded-full font-medium">9 Escala</span>
               </div>
             </CardContent>
           </Card>
 
           <Card className="border-none shadow-sm bg-white overflow-hidden relative group">
             <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-              <Award className="w-16 h-16 text-neon-pink" />
+              <Award className="w-16 h-16 text-neon-blue-dark" />
             </div>
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium text-slate-500 uppercase tracking-wider">Score Médio (Top 5)</CardTitle>
@@ -130,7 +130,7 @@ export default function Home() {
                   />
                   <Bar dataKey="faturamento" radius={[4, 4, 0, 0]}>
                     {chartData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.grupo === 'Escala' ? '#8b5cf6' : '#ec4899'} />
+                      <Cell key={`cell-${index}`} fill={entry.grupo === 'Escala' ? '#20445B' : '#AC9469'} />
                     ))}
                   </Bar>
                 </BarChart>
@@ -161,7 +161,7 @@ export default function Home() {
                         <div className="text-xs text-slate-500">{performer.grupo}</div>
                       </div>
                     </div>
-                    <div className="font-bold text-neon-purple">{performer.score}</div>
+                    <div className="font-bold text-neon-blue">{performer.score}</div>
                   </div>
                 ))}
               </div>
@@ -174,8 +174,8 @@ export default function Home() {
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-xl font-bold text-slate-900">Detalhamento por Turma</h2>
             <TabsList className="bg-slate-100 p-1 rounded-xl">
-              <TabsTrigger value="estrutura" className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-neon-purple data-[state=active]:shadow-sm">Neon Estrutura</TabsTrigger>
-              <TabsTrigger value="escala" className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-neon-purple data-[state=active]:shadow-sm">Neon Escala</TabsTrigger>
+              <TabsTrigger value="estrutura" className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-neon-blue data-[state=active]:shadow-sm">Neon Estrutura</TabsTrigger>
+              <TabsTrigger value="escala" className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-neon-blue data-[state=active]:shadow-sm">Neon Escala</TabsTrigger>
             </TabsList>
           </div>
 
