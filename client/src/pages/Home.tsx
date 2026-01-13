@@ -6,8 +6,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import { Users, TrendingUp, DollarSign, Award } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/_core/hooks/useAuth";
 
 export default function Home() {
+  // Admin dashboard - no auth check needed for now
+
   const topPerformers = [
     ...analiseData.neon_estrutura.ranking.map(([nome, score]) => ({ nome, score, grupo: "Estrutura" })),
     ...analiseData.neon_escala.ranking.map(([nome, score]) => ({ nome, score, grupo: "Escala" }))

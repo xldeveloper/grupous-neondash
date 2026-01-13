@@ -10,6 +10,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   const navItems = [
     { href: "/", label: "Visão Geral", icon: LayoutDashboard },
+    { href: "/meu-dashboard", label: "Meu Dashboard", icon: Users },
+    { href: "/enviar-metricas", label: "Enviar Métricas", icon: TrendingUp },
     { href: "/estrutura", label: "Neon Estrutura", icon: Users },
     { href: "/escala", label: "Neon Escala", icon: TrendingUp },
   ];

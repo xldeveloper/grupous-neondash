@@ -5,14 +5,18 @@ import { Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
+import MyDashboard from "./pages/MyDashboard";
+import SubmitMetrics from "./pages/SubmitMetrics";
 import Estrutura from "./pages/Estrutura";
 import Escala from "./pages/Escala";
 
-
 function Router() {
+  // make sure to consider if you need authentication for certain routes
   return (
     <Switch>
       <Route path={"/"} component={Home} />
+      <Route path={"/meu-dashboard"} component={MyDashboard} />
+      <Route path={"/enviar-metricas"} component={SubmitMetrics} />
       <Route path={"/estrutura"} component={Estrutura} />
       <Route path={"/escala"} component={Escala} />
       <Route path={"/404"} component={NotFound} />
