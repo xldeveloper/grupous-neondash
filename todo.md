@@ -45,7 +45,7 @@
 ## 📋 Backlog (Futuras Melhorias)
 
 ### Notificações
-- [ ] Sistema de notificações por email
+- [x] Sistema de notificações por email (implementado ao vincular perfil)
 - [ ] Lembretes automáticos para envio de métricas
 - [ ] Alertas de metas não atingidas
 
@@ -80,12 +80,12 @@
 - [x] Restaurar schema original com openId
 - [x] Adicionar campo email na tabela mentorados
 - [x] Criar procedure tRPC linkEmail para vincular emails
-- [ ] Criar interface admin para vincular emails aos mentorados
-- [ ] Atualizar MyDashboard para detectar mentorado pelo email logado
-- [ ] Atualizar SubmitMetrics para vincular ao mentorado correto
-- [ ] Testar fluxo completo de login e visualização
-- [ ] Criar checkpoint final
-- [ ] Preparar para deploy
+- [x] Criar interface admin para vincular emails aos mentorados
+- [x] Atualizar MyDashboard para detectar mentorado pelo email logado
+- [x] Atualizar SubmitMetrics para vincular ao mentorado correto
+- [x] Testar fluxo completo de login e visualização
+- [x] Criar checkpoint final
+- [x] Preparar para deploy
 
 
 ## Nova Solicitação - Conformidade com Diretrizes de Design (style/)
@@ -96,7 +96,7 @@
 - [x] Validar tipografia (Outfit + JetBrains Mono)
 - [x] Validar paleta de cores (#112031, #20445B, #AC9469, #D2D0C7)
 - [x] Validar logo e branding em todas as páginas
-- [ ] Criar checkpoint final
+- [x] Criar checkpoint final
 
 
 ### Nova Solicitação - Atualizar Símbolo N Oficial
@@ -106,7 +106,7 @@
 - [x] Atualizar favicon com novo símbolo
 - [x] Verificar botão de logout na sidebar (confirmado presente)
 - [x] Configurar redirecionamento após login para /dashboard
-- [ ] Criar checkpoint final
+- [x] Criar checkpoint final
 
 
 ### Nova Solicitação - Corrigir Redirecionamento Após Login
@@ -134,3 +134,28 @@
 - [x] Adicionar links de navegação no DashboardLayout com filtro de permissões
 - [x] Testar fluxo completo: login → detecção → dashboard personalizado
 - [x] Criar checkpoint final
+
+
+### Nova Solicitação - Notificações, Gestão de Mentorados e Dashboard Comparativo
+- [x] Implementar sistema de notificações por email ao vincular perfil
+- [x] Criar função de envio de email usando API do Manus
+- [x] Integrar notificação na ação de vincular email
+- [x] Criar página /admin/mentorados para gestão completa
+- [x] Implementar CRUD de mentorados (criar, editar, remover)
+- [x] Adicionar upload de foto de perfil (via URL)
+- [x] Implementar definição de metas personalizadas
+- [x] Criar dashboard comparativo para mentorados
+- [x] Calcular percentis de performance vs turma
+- [x] Mostrar áreas de destaque do mentorado
+- [x] Adicionar gráficos comparativos anonimizados
+- [x] Atualizar rotas e navegação
+- [x] Criar checkpoint final
+
+
+### Nova Solicitação - Remover Clerk e Corrigir Autenticação
+- [x] Identificar todas as referências ao Clerk no código
+- [x] Remover imports e configurações do Clerk
+- [x] Garantir que apenas Manus Auth seja utilizado
+- [x] Corrigir redirecionamento após login para dashboard correto
+- [x] Testar fluxo completo de autenticação
+- [x] Criar checkpoint após validação

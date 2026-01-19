@@ -10,21 +10,33 @@ import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 
 export default function MyDashboard() {
-  const { user } = useAuth();
   const [, setLocation] = useLocation();
   const { data: mentorado, isLoading: loadingMentorado } = trpc.mentorados.me.useQuery();
-  const { data: metricas, isLoading: loadingMetricas } = trpc.mentorados.metricas.useQuery({});
+  const { data: metricas, isLoading: loadingMetricas } = trpc.mentorados.metricas.useQuery(
+    {},
+    { enabled: !!mentorado }
+  );
   
   const currentDate = new Date();
   const currentYear = currentDate.getFullYear();
   const currentMonth = currentDate.getMonth() + 1;
 
-  const { data: feedbackAtual } = trpc.mentorados.feedback.useQuery({
-    ano: currentYear,
-    mes: currentMonth,
-  });
+  const { data: feedbackAtual } = trpc.mentorados.feedback.useQuery(
+    {
+      ano: currentYear,
+      mes: currentMonth,
+    },
+    { enabled: !!mentorado }
+  );
 
-  if (loadingMentorado || loadingMetricas) {
+  // Redirect to PrimeiroAcesso if no mentorado profile found - must be before any conditional returns
+  useEffect(() => {
+    if (!loadingMentorado && !mentorado) {
+      setLocation("/primeiro-acesso");
+    }
+  }, [mentorado, loadingMentorado, setLocation]);
+
+  if (loadingMentorado) {
     return (
       <DashboardLayout>
         <div className="flex items-center justify-center h-96">
@@ -37,15 +49,30 @@ export default function MyDashboard() {
     );
   }
 
-  // Redirect to PrimeiroAcesso if no mentorado profile found
-  useEffect(() => {
-    if (!loadingMentorado && !mentorado) {
-      setLocation("/primeiro-acesso");
-    }
-  }, [mentorado, loadingMentorado, setLocation]);
-
   if (!mentorado) {
-    return null; // Will redirect
+    return (
+      <DashboardLayout>
+        <div className="flex items-center justify-center h-96">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-neon-purple mx-auto mb-4"></div>
+            <p className="text-slate-500">Redirecionando...</p>
+          </div>
+        </div>
+      </DashboardLayout>
+    );
+  }
+
+  if (loadingMetricas) {
+    return (
+      <DashboardLayout>
+        <div className="flex items-center justify-center h-96">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-neon-purple mx-auto mb-4"></div>
+            <p className="text-slate-500">Carregando métricas...</p>
+          </div>
+        </div>
+      </DashboardLayout>
+    );
   }
 
   const ultimaMetrica = metricas?.[0];

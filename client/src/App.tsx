@@ -13,6 +13,8 @@ import Escala from "./pages/Escala";
 import LandingPage from "./pages/LandingPage";
 import VincularEmails from "./pages/VincularEmails";
 import PrimeiroAcesso from "./pages/PrimeiroAcesso";
+import GestaoMentorados from "./pages/GestaoMentorados";
+import DashboardComparativo from "./pages/DashboardComparativo";
 
 function Router() {
   return (
@@ -26,6 +28,8 @@ function Router() {
       <Route path="/enviar-metricas" component={SubmitMetrics} />
       <Route path="/admin" component={Admin} />
       <Route path="/admin/vincular" component={VincularEmails} />
+      <Route path="/admin/mentorados" component={GestaoMentorados} />
+      <Route path="/comparativo" component={DashboardComparativo} />
       <Route path="/estrutura" component={Estrutura} />
       <Route path="/escala" component={Escala} />
       <Route path="/primeiro-acesso" component={PrimeiroAcesso} />

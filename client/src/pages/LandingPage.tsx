@@ -4,20 +4,42 @@ import { getLoginUrl } from "@/const";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { useEffect } from "react";
 import { useLocation } from "wouter";
+import { trpc } from "@/lib/trpc";
 
 export default function LandingPage() {
-  const { isAuthenticated, loading } = useAuth();
+  const { isAuthenticated, loading, user } = useAuth();
   const [, setLocation] = useLocation();
+  
+  // Check if user is a mentorado
+  const { data: mentorado, isLoading: loadingMentorado } = trpc.mentorados.me.useQuery(
+    undefined,
+    { enabled: isAuthenticated }
+  );
 
-  // Redirect authenticated users to dashboard
+  // Redirect authenticated users to appropriate dashboard
   useEffect(() => {
-    if (!loading && isAuthenticated) {
+    if (loading || loadingMentorado) return;
+    if (!isAuthenticated) return;
+    
+    if (mentorado) {
+      // User is a mentorado, go to personal dashboard
+      setLocation("/meu-dashboard");
+    } else if (user?.role === "admin") {
+      // User is admin, go to main dashboard
       setLocation("/dashboard");
+    } else {
+      // User has no profile, go to first access page
+      setLocation("/primeiro-acesso");
     }
-  }, [isAuthenticated, loading, setLocation]);
+  }, [isAuthenticated, loading, loadingMentorado, mentorado, user, setLocation]);
 
   // Show nothing while checking auth or redirecting
-  if (loading || isAuthenticated) {
+  if (loading || (isAuthenticated && loadingMentorado)) {
+    return null;
+  }
+  
+  // If authenticated, we're redirecting
+  if (isAuthenticated) {
     return null;
   }
 

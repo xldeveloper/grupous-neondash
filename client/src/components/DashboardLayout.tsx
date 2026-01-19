@@ -1,6 +1,6 @@
 import { Link, useLocation } from "wouter";
 import { cn } from "@/lib/utils";
-import { LayoutDashboard, Users, TrendingUp, Menu, X, Shield, Link2 } from "lucide-react";
+import { LayoutDashboard, Users, TrendingUp, Menu, X, Shield, Link2, UserCog, BarChart3 } from "lucide-react";
 import { useState } from "react";
 import { Button } from "./ui/button";
 import { LogOut, Settings } from "lucide-react";
@@ -24,9 +24,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const navItems = [
     { href: "/dashboard", label: "Visão Geral", icon: LayoutDashboard },
     { href: "/meu-dashboard", label: "Meu Dashboard", icon: Users },
+    { href: "/comparativo", label: "Comparativo", icon: BarChart3 },
     { href: "/enviar-metricas", label: "Enviar Métricas", icon: TrendingUp },
     { href: "/admin", label: "Administração", icon: Shield, adminOnly: true },
     { href: "/admin/vincular", label: "Vincular Emails", icon: Link2, adminOnly: true },
+    { href: "/admin/mentorados", label: "Gestão Mentorados", icon: UserCog, adminOnly: true },
     { href: "/estrutura", label: "Neon Estrutura", icon: Users },
     { href: "/escala", label: "Neon Escala", icon: TrendingUp },
   ];
