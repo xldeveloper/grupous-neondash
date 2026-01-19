@@ -1,4 +1,3 @@
-import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/clerk-react";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/NotFound";
@@ -42,14 +41,6 @@ function App() {
         // switchable
       >
         <TooltipProvider>
-          <header className="flex justify-end p-4">
-            <SignedOut>
-              <SignInButton />
-            </SignedOut>
-            <SignedIn>
-              <UserButton />
-            </SignedIn>
-          </header>
           <Toaster />
           <Router />
         </TooltipProvider>

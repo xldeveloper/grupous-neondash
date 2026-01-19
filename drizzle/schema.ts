@@ -30,8 +30,9 @@ export type InsertUser = typeof users.$inferInsert;
  */
 export const mentorados = mysqlTable("mentorados", {
   id: int("id").autoincrement().primaryKey(),
-  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  userId: int("userId").references(() => users.id, { onDelete: "set null" }),
   nomeCompleto: varchar("nomeCompleto", { length: 255 }).notNull(),
+  email: varchar("email", { length: 320 }).unique(),
   turma: mysqlEnum("turma", ["neon_estrutura", "neon_escala"]).notNull(),
   metaFaturamento: int("metaFaturamento").notNull().default(16000),
   createdAt: timestamp("createdAt").defaultNow().notNull(),

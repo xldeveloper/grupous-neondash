@@ -1,5 +1,8 @@
 import { z } from "zod";
 import { protectedProcedure, router } from "./_core/trpc";
+import { eq } from "drizzle-orm";
+import { getDb } from "./db";
+import { mentorados } from "../drizzle/schema";
 import {
   getMentoradoByUserId,
   getAllMentorados,
@@ -178,5 +181,29 @@ export const mentoradosRouter = router({
 
       const id = await upsertFeedback(input);
       return { id };
+    }),
+
+  // Link email to mentorado (admin only)
+  linkEmail: protectedProcedure
+    .input(
+      z.object({
+        mentoradoId: z.number(),
+        email: z.string().email(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      if (ctx.user.role !== "admin") {
+        throw new Error("Acesso negado");
+      }
+      
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+
+      await db
+        .update(mentorados)
+        .set({ email: input.email })
+        .where(eq(mentorados.id, input.mentoradoId));
+
+      return { success: true };
     }),
 });

@@ -73,3 +73,16 @@
 - [x] Aplicar identidade visual em todos os componentes
 - [x] Atualizar favicon e título da página
 - [x] Adicionar classes utilitárias para cores da marca
+
+
+## Nova Solicitação - Sistema de Login Independente (Opção 1)
+- [x] Reverter alterações do Clerk (manter Manus OAuth)
+- [x] Restaurar schema original com openId
+- [x] Adicionar campo email na tabela mentorados
+- [x] Criar procedure tRPC linkEmail para vincular emails
+- [ ] Criar interface admin para vincular emails aos mentorados
+- [ ] Atualizar MyDashboard para detectar mentorado pelo email logado
+- [ ] Atualizar SubmitMetrics para vincular ao mentorado correto
+- [ ] Testar fluxo completo de login e visualização
+- [ ] Criar checkpoint final
+- [ ] Preparar para deploy
