@@ -8,6 +8,10 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -40,98 +44,122 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+
+  /* Neon Brand Extensions */
+  --color-neon-blue-dark: linear-gradient(to bottom, #112031, #162a40);
+  --color-neon-blue: #20445B;
+  --color-neon-gold: #AC9469;
+  --color-neon-paper: #FAF9F6;
 }
 
 :root {
-  /* Brand Colors - Neon Official Identity */
-  --color-neon-blue-dark: #112031; /* Azul Escuro - Cor principal */
-  --color-neon-blue: #20445B; /* Azul Petróleo - Institucional */
-  --color-neon-gold: #AC9469; /* Dourado - Sofisticação */
-  --color-neon-gray: #D2D0C7; /* Cinza Elegante - Neutro */
-  --color-slate-50: oklch(0.98 0.01 240);
-  --color-slate-100: oklch(0.95 0.02 240);
-  --color-slate-900: oklch(0.20 0.05 240);
+  /* Neon Stitch Hybrid Palette - Premium AI Lab Aesthetic */
 
-  --primary: var(--color-neon-blue);
-  --primary-foreground: oklch(1 0 0);
-  --sidebar-primary: var(--color-neon-blue-dark);
-  --sidebar-primary-foreground: oklch(1 0 0);
-  
-  /* Charts using Neon Official Palette */
-  --chart-1: var(--color-neon-blue);
-  --chart-2: var(--color-neon-gold);
-  --chart-3: var(--color-neon-blue-dark);
-  --chart-4: oklch(0.60 0.15 250);
-  --chart-5: var(--color-neon-gray);
+  /* Foundation Colors */
+  --color-paper: #FAF9F6;  /* Premium Off-white Background */
+  --color-pure-white: #FFFFFF;
+  --color-neon-blue-dark: #112031; /* Deep Navy - Primary Text */
+  --color-neon-blue-medium: #20445B; /* Corporate Blue */
+  --color-neon-gold: #AC9469; /* Luxury Accent */
+  --color-neon-gray-light: #F3F4F6; /* Subtle Backgrounds */
+  --color-neon-border: #E5E7EB; /* Clean Lines */
 
-  --radius: 1rem;
-  
-  --background: var(--color-slate-50);
-  --foreground: var(--color-slate-900);
-  
-  --card: oklch(1 0 0);
-  --card-foreground: var(--color-slate-900);
-  
-  --popover: oklch(1 0 0);
-  --popover-foreground: var(--color-slate-900);
-  
-  --secondary: var(--color-slate-100);
-  --secondary-foreground: var(--color-slate-900);
-  
-  --muted: var(--color-slate-100);
-  --muted-foreground: oklch(0.55 0.05 240);
-  
-  --accent: var(--color-slate-100);
-  --accent-foreground: var(--color-neon-blue);
-  
+  --font-sans: 'Outfit', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  --radius: 0.75rem; /* 12px - Modern Soft */
+
+  /* Semantic Mapping */
+  --background: var(--color-paper);
+  --foreground: var(--color-neon-blue-dark);
+
+  --card: var(--color-pure-white);
+  --card-foreground: var(--color-neon-blue-dark);
+
+  --popover: var(--color-pure-white);
+  --popover-foreground: var(--color-neon-blue-dark);
+
+  --primary: var(--color-neon-blue-dark);
+  --primary-foreground: var(--color-pure-white);
+
+  --secondary: var(--color-neon-gray-light);
+  --secondary-foreground: var(--color-neon-blue-dark);
+
+  --muted: var(--color-neon-gray-light);
+  --muted-foreground: var(--color-neon-blue-medium);
+
+  --accent: var(--color-paper);
+  --accent-foreground: var(--color-neon-blue-dark);
+
   --destructive: oklch(0.6 0.25 20);
   --destructive-foreground: oklch(1 0 0);
-  
-  --border: oklch(0.90 0.02 240);
-  --input: oklch(0.90 0.02 240);
-  --ring: var(--color-neon-blue);
-  
-  --sidebar: oklch(1 0 0);
-  --sidebar-foreground: var(--color-slate-900);
-  --sidebar-accent: var(--color-slate-100);
-  --sidebar-accent-foreground: var(--color-neon-blue);
-  --sidebar-border: oklch(0.90 0.02 240);
-  --sidebar-ring: var(--color-neon-blue);
+
+  --border: var(--color-neon-border);
+  --input: var(--color-neon-border);
+  --ring: var(--color-neon-gold);
+
+  /* Sidebar Specifics */
+  --sidebar: var(--color-pure-white);
+  --sidebar-foreground: var(--color-neon-blue-dark);
+  --sidebar-primary: var(--color-neon-blue-dark);
+  --sidebar-primary-foreground: var(--color-pure-white);
+  --sidebar-accent: var(--color-neon-gray-light);
+  --sidebar-accent-foreground: var(--color-neon-blue-dark);
+  --sidebar-border: var(--color-neon-border);
+  --sidebar-ring: var(--color-neon-gold);
+
+  /* Charts */
+  --chart-1: var(--color-neon-blue-dark);
+  --chart-2: var(--color-neon-gold);
+  --chart-3: var(--color-neon-blue-medium);
+  --chart-4: #D2D0C7; /* Neon Gray */
+  --chart-5: #1A1A1A; /* Black Accent */
 }
 
+/* Dark Mode - Maintained for fallback, but aligned with new identity */
 .dark {
-  --primary: var(--color-blue-700);
-  --primary-foreground: var(--color-blue-50);
-  --sidebar-primary: var(--color-blue-500);
-  --sidebar-primary-foreground: var(--color-blue-50);
-  --background: oklch(0.141 0.005 285.823);
-  --foreground: oklch(0.85 0.005 65);
-  --card: oklch(0.21 0.006 285.885);
-  --card-foreground: oklch(0.85 0.005 65);
-  --popover: oklch(0.21 0.006 285.885);
-  --popover-foreground: oklch(0.85 0.005 65);
-  --secondary: oklch(0.24 0.006 286.033);
-  --secondary-foreground: oklch(0.7 0.005 65);
-  --muted: oklch(0.274 0.006 286.033);
-  --muted-foreground: oklch(0.705 0.015 286.067);
-  --accent: oklch(0.274 0.006 286.033);
-  --accent-foreground:  oklch(0.92 0.005 65);
-  --destructive: oklch(0.704 0.191 22.216);
-  --destructive-foreground: oklch(0.985 0 0);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.488 0.243 264.376);
-  --chart-1: var(--color-blue-300);
-  --chart-2: var(--color-blue-500);
-  --chart-3: var(--color-blue-600);
-  --chart-4: var(--color-blue-700);
-  --chart-5: var(--color-blue-800);
-  --sidebar: oklch(0.21 0.006 285.885);
-  --sidebar-foreground: oklch(0.85 0.005 65);
-  --sidebar-accent: oklch(0.274 0.006 286.033);
-  --sidebar-accent-foreground:  oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.488 0.243 264.376);
+  --background: #112031; /* Deep Navy Background */
+  --foreground: #FAF9F6; /* Off-white Text */
+
+  --card: #162a40; /* Slightly Lighter Navy */
+  --card-foreground: #FAF9F6;
+
+  --popover: #162a40;
+  --popover-foreground: #FAF9F6;
+
+  --primary: #AC9469; /* Gold Primary in Dark Mode */
+  --primary-foreground: #112031;
+
+  --secondary: #20445B;
+  --secondary-foreground: #FAF9F6;
+
+  --muted: #20445B;
+  --muted-foreground: #FAF9F6;
+
+  --accent: #20445B;
+  --accent-foreground: #FAF9F6;
+
+  --destructive: oklch(0.6 0.25 20);
+  --destructive-foreground: oklch(1 0 0);
+
+  --border: #20445B;
+  --input: #20445B;
+  --ring: #AC9469;
+
+  --sidebar: #112031;
+  --sidebar-foreground: #FAF9F6;
+  --sidebar-primary: #AC9469;
+  --sidebar-primary-foreground: #112031;
+  --sidebar-accent: #20445B;
+  --sidebar-accent-foreground: #FAF9F6;
+  --sidebar-border: #20445B;
+  --sidebar-ring: #AC9469;
+
+  --chart-1: #AC9469;
+  --chart-2: #20445B;
+  --chart-3: #FAF9F6;
+  --chart-4: #D2D0C7;
+  --chart-5: #FFD700;
 }
 
 @layer base {
@@ -200,39 +228,39 @@
   .bg-neon-blue-dark {
     background-color: var(--color-neon-blue-dark);
   }
-  
+
   .bg-neon-blue {
     background-color: var(--color-neon-blue);
   }
-  
+
   .bg-neon-gold {
     background-color: var(--color-neon-gold);
   }
-  
+
   .bg-neon-gray {
     background-color: var(--color-neon-gray);
   }
-  
+
   .text-neon-blue-dark {
     color: var(--color-neon-blue-dark);
   }
-  
+
   .text-neon-blue {
     color: var(--color-neon-blue);
   }
-  
+
   .text-neon-gold {
     color: var(--color-neon-gold);
   }
-  
+
   .text-neon-gray {
     color: var(--color-neon-gray);
   }
-  
+
   .border-neon-blue {
     border-color: var(--color-neon-blue);
   }
-  
+
   .border-neon-gold {
     border-color: var(--color-neon-gold);
   }
