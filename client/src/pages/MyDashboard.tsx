@@ -1,5 +1,7 @@
 import { useAuth } from "@/_core/hooks/useAuth";
 import DashboardLayout from "@/components/DashboardLayout";
+import { useLocation } from "wouter";
+import { useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { trpc } from "@/lib/trpc";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts';
@@ -9,6 +11,7 @@ import { Badge } from "@/components/ui/badge";
 
 export default function MyDashboard() {
   const { user } = useAuth();
+  const [, setLocation] = useLocation();
   const { data: mentorado, isLoading: loadingMentorado } = trpc.mentorados.me.useQuery();
   const { data: metricas, isLoading: loadingMetricas } = trpc.mentorados.metricas.useQuery({});
   
@@ -34,21 +37,15 @@ export default function MyDashboard() {
     );
   }
 
+  // Redirect to PrimeiroAcesso if no mentorado profile found
+  useEffect(() => {
+    if (!loadingMentorado && !mentorado) {
+      setLocation("/primeiro-acesso");
+    }
+  }, [mentorado, loadingMentorado, setLocation]);
+
   if (!mentorado) {
-    return (
-      <DashboardLayout>
-        <Card className="max-w-2xl mx-auto mt-12">
-          <CardHeader>
-            <CardTitle>Perfil não encontrado</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-slate-600">
-              Seu perfil de mentorado ainda não foi criado. Entre em contato com o administrador.
-            </p>
-          </CardContent>
-        </Card>
-      </DashboardLayout>
-    );
+    return null; // Will redirect
   }
 
   const ultimaMetrica = metricas?.[0];

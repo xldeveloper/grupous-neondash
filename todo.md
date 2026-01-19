@@ -123,3 +123,14 @@
 - [x] Adicionar logs detalhados para diagnóstico
 - [x] Garantir que o redirecionamento funcione para admin e não-admin
 - [x] Criar checkpoint após validação completa
+
+
+### Nova Solicitação - Sistema de Vinculação e Detecção de Mentorados
+- [x] Criar página /admin/vincular para associar emails aos mentorados
+- [x] Implementar formulário de vinculação com seleção de mentorado e input de email
+- [x] Atualizar MyDashboard para detectar automaticamente mentorado pelo email
+- [x] Criar página de primeiro acesso para usuários sem perfil vinculado
+- [x] Adicionar rotas no App.tsx
+- [x] Adicionar links de navegação no DashboardLayout com filtro de permissões
+- [x] Testar fluxo completo: login → detecção → dashboard personalizado
+- [x] Criar checkpoint final

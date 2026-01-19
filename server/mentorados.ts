@@ -10,6 +10,14 @@ export async function getMentoradoByUserId(userId: number) {
   return result.length > 0 ? result[0] : undefined;
 }
 
+export async function getMentoradoByEmail(email: string) {
+  const db = await getDb();
+  if (!db) return undefined;
+  
+  const result = await db.select().from(mentorados).where(eq(mentorados.email, email)).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
 export async function getAllMentorados() {
   const db = await getDb();
   if (!db) return [];
@@ -64,10 +72,7 @@ export async function upsertMetricaMensal(data: InsertMetricaMensal) {
   if (existing) {
     await db
       .update(metricasMensais)
-      .set({
-        ...data,
-        updatedAt: new Date(),
-      })
+      .set(data)
       .where(eq(metricasMensais.id, existing.id));
     return existing.id;
   } else {
@@ -104,10 +109,7 @@ export async function upsertFeedback(data: InsertFeedback) {
   if (existing) {
     await db
       .update(feedbacks)
-      .set({
-        ...data,
-        updatedAt: new Date(),
-      })
+      .set(data)
       .where(eq(feedbacks.id, existing.id));
     return existing.id;
   } else {

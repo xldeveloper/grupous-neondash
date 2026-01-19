@@ -5,6 +5,7 @@ import { getDb } from "./db";
 import { mentorados } from "../drizzle/schema";
 import {
   getMentoradoByUserId,
+  getMentoradoByEmail,
   getAllMentorados,
   createMentorado,
   getMetricasMensaisByMentorado,
@@ -16,8 +17,17 @@ import {
 
 export const mentoradosRouter = router({
   // Get current user's mentorado profile
+  // First tries to find by userId, then by email
   me: protectedProcedure.query(async ({ ctx }) => {
-    return await getMentoradoByUserId(ctx.user.id);
+    // Try to find by userId first (legacy)
+    let mentorado = await getMentoradoByUserId(ctx.user.id);
+    
+    // If not found and user has email, try to find by email
+    if (!mentorado && ctx.user.email) {
+      mentorado = await getMentoradoByEmail(ctx.user.email);
+    }
+    
+    return mentorado;
   }),
 
   // Get all mentorados (admin only)

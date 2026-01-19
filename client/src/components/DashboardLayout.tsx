@@ -1,6 +1,6 @@
 import { Link, useLocation } from "wouter";
 import { cn } from "@/lib/utils";
-import { LayoutDashboard, Users, TrendingUp, Menu, X, Shield } from "lucide-react";
+import { LayoutDashboard, Users, TrendingUp, Menu, X, Shield, Link2 } from "lucide-react";
 import { useState } from "react";
 import { Button } from "./ui/button";
 import { LogOut, Settings } from "lucide-react";
@@ -25,10 +25,16 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     { href: "/dashboard", label: "Visão Geral", icon: LayoutDashboard },
     { href: "/meu-dashboard", label: "Meu Dashboard", icon: Users },
     { href: "/enviar-metricas", label: "Enviar Métricas", icon: TrendingUp },
-    { href: "/admin", label: "Administração", icon: Shield },
+    { href: "/admin", label: "Administração", icon: Shield, adminOnly: true },
+    { href: "/admin/vincular", label: "Vincular Emails", icon: Link2, adminOnly: true },
     { href: "/estrutura", label: "Neon Estrutura", icon: Users },
     { href: "/escala", label: "Neon Escala", icon: TrendingUp },
   ];
+
+  // Filter nav items based on user role
+  const filteredNavItems = navItems.filter(item => 
+    !item.adminOnly || user.role === 'admin'
+  );
 
   return (
     <div className="min-h-screen bg-background flex flex-col md:flex-row font-sans text-foreground selection:bg-neon-gold/20">
@@ -59,7 +65,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         </div>
 
         <nav className="px-6 py-4 space-y-2">
-          {navItems.map((item) => {
+          {filteredNavItems.map((item) => {
             const Icon = item.icon;
             const isActive = location === item.href;
             return (
