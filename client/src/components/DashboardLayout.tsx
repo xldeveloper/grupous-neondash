@@ -3,13 +3,14 @@ import { cn } from "@/lib/utils";
 import { LayoutDashboard, Users, TrendingUp, Menu, X, Shield } from "lucide-react";
 import { useState } from "react";
 import { Button } from "./ui/button";
+import { SignedIn, UserButton } from "@clerk/clerk-react";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const [location] = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const navItems = [
-    { href: "/", label: "Visão Geral", icon: LayoutDashboard },
+    { href: "/dashboard", label: "Visão Geral", icon: LayoutDashboard },
     { href: "/meu-dashboard", label: "Meu Dashboard", icon: Users },
     { href: "/enviar-metricas", label: "Enviar Métricas", icon: TrendingUp },
     { href: "/admin", label: "Administração", icon: Shield },

@@ -1,8 +1,8 @@
-import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/clerk-react";
+import { SignedIn, SignedOut } from "@clerk/clerk-react";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/NotFound";
-import { Route, Switch } from "wouter";
+import { Route, Switch, Redirect } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
@@ -11,46 +11,63 @@ import Admin from "./pages/Admin";
 import SubmitMetrics from "./pages/SubmitMetrics";
 import Estrutura from "./pages/Estrutura";
 import Escala from "./pages/Escala";
+import LandingPage from "./pages/LandingPage";
+
+// Wrapper for protected routes
+const ProtectedRoute = ({ component: Component }: { component: React.ComponentType }) => (
+  <>
+    <SignedIn>
+      <Component />
+    </SignedIn>
+    <SignedOut>
+      <Redirect to="/" />
+    </SignedOut>
+  </>
+);
 
 function Router() {
-  // make sure to consider if you need authentication for certain routes
   return (
     <Switch>
-      <Route path={"/"} component={Home} />
-      <Route path={"/meu-dashboard"} component={MyDashboard} />
-      <Route path={"/enviar-metricas"} component={SubmitMetrics} />
-      <Route path={"/admin"} component={Admin} />
-      <Route path={"/estrutura"} component={Estrutura} />
-      <Route path={"/escala"} component={Escala} />
-      <Route path={"/404"} component={NotFound} />
-      {/* Final fallback route */}
+      {/* Public Landing Page */}
+      <Route path="/" component={LandingPage} />
+
+      {/* Protected Dashboard Routes */}
+      <Route path="/dashboard">
+        <ProtectedRoute component={Home} />
+      </Route>
+      <Route path="/meu-dashboard">
+        <ProtectedRoute component={MyDashboard} />
+      </Route>
+      <Route path="/enviar-metricas">
+        <ProtectedRoute component={SubmitMetrics} />
+      </Route>
+      <Route path="/admin">
+         {/* Admin might need extra role checks later */}
+        <ProtectedRoute component={Admin} />
+      </Route>
+      <Route path="/estrutura">
+        <ProtectedRoute component={Estrutura} />
+      </Route>
+      <Route path="/escala">
+        <ProtectedRoute component={Escala} />
+      </Route>
+
+      {/* 404 Pages */}
+      <Route path="/404" component={NotFound} />
       <Route component={NotFound} />
     </Switch>
   );
 }
 
-// NOTE: About Theme
-// - First choose a default theme according to your design style (dark or light bg), than change color palette in index.css
-//   to keep consistent foreground/background color across components
-// - If you want to make theme switchable, pass `switchable` ThemeProvider and use `useTheme` hook
-
 function App() {
   return (
     <ErrorBoundary>
-      <ThemeProvider
-        defaultTheme="light"
-        // switchable
-      >
+      <ThemeProvider defaultTheme="light">
         <TooltipProvider>
-          <header className="flex justify-end p-4">
-            <SignedOut>
-              <SignInButton />
-            </SignedOut>
-            <SignedIn>
-              <UserButton />
-            </SignedIn>
-          </header>
+          {/* Global Toaster */}
           <Toaster />
+
+          {/* Main Router */}
           <Router />
         </TooltipProvider>
       </ThemeProvider>
