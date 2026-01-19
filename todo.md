@@ -86,3 +86,14 @@
 - [ ] Testar fluxo completo de login e visualização
 - [ ] Criar checkpoint final
 - [ ] Preparar para deploy
+
+
+## Nova Solicitação - Conformidade com Diretrizes de Design (style/)
+- [x] Analisar arquivos de design na pasta style/
+- [x] Comparar design atual com diretrizes (95% conforme)
+- [x] Identificar gaps de ícones, miniaturas e thumbnails
+- [x] Criar favicon SVG com símbolo N dourado
+- [x] Validar tipografia (Outfit + JetBrains Mono)
+- [x] Validar paleta de cores (#112031, #20445B, #AC9469, #D2D0C7)
+- [x] Validar logo e branding em todas as páginas
+- [ ] Criar checkpoint final

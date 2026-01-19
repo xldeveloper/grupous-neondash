@@ -3,13 +3,23 @@ import { cn } from "@/lib/utils";
 import { LayoutDashboard, Users, TrendingUp, Menu, X, Shield } from "lucide-react";
 import { useState } from "react";
 import { Button } from "./ui/button";
-import { SignedIn, UserButton, useClerk } from "@clerk/clerk-react";
 import { LogOut, Settings } from "lucide-react";
+import { useAuth } from "@/_core/hooks/useAuth";
+import { getLoginUrl } from "@/const";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const [location] = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const { signOut, openUserProfile } = useClerk();
+  const { user, logout } = useAuth();
+
+  // Redirect to login if not authenticated
+  if (!user) {
+    if (typeof window !== "undefined") {
+      window.location.href = getLoginUrl();
+    }
+    return null;
+  }
+
 
   const navItems = [
     { href: "/dashboard", label: "Visão Geral", icon: LayoutDashboard },
@@ -69,18 +79,13 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         </nav>
 
         <div className="px-6 py-2 space-y-1">
-             <Button
-                variant="ghost"
-                className="w-full justify-start text-muted-foreground hover:text-foreground hover:bg-sidebar-accent/50 h-10 px-4"
-                onClick={() => openUserProfile()}
-             >
-                <Settings className="mr-3 h-4 w-4" />
-                Configurar Perfil
-             </Button>
+             <div className="px-4 py-2 text-sm text-muted-foreground">
+                {user.name || user.email}
+             </div>
              <Button
                 variant="ghost"
                 className="w-full justify-start text-destructive hover:text-destructive hover:bg-destructive/10 h-10 px-4"
-                onClick={() => signOut()}
+                onClick={() => logout()}
              >
                 <LogOut className="mr-3 h-4 w-4" />
                 Sair
