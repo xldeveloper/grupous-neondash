@@ -176,3 +176,11 @@
 - [x] Corrigir persistência do cookie para evitar loop de login (removido domínio do cookie)
 - [x] Testar fluxo completo: landing page → login → dashboard
 - [x] Criar checkpoint após validação
+
+
+### Nova Solicitação - Corrigir Logout e Redirecionamento
+- [x] Corrigir logout para garantir que o cookie seja limpo antes do redirecionamento
+- [x] Garantir que o redirecionamento para landing page funcione após logout
+- [x] Adicionar delay na LandingPage para evitar redirecionamento prematuro
+- [x] Testar fluxo completo: dashboard → logout → landing page → login → dashboard
+- [x] Criar checkpoint após validação
