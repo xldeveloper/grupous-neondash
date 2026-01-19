@@ -42,7 +42,24 @@ export function registerOAuthRoutes(app: Express) {
       });
 
       const cookieOptions = getSessionCookieOptions(req);
+      console.log("[OAuth] Setting cookie with options:", {
+        cookieName: COOKIE_NAME,
+        options: cookieOptions,
+        hostname: req.hostname,
+        protocol: req.protocol,
+        headers: {
+          'x-forwarded-proto': req.headers['x-forwarded-proto'],
+          'x-forwarded-host': req.headers['x-forwarded-host'],
+        },
+      });
+      
       res.cookie(COOKIE_NAME, sessionToken, { ...cookieOptions, maxAge: ONE_YEAR_MS });
+      
+      console.log("[OAuth] Redirecting to /dashboard for user:", {
+        openId: userInfo.openId,
+        email: userInfo.email,
+        name: userInfo.name,
+      });
 
       res.redirect(302, "/dashboard");
     } catch (error) {

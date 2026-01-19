@@ -114,3 +114,12 @@
 - [x] Garantir que usuários autenticados sejam redirecionados do / para /dashboard
 - [x] Testar fluxo completo: Landing Page → Login → Dashboard
 - [x] Criar checkpoint após validação
+
+
+### Nova Solicitação - Corrigir Redirecionamento para Contas Não-Admin
+- [x] Investigar problema de redirecionamento após login com contas não-admin
+- [x] Verificar configuração de cookies (domínio, path, sameSite)
+- [x] Ajustar configuração de cookies para suportar HTTPS e localhost
+- [x] Adicionar logs detalhados para diagnóstico
+- [x] Garantir que o redirecionamento funcione para admin e não-admin
+- [x] Criar checkpoint após validação completa
