@@ -1,3 +1,7 @@
+---
+description: 
+---
+
 # ui-ux-pro-max
 
 Comprehensive design guide for web and mobile applications. Contains 50+ styles, 97 color palettes, 57 font pairings, 99 UX guidelines, and 25 chart types across 9 technology stacks. Searchable database with priority-based recommendations.
@@ -150,13 +154,8 @@ Available stacks: `html-tailwind`, `react`, `nextjs`, `vue`, `svelte`, `swiftui`
 | `html-tailwind`   | Tailwind utilities, responsive, a11y (DEFAULT)        |
 | `react`           | State, hooks, performance, patterns                   |
 | `nextjs`          | SSR, routing, images, API routes                      |
-| `vue`             | Composition API, Pinia, Vue Router                    |
-| `svelte`          | Runes, stores, SvelteKit                              |
-| `swiftui`         | Views, State, Navigation, Animation                   |
 | `react-native`    | Components, Navigation, Lists                         |
-| `flutter`         | Widgets, State, Layout, Theming                       |
 | `shadcn`          | shadcn/ui components, theming, forms, patterns        |
-| `jetpack-compose` | Composables, Modifiers, State Hoisting, Recomposition |
 
 ---
 

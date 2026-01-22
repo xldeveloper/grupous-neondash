@@ -224,43 +224,45 @@
     }
   }
 }
+
 /* Neon Brand Utility Classes */
-.bg-neon-blue-dark {
+@utility bg-neon-blue-dark {
   background-color: var(--color-neon-blue-dark);
 }
 
-.bg-neon-blue {
+@utility bg-neon-blue {
   background-color: var(--color-neon-blue);
 }
 
-.bg-neon-gold {
+@utility bg-neon-gold {
   background-color: var(--color-neon-gold);
 }
 
-.bg-neon-gray {
-  background-color: var(--color-neon-gray);
+@utility bg-neon-gray {
+  background-color: var(--color-neon-gray-light);
 }
 
-.text-neon-blue-dark {
+@utility text-neon-blue-dark {
   color: var(--color-neon-blue-dark);
 }
 
-.text-neon-blue {
+@utility text-neon-blue {
   color: var(--color-neon-blue);
 }
 
-.text-neon-gold {
+@utility text-neon-gold {
   color: var(--color-neon-gold);
 }
 
-.text-neon-gray {
-  color: var(--color-neon-gray);
-}
-
-.border-neon-blue {
+@utility border-neon-blue {
   border-color: var(--color-neon-blue);
 }
 
-.border-neon-gold {
+@utility border-neon-gold {
   border-color: var(--color-neon-gold);
 }
+
+@utility border-neon-border {
+  border-color: var(--color-neon-border);
+}
+
