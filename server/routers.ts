@@ -4,6 +4,8 @@ import { mentoradosRouter } from "./mentoradosRouter";
 import { gamificacaoRouter } from "./gamificacaoRouter";
 import { moltbotRouter } from "./moltbotRouter";
 import { leadsRouter } from "./leadsRouter";
+import { tasksRouter } from "./routers/tasks";
+import { classesRouter } from "./routers/classes";
 
 export const appRouter = router({
   system: systemRouter,
@@ -14,6 +16,8 @@ export const appRouter = router({
   gamificacao: gamificacaoRouter,
   moltbot: moltbotRouter,
   leads: leadsRouter,
+  tasks: tasksRouter,
+  classes: classesRouter,
 });
 
 export type AppRouter = typeof appRouter;

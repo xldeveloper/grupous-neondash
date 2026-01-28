@@ -467,3 +467,73 @@ export const interacoes = pgTable(
 export type Interacao = typeof interacoes.$inferSelect;
 export type InsertInteracao = typeof interacoes.$inferInsert;
 
+
+/**
+ * Tasks - Mentorado specific tasks/checklist
+ */
+export const tasks = pgTable(
+  "tasks",
+  {
+    id: serial("id").primaryKey(),
+    mentoradoId: integer("mentorado_id")
+      .notNull()
+      .references(() => mentorados.id, { onDelete: "cascade" }),
+    title: text("title").notNull(),
+    status: text("status").notNull().default("todo"), // "todo" | "done"
+    category: text("category").default("geral"),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().notNull(),
+  },
+  table => [
+    index("tasks_mentorado_idx").on(table.mentoradoId),
+    index("tasks_status_idx").on(table.status),
+  ]
+);
+
+export type Task = typeof tasks.$inferSelect;
+export type InsertTask = typeof tasks.$inferInsert;
+
+/**
+ * Classes - Educational content and meetings
+ */
+export const classes = pgTable(
+  "classes",
+  {
+    id: serial("id").primaryKey(),
+    title: text("title").notNull(),
+    description: text("description"),
+    url: text("url"), // Video or meeting URL
+    date: timestamp("date"), // For live events
+    type: text("type").default("aula"), // "aula" | "encontro" | "material"
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+  }
+);
+
+export type Class = typeof classes.$inferSelect;
+export type InsertClass = typeof classes.$inferInsert;
+
+/**
+ * Class Progress - Tracking watched status per mentorado
+ */
+export const classProgress = pgTable(
+  "class_progress",
+  {
+    id: serial("id").primaryKey(),
+    mentoradoId: integer("mentorado_id")
+      .notNull()
+      .references(() => mentorados.id, { onDelete: "cascade" }),
+    classId: integer("class_id")
+      .notNull()
+      .references(() => classes.id, { onDelete: "cascade" }),
+    status: text("status").notNull().default("pending"), // "pending" | "watched"
+    completedAt: timestamp("completed_at"),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+  },
+  table => [
+    uniqueIndex("class_progress_unique_idx").on(table.mentoradoId, table.classId),
+    index("class_progress_mentorado_idx").on(table.mentoradoId),
+  ]
+);
+
+export type ClassProgress = typeof classProgress.$inferSelect;
+export type InsertClassProgress = typeof classProgress.$inferInsert;
