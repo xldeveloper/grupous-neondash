@@ -149,7 +149,7 @@ function KanbanColumn({ id, title, color, leads, onLeadClick }: any) {
           </div>
         </div>
         <div className="text-xs font-medium text-muted-foreground">
-          {new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(totalValue)}
+          {new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(totalValue / 100)}
         </div>
       </div>
 
@@ -208,7 +208,7 @@ function LeadCard({ lead, onClick, isOverlay }: any) {
         <div className="flex items-center justify-between">
           <div className="text-sm font-semibold text-primary">
             {lead.valorEstimado ? 
-              new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL", notation: "compact" }).format(lead.valorEstimado) 
+              new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL", notation: "compact" }).format(lead.valorEstimado / 100) 
               : "-"}
           </div>
           <Badge variant="outline" className="text-[10px] px-1 h-5 capitalize">

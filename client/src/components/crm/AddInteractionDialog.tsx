@@ -30,11 +30,14 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 
-const interactionSchema = z.object({
+// Input schema for form - keeps duracao as string
+const interactionFormSchema = z.object({
   tipo: z.enum(["ligacao", "email", "whatsapp", "reuniao", "nota"]),
   notas: z.string().min(1, "Notas são obrigatórias"),
-  duracao: z.string().optional().transform(val => val ? parseInt(val) : undefined),
+  duracao: z.string().optional(),
 });
+
+type InteractionFormValues = z.infer<typeof interactionFormSchema>;
 
 interface AddInteractionDialogProps {
   leadId: number;
@@ -52,10 +55,10 @@ export function AddInteractionDialog({
   onSuccess 
 }: AddInteractionDialogProps) {
   const trpcUtils = trpc.useUtils();
-  const form = useForm<z.infer<typeof interactionSchema>>({
-    resolver: zodResolver(interactionSchema),
+  const form = useForm<InteractionFormValues>({
+    resolver: zodResolver(interactionFormSchema),
     defaultValues: {
-      tipo: defaultType as any,
+      tipo: defaultType as InteractionFormValues["tipo"],
       notas: "",
       duracao: "",
     },
@@ -64,7 +67,7 @@ export function AddInteractionDialog({
   useEffect(() => {
     if (isOpen) {
       form.reset({
-        tipo: defaultType as any,
+        tipo: defaultType as InteractionFormValues["tipo"],
         notas: "",
         duracao: "",
       });
@@ -84,10 +87,12 @@ export function AddInteractionDialog({
     },
   });
 
-  const onSubmit = (values: z.infer<typeof interactionSchema>) => {
+  const onSubmit = (values: InteractionFormValues) => {
     mutation.mutate({
       leadId,
-      ...values,
+      tipo: values.tipo,
+      notas: values.notas,
+      duracao: values.duracao ? parseInt(values.duracao) : undefined,
     });
   };
 

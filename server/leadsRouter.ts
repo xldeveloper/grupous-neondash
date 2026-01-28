@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { router, protectedProcedure } from "./_core/trpc";
-import { eq, and, desc, like, sql, getTableColumns } from "drizzle-orm";
+import { eq, and, desc, like, sql, getTableColumns, gte, lte, arrayContains } from "drizzle-orm";
 import { getDb } from "./db";
 import { leads, interacoes, mentorados } from "../drizzle/schema";
 import { TRPCError } from "@trpc/server";
@@ -12,6 +12,9 @@ export const leadsRouter = router({
         busca: z.string().optional(),
         status: z.string().optional(),
         origem: z.string().optional(),
+        valorMin: z.number().optional(),
+        valorMax: z.number().optional(),
+        tags: z.array(z.string()).optional(),
         page: z.number().default(1),
         limit: z.number().default(20),
       })
@@ -37,14 +40,31 @@ export const leadsRouter = router({
         );
       }
 
-      if (input.status) {
+      // Guard: Only apply status filter if not 'all'
+      if (input.status && input.status !== "all") {
         // @ts-expect-error Drizzle enum typing
         filters.push(eq(leads.status, input.status));
       }
 
-      if (input.origem) {
+      // Guard: Only apply origem filter if not 'all'
+      if (input.origem && input.origem !== "all") {
         // @ts-expect-error Drizzle enum typing
         filters.push(eq(leads.origem, input.origem));
+      }
+
+      // Advanced filter: valorMin (stored in cents)
+      if (input.valorMin !== undefined && input.valorMin > 0) {
+        filters.push(gte(leads.valorEstimado, input.valorMin * 100));
+      }
+
+      // Advanced filter: valorMax (stored in cents)
+      if (input.valorMax !== undefined && input.valorMax < 100000) {
+        filters.push(lte(leads.valorEstimado, input.valorMax * 100));
+      }
+
+      // Advanced filter: tags
+      if (input.tags && input.tags.length > 0) {
+        filters.push(arrayContains(leads.tags, input.tags));
       }
 
       const whereClause = and(...filters);
@@ -336,14 +356,36 @@ export const leadsRouter = router({
           taxaConversao: 0,
           tempoMedioFechamento: 0,
           valorPipeline: 0,
-          leadsPorOrigem: [],
+          leadsPorOrigem: {},
         };
       }
+
+      // Calculate date filter based on periodo
+      let dateFilter: Date | undefined;
+      if (input.periodo) {
+        const now = new Date();
+        switch (input.periodo) {
+          case "7d":
+            dateFilter = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+            break;
+          case "30d":
+            dateFilter = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+            break;
+          case "90d":
+            dateFilter = new Date(now.getTime() - 90 * 24 * 60 * 60 * 1000);
+            break;
+        }
+      }
+
+      // Build query with optional date filter
+      const whereClause = dateFilter
+        ? and(eq(leads.mentoradoId, mentorado.id), gte(leads.createdAt, dateFilter))
+        : eq(leads.mentoradoId, mentorado.id);
 
       const allLeads = await db
         .select()
         .from(leads)
-        .where(eq(leads.mentoradoId, mentorado.id));
+        .where(whereClause);
 
       const ativos = allLeads.filter(
         l => l.status !== "fechado_ganho" && l.status !== "perdido"
@@ -353,9 +395,22 @@ export const leadsRouter = router({
       const total = allLeads.length;
       const taxaConversao = total > 0 ? (ganhos / total) * 100 : 0;
 
-      const valorPipeline = allLeads
+      // valorPipeline stored in cents, divide by 100 for display
+      const valorPipelineCents = allLeads
         .filter(l => l.status !== "perdido" && l.status !== "fechado_ganho")
         .reduce((sum, l) => sum + (l.valorEstimado || 0), 0);
+
+      // Calculate average time to close for 'fechado_ganho' leads
+      const closedLeads = allLeads.filter(l => l.status === "fechado_ganho" && l.createdAt && l.updatedAt);
+      let tempoMedioFechamento = 0;
+      if (closedLeads.length > 0) {
+        const totalDays = closedLeads.reduce((sum, l) => {
+          const created = new Date(l.createdAt).getTime();
+          const closed = new Date(l.updatedAt).getTime();
+          return sum + (closed - created) / (1000 * 60 * 60 * 24);
+        }, 0);
+        tempoMedioFechamento = Math.round(totalDays / closedLeads.length);
+      }
 
       // Simple stats for now, can be optimized with aggregations
       const leadsPorOrigem = allLeads.reduce((acc, curr) => {
@@ -366,8 +421,8 @@ export const leadsRouter = router({
       return {
         totalAtivos: ativos,
         taxaConversao,
-        tempoMedioFechamento: 0, // Placeholder
-        valorPipeline,
+        tempoMedioFechamento,
+        valorPipeline: valorPipelineCents / 100, // Return in reais for display
         leadsPorOrigem,
       };
     }),

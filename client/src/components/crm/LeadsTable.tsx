@@ -137,7 +137,7 @@ export function LeadsTable({ filters, page, onPageChange, onLeadClick }: LeadsTa
                     ? new Intl.NumberFormat("pt-BR", {
                         style: "currency",
                         currency: "BRL",
-                      }).format(lead.valorEstimado)
+                      }).format(lead.valorEstimado / 100)
                     : "-"}
                 </TableCell>
                 <TableCell className="text-muted-foreground text-sm">

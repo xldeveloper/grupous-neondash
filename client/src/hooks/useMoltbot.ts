@@ -10,7 +10,7 @@
 
 import { useState, useCallback, useEffect, useRef } from "react";
 import { trpc } from "@/lib/trpc";
-import { useAuth } from "@clerk/clerk-react";
+import { useAuth } from "@/_core/hooks/useAuth";
 
 interface ChatMessage {
   id: number;
@@ -38,7 +38,7 @@ interface UseMoltbotReturn {
 }
 
 export function useMoltbot(): UseMoltbotReturn {
-  const { isSignedIn } = useAuth();
+  const { isAuthenticated, user } = useAuth();
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -51,14 +51,14 @@ export function useMoltbot(): UseMoltbotReturn {
   const terminateSessionMutation = trpc.moltbot.terminateSession.useMutation();
   const sendMessageMutation = trpc.moltbot.sendMessage.useMutation();
   const statusQuery = trpc.moltbot.getStatus.useQuery(undefined, {
-    enabled: isSignedIn ?? false,
+    enabled: isAuthenticated,
   });
 
   // Get active sessions on mount
   const activeSessionsQuery = trpc.moltbot.getActiveSessions.useQuery(
     undefined,
     {
-      enabled: isSignedIn ?? false,
+      enabled: isAuthenticated,
     }
   );
 

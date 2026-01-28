@@ -29,16 +29,17 @@ import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { useEffect } from "react";
 
-const createLeadSchema = z.object({
+// Form schema - keeps valorEstimado as string for input
+const createLeadFormSchema = z.object({
   nome: z.string().min(2, "Nome é obrigatório"),
   email: z.string().email("Email inválido"),
   telefone: z.string().optional(),
   empresa: z.string().optional(),
-  origem: z.enum(["instagram", "whatsapp", "google", "indicacao", "site", "outro"], {
-    required_error: "Selecione a origem",
-  }),
-  valorEstimado: z.string().optional().transform(val => val ? parseFloat(val.replace("R$", "").replace(".", "").replace(",", ".")) * 100 : undefined), // Convert input to cents
+  origem: z.enum(["instagram", "whatsapp", "google", "indicacao", "site", "outro"]),
+  valorEstimado: z.string().optional(),
 });
+
+type CreateLeadFormValues = z.infer<typeof createLeadFormSchema>;
 
 interface CreateLeadDialogProps {
   isOpen: boolean;
@@ -48,8 +49,8 @@ interface CreateLeadDialogProps {
 
 export function CreateLeadDialog({ isOpen, onClose, onSuccess }: CreateLeadDialogProps) {
   const trpcUtils = trpc.useUtils();
-  const form = useForm<z.infer<typeof createLeadSchema>>({
-    resolver: zodResolver(createLeadSchema),
+  const form = useForm<CreateLeadFormValues>({
+    resolver: zodResolver(createLeadFormSchema),
     defaultValues: {
       nome: "",
       email: "",
@@ -77,8 +78,20 @@ export function CreateLeadDialog({ isOpen, onClose, onSuccess }: CreateLeadDialo
     },
   });
 
-  const onSubmit = (values: z.infer<typeof createLeadSchema>) => {
-    mutation.mutate(values as any); // zod transform handles number conversion
+  const onSubmit = (values: CreateLeadFormValues) => {
+    // Convert valorEstimado from string to cents (number)
+    const valorEstimadoCents = values.valorEstimado 
+      ? Math.round(parseFloat(values.valorEstimado.replace("R$", "").replace(".", "").replace(",", ".")) * 100) 
+      : undefined;
+
+    mutation.mutate({
+      nome: values.nome,
+      email: values.email,
+      telefone: values.telefone,
+      empresa: values.empresa,
+      origem: values.origem,
+      valorEstimado: valorEstimadoCents,
+    });
   };
 
   return (

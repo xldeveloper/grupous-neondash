@@ -121,7 +121,7 @@ export function LeadDetailModal({ leadId, isOpen, onClose }: LeadDetailModalProp
                     <TabsContent value="historico" className="flex-1 overflow-hidden flex flex-col mt-0">
                         <ScrollArea className="flex-1 p-6">
                             <div className="relative border-l border-muted ml-4 space-y-8 pb-10">
-                                {data.interacoes.map((interaction) => (
+                                {(data.interacoes as Array<{ id: number; tipo: string; createdAt: Date; notas?: string | null; duracao?: number | null }>).map((interaction) => (
                                     <div key={interaction.id} className="relative pl-8">
                                         <div className="absolute -left-[9px] top-1 bg-background p-1 rounded-full border">
                                             {getInteractionIcon(interaction.tipo)}
@@ -171,7 +171,7 @@ export function LeadDetailModal({ leadId, isOpen, onClose }: LeadDetailModalProp
                                 <Label>Valor Estimado</Label>
                                 <div className="text-lg font-medium">
                                     {data.lead.valorEstimado 
-                                        ? new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(data.lead.valorEstimado)
+                                        ? new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(data.lead.valorEstimado / 100)
                                         : "Não definido"}
                                 </div>
                             </div>
