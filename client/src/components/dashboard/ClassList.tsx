@@ -6,9 +6,9 @@ import { PlayCircle, CheckCircle, Clock, Video } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 
-export function ClassList() {
+export function ClassList({ mentoradoId }: { mentoradoId?: number }) {
   const utils = trpc.useContext();
-  const { data: classes, isLoading } = trpc.classes.list.useQuery();
+  const { data: classes, isLoading } = trpc.classes.list.useQuery({ mentoradoId });
   
   const markWatched = trpc.classes.markWatched.useMutation({
     onSuccess: () => utils.classes.list.invalidate(),
@@ -89,7 +89,7 @@ export function ClassList() {
                   variant="ghost"
                   size="sm"
                   disabled={item.watched || markWatched.isPending}
-                  onClick={() => markWatched.mutate({ classId: item.id })}
+                  onClick={() => markWatched.mutate({ classId: item.id, mentoradoId })} // Pass mentoradoId
                   className={cn(
                     "flex-shrink-0 h-8 self-center",
                     item.watched 

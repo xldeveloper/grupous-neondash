@@ -5,6 +5,7 @@ import {
   mentoradoProcedure, 
   adminProcedure 
 } from "./_core/trpc";
+import { TRPCError } from "@trpc/server"; // Added import
 import { eq } from "drizzle-orm";
 import { getDb } from "./db";
 import { mentorados } from "../drizzle/schema";
@@ -24,6 +25,22 @@ export const mentoradosRouter = router({
   me: mentoradoProcedure.query(async ({ ctx }) => {
     return ctx.mentorado;
   }),
+
+  // Get specific mentorado by ID (admin only or self?)
+  // Actually usually used by admin to "view as"
+  getById: protectedProcedure
+    .input(z.object({ id: z.number() }))
+    .query(async ({ ctx, input }) => {
+        const db = getDb();
+        if (ctx.user?.role !== "admin") {
+            // If not admin, can only see self
+            if (ctx.mentorado?.id !== input.id) throw new TRPCError({ code: "FORBIDDEN" });
+        }
+        
+        const [mentorado] = await db.select().from(mentorados).where(eq(mentorados.id, input.id)).limit(1);
+        if(!mentorado) throw new TRPCError({ code: "NOT_FOUND" });
+        return mentorado;
+    }),
 
   // Get all mentorados (admin only)
   list: adminProcedure.query(async () => {

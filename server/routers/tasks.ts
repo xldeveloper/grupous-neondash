@@ -1,82 +1,127 @@
 
 import { z } from "zod";
-import { mentoradoProcedure, router } from "../_core/trpc";
-import { getDb } from "../db";
+import {
+  router,
+  protectedProcedure,
+  publicProcedure,
+} from "../_core/trpc";
 import { tasks } from "../../drizzle/schema";
 import { eq, and, desc } from "drizzle-orm";
+import { TRPCError } from "@trpc/server";
+import { getDb } from "../db";
 
 export const tasksRouter = router({
-  list: mentoradoProcedure.query(async ({ ctx }) => {
-    const db = await getDb();
-    if (!db) throw new Error("Database not available");
+  list: protectedProcedure
+    .input(z.object({ mentoradoId: z.number().optional() }).optional())
+    .query(async ({ ctx, input }) => {
+      const db = getDb();
+      
+      let targetMentoradoId = ctx.mentorado?.id;
 
-    return db
-      .select()
-      .from(tasks)
-      .where(eq(tasks.mentoradoId, ctx.mentorado.id))
-      .orderBy(desc(tasks.createdAt));
-  }),
+      if (input?.mentoradoId) {
+        if (ctx.user?.role !== "admin") {
+           throw new TRPCError({ code: "FORBIDDEN", message: "Apenas admins podem visualizar tarefas de outros." });
+        }
+        targetMentoradoId = input.mentoradoId;
+      }
 
-  create: mentoradoProcedure
-    .input(z.object({
-      title: z.string().min(1),
-      category: z.string().min(1),
-    }))
+      if (!targetMentoradoId) {
+         throw new TRPCError({ code: "UNAUTHORIZED", message: "Perfil de mentorado não encontrado." });
+      }
+
+      return db
+        .select()
+        .from(tasks)
+        .where(eq(tasks.mentoradoId, targetMentoradoId))
+        .orderBy(desc(tasks.createdAt));
+    }),
+
+  create: protectedProcedure
+    .input(
+      z.object({
+        title: z.string().min(1),
+        category: z.enum(["geral", "aula", "crm", "financeiro"]).default("geral"),
+        mentoradoId: z.number().optional(), // Admin override
+      })
+    )
     .mutation(async ({ ctx, input }) => {
-      const db = await getDb();
-      if (!db) throw new Error("Database not available");
+      const db = getDb();
+      
+      let targetMentoradoId = ctx.mentorado?.id;
+
+      if (input.mentoradoId) {
+        if (ctx.user?.role !== "admin") {
+           throw new TRPCError({ code: "FORBIDDEN", message: "Apenas admins podem criar tarefas para outros." });
+        }
+        targetMentoradoId = input.mentoradoId;
+      }
+
+      if (!targetMentoradoId) {
+         throw new TRPCError({ code: "UNAUTHORIZED", message: "Perfil de mentorado não encontrado." });
+      }
 
       const [newTask] = await db
         .insert(tasks)
         .values({
-          mentoradoId: ctx.mentorado.id,
+          mentoradoId: targetMentoradoId,
           title: input.title,
-          status: "todo",
           category: input.category,
+          status: "todo",
         })
         .returning();
 
       return newTask;
     }),
 
-  toggle: mentoradoProcedure
+  toggle: protectedProcedure
     .input(z.object({
       id: z.number(),
-      status: z.enum(["todo", "done"]),
     }))
     .mutation(async ({ ctx, input }) => {
-      const db = await getDb();
-      if (!db) throw new Error("Database not available");
+      const db = getDb();
+
+      const [task] = await db
+        .select()
+        .from(tasks)
+        .where(eq(tasks.id, input.id))
+        .limit(1);
+
+      if (!task) throw new TRPCError({ code: "NOT_FOUND" });
+
+      const isOwner = ctx.mentorado?.id === task.mentoradoId;
+      const isAdmin = ctx.user?.role === "admin";
+
+      if (!isOwner && !isAdmin) {
+        throw new TRPCError({ code: "FORBIDDEN" });
+      }
+
+      const newStatus = task.status === "done" ? "todo" : "done";
 
       const [updatedTask] = await db
         .update(tasks)
-        .set({ status: input.status, updatedAt: new Date() })
-        .where(
-          and(
-            eq(tasks.id, input.id),
-            eq(tasks.mentoradoId, ctx.mentorado.id)
-          )
-        )
+        .set({ status: newStatus, updatedAt: new Date() })
+        .where(eq(tasks.id, input.id))
         .returning();
 
       return updatedTask;
     }),
 
-  delete: mentoradoProcedure
+  delete: protectedProcedure
     .input(z.object({ id: z.number() }))
     .mutation(async ({ ctx, input }) => {
-      const db = await getDb();
-      if (!db) throw new Error("Database not available");
-
-      await db
-        .delete(tasks)
-        .where(
-          and(
-            eq(tasks.id, input.id),
-            eq(tasks.mentoradoId, ctx.mentorado.id)
-          )
-        );
+      const db = getDb();
       
+      const [task] = await db.select().from(tasks).where(eq(tasks.id, input.id)).limit(1);
+      if (!task) throw new TRPCError({ code: "NOT_FOUND" });
+
+      const isOwner = ctx.mentorado?.id === task.mentoradoId;
+      const isAdmin = ctx.user?.role === "admin";
+
+      if (!isOwner && !isAdmin) {
+        throw new TRPCError({ code: "FORBIDDEN" });
+      }
+
+      await db.delete(tasks).where(eq(tasks.id, input.id));
       return { success: true };
     }),
 });

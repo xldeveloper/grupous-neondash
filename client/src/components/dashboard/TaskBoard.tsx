@@ -10,11 +10,11 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 
-export function TaskBoard() {
+export function TaskBoard({ mentoradoId }: { mentoradoId?: number }) {
   const [newTask, setNewTask] = useState("");
   const utils = trpc.useContext();
   
-  const { data: tasks, isLoading } = trpc.tasks.list.useQuery();
+  const { data: tasks, isLoading } = trpc.tasks.list.useQuery({ mentoradoId });
   
   const createTask = trpc.tasks.create.useMutation({
     onSuccess: () => {
@@ -34,7 +34,7 @@ export function TaskBoard() {
   const handleCreate = (e: React.FormEvent) => {
     e.preventDefault();
     if (!newTask.trim()) return;
-    createTask.mutate({ title: newTask, category: "geral" });
+    createTask.mutate({ title: newTask, category: "geral", mentoradoId });
   };
 
   if (isLoading) {

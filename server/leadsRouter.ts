@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { router, mentoradoProcedure } from "./_core/trpc";
+import { router, mentoradoProcedure, protectedProcedure } from "./_core/trpc";
 import { eq, and, desc, sql, gte, lte, arrayContains } from "drizzle-orm";
 import { getDb } from "./db";
 import { leads, interacoes } from "../drizzle/schema";
@@ -318,11 +318,20 @@ export const leadsRouter = router({
       return newInteraction;
     }),
 
-  stats: mentoradoProcedure
-    .input(z.object({ periodo: z.enum(["7d", "30d", "90d"]).optional() }))
+  stats: protectedProcedure
+    .input(z.object({ 
+      periodo: z.enum(["7d", "30d", "90d"]).optional(),
+      mentoradoId: z.number().optional() 
+    }))
     .query(async ({ ctx, input }) => {
       const db = getDb();
-      const mentorado = ctx.mentorado;
+      
+      let targetMentoradoId = ctx.mentorado?.id;
+      if (input.mentoradoId) {
+        if (ctx.user?.role !== "admin") throw new TRPCError({ code: "FORBIDDEN" });
+        targetMentoradoId = input.mentoradoId;
+      }
+      if (!targetMentoradoId) throw new TRPCError({ code: "UNAUTHORIZED" });
 
       // Calculate date filter based on periodo
       let dateFilter: Date | undefined;
@@ -343,8 +352,8 @@ export const leadsRouter = router({
 
       // Build query with optional date filter
       const whereClause = dateFilter
-        ? and(eq(leads.mentoradoId, mentorado.id), gte(leads.createdAt, dateFilter))
-        : eq(leads.mentoradoId, mentorado.id);
+        ? and(eq(leads.mentoradoId, targetMentoradoId), gte(leads.createdAt, dateFilter))
+        : eq(leads.mentoradoId, targetMentoradoId);
 
       const allLeads = await db
         .select()

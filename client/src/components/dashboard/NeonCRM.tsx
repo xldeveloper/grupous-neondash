@@ -3,8 +3,8 @@ import { trpc } from "@/lib/trpc";
 import { NeonCard } from "@/components/ui/neon-card";
 import { Users, DollarSign, Activity, TrendingUp } from "lucide-react";
 
-export function NeonCRM() {
-  const { data: stats, isLoading } = trpc.leads.stats.useQuery({});
+export function NeonCRM({ mentoradoId }: { mentoradoId?: number }) {
+  const { data: stats, isLoading } = trpc.leads.stats.useQuery({ mentoradoId });
 
   if (isLoading) {
     return <div className="animate-pulse h-32 bg-slate-800 rounded-xl" />;

@@ -1,15 +1,30 @@
 
 import { z } from "zod";
-import { mentoradoProcedure, router } from "../_core/trpc";
+import { router, protectedProcedure } from "../_core/trpc";
 import { getDb } from "../db";
 import { classes, classProgress } from "../../drizzle/schema";
 import { eq, and, desc } from "drizzle-orm";
+import { TRPCError } from "@trpc/server";
 
 export const classesRouter = router({
-  list: mentoradoProcedure.query(async ({ ctx }) => {
-    const db = await getDb();
-    if (!db) throw new Error("Database not available");
+  list: protectedProcedure
+    .input(z.object({ mentoradoId: z.number().optional() }).optional())
+    .query(async ({ ctx, input }) => {
+      const db = getDb();
+      
+      let targetMentoradoId = ctx.mentorado?.id;
 
+      if (input?.mentoradoId) {
+        if (ctx.user?.role !== "admin") {
+           throw new TRPCError({ code: "FORBIDDEN", message: "Forbidden" });
+        }
+        targetMentoradoId = input.mentoradoId;
+      }
+
+      if (!targetMentoradoId) {
+         throw new TRPCError({ code: "UNAUTHORIZED", message: "Mentorado profile required" });
+      }
+    
     // Fetch classes and join with progress for the current mentorado
     // Note: Drizzle's query builder for joins can be verbose, so we might fetch classes and progress separately
     // or use a raw query if needed. For now, let's fetch separately and merge in JS for simplicity unless performance is critical.
@@ -22,7 +37,7 @@ export const classesRouter = router({
     const progress = await db
       .select()
       .from(classProgress)
-      .where(eq(classProgress.mentoradoId, ctx.mentorado.id));
+      .where(eq(classProgress.mentoradoId, targetMentoradoId));
 
     const progressMap = new Map(progress.map(p => [p.classId, p]));
 
@@ -33,13 +48,20 @@ export const classesRouter = router({
     }));
   }),
 
-  markWatched: mentoradoProcedure
+  markWatched: protectedProcedure
     .input(z.object({
       classId: z.number(),
+      mentoradoId: z.number().optional(), // Admin override
     }))
     .mutation(async ({ ctx, input }) => {
-      const db = await getDb();
-      if (!db) throw new Error("Database not available");
+      const db = getDb();
+
+      let targetMentoradoId = ctx.mentorado?.id;
+      if (input.mentoradoId) {
+        if (ctx.user?.role !== "admin") throw new TRPCError({ code: "FORBIDDEN" });
+        targetMentoradoId = input.mentoradoId;
+      }
+      if (!targetMentoradoId) throw new TRPCError({ code: "UNAUTHORIZED" });
 
       // Check if already watched
       const existing = await db
@@ -47,7 +69,7 @@ export const classesRouter = router({
         .from(classProgress)
         .where(
           and(
-            eq(classProgress.mentoradoId, ctx.mentorado.id),
+            eq(classProgress.mentoradoId, targetMentoradoId),
             eq(classProgress.classId, input.classId)
           )
         )
@@ -60,7 +82,7 @@ export const classesRouter = router({
       const [newProgress] = await db
         .insert(classProgress)
         .values({
-          mentoradoId: ctx.mentorado.id,
+          mentoradoId: targetMentoradoId,
           classId: input.classId,
           status: "watched",
           completedAt: new Date(),
