@@ -96,10 +96,10 @@ export function useMoltbot(): UseMoltbotReturn {
 
   // WebSocket connection for real-time updates
   useEffect(() => {
-    if (!sessionId || !isSignedIn) return;
+    if (!sessionId || !isAuthenticated || !user?.id) return;
 
     const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
-    const wsUrl = `${protocol}//${window.location.host}/ws/moltbot`;
+    const wsUrl = `${protocol}//${window.location.host}/ws/moltbot?userId=${user.id}`;
 
     const ws = new WebSocket(wsUrl);
     wsRef.current = ws;
@@ -142,7 +142,7 @@ export function useMoltbot(): UseMoltbotReturn {
       ws.close();
       wsRef.current = null;
     };
-  }, [sessionId, isSignedIn]);
+  }, [sessionId, isAuthenticated, user?.id]);
 
   // Create new chat session
   const createSession = useCallback(async () => {

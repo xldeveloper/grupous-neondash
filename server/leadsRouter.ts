@@ -215,11 +215,11 @@ export const leadsRouter = router({
         id: z.number(),
         status: z.enum([
           "novo",
-          "em_contato",
-          "reuniao_agendada",
-          "proposta_enviada",
+          "primeiro_contato",
+          "qualificado",
+          "proposta",
           "negociacao",
-          "fechado_ganho",
+          "fechado",
           "perdido",
         ]),
       })
@@ -388,20 +388,20 @@ export const leadsRouter = router({
         .where(whereClause);
 
       const ativos = allLeads.filter(
-        l => l.status !== "fechado_ganho" && l.status !== "perdido"
+        l => l.status !== "fechado" && l.status !== "perdido"
       ).length;
 
-      const ganhos = allLeads.filter(l => l.status === "fechado_ganho").length;
+      const ganhos = allLeads.filter(l => l.status === "fechado").length;
       const total = allLeads.length;
       const taxaConversao = total > 0 ? (ganhos / total) * 100 : 0;
 
       // valorPipeline stored in cents, divide by 100 for display
       const valorPipelineCents = allLeads
-        .filter(l => l.status !== "perdido" && l.status !== "fechado_ganho")
+        .filter(l => l.status !== "perdido" && l.status !== "fechado")
         .reduce((sum, l) => sum + (l.valorEstimado || 0), 0);
 
-      // Calculate average time to close for 'fechado_ganho' leads
-      const closedLeads = allLeads.filter(l => l.status === "fechado_ganho" && l.createdAt && l.updatedAt);
+      // Calculate average time to close for 'fechado' leads
+      const closedLeads = allLeads.filter(l => l.status === "fechado" && l.createdAt && l.updatedAt);
       let tempoMedioFechamento = 0;
       if (closedLeads.length > 0) {
         const totalDays = closedLeads.reduce((sum, l) => {

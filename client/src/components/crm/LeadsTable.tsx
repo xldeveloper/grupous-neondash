@@ -39,12 +39,12 @@ export function LeadsTable({ filters, page, onPageChange, onLeadClick }: LeadsTa
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "novo": return "bg-blue-500 hover:bg-blue-600";
-      case "em_contato": return "bg-purple-500 hover:bg-purple-600";
-      case "reuniao_agendada": return "bg-cyan-500 hover:bg-cyan-600";
-      case "proposta_enviada": return "bg-amber-500 hover:bg-amber-600";
-      case "negociacao": return "bg-orange-500 hover:bg-orange-600";
-      case "fechado_ganho": return "bg-green-500 hover:bg-green-600";
+      case "novo": return "bg-yellow-500 hover:bg-yellow-600";
+      case "primeiro_contato": return "bg-orange-400 hover:bg-orange-500";
+      case "qualificado": return "bg-purple-500 hover:bg-purple-600";
+      case "proposta": return "bg-orange-600 hover:bg-orange-700";
+      case "negociacao": return "bg-pink-500 hover:bg-pink-600";
+      case "fechado": return "bg-green-500 hover:bg-green-600";
       case "perdido": return "bg-red-500 hover:bg-red-600";
       default: return "bg-gray-500 hover:bg-gray-600";
     }
@@ -52,11 +52,11 @@ export function LeadsTable({ filters, page, onPageChange, onLeadClick }: LeadsTa
 
   const statusLabels: Record<string, string> = {
     novo: "Novo",
-    em_contato: "Em Contato",
-    reuniao_agendada: "Reunião",
-    proposta_enviada: "Proposta",
+    primeiro_contato: "Primeiro Contato",
+    qualificado: "Qualificado",
+    proposta: "Proposta",
     negociacao: "Negociação",
-    fechado_ganho: "Ganho",
+    fechado: "Fechado",
     perdido: "Perdido",
   };
 

@@ -45,9 +45,12 @@ export function LeadDetailModal({ leadId, isOpen, onClose }: LeadDetailModalProp
 
   const getStatusColor = (status?: string) => {
     switch (status) {
-      case "novo": return "bg-blue-500";
-      case "em_contato": return "bg-purple-500";
-      case "fechado_ganho": return "bg-green-500";
+      case "novo": return "bg-yellow-500";
+      case "primeiro_contato": return "bg-orange-400";
+      case "qualificado": return "bg-purple-500";
+      case "proposta": return "bg-orange-600";
+      case "negociacao": return "bg-pink-500";
+      case "fechado": return "bg-green-500";
       case "perdido": return "bg-red-500";
       default: return "bg-gray-500";
     }

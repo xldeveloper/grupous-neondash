@@ -97,11 +97,11 @@ export function FiltersPanel({
             <SelectContent>
               <SelectItem value="all">Todos</SelectItem>
               <SelectItem value="novo">Novo</SelectItem>
-              <SelectItem value="em_contato">Em Contato</SelectItem>
-              <SelectItem value="reuniao_agendada">Reunião Agendada</SelectItem>
-              <SelectItem value="proposta_enviada">Proposta Enviada</SelectItem>
+              <SelectItem value="primeiro_contato">Primeiro Contato</SelectItem>
+              <SelectItem value="qualificado">Qualificado</SelectItem>
+              <SelectItem value="proposta">Proposta</SelectItem>
               <SelectItem value="negociacao">Negociação</SelectItem>
-              <SelectItem value="fechado_ganho">Fechado (Ganho)</SelectItem>
+              <SelectItem value="fechado">Fechado</SelectItem>
               <SelectItem value="perdido">Perdido</SelectItem>
             </SelectContent>
           </Select>

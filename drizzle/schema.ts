@@ -56,11 +56,11 @@ export const origemLeadEnum = pgEnum("origem_lead", [
 
 export const statusLeadEnum = pgEnum("status_lead", [
   "novo",
-  "em_contato",
-  "reuniao_agendada",
-  "proposta_enviada",
+  "primeiro_contato",
+  "qualificado",
+  "proposta",
   "negociacao",
-  "fechado_ganho",
+  "fechado",
   "perdido",
 ]);
 
