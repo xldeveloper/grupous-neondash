@@ -36,9 +36,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const navItems = [
     { href: "/dashboard", label: "Visão Geral", icon: LayoutDashboard },
     { href: "/meu-dashboard", label: "Meu Dashboard", icon: Users },
-    { href: "/conquistas", label: "Conquistas", icon: Trophy },
-    { href: "/ranking", label: "Ranking", icon: Medal },
-    { href: "/notificacoes", label: "Notificações", icon: Bell },
     { href: "/assistente", label: "Assistente IA", icon: Bot },
     { href: "/crm/leads", label: "CRM Leads", icon: Briefcase },
     { href: "/admin", label: "Administração", icon: Shield, adminOnly: true },
@@ -54,8 +51,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       icon: UserCog,
       adminOnly: true,
     },
-    { href: "/estrutura", label: "Neon Estrutura", icon: Building2 }, // Users icon duplicate in original, changed to Building2
-    { href: "/escala", label: "Neon Escala", icon: Rocket }, // TrendingUp duplicate, changed to Rocket
+    // { href: "/estrutura", label: "Neon Estrutura", icon: Building2 }, // Incorporated into Home
+    // { href: "/escala", label: "Neon Escala", icon: Rocket }, // Incorporated into Home
   ];
 
   const filteredNavItems = navItems.filter(
