@@ -13,8 +13,7 @@ import PrimeiroAcesso from "./pages/PrimeiroAcesso";
 // Lazy loaded (heavy pages with charts/complex UI)
 const Home = lazy(() => import("./pages/Home"));
 const MyDashboard = lazy(() => import("./pages/MyDashboard"));
-const Admin = lazy(() => import("./pages/Admin"));
-const VincularEmails = lazy(() => import("./pages/VincularEmails"));
+
 const GestaoMentorados = lazy(() => import("./pages/GestaoMentorados"));
 const MoltbotPage = lazy(() => import("./pages/MoltbotPage"));
 const LeadsPage = lazy(() => import("./pages/crm/LeadsPage").then(module => ({ default: module.LeadsPage })));
@@ -37,8 +36,7 @@ function Router() {
       {/* Dashboard Routes (protected by DashboardLayout) */}
       <Route path="/dashboard" component={Home} />
       <Route path="/meu-dashboard" component={MyDashboard} />
-      <Route path="/admin" component={Admin} />
-      <Route path="/admin/vincular" component={VincularEmails} />
+
       <Route path="/admin/mentorados" component={GestaoMentorados} />
       <Route path="/primeiro-acesso" component={PrimeiroAcesso} />
       <Route path="/assistente" component={MoltbotPage} />

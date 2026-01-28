@@ -38,16 +38,17 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     { href: "/meu-dashboard", label: "Meu Dashboard", icon: Users },
     { href: "/assistente", label: "Assistente IA", icon: Bot },
     { href: "/crm/leads", label: "CRM Leads", icon: Briefcase },
-    { href: "/admin", label: "Administração", icon: Shield, adminOnly: true },
-    {
-      href: "/admin/vincular",
-      label: "Vincular Emails",
-      icon: Link2,
-      adminOnly: true,
-    },
+    // Consolidated into /admin/mentorados
+    // { href: "/admin", label: "Administração", icon: Shield, adminOnly: true },
+    // {
+    //   href: "/admin/vincular",
+    //   label: "Vincular Emails",
+    //   icon: Link2,
+    //   adminOnly: true,
+    // },
     {
       href: "/admin/mentorados",
-      label: "Gestão Mentorados",
+      label: "Área Administrativa", // Renamed from Gestão Mentorados
       icon: UserCog,
       adminOnly: true,
     },
