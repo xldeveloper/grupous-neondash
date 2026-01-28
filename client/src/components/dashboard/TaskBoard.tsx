@@ -92,7 +92,7 @@ export function TaskBoard({ mentoradoId }: { mentoradoId?: number }) {
                     <div className="flex items-center gap-3">
                       <Checkbox
                         checked={false}
-                        onCheckedChange={() => toggleTask.mutate({ id: task.id, status: "done" })}
+                        onCheckedChange={() => toggleTask.mutate({ id: task.id })}
                         className="border-slate-600 data-[state=checked]:bg-neon-gold data-[state=checked]:text-black"
                       />
                       <span className="text-sm text-slate-300 font-mono">{task.title}</span>
@@ -127,7 +127,7 @@ export function TaskBoard({ mentoradoId }: { mentoradoId?: number }) {
                     <div className="flex items-center gap-3 opacity-60">
                       <Checkbox
                         checked={true}
-                        onCheckedChange={() => toggleTask.mutate({ id: task.id, status: "todo" })}
+                        onCheckedChange={() => toggleTask.mutate({ id: task.id })}
                         className="border-slate-600"
                       />
                       <span className="text-sm text-slate-400 font-mono line-through">{task.title}</span>
