@@ -1,0 +1,166 @@
+"use client";
+import React, { useState } from "react";
+import { Sidebar, SidebarBody, SidebarLink } from "@/components/ui/sidebar";
+import {
+  LayoutDashboard,
+  Users,
+  TrendingUp,
+  Shield,
+  Link2,
+  UserCog,
+  BarChart3,
+  Trophy,
+  Medal,
+  Bell,
+  Bot,
+  Briefcase,
+  LogOut,
+} from "lucide-react";
+import { motion } from "motion/react";
+import { cn } from "@/lib/utils";
+import { useAuth } from "@/_core/hooks/useAuth";
+import { Link, useLocation } from "wouter";
+
+export function AppSidebar({ children }: { children: React.ReactNode }) {
+  const { user, logout } = useAuth();
+  const [location] = useLocation();
+  const [open, setOpen] = useState(false);
+
+  if (!user) {
+    return null; // Or handle redirect, usually handled by parent or protected route wrapper
+  }
+
+  const navItems = [
+    { href: "/dashboard", label: "Visão Geral", icon: LayoutDashboard },
+    { href: "/meu-dashboard", label: "Meu Dashboard", icon: Users },
+    { href: "/comparativo", label: "Comparativo", icon: BarChart3 },
+    { href: "/conquistas", label: "Conquistas", icon: Trophy },
+    { href: "/ranking", label: "Ranking", icon: Medal },
+    { href: "/notificacoes", label: "Notificações", icon: Bell },
+    { href: "/assistente", label: "Assistente IA", icon: Bot },
+    { href: "/crm/leads", label: "CRM Leads", icon: Briefcase },
+    { href: "/enviar-metricas", label: "Enviar Métricas", icon: TrendingUp },
+    { href: "/admin", label: "Administração", icon: Shield, adminOnly: true },
+    {
+      href: "/admin/vincular",
+      label: "Vincular Emails",
+      icon: Link2,
+      adminOnly: true,
+    },
+    {
+      href: "/admin/mentorados",
+      label: "Gestão Mentorados",
+      icon: UserCog,
+      adminOnly: true,
+    },
+    { href: "/estrutura", label: "Neon Estrutura", icon: Users },
+    { href: "/escala", label: "Neon Escala", icon: TrendingUp },
+  ];
+
+  const filteredNavItems = navItems.filter(
+    (item) => !item.adminOnly || user.role === "admin"
+  );
+
+  return (
+    <div
+      className={cn(
+        "flex flex-col md:flex-row bg-gray-100 dark:bg-neutral-800 w-full flex-1 mx-auto border border-neutral-200 dark:border-neutral-700 overflow-hidden",
+        "h-screen" 
+      )}
+    >
+      <Sidebar open={open} setOpen={setOpen}>
+        <SidebarBody className="justify-between gap-10">
+          <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
+            {open ? <Logo /> : <LogoIcon />}
+            <div className="mt-8 flex flex-col gap-2">
+              {filteredNavItems.map((item, idx) => (
+                <SidebarLink
+                  key={idx}
+                  link={{
+                    label: item.label,
+                    href: item.href,
+                    icon: (
+                      <item.icon
+                        className={cn(
+                          "h-5 w-5 flex-shrink-0 text-neutral-700 dark:text-neutral-200",
+                          location === item.href && "text-neon-gold"
+                        )}
+                      />
+                    ),
+                  }}
+                  className={cn(
+                    location === item.href && "bg-neutral-200/50 dark:bg-neutral-700/50 rounded-md"
+                  )}
+                />
+              ))}
+            </div>
+          </div>
+          <div>
+            <SidebarLink
+              link={{
+                label: user.name || user.email || "Usuário",
+                href: "#",
+                icon: (
+                  <div className="h-7 w-7 flex-shrink-0 rounded-full bg-neutral-300 dark:bg-neutral-600 flex items-center justify-center text-xs font-bold">
+                     {user.name?.[0]?.toUpperCase() || "U"}
+                  </div>
+                  // Alternatively use UserButton from Clerk if preferred, but SidebarLink expects an icon element.
+                  // For now, keeping it simple with a styled initial.
+                ),
+              }}
+            />
+             <div onClick={() => logout()} className="cursor-pointer">
+                <SidebarLink
+                    link={{
+                        label: "Sair",
+                        href: "#",
+                        icon: <LogOut className="h-5 w-5 flex-shrink-0 text-neutral-700 dark:text-neutral-200" />
+                    }}
+                />
+             </div>
+          </div>
+        </SidebarBody>
+      </Sidebar>
+      <main className="flex-1 overflow-y-auto w-full p-2 md:p-10 border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 rounded-tl-2xl">
+          {children}
+      </main>
+    </div>
+  );
+}
+
+export const Logo = () => {
+  return (
+    <a
+      href="#"
+      className="font-normal flex space-x-2 items-center text-sm text-black py-1 relative z-20"
+    >
+       <img
+        src="/brand/neon-symbol-official.png"
+        alt="Neon"
+        className="h-6 w-6 flex-shrink-0"
+      />
+      <motion.span
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="font-medium text-black dark:text-white whitespace-pre"
+      >
+        NEON DASHBOARD
+      </motion.span>
+    </a>
+  );
+};
+
+export const LogoIcon = () => {
+  return (
+    <a
+      href="#"
+      className="font-normal flex space-x-2 items-center text-sm text-black py-1 relative z-20"
+    >
+      <img
+        src="/brand/neon-symbol-official.png"
+        alt="Neon"
+        className="h-6 w-6 flex-shrink-0"
+      />
+    </a>
+  );
+};

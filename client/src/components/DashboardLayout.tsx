@@ -10,15 +10,12 @@ import {
   Link2,
   UserCog,
   BarChart3,
-  Trophy,
-  Medal,
-  Bell,
   Bot,
   Briefcase,
 } from "lucide-react";
 import { useState } from "react";
 import { Button } from "./ui/button";
-import { LogOut, Settings } from "lucide-react";
+import { LogOut } from "lucide-react";
 import { useAuth } from "@/_core/hooks/useAuth";
 
 export default function DashboardLayout({
@@ -39,9 +36,6 @@ export default function DashboardLayout({
     { href: "/dashboard", label: "Visão Geral", icon: LayoutDashboard },
     { href: "/meu-dashboard", label: "Meu Dashboard", icon: Users },
     { href: "/comparativo", label: "Comparativo", icon: BarChart3 },
-    { href: "/conquistas", label: "Conquistas", icon: Trophy },
-    { href: "/ranking", label: "Ranking", icon: Medal },
-    { href: "/notificacoes", label: "Notificações", icon: Bell },
     { href: "/assistente", label: "Assistente IA", icon: Bot },
     { href: "/crm/leads", label: "CRM Leads", icon: Briefcase },
     { href: "/enviar-metricas", label: "Enviar Métricas", icon: TrendingUp },
@@ -58,8 +52,6 @@ export default function DashboardLayout({
       icon: UserCog,
       adminOnly: true,
     },
-    { href: "/estrutura", label: "Neon Estrutura", icon: Users },
-    { href: "/escala", label: "Neon Escala", icon: TrendingUp },
   ];
 
   // Filter nav items based on user role

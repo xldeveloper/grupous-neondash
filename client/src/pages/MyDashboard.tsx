@@ -19,6 +19,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useState } from "react";
+import { NotificationsView } from "@/components/dashboard/NotificationsView";
 
 export default function MyDashboard() {
   const isMobile = useIsMobile();
@@ -93,7 +94,7 @@ export default function MyDashboard() {
   return (
     <DashboardLayout>
       <div className="space-y-8 animate-in fade-in duration-500">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
           <div>
             <h1 className="text-3xl font-bold bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
               {isAdmin ? "Visão Admin" : "Meu Dashboard"}
@@ -133,93 +134,97 @@ export default function MyDashboard() {
           </div>
         </div>
 
-        {/* Hero Section - Only show if we have a mentorado data or if loading */}
-        {(currentMentorado || isLoading) && (
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-6 mb-8">
-          {/* Profile Card */}
-          <div className="md:col-span-8">
-            <NeonCard className="h-full relative overflow-hidden group">
-              <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+           {/* Hero Section */}
+            <div className="md:col-span-8">
+              {(currentMentorado || isLoading) && (
+                <NeonCard className="h-full relative overflow-hidden group">
+                  <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
-              <div className="relative z-10 flex flex-col md:flex-row items-center gap-6 p-2">
-                <div className="relative">
-                  <div className="w-24 h-24 rounded-full border-2 border-white/10 overflow-hidden shadow-[0_0_30px_rgba(168,85,247,0.2)]">
-                    {isLoading ? (
-                      <Skeleton className="w-full h-full bg-slate-800" />
-                    ) : (
-                      <img
-                        src={currentMentorado?.fotoUrl || `https://ui-avatars.com/api/?name=${currentMentorado?.nomeCompleto}&background=random`}
-                        alt="Profile"
-                        className="w-full h-full object-cover"
-                      />
-                    )}
-                  </div>
-                  <div className="absolute bottom-0 right-0 translate-x-1/4 translate-y-1/4">
-                    <div className="bg-black border border-white/10 rounded-full p-2 shadow-xl">
-                      <TrendingUp className="w-4 h-4 text-green-500" />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="text-center md:text-left space-y-2 flex-1">
-                  {isLoading ? (
-                    <div className="space-y-2">
-                      <Skeleton className="h-8 w-48 bg-slate-800" />
-                      <Skeleton className="h-4 w-32 bg-slate-800" />
-                    </div>
-                  ) : (
-                    <>
-                      <div className="flex items-center justify-center md:justify-start gap-3">
-                        <h2 className="text-2xl font-bold text-white">
-                          Olá, {currentMentorado?.nomeCompleto?.split(' ')[0]}
-                        </h2>
-                        <span className="px-2 py-0.5 rounded-full bg-purple-500/10 border border-purple-500/20 text-xs text-purple-400 font-medium uppercase tracking-wider">
-                          {currentMentorado?.turma === "neon_estrutura" ? "Estrutura" : "Escala"}
-                        </span>
+                  <div className="relative z-10 flex flex-col md:flex-row items-center gap-6 p-2">
+                    <div className="relative">
+                      <div className="w-24 h-24 rounded-full border-2 border-white/10 overflow-hidden shadow-[0_0_30px_rgba(168,85,247,0.2)]">
+                        {isLoading ? (
+                          <Skeleton className="w-full h-full bg-slate-800" />
+                        ) : (
+                          <img
+                            src={currentMentorado?.fotoUrl || `https://ui-avatars.com/api/?name=${currentMentorado?.nomeCompleto}&background=random`}
+                            alt="Profile"
+                            className="w-full h-full object-cover"
+                          />
+                        )}
                       </div>
-                      <p className="text-gray-400 max-w-md">
-                        Mantenha o foco nas metas de {new Date().toLocaleString('pt-BR', { month: 'long' })}.
-                        Sua evolução é constante! 🚀
-                      </p>
-                    </>
-                  )}
-                </div>
-              </div>
-            </NeonCard>
-          </div>
+                      <div className="absolute bottom-0 right-0 translate-x-1/4 translate-y-1/4">
+                        <div className="bg-black border border-white/10 rounded-full p-2 shadow-xl">
+                          <TrendingUp className="w-4 h-4 text-green-500" />
+                        </div>
+                      </div>
+                    </div>
 
-          {/* Quick Stats / Sidebar Trigger */}
-          <div className="md:col-span-4">
-            <NeonCard className="h-full flex flex-col justify-between p-6">
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-lg font-semibold text-white">Progresso Geral</h3>
-                  <span className="text-sm text-gray-400">Mês Atual</span>
+                    <div className="text-center md:text-left space-y-2 flex-1">
+                      {isLoading ? (
+                        <div className="space-y-2">
+                          <Skeleton className="h-8 w-48 bg-slate-800" />
+                          <Skeleton className="h-4 w-32 bg-slate-800" />
+                        </div>
+                      ) : (
+                        <>
+                          <div className="flex items-center justify-center md:justify-start gap-3">
+                            <h2 className="text-2xl font-bold text-white">
+                              Olá, {currentMentorado?.nomeCompleto?.split(' ')[0]}
+                            </h2>
+                            <span className="px-2 py-0.5 rounded-full bg-purple-500/10 border border-purple-500/20 text-xs text-purple-400 font-medium uppercase tracking-wider">
+                              {currentMentorado?.turma === "neon_estrutura" ? "Estrutura" : "Escala"}
+                            </span>
+                          </div>
+                          <p className="text-gray-400 max-w-md">
+                            Mantenha o foco nas metas de {new Date().toLocaleString('pt-BR', { month: 'long' })}.
+                            Sua evolução é constante! 🚀
+                          </p>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                </NeonCard>
+              )}
+            </div>
+            
+            {/* Quick Stats */}
+            <div className="md:col-span-4">
+               <NeonCard className="h-full flex flex-col justify-between p-6">
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-lg font-semibold text-white">Progresso Geral</h3>
+                    <span className="text-sm text-gray-400">Mês Atual</span>
+                  </div>
+                  <div className="flex items-end gap-2">
+                    <span className="text-4xl font-bold text-neon-gold">75%</span>
+                    <span className="text-green-400 flex items-center text-sm">
+                      <TrendingUp className="w-4 h-4 mr-1" /> +5%
+                    </span>
+                  </div>
+                  <p className="text-gray-500 text-sm">
+                    Você está no caminho certo! Continue assim.
+                  </p>
                 </div>
-                <div className="flex items-end gap-2">
-                  <span className="text-4xl font-bold text-neon-gold">75%</span>
-                  <span className="text-green-400 flex items-center text-sm">
-                    <TrendingUp className="w-4 h-4 mr-1" /> +5%
-                  </span>
-                </div>
-                <p className="text-gray-500 text-sm">
-                  Você está no caminho certo! Continue assim.
-                </p>
-              </div>
-              <Button className="w-full mt-4 bg-white/5 hover:bg-white/10 text-white border-0">
-                Ver Detalhes
-              </Button>
-            </NeonCard>
-          </div>
+              </NeonCard>
+            </div>
         </div>
-        )}
 
-        {/* CRM Summary Section */}
-        <section>
-          <NeonCRM mentoradoId={targetMentoradoId} />
-        </section>
+        {/* CRM Summary & Notifications Split */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <section className="lg:col-span-8">
+               <NeonCRM mentoradoId={targetMentoradoId} />
+            </section>
+            <section className="lg:col-span-4">
+              <NeonCard className="h-full p-4 bg-white/5 border-white/5">
+                 <NotificationsView />
+              </NeonCard>
+            </section>
+        </div>
 
-        {/* Main Content Grid */}
+
+        {/* Tasks & Classes */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 h-[600px]">
           {/* Left Column: Tasks - Takes up 7/12 on large screens */}
            <section className="lg:col-span-7 h-full">

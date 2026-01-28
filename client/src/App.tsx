@@ -8,8 +8,6 @@ import { ThemeProvider } from "./contexts/ThemeContext";
 
 // Eagerly loaded (landing + lightweight pages)
 import LandingPage from "./pages/LandingPage";
-import Estrutura from "./pages/Estrutura";
-import Escala from "./pages/Escala";
 import PrimeiroAcesso from "./pages/PrimeiroAcesso";
 
 // Lazy loaded (heavy pages with charts/complex UI)
@@ -20,9 +18,6 @@ const SubmitMetrics = lazy(() => import("./pages/SubmitMetrics"));
 const VincularEmails = lazy(() => import("./pages/VincularEmails"));
 const GestaoMentorados = lazy(() => import("./pages/GestaoMentorados"));
 const DashboardComparativo = lazy(() => import("./pages/DashboardComparativo"));
-const Conquistas = lazy(() => import("./pages/Conquistas"));
-const RankingMensal = lazy(() => import("./pages/RankingMensal"));
-const Notificacoes = lazy(() => import("./pages/Notificacoes"));
 const MoltbotPage = lazy(() => import("./pages/MoltbotPage"));
 const LeadsPage = lazy(() => import("./pages/crm/LeadsPage").then(module => ({ default: module.LeadsPage })));
 
@@ -49,11 +44,6 @@ function Router() {
       <Route path="/admin/vincular" component={VincularEmails} />
       <Route path="/admin/mentorados" component={GestaoMentorados} />
       <Route path="/comparativo" component={DashboardComparativo} />
-      <Route path="/conquistas" component={Conquistas} />
-      <Route path="/ranking" component={RankingMensal} />
-      <Route path="/notificacoes" component={Notificacoes} />
-      <Route path="/estrutura" component={Estrutura} />
-      <Route path="/escala" component={Escala} />
       <Route path="/primeiro-acesso" component={PrimeiroAcesso} />
       <Route path="/assistente" component={MoltbotPage} />
       <Route path="/crm/leads" component={LeadsPage} />
