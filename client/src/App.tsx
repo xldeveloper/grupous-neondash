@@ -69,15 +69,7 @@ function App() {
       <ThemeProvider defaultTheme="light">
         <TooltipProvider>
           <Toaster />
-          <header className="flex justify-end p-4 gap-4">
-            <SignedOut>
-              <SignInButton />
-              <SignUpButton />
-            </SignedOut>
-            <SignedIn>
-              <UserButton />
-            </SignedIn>
-          </header>
+{/* Header removed - handled by Layout/Sidebar */}
           <Suspense fallback={<PageLoader />}>
             <Router />
           </Suspense>

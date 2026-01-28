@@ -1,33 +1,34 @@
-import { Link, useLocation, Redirect } from "wouter";
-import { cn } from "@/lib/utils";
+"use client";
+import React, { useState } from "react";
+import { Sidebar, SidebarBody, SidebarLink } from "@/components/ui/sidebar";
 import {
   LayoutDashboard,
   Users,
   TrendingUp,
-  Menu,
-  X,
   Shield,
   Link2,
   UserCog,
   BarChart3,
+  Trophy,
+  Medal,
+  Bell,
   Bot,
   Briefcase,
+  LogOut,
+  Building2,
+  Rocket
 } from "lucide-react";
-import { useState } from "react";
-import { Button } from "./ui/button";
-import { LogOut } from "lucide-react";
+import { motion } from "framer-motion";
+import { cn } from "@/lib/utils";
 import { useAuth } from "@/_core/hooks/useAuth";
+import { Link, useLocation, Redirect } from "wouter";
+import { UserButton } from "@clerk/clerk-react";
 
-export default function DashboardLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  const [location] = useLocation();
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const { user, logout } = useAuth();
+  const [location] = useLocation();
+  const [open, setOpen] = useState(false);
 
-  // Redirect to login if not authenticated
   if (!user) {
     return <Redirect to="/" />;
   }
@@ -36,6 +37,9 @@ export default function DashboardLayout({
     { href: "/dashboard", label: "Visão Geral", icon: LayoutDashboard },
     { href: "/meu-dashboard", label: "Meu Dashboard", icon: Users },
     { href: "/comparativo", label: "Comparativo", icon: BarChart3 },
+    { href: "/conquistas", label: "Conquistas", icon: Trophy },
+    { href: "/ranking", label: "Ranking", icon: Medal },
+    { href: "/notificacoes", label: "Notificações", icon: Bell },
     { href: "/assistente", label: "Assistente IA", icon: Bot },
     { href: "/crm/leads", label: "CRM Leads", icon: Briefcase },
     { href: "/enviar-metricas", label: "Enviar Métricas", icon: TrendingUp },
@@ -52,142 +56,106 @@ export default function DashboardLayout({
       icon: UserCog,
       adminOnly: true,
     },
+    { href: "/estrutura", label: "Neon Estrutura", icon: Building2 }, // Users icon duplicate in original, changed to Building2
+    { href: "/escala", label: "Neon Escala", icon: Rocket }, // TrendingUp duplicate, changed to Rocket
   ];
 
-  // Filter nav items based on user role
   const filteredNavItems = navItems.filter(
-    item => !item.adminOnly || user.role === "admin"
+    (item) => !item.adminOnly || user.role === "admin"
   );
 
   return (
-    <div className="min-h-screen bg-background flex flex-col md:flex-row font-sans text-foreground selection:bg-neon-gold/20">
-      {/* Mobile Header */}
-      <div className="md:hidden flex items-center justify-between p-4 bg-sidebar/80 backdrop-blur-md border-b border-sidebar-border sticky top-0 z-50">
-        <div className="flex items-center gap-2">
-          <img
-            src="/brand/neon-symbol-official.png"
-            alt="Neon"
-            className="w-8 h-8 object-contain"
-          />
-          <span className="font-bold text-xl text-primary tracking-tight font-sans">
-            NEON
-          </span>
-        </div>
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          className="text-primary hover:text-neon-gold transition-colors"
-        >
-          {isMobileMenuOpen ? (
-            <X className="h-6 w-6" />
-          ) : (
-            <Menu className="h-6 w-6" />
-          )}
-        </Button>
-      </div>
-
-      {/* Sidebar / Mobile Menu */}
-      <aside
-        className={cn(
-          "fixed inset-y-0 left-0 z-40 w-72 bg-sidebar/80 backdrop-blur-xl border-r border-sidebar-border transform transition-transform duration-300 ease-[cubic-bezier(0.25,1,0.5,1)] md:translate-x-0 md:static md:h-screen overflow-y-auto",
-          isMobileMenuOpen ? "translate-x-0 shadow-2xl" : "-translate-x-full"
-        )}
-      >
-        <div className="p-8 hidden md:block">
-          <div className="flex items-center gap-3 mb-2">
-            <img
-              src="/brand/neon-symbol-official.png"
-              alt="Neon"
-              className="w-10 h-10 object-contain"
-            />
-            <div>
-              <h1 className="text-2xl font-bold text-primary tracking-tighter font-sans">
-                NEON
-              </h1>
-              <p className="text-[10px] text-neon-blue-medium uppercase tracking-[0.2em] font-mono font-medium">
-                Mentoria Black
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <nav className="px-6 py-4 space-y-2">
-          {filteredNavItems.map(item => {
-            const Icon = item.icon;
-            const isActive = location === item.href;
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={cn(
-                  "group flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-300 border border-transparent",
-                  isActive
-                    ? "bg-sidebar-accent text-sidebar-primary border-sidebar-border shadow-sm"
-                    : "text-muted-foreground hover:text-foreground hover:bg-sidebar-accent/50 hover:border-sidebar-border/50 hover:pl-5"
-                )}
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                <Icon
+    <div
+      className={cn(
+        "flex flex-col md:flex-row bg-gray-100 dark:bg-neutral-800 w-full flex-1 mx-auto border border-neutral-200 dark:border-neutral-700 overflow-hidden",
+        "h-screen" 
+      )}
+    >
+      <Sidebar open={open} setOpen={setOpen}>
+        <SidebarBody className="justify-between gap-10">
+          <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
+            {open ? <Logo /> : <LogoIcon />}
+            <div className="mt-8 flex flex-col gap-2">
+              {filteredNavItems.map((item, idx) => (
+                <SidebarLink
+                  key={idx}
+                  link={{
+                    label: item.label,
+                    href: item.href,
+                    icon: (
+                      <item.icon
+                        className={cn(
+                          "h-5 w-5 flex-shrink-0 text-neutral-700 dark:text-neutral-200",
+                          location === item.href && "text-neon-gold"
+                        )}
+                      />
+                    ),
+                  }}
                   className={cn(
-                    "h-4 w-4 transition-colors duration-300",
-                    isActive
-                      ? "text-neon-gold"
-                      : "text-muted-foreground group-hover:text-neon-gold"
+                    location === item.href && "bg-neutral-200/50 dark:bg-neutral-700/50 rounded-md"
                   )}
                 />
-                {item.label}
-              </Link>
-            );
-          })}
-        </nav>
-
-        <div className="px-6 py-2 space-y-1">
-          <div className="px-4 py-2 text-sm text-muted-foreground">
-            {user.name || user.email}
-          </div>
-          <Button
-            variant="ghost"
-            className="w-full justify-start text-destructive hover:text-destructive hover:bg-destructive/10 h-10 px-4"
-            onClick={() => logout()}
-          >
-            <LogOut className="mr-3 h-4 w-4" />
-            Sair
-          </Button>
-        </div>
-
-        <div className="absolute bottom-0 left-0 right-0 p-8">
-          <div className="bg-gradient-to-br from-sidebar-accent/50 to-white/50 backdrop-blur-sm rounded-lg p-5 border border-sidebar-border">
-            <p className="text-[10px] font-mono font-medium text-neon-blue-medium uppercase mb-3 flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-neon-gold animate-pulse"></span>
-              System Status
-            </p>
-            <div className="flex items-center gap-2">
-              <span className="text-sm font-semibold text-primary font-sans">
-                Operacional
-              </span>
+              ))}
             </div>
-            <p className="text-[10px] text-muted-foreground mt-2 font-mono">
-              v2.5.0 (Stitch)
-            </p>
           </div>
-        </div>
-      </aside>
-
-      {/* Main Content */}
-      <main className="flex-1 overflow-y-auto p-4 md:p-10 scrollbar-thin scrollbar-thumb-neon-border scrollbar-track-transparent">
-        <div className="max-w-[1600px] mx-auto animate-in fade-in slide-in-from-bottom-4 duration-700 ease-out">
+          <div className="flex flex-col gap-2">
+             <div className="flex items-center gap-2 p-2 rounded-md hover:bg-neutral-200/50 dark:hover:bg-neutral-700/50 transition-colors">
+                <div className="h-7 w-7 flex-shrink-0 flex items-center justify-center">
+                   <UserButton afterSignOutUrl="/" />
+                </div>
+                 {open && (
+                     <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        className="text-sm text-neutral-700 dark:text-neutral-200 whitespace-pre overflow-hidden text-ellipsis"
+                     >
+                        {user.name || "Minha Conta"}
+                     </motion.div>
+                 )}
+             </div>
+          </div>
+        </SidebarBody>
+      </Sidebar>
+      <main className="flex-1 overflow-y-auto w-full p-2 md:p-10 border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 rounded-tl-2xl">
           {children}
-        </div>
       </main>
-
-      {/* Overlay for mobile menu */}
-      {isMobileMenuOpen && (
-        <div
-          className="fixed inset-0 bg-neon-blue-dark/20 backdrop-blur-sm z-30 md:hidden animate-in fade-in duration-300"
-          onClick={() => setIsMobileMenuOpen(false)}
-        />
-      )}
     </div>
   );
 }
+
+export const Logo = () => {
+  return (
+    <Link
+      href="/dashboard"
+      className="font-normal flex space-x-2 items-center text-sm text-black py-1 relative z-20"
+    >
+       <img
+        src="/brand/neon-symbol-official.png"
+        alt="Neon"
+        className="h-6 w-6 flex-shrink-0"
+      />
+      <motion.span
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="font-medium text-black dark:text-white whitespace-pre"
+      >
+        NEON DASHBOARD
+      </motion.span>
+    </Link>
+  );
+};
+
+export const LogoIcon = () => {
+  return (
+    <Link
+      href="/dashboard"
+      className="font-normal flex space-x-2 items-center text-sm text-black py-1 relative z-20"
+    >
+      <img
+        src="/brand/neon-symbol-official.png"
+        alt="Neon"
+        className="h-6 w-6 flex-shrink-0"
+      />
+    </Link>
+  );
+};
