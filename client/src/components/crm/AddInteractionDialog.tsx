@@ -29,6 +29,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
+import { InteractionTemplatesDialog } from "./InteractionTemplatesDialog";
+import { BookTemplate, Plus } from "lucide-react";
 
 // Input schema for form - keeps duracao as string
 const interactionFormSchema = z.object({
@@ -87,6 +89,9 @@ export function AddInteractionDialog({
     },
   });
 
+  const [templatesOpen, setTemplatesOpen] = useState(false);
+  const { data: templates } = trpc.interactionTemplates.list.useQuery(undefined, { enabled: isOpen });
+
   const onSubmit = (values: InteractionFormValues) => {
     mutation.mutate({
       leadId,
@@ -98,12 +103,40 @@ export function AddInteractionDialog({
 
   const watchTipo = form.watch("tipo");
 
+  const handleTemplateSelect = (template: any) => {
+      form.setValue("notas", template.content);
+      // Optional: change type if template dictates?
+      if (template.type) {
+          form.setValue("tipo", template.type);
+      }
+      setTemplatesOpen(false);
+  }
+
   return (
+    <>
+    <InteractionTemplatesDialog 
+        isOpen={templatesOpen} 
+        onClose={() => setTemplatesOpen(false)} 
+        onSelectTemplate={handleTemplateSelect}
+    />
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Nova Interação</DialogTitle>
         </DialogHeader>
+        
+        {/* Template Quick Select */}
+        <div className="flex gap-2 mb-2 overflow-x-auto pb-2">
+            <Button variant="outline" size="sm" className="gap-2 shrink-0" onClick={() => setTemplatesOpen(true)}>
+                <BookTemplate className="h-4 w-4" /> Gerenciar Templates
+            </Button>
+            {templates?.templates.slice(0, 3).map((t: any) => (
+                <Button key={t.id} variant="secondary" size="sm" className="shrink-0 text-xs" onClick={() => handleTemplateSelect(t)}>
+                    {t.title}
+                </Button>
+            ))}
+        </div>
+
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <FormField
@@ -177,5 +210,6 @@ export function AddInteractionDialog({
         </Form>
       </DialogContent>
     </Dialog>
+    </>
   );
 }

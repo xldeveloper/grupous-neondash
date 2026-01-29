@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { router, mentoradoProcedure, protectedProcedure } from "./_core/trpc";
-import { eq, and, desc, sql, gte, lte, arrayContains } from "drizzle-orm";
+import { eq, and, desc, sql, gte, lte, arrayContains, inArray } from "drizzle-orm";
 import { getDb } from "./db";
 import { leads, interacoes } from "../drizzle/schema";
 import { TRPCError } from "@trpc/server";
@@ -415,5 +415,97 @@ export const leadsRouter = router({
         valorPipeline: valorPipelineCents / 100, // Return in reais for display
         leadsPorOrigem,
       };
+    }),
+  bulkUpdateStatus: mentoradoProcedure
+    .input(
+      z.object({
+        ids: z.array(z.number()),
+        status: z.enum([
+          "novo",
+          "primeiro_contato",
+          "qualificado",
+          "proposta",
+          "negociacao",
+          "fechado",
+          "perdido",
+        ]),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const db = getDb();
+      
+      const targets = await db
+        .select({ id: leads.id, mentoradoId: leads.mentoradoId })
+        .from(leads)
+        .where(inArray(leads.id, input.ids));
+
+      const validIds = targets
+        .filter((l) => l.mentoradoId === ctx.mentorado.id)
+        .map((l) => l.id);
+
+      if (validIds.length === 0) return { count: 0 };
+
+      await db
+        .update(leads)
+        .set({ status: input.status, updatedAt: new Date() })
+        .where(inArray(leads.id, validIds));
+
+      return { count: validIds.length };
+    }),
+
+  bulkDelete: mentoradoProcedure
+    .input(z.object({ ids: z.array(z.number()) }))
+    .mutation(async ({ ctx, input }) => {
+      const db = getDb();
+      const targets = await db
+        .select({ id: leads.id, mentoradoId: leads.mentoradoId })
+        .from(leads)
+        .where(inArray(leads.id, input.ids));
+
+      const validIds = targets
+        .filter((l) => l.mentoradoId === ctx.mentorado.id)
+        .map((l) => l.id);
+
+      if (validIds.length === 0) return { count: 0 };
+
+      await db.delete(leads).where(inArray(leads.id, validIds));
+      return { count: validIds.length };
+    }),
+
+  bulkAddTags: mentoradoProcedure
+    .input(z.object({ ids: z.array(z.number()), tags: z.array(z.string()) }))
+    .mutation(async ({ ctx, input }) => {
+      const db = getDb();
+      
+      const targets = await db
+        .select({ id: leads.id, mentoradoId: leads.mentoradoId })
+        .from(leads)
+        .where(inArray(leads.id, input.ids));
+
+      const validIds = targets
+        .filter((l) => l.mentoradoId === ctx.mentorado.id)
+        .map((l) => l.id);
+
+      if (validIds.length === 0) return { count: 0 };
+
+      // Iterative update to ensure tag uniqueness per lead
+      let updatedCount = 0;
+      for (const id of validIds) {
+        const lead = await db.query.leads.findFirst({
+          where: eq(leads.id, id),
+          columns: { tags: true } 
+        });
+        
+        if (lead) {
+          const currentTags = lead.tags || [];
+          const newTags = Array.from(new Set([...currentTags, ...input.tags]));
+          
+          if (newTags.length !== currentTags.length) {
+             await db.update(leads).set({ tags: newTags, updatedAt: new Date() }).where(eq(leads.id, id));
+             updatedCount++;
+          }
+        }
+      }
+      return { count: updatedCount };
     }),
 });

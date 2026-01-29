@@ -15,7 +15,17 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { createPortal } from "react-dom";
-import { Phone, MessageSquare, Plus, MessageCircle } from "lucide-react";
+import { Phone, MessageSquare, Plus, MessageCircle, CheckSquare, RefreshCw, Trash2, X } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
+import { toast } from "sonner";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 interface PipelineKanbanProps {
   filters: any;
@@ -47,6 +57,52 @@ export function PipelineKanban({ filters, onLeadClick, onCreateOpen, mentoradoId
   });
 
   const [activeId, setActiveId] = useState<number | null>(null);
+  const [selectMode, setSelectMode] = useState(false);
+  const [selectedIds, setSelectedIds] = useState<number[]>([]);
+
+  const bulkUpdateStatus = trpc.leads.bulkUpdateStatus.useMutation({
+    onSuccess: () => {
+      toast.success("Status atualizado com sucesso!");
+      refetch();
+      setSelectedIds([]);
+      setSelectMode(false);
+    },
+    onError: (err) => {
+      toast.error(`Erro ao atualizar status: ${err.message}`);
+    }
+  });
+
+  const bulkDelete = trpc.leads.bulkDelete.useMutation({
+    onSuccess: () => {
+      toast.success("Leads deletados com sucesso!");
+      refetch();
+      setSelectedIds([]);
+      setSelectMode(false);
+    },
+    onError: (err) => {
+      toast.error(`Erro ao deletar leads: ${err.message}`);
+    }
+  });
+
+  const handleSelectOne = (checked: boolean, id: number) => {
+    if (checked) {
+      setSelectedIds(prev => [...prev, id]);
+    } else {
+      setSelectedIds(prev => prev.filter(i => i !== id));
+    }
+  };
+
+  const executeBulkStatus = (status: "novo" | "primeiro_contato" | "qualificado" | "proposta" | "negociacao" | "fechado" | "perdido" | "proposta_enviada" | "em_contato" | "reuniao" | "fechado_ganho" | "fechado_perdido") => {
+     if (selectedIds.length === 0) return;
+     bulkUpdateStatus.mutate({ ids: selectedIds, status: status as any });
+  };
+
+  const executeBulkDelete = () => {
+    if (selectedIds.length === 0) return;
+    if (confirm(`Tem certeza que deseja deletar ${selectedIds.length} leads?`)) {
+      bulkDelete.mutate({ ids: selectedIds });
+    }
+  };
 
   const leadsByStatus = useMemo(() => {
     const groups: Record<string, any[]> = {};
@@ -116,6 +172,21 @@ export function PipelineKanban({ filters, onLeadClick, onCreateOpen, mentoradoId
   }
 
   return (
+    <div className="flex flex-col h-[calc(100vh-220px)]">
+      <div className="flex justify-end px-2 mb-2">
+         <Button 
+            variant={selectMode ? "secondary" : "outline"} 
+            size="sm" 
+            onClick={() => {
+                setSelectMode(!selectMode);
+                setSelectedIds([]);
+            }}
+            className="gap-2"
+         >
+            <CheckSquare className="h-4 w-4" />
+            {selectMode ? "Cancelar Seleção" : "Selecionar Leads"}
+         </Button>
+      </div>
     <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
       <div className="flex gap-4 overflow-x-auto pb-4 h-[calc(100vh-220px)] items-start px-1">
         {COLUMNS.map((col) => (
@@ -127,6 +198,9 @@ export function PipelineKanban({ filters, onLeadClick, onCreateOpen, mentoradoId
             leads={leadsByStatus[col.id] || []}
             onLeadClick={onLeadClick}
             onCreateOpen={onCreateOpen}
+            selectMode={selectMode}
+            selectedIds={selectedIds}
+            onSelect={handleSelectOne}
           />
         ))}
       </div>
@@ -140,10 +214,48 @@ export function PipelineKanban({ filters, onLeadClick, onCreateOpen, mentoradoId
         document.body
       )}
     </DndContext>
+    
+    {selectedIds.length > 0 && (
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 bg-popover border shadow-2xl rounded-xl p-2 flex items-center gap-2 animate-in slide-in-from-bottom-5 fade-in z-50">
+            <div className="bg-primary/10 text-primary px-3 py-1.5 rounded-md text-sm font-medium mr-2">
+                {selectedIds.length} selecionados
+            </div>
+            
+            <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                    <Button variant="secondary" size="sm" className="gap-2">
+                        <RefreshCw className="h-4 w-4" />
+                        Status
+                    </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                    <DropdownMenuLabel>Mudar Status para...</DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={() => executeBulkStatus("novo")}>Novo</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => executeBulkStatus("primeiro_contato")}>Primeiro Contato</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => executeBulkStatus("qualificado")}>Qualificado</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => executeBulkStatus("proposta")}>Proposta</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => executeBulkStatus("negociacao")}>Negociação</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => executeBulkStatus("fechado")}>Fechado</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => executeBulkStatus("perdido")}>Perdido</DropdownMenuItem>
+                </DropdownMenuContent>
+            </DropdownMenu>
+
+            <Button variant="destructive" size="sm" className="gap-2" onClick={executeBulkDelete}>
+                <Trash2 className="h-4 w-4" />
+                Deletar
+            </Button>
+            
+            <Button variant="ghost" size="icon" onClick={() => setSelectedIds([])} className="ml-2">
+                <X className="h-4 w-4" />
+            </Button>
+        </div>
+      )}
+    </div>
   );
 }
 
-function KanbanColumn({ id, title, color, leads, onLeadClick, onCreateOpen }: any) {
+function KanbanColumn({ id, title, color, leads, onLeadClick, onCreateOpen, selectMode, selectedIds, onSelect }: any) {
   const { setNodeRef, isOver } = useDroppable({ id });
 
   return (
@@ -186,6 +298,9 @@ function KanbanColumn({ id, title, color, leads, onLeadClick, onCreateOpen }: an
                 key={lead.id}
                 lead={lead}
                 onClick={() => onLeadClick(lead.id)}
+                selectMode={selectMode}
+                selected={selectedIds.includes(lead.id)}
+                onSelect={(checked: boolean) => onSelect(checked, lead.id)}
               />
             ))
           )}
@@ -195,9 +310,10 @@ function KanbanColumn({ id, title, color, leads, onLeadClick, onCreateOpen }: an
   );
 }
 
-function DraggableLeadCard({ lead, onClick }: any) {
+function DraggableLeadCard({ lead, onClick, selectMode, selected, onSelect }: any) {
   const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
     id: lead.id,
+    disabled: selectMode, // Disable drag when selecting
   });
 
   const style = transform ? {
@@ -206,12 +322,18 @@ function DraggableLeadCard({ lead, onClick }: any) {
 
   return (
     <div ref={setNodeRef} style={style} {...listeners} {...attributes} className={`${isDragging ? "opacity-50 rotate-2 scale-105" : ""} transition-all duration-200`}>
-      <LeadCard lead={lead} onClick={onClick} />
+      <LeadCard 
+        lead={lead} 
+        onClick={onClick} 
+        selectMode={selectMode} 
+        selected={selected} 
+        onSelect={onSelect}
+      />
     </div>
   );
 }
 
-function LeadCard({ lead, onClick, isOverlay }: any) {
+function LeadCard({ lead, onClick, isOverlay, selectMode, selected, onSelect }: any) {
   return (
     <Card
       onClick={onClick}
@@ -224,6 +346,11 @@ function LeadCard({ lead, onClick, isOverlay }: any) {
         {/* Header: Avatar + Name + Actions */}
         <div className="flex items-start justify-between mb-3">
           <div className="flex items-center gap-3">
+             {selectMode && (
+                <div onClick={(e) => e.stopPropagation()}>
+                    <Checkbox checked={selected} onCheckedChange={onSelect} />
+                </div>
+             )}
              <Avatar className="h-8 w-8 bg-muted border border-border">
                <AvatarFallback className="text-xs font-medium text-muted-foreground">
                  {lead.nome.substring(0, 2).toUpperCase()}

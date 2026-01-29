@@ -22,6 +22,10 @@ import { trpc } from "@/lib/trpc";
 import { Skeleton } from "@/components/ui/skeleton";
 import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import { Checkbox } from "@/components/ui/checkbox";
+import { toast } from "sonner";
+import { useState } from "react";
+import { Trash2, Tag, RefreshCw, X } from "lucide-react";
 
 interface LeadsTableProps {
   filters: any;
@@ -38,6 +42,54 @@ export function LeadsTable({ filters, page, onPageChange, onLeadClick, mentorado
     limit: 10,
     mentoradoId,
   });
+
+  const [selectedIds, setSelectedIds] = useState<number[]>([]);
+  const utils = trpc.useUtils();
+
+  const bulkUpdateStatus = trpc.leads.bulkUpdateStatus.useMutation({
+    onSuccess: (data) => {
+        toast.success(`${data.count} leads atualizados com sucesso`);
+        utils.leads.list.invalidate();
+        setSelectedIds([]);
+    },
+    onError: (err) => toast.error(`Erro ao atualizar: ${err.message}`)
+  });
+
+  const bulkDelete = trpc.leads.bulkDelete.useMutation({
+    onSuccess: (data) => {
+        toast.success(`${data.count} leads removidos com sucesso`);
+        utils.leads.list.invalidate();
+        setSelectedIds([]);
+    },
+    onError: (err) => toast.error(`Erro ao deletar: ${err.message}`)
+  });
+
+  const handleSelectAll = (checked: boolean) => {
+    if (checked && data?.leads) {
+        setSelectedIds(data.leads.map(l => l.id));
+    } else {
+        setSelectedIds([]);
+    }
+  };
+
+  const handleSelectOne = (checked: boolean, id: number) => {
+    if (checked) {
+        setSelectedIds(prev => [...prev, id]);
+    } else {
+        setSelectedIds(prev => prev.filter(i => i !== id));
+    }
+  };
+
+  const executeBulkStatus = (status: any) => {
+    bulkUpdateStatus.mutate({ ids: selectedIds, status });
+  };
+
+  const executeBulkDelete = () => {
+    if (confirm(`Tem certeza que deseja deletar ${selectedIds.length} leads?`)) {
+        bulkDelete.mutate({ ids: selectedIds });
+    }
+  };
+
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -92,6 +144,12 @@ export function LeadsTable({ filters, page, onPageChange, onLeadClick, mentorado
         <Table>
           <TableHeader>
             <TableRow>
+              <TableHead className="w-[50px]">
+                <Checkbox 
+                    checked={data?.leads.length > 0 && selectedIds.length === data?.leads.length}
+                    onCheckedChange={(checked) => handleSelectAll(!!checked)}
+                />
+              </TableHead>
               <TableHead>Nome</TableHead>
               <TableHead>Email</TableHead>
               <TableHead>Telefone</TableHead>
@@ -109,6 +167,12 @@ export function LeadsTable({ filters, page, onPageChange, onLeadClick, mentorado
                 className="cursor-pointer hover:bg-muted/50"
                 onClick={() => onLeadClick(lead.id)}
               >
+                <TableCell onClick={(e) => e.stopPropagation()}>
+                    <Checkbox 
+                        checked={selectedIds.includes(lead.id)}
+                        onCheckedChange={(checked) => handleSelectOne(!!checked, lead.id)}
+                    />
+                </TableCell>
                 <TableCell className="font-medium">
                   <div className="flex items-center gap-3">
                     <Avatar className="h-8 w-8">
@@ -198,6 +262,41 @@ export function LeadsTable({ filters, page, onPageChange, onLeadClick, mentorado
           Próximo
         </Button>
       </div>
+
+      {selectedIds.length > 0 && (
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 bg-popover border shadow-2xl rounded-xl p-2 flex items-center gap-2 animate-in slide-in-from-bottom-5 fade-in z-50">
+            <div className="bg-primary/10 text-primary px-3 py-1.5 rounded-md text-sm font-medium mr-2">
+                {selectedIds.length} selecionados
+            </div>
+            
+            <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                    <Button variant="secondary" size="sm" className="gap-2">
+                        <RefreshCw className="h-4 w-4" />
+                        Status
+                    </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                    <DropdownMenuLabel>Mudar Status para...</DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    {Object.entries(statusLabels).map(([key, label]) => (
+                        <DropdownMenuItem key={key} onClick={() => executeBulkStatus(key)}>
+                            {label}
+                        </DropdownMenuItem>
+                    ))}
+                </DropdownMenuContent>
+            </DropdownMenu>
+
+            <Button variant="destructive" size="sm" className="gap-2" onClick={executeBulkDelete}>
+                <Trash2 className="h-4 w-4" />
+                Deletar
+            </Button>
+            
+            <Button variant="ghost" size="icon" onClick={() => setSelectedIds([])} className="ml-2">
+                <X className="h-4 w-4" />
+            </Button>
+        </div>
+      )}
     </div>
   );
 }

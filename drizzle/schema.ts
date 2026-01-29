@@ -646,3 +646,27 @@ export const atividadeProgress = pgTable(
 export type AtividadeProgress = typeof atividadeProgress.$inferSelect;
 export type InsertAtividadeProgress = typeof atividadeProgress.$inferInsert;
 
+/**
+ * Interaction Templates - Pre-defined message templates for mentors
+ */
+export const interactionTemplates = pgTable(
+  "interaction_templates",
+  {
+    id: serial("id").primaryKey(),
+    userId: integer("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    title: text("title").notNull(),
+    content: text("content").notNull(),
+    type: tipoInteracaoEnum("type").notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().notNull(),
+  },
+  table => [
+    index("interaction_templates_user_idx").on(table.userId),
+  ]
+);
+
+export type InteractionTemplate = typeof interactionTemplates.$inferSelect;
+export type InsertInteractionTemplate = typeof interactionTemplates.$inferInsert;
+

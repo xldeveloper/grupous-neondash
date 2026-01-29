@@ -1,6 +1,6 @@
 import { BentoGrid, BentoCard, BentoCardContent, BentoCardFooter, BentoCardHeader } from "@/components/ui/bento-grid";
 import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { AnimatedTabs, AnimatedTabsContent, AnimatedTabsList, AnimatedTabsTrigger } from "@/components/ui/animated-tabs";
 import { trpc } from "@/lib/trpc";
 import {
   Loader2,
@@ -20,6 +20,8 @@ import {
   Lock,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { calcularProgresso } from "@/data/atividades-data";
+
 
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   Target,
@@ -35,7 +37,7 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   Award,
   Trophy,
   Medal,
-};
+  };
 
 const colorMap: Record<string, string> = {
   gold: "from-yellow-400 to-amber-500 text-yellow-900",
@@ -56,6 +58,37 @@ const categoriaLabels: Record<string, string> = {
   consistencia: "Consistência",
   especial: "Especial",
 };
+
+
+
+// Component helper to isolate logic and avoiding re-fches if parent components re-nder
+function ActivityProgressContent() {
+  const { data: progressMap } = trpc.atividades.getProgress.useQuery();
+
+  const { total, completed, percentage } = calcularProgresso(
+    Object.fromEntries(
+      Object.entries(progressMap || {}).map(([k, v]) => [k, v.completed])
+    )
+  );
+
+  return (
+    <>
+      <BentoCardHeader className="pb-2">
+        <div className="text-sm font-medium text-green-700 dark:text-green-400 uppercase tracking-wider">
+          Progresso Geral
+        </div>
+      </BentoCardHeader>
+      <BentoCardContent>
+        <div className="text-4xl font-bold text-green-900 dark:text-green-100">
+          {percentage}%
+          <span className="text-sm font-normal text-green-600 dark:text-green-500 ml-2">
+            ({completed}/{total} passos)
+          </span>
+        </div>
+      </BentoCardContent>
+    </>
+  );
+}
 
 export function AchievementsView() {
   const { data: allBadges, isLoading: loadingAll } =
@@ -97,7 +130,6 @@ export function AchievementsView() {
       ) : (
         <>
           {/* Summary Cards */}
-          {/* Summary Cards */}
           <BentoGrid className="grid-cols-1 md:grid-cols-3 gap-6 mb-8">
             <BentoCard delay={0} className="border-none shadow-sm bg-gradient-to-br from-yellow-50 to-amber-50 dark:from-amber-950/30 dark:to-yellow-950/30">
               <BentoCardHeader className="pb-2">
@@ -129,34 +161,22 @@ export function AchievementsView() {
             </BentoCard>
 
             <BentoCard delay={0.2} className="border-none shadow-sm bg-gradient-to-br from-green-50 to-emerald-50 dark:from-emerald-950/30 dark:to-green-950/30">
-              <BentoCardHeader className="pb-2">
-                <div className="text-sm font-medium text-green-700 dark:text-green-400 uppercase tracking-wider">
-                  Progresso
-                </div>
-              </BentoCardHeader>
-              <BentoCardContent>
-                <div className="text-4xl font-bold text-green-900 dark:text-green-100">
-                  {allBadges && allBadges.length > 0
-                    ? Math.round((totalBadges / allBadges.length) * 100)
-                    : 0}
-                  %
-                </div>
-              </BentoCardContent>
+              <ActivityProgressContent />
             </BentoCard>
           </BentoGrid>
 
           {/* Badges by Category */}
-          <Tabs defaultValue="all" className="w-full">
-            <TabsList className="mb-6 overflow-x-auto w-full md:w-auto justify-start">
-              <TabsTrigger value="all">Todos</TabsTrigger>
+          <AnimatedTabs defaultValue="all" className="w-full">
+            <AnimatedTabsList className="mb-6 overflow-x-auto w-full md:w-auto justify-start bg-slate-100 dark:bg-slate-800 p-1.5 rounded-2xl">
+              <AnimatedTabsTrigger value="all" className="rounded-xl">Todos</AnimatedTabsTrigger>
               {categorias.map(cat => (
-                <TabsTrigger key={cat} value={cat}>
+                <AnimatedTabsTrigger key={cat} value={cat} className="rounded-xl">
                   {categoriaLabels[cat]}
-                </TabsTrigger>
+                </AnimatedTabsTrigger>
               ))}
-            </TabsList>
+            </AnimatedTabsList>
 
-            <TabsContent value="all">
+            <AnimatedTabsContent value="all">
               <BentoGrid className="grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 {allBadges?.map((badge, idx) => {
                   const earned = earnedBadgeIds.has(badge.id);
@@ -227,10 +247,10 @@ export function AchievementsView() {
                   );
                 })}
               </BentoGrid>
-            </TabsContent>
+            </AnimatedTabsContent>
 
             {categorias.map(cat => (
-              <TabsContent key={cat} value={cat}>
+              <AnimatedTabsContent key={cat} value={cat}>
                 <BentoGrid className="grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                   {allBadges
                     ?.filter(b => b.categoria === cat)
@@ -304,11 +324,12 @@ export function AchievementsView() {
                       );
                     })}
                 </BentoGrid>
-              </TabsContent>
+              </AnimatedTabsContent>
             ))}
-          </Tabs>
+          </AnimatedTabs>
         </>
       )}
     </div>
   );
 }
+

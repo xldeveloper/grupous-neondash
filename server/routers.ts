@@ -9,6 +9,7 @@ import { classesRouter } from "./routers/classes";
 import { playbookRouter } from "./routers/playbook";
 import { authRouter } from "./routers/auth";
 import { atividadesRouter } from "./atividadesRouter";
+import { interactionTemplatesRouter } from "./interactionTemplatesRouter";
 
 export const appRouter = router({
   system: systemRouter,
@@ -21,6 +22,7 @@ export const appRouter = router({
   classes: classesRouter,
   playbook: playbookRouter,
   atividades: atividadesRouter,
+  interactionTemplates: interactionTemplatesRouter,
 });
 
 
