@@ -19,6 +19,9 @@ This document outlines the changes made to implement automatic synchronization b
 - Mounted `POST /api/webhooks/clerk` endpoint.
 - Configured `express.raw` middleware specifically for this route to enable secure signature verification.
 
+> [!NOTE]
+> This implementation follows the **official `server-side` webhook pattern** verified via the Clerk MCP.
+
 ## Configuration Required
 
 > [!IMPORTANT]
