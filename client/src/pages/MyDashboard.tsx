@@ -24,6 +24,10 @@ import { SubmitMetricsForm } from "@/components/dashboard/SubmitMetricsForm";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ComparativoView } from "@/components/dashboard/ComparativoView";
 import { PlaybookView } from "@/components/dashboard/PlaybookView";
+import { NotionRenderer } from "@/components/notion/NotionRenderer";
+
+const NOTION_PAGE_ID = "2f64d8c5-8988-8187-8f52-dfee621aab1e";
+
 
 export default function MyDashboard() {
   const isMobile = useIsMobile();
@@ -154,7 +158,11 @@ export default function MyDashboard() {
             <TabsTrigger value="jornada" className="data-[state=active]:bg-green-500/20 data-[state=active]:text-green-400">
                Playbook
             </TabsTrigger>
+            <TabsTrigger value="atividades" className="data-[state=active]:bg-pink-500/20 data-[state=active]:text-pink-400">
+               Atividades (Notion)
+            </TabsTrigger>
           </TabsList>
+
 
           <TabsContent value="visao-geral" className="space-y-6 animate-in slide-in-from-left-4 duration-300">
              <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
@@ -290,7 +298,26 @@ export default function MyDashboard() {
                 </NeonCard>
              </div>
           </TabsContent>
+
+          <TabsContent value="atividades" className="animate-in slide-in-from-bottom-4 duration-300">
+             <div className="grid grid-cols-1">
+                <NeonCard className="p-6 bg-black/40 border-white/5 min-h-[600px]">
+                   <div className="mb-6 flex items-center justify-between">
+                     <div>
+                       <h2 className="text-xl font-bold text-white mb-1">Atividades & Conteúdo</h2>
+                       <p className="text-gray-400 text-sm">Sincronizado diretamente do Notion em tempo real.</p>
+                     </div>
+                     <span className="text-xs bg-white/10 px-2 py-1 rounded text-gray-400 flex items-center gap-1">
+                       <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                       Live Sync
+                     </span>
+                   </div>
+                   <NotionRenderer blockId={NOTION_PAGE_ID} />
+                </NeonCard>
+             </div>
+          </TabsContent>
         </Tabs>
+
       </div>
     </DashboardLayout>
   );

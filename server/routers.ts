@@ -7,6 +7,8 @@ import { leadsRouter } from "./leadsRouter";
 import { tasksRouter } from "./routers/tasks";
 import { classesRouter } from "./routers/classes";
 import { playbookRouter } from "./routers/playbook";
+import { notionRouter } from "./notionRouter";
+
 
 export const appRouter = router({
   system: systemRouter,
@@ -20,6 +22,8 @@ export const appRouter = router({
   tasks: tasksRouter,
   classes: classesRouter,
   playbook: playbookRouter,
+  notion: notionRouter,
 });
+
 
 export type AppRouter = typeof appRouter;
