@@ -1,17 +1,11 @@
 import { Button } from "@/components/ui/button";
-import { ArrowRight, CheckCircle2, TrendingUp, Users, Shield, Star, ChevronDown } from "lucide-react";
+import { ArrowRight, CheckCircle2, TrendingUp, Users, Shield, Star, BookOpen, Smartphone, Zap, Calendar } from "lucide-react";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { useEffect, useState } from "react";
 import { useLocation } from "wouter";
 import { trpc } from "@/lib/trpc";
 import { SignInButton as ClerkSignInButton } from "@clerk/clerk-react";
 import { NeonCard, NeonCardContent, NeonCardHeader, NeonCardTitle } from "@/components/ui/neon-card";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
 
 export default function LandingPage() {
   const { isAuthenticated, loading, user } = useAuth();
@@ -94,11 +88,11 @@ export default function LandingPage() {
           </div>
         </div>
         <nav className="hidden md:flex gap-8 text-sm font-medium text-muted-foreground items-center">
-          <a href="#resources" className="hover:text-neon-blue-dark transition-colors">
-            Recursos
+          <a href="#purpose" className="hover:text-neon-blue-dark transition-colors">
+            O que é
           </a>
-          <a href="#testimonials" className="hover:text-neon-blue-dark transition-colors">
-            Depoimentos
+          <a href="#methodology" className="hover:text-neon-blue-dark transition-colors">
+            Como usar
           </a>
           <ClerkSignInButton mode="modal">
             <Button variant="ghost" className="text-neon-blue-dark hover:bg-neon-blue/5 hover:text-neon-blue">
@@ -114,118 +108,84 @@ export default function LandingPage() {
       </header>
 
       {/* Hero Section */}
-      <section className="pt-32 pb-20 md:pt-48 md:pb-32 px-4 relative z-10 flex flex-col items-center text-center">
-        <div className="max-w-4xl space-y-8 animate-in fade-in slide-in-from-bottom-8 duration-1000">
+      <section className="pt-32 pb-20 md:pt-48 md:pb-24 px-4 relative z-10 flex flex-col items-center text-center">
+        <div className="max-w-5xl space-y-8 animate-in fade-in slide-in-from-bottom-8 duration-1000">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-neon-gold/30 shadow-sm mb-4 hover:border-neon-gold/60 transition-colors cursor-default">
             <span className="w-2 h-2 rounded-full bg-neon-gold animate-pulse shadow-[0_0_8px_rgba(172,148,105,0.5)]" />
             <span className="text-xs font-bold text-neon-blue-medium tracking-wide uppercase">
-              Dashboard de Alta Performance v2.0
+              Bem-vindo ao Grupo de Elite
             </span>
           </div>
 
           <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-neon-blue-dark leading-[1.1]">
-            Domine os Números da Sua <br />
+            Hello, NEON! <br />
             <span className="bg-clip-text text-transparent bg-gradient-to-r from-neon-blue-dark via-neon-blue to-neon-gold pb-2">
-              Clínica de Estética
+              Comece sua Jornada Aqui.
             </span>
           </h1>
 
           <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-            Tenha clareza total sobre faturamento, lucro e conversão. A ferramenta definitiva para mentorados que buscam escala e previsibilidade.
+            Você agora faz parte do meu grupo de elite. Esta plataforma é o seu centro de comando para escalar sua clínica com previsibilidade e lucro.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-8">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-6">
             <ClerkSignInButton mode="modal">
               <Button
                 size="lg"
                 className="h-14 px-8 text-base bg-neon-blue-dark hover:bg-neon-blue text-white shadow-xl hover:shadow-neon-blue/20 hover:-translate-y-0.5 transition-all duration-300 group rounded-full"
               >
-                Acessar Meu Dashboard
+                Acessar Portal do Mentor
                 <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </Button>
             </ClerkSignInButton>
           </div>
-
-          {/* Floating UI Elements as decoration */}
-          <div className="hidden md:block absolute top-[20%] left-[5%] animate-in fade-in slide-in-from-left-8 duration-1000 delay-300">
-             <NeonCard variant="glass" className="w-48 p-4 rotate-[-6deg]">
-                <div className="flex items-center gap-2 mb-2">
-                  <TrendingUp className="w-4 h-4 text-neon-green" />
-                  <span className="text-xs font-bold text-neon-blue-dark">+28% Crescimento</span>
-                </div>
-                <div className="h-1 w-full bg-slate-100 rounded-full overflow-hidden">
-                   <div className="h-full w-[70%] bg-neon-green rounded-full" />
-                </div>
-             </NeonCard>
-          </div>
-
-           <div className="hidden md:block absolute bottom-[10%] right-[5%] animate-in fade-in slide-in-from-right-8 duration-1000 delay-500">
-             <NeonCard variant="glass" className="w-56 p-4 rotate-[6deg]">
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-full bg-neon-gold/20 flex items-center justify-center">
-                    <Star className="w-4 h-4 text-neon-gold fill-neon-gold" />
-                  </div>
-                  <div>
-                    <p className="text-xs text-muted-foreground">Meta Atingida</p>
-                    <p className="text-sm font-bold text-neon-blue-dark">R$ 150.000,00</p>
-                  </div>
-                </div>
-             </NeonCard>
-          </div>
         </div>
       </section>
 
-      {/* Features Grid */}
-      <section id="resources" className="py-20 bg-white relative">
+      {/* Purpose Section: "Para que serve este Notion/Portal?" */}
+      <section id="purpose" className="py-20 bg-white relative overflow-hidden">
+        <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-neon-border to-transparent" />
+
         <div className="container mx-auto px-4">
-          <div className="text-center max-w-2xl mx-auto mb-16">
+          <div className="text-center max-w-3xl mx-auto mb-16">
             <h2 className="text-3xl font-bold text-neon-blue-dark mb-4">
-              Tudo que você precisa para escalar
+              O Seu Novo Centro de Comando
             </h2>
-            <p className="text-muted-foreground">
-              Monitoramento em tempo real, relatórios detalhados e feedbacks diretos do seu mentor.
+            <p className="text-muted-foreground text-lg">
+              Mais do que um dashboard, este é o seu ambiente de trabalho oficial da Mentoria Black.
+              Projetado para eliminar distrações e focar no que importa: resultados.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <NeonCard variant="default" className="group">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+            <NeonCard variant="default" className="group h-full">
               <NeonCardHeader>
-                <div className="w-12 h-12 rounded-xl bg-neon-blue/10 flex items-center justify-center mb-4 group-hover:bg-neon-blue/20 transition-colors">
-                  <TrendingUp className="w-6 h-6 text-neon-blue" />
+                <div className="w-14 h-14 rounded-2xl bg-neon-blue/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                  <BookOpen className="w-7 h-7 text-neon-blue" />
                 </div>
-                <NeonCardTitle>Métricas Detalhadas</NeonCardTitle>
+                <NeonCardTitle className="text-xl">Caderno de Atividades Digital</NeonCardTitle>
               </NeonCardHeader>
               <NeonCardContent>
-                <p className="text-muted-foreground">
-                  Acompanhe Faturamento, Lucro Líquido, Ticket Médio e Custo por Lead com gráficos intuitivos.
+                <p className="text-muted-foreground leading-relaxed">
+                  Seu espaço dedicado para anotações e atividades ao longo da jornada.
+                  Com ferramentas integradas para você <strong>responder e executar</strong> tudo que for ensinado,
+                  sem perder nada em cadernos físicos ou notas soltas.
                 </p>
               </NeonCardContent>
             </NeonCard>
 
-            <NeonCard variant="default" className="group">
+            <NeonCard variant="default" className="group h-full">
               <NeonCardHeader>
-                 <div className="w-12 h-12 rounded-xl bg-neon-gold/10 flex items-center justify-center mb-4 group-hover:bg-neon-gold/20 transition-colors">
-                  <Users className="w-6 h-6 text-neon-gold" />
+                <div className="w-14 h-14 rounded-2xl bg-neon-gold/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                  <TrendingUp className="w-7 h-7 text-neon-gold" />
                 </div>
-                <NeonCardTitle>Gestão de Leads</NeonCardTitle>
+                <NeonCardTitle className="text-xl">Gestão Completa (360º)</NeonCardTitle>
               </NeonCardHeader>
               <NeonCardContent>
-                <p className="text-muted-foreground">
-                  Visualize seu funil de vendas, taxas de conversão e origem dos seus melhores pacientes.
-                </p>
-              </NeonCardContent>
-            </NeonCard>
-
-             <NeonCard variant="default" className="group">
-              <NeonCardHeader>
-                 <div className="w-12 h-12 rounded-xl bg-neon-blue-dark/5 flex items-center justify-center mb-4 group-hover:bg-neon-blue-dark/10 transition-colors">
-                  <Shield className="w-6 h-6 text-neon-blue-dark" />
-                </div>
-                <NeonCardTitle>Feedback Privado</NeonCardTitle>
-              </NeonCardHeader>
-              <NeonCardContent>
-                <p className="text-muted-foreground">
-                  Receba análises mensais e direcionamentos estratégicos diretamente do seu mentor na plataforma.
+                <p className="text-muted-foreground leading-relaxed">
+                  Gerencie sua clínica de ponta a ponta:
+                  <strong> Administrativo, Conteúdo, CRM, Análise de Dados e Planejamento. </strong>
+                  Tenha controle total sobre os números que realmente movem o ponteiro do seu negócio.
                 </p>
               </NeonCardContent>
             </NeonCard>
@@ -233,46 +193,54 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Testimonials / Social Proof */}
-      <section id="testimonials" className="py-20 bg-neon-gray/50">
+      {/* Methodology Section: "Como usar este Notion?" */}
+      <section id="methodology" className="py-24 bg-neon-gray/30 relative">
         <div className="container mx-auto px-4">
-           <div className="text-center max-w-2xl mx-auto mb-16">
-            <h2 className="text-3xl font-bold text-neon-blue-dark mb-4">
-              O que dizem nossos mentorados
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <h2 className="text-3xl font-bold text-neon-blue-dark mb-6">
+              Como Usar a Plataforma
             </h2>
+            <p className="text-muted-foreground">
+              Para extrair o máximo da Mentoria Black, siga este protocolo de uso.
+            </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[
-              {
-                quote: "Consegui dobrar meu faturamento em 3 meses apenas ajustando as métricas que o dashboard me mostrou.",
-                author: "Dra. Ana Silva",
-                role: "Harmonização Facial"
-              },
-               {
-                quote: "A clareza que tenho hoje sobre meu lucro real mudou completamente minha gestão financeira.",
-                author: "Dr. Carlos Eduardo",
-                role: "Implante Capilar"
-              },
-               {
-                quote: "O feedback mensal direto na plataforma é o game changer. Sei exatamente onde focar.",
-                author: "Dra. Marina Costa",
-                role: "Dermatologista"
-              }
-            ].map((t, i) => (
-              <NeonCard key={i} variant="glass" className="border-none bg-white">
-                <NeonCardContent className="pt-6">
-                  <div className="flex gap-1 mb-4">
-                    {[1,2,3,4,5].map(s => <Star key={s} className="w-4 h-4 text-neon-gold fill-neon-gold" />)}
-                  </div>
-                  <p className="text-slate-600 mb-6 italic">"{t.quote}"</p>
-                  <div>
-                    <p className="font-bold text-neon-blue-dark">{t.author}</p>
-                    <p className="text-xs text-muted-foreground">{t.role}</p>
-                  </div>
-                </NeonCardContent>
-              </NeonCard>
-            ))}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative z-10">
+            {/* Step 1 */}
+            <div className="flex flex-col items-center text-center p-6 bg-white rounded-2xl shadow-sm border border-neon-border/50 hover:shadow-md transition-shadow">
+              <div className="w-16 h-16 rounded-full bg-slate-50 flex items-center justify-center mb-6 text-neon-blue-dark">
+                <Smartphone className="w-8 h-8" />
+              </div>
+              <h3 className="text-lg font-bold text-neon-blue-dark mb-3">Onipresença</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                Use no computador ou celular. Tenha a plataforma sempre aberta ao assistir às aulas gravadas e durante os encontros ao vivo. Ela é sua extensão.
+              </p>
+            </div>
+
+            {/* Step 2 */}
+            <div className="flex flex-col items-center text-center p-6 bg-white rounded-2xl shadow-sm border border-neon-border/50 hover:shadow-md transition-shadow relative transform md:-translate-y-4">
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-neon-gold text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm">
+                Essencial
+              </div>
+              <div className="w-16 h-16 rounded-full bg-neon-gold/10 flex items-center justify-center mb-6 text-neon-gold">
+                <Zap className="w-8 h-8" />
+              </div>
+              <h3 className="text-lg font-bold text-neon-blue-dark mb-3">Execução &gt; Consumo</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                Não maratone as aulas sem aplicar. À medida que assistir, <strong>responda às ferramentas e perguntas</strong>. A execução gera resultados, não apenas o estudo.
+              </p>
+            </div>
+
+            {/* Step 3 */}
+            <div className="flex flex-col items-center text-center p-6 bg-white rounded-2xl shadow-sm border border-neon-border/50 hover:shadow-md transition-shadow">
+              <div className="w-16 h-16 rounded-full bg-slate-50 flex items-center justify-center mb-6 text-neon-blue-dark">
+                <Calendar className="w-8 h-8" />
+              </div>
+              <h3 className="text-lg font-bold text-neon-blue-dark mb-3">Hábito Diário</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                Crie o hábito de abrir a plataforma diariamente. Use-a para gerenciar tarefas, produção de conteúdo, hábitos e rotina. Transforme disciplina em dados.
+              </p>
+            </div>
           </div>
         </div>
       </section>
@@ -280,7 +248,7 @@ export default function LandingPage() {
       {/* Footer */}
       <footer className="py-12 bg-white border-t border-neon-border text-center text-sm text-muted-foreground z-10">
         <div className="container mx-auto px-4 flex flex-col items-center">
-           <div className="w-12 h-12 bg-neon-blue-dark rounded-full flex items-center justify-center mb-6">
+           <div className="w-12 h-12 bg-neon-blue-dark rounded-full flex items-center justify-center mb-6 animate-in zoom-in duration-500">
               <span className="text-neon-gold font-bold text-xl">N</span>
            </div>
            <p className="mb-4">© 2026 Neon - Mentoria Black. Todos os direitos reservados.</p>
