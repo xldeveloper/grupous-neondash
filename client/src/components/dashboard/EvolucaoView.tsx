@@ -12,8 +12,12 @@ import {
 } from "@/components/ui/table";
 import { Skeleton } from "@/components/ui/skeleton";
 
-export function EvolucaoView() {
-  const { data: evolutionData, isLoading } = trpc.mentorados.evolution.useQuery();
+interface EvolucaoViewProps {
+  mentoradoId?: number;
+}
+
+export function EvolucaoView({ mentoradoId }: EvolucaoViewProps) {
+  const { data: evolutionData, isLoading } = trpc.mentorados.evolution.useQuery({ mentoradoId });
 
   if (isLoading) {
     return <Skeleton className="h-[400px] w-full" />;
@@ -24,7 +28,7 @@ export function EvolucaoView() {
 
   return (
     <div className="space-y-4">
-      <EvolutionChart />
+      <EvolutionChart mentoradoId={mentoradoId} />
 
       <Card className="col-span-4">
         <CardHeader>

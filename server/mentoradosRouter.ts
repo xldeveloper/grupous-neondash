@@ -74,8 +74,16 @@ export const mentoradosRouter = router({
 
   // Get metrics history sorted ASC for charts
   evolution: mentoradoProcedure
-    .query(async ({ ctx }) => {
-      return await getMetricasEvolution(ctx.mentorado.id);
+    .input(z.object({ mentoradoId: z.number().optional() }).optional())
+    .query(async ({ ctx, input }) => {
+      let targetId = ctx.mentorado.id;
+
+      // If admin and requested specific ID, verify access
+      if (input?.mentoradoId && ctx.user?.role === "admin") {
+        targetId = input.mentoradoId;
+      }
+
+      return await getMetricasEvolution(targetId);
     }),
 
 

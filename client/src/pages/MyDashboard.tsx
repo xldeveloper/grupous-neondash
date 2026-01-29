@@ -278,7 +278,7 @@ export default function MyDashboard() {
           <TabsContent value="evolucao" className="animate-in slide-in-from-right-4 duration-300">
              <div className="grid grid-cols-1">
                 <NeonCard className="p-6 bg-white/95 dark:bg-black/40 border-white/5">
-                   <EvolucaoView />
+                   <EvolucaoView mentoradoId={targetMentoradoId} />
                 </NeonCard>
              </div>
           </TabsContent>

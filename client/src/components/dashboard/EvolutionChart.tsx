@@ -13,8 +13,12 @@ import { trpc } from "@/lib/trpc";
 import { formatCurrency } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
 
-export function EvolutionChart() {
-  const { data: evolutionData, isLoading } = trpc.mentorados.evolution.useQuery();
+interface EvolutionChartProps {
+  mentoradoId?: number;
+}
+
+export function EvolutionChart({ mentoradoId }: EvolutionChartProps) {
+  const { data: evolutionData, isLoading } = trpc.mentorados.evolution.useQuery({ mentoradoId });
 
   if (isLoading) {
     return (
