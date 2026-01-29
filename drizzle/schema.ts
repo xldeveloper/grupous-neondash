@@ -612,3 +612,34 @@ export const playbookProgress = pgTable(
 
 export type PlaybookProgress = typeof playbookProgress.$inferSelect;
 export type InsertPlaybookProgress = typeof playbookProgress.$inferInsert;
+
+/**
+ * Atividade Progress - Tracking PLAY NEON activity steps per mentorado
+ */
+export const atividadeProgress = pgTable(
+  "atividade_progress",
+  {
+    id: serial("id").primaryKey(),
+    mentoradoId: integer("mentorado_id")
+      .notNull()
+      .references(() => mentorados.id, { onDelete: "cascade" }),
+    atividadeCodigo: varchar("atividade_codigo", { length: 100 }).notNull(),
+    stepCodigo: varchar("step_codigo", { length: 100 }).notNull(),
+    completed: simNaoEnum("completed").default("nao").notNull(),
+    completedAt: timestamp("completed_at"),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+  },
+  table => [
+    uniqueIndex("atividade_progress_unique_idx").on(
+      table.mentoradoId,
+      table.atividadeCodigo,
+      table.stepCodigo
+    ),
+    index("atividade_progress_mentorado_idx").on(table.mentoradoId),
+    index("atividade_progress_atividade_idx").on(table.mentoradoId, table.atividadeCodigo),
+  ]
+);
+
+export type AtividadeProgress = typeof atividadeProgress.$inferSelect;
+export type InsertAtividadeProgress = typeof atividadeProgress.$inferInsert;
+

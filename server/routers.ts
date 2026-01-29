@@ -8,7 +8,7 @@ import { tasksRouter } from "./routers/tasks";
 import { classesRouter } from "./routers/classes";
 import { playbookRouter } from "./routers/playbook";
 import { authRouter } from "./routers/auth";
-
+import { atividadesRouter } from "./atividadesRouter";
 
 export const appRouter = router({
   system: systemRouter,
@@ -20,6 +20,7 @@ export const appRouter = router({
   tasks: tasksRouter,
   classes: classesRouter,
   playbook: playbookRouter,
+  atividades: atividadesRouter,
 });
 
 
