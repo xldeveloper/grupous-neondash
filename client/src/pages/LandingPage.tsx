@@ -88,24 +88,25 @@ export default function LandingPage() {
             </span>
           </div>
         </div>
-        <nav className="hidden md:flex gap-8 text-sm font-medium text-muted-foreground items-center">
+        <nav className="hidden md:flex gap-6 text-sm font-medium text-muted-foreground items-center">
           <a href="#purpose" className="hover:text-neon-blue-dark transition-colors">
             O que é
           </a>
           <a href="#methodology" className="hover:text-neon-blue-dark transition-colors">
             Como usar
           </a>
-          <Link href="/comece-aqui" className="hover:text-neon-blue-dark transition-colors">
-            Comece Aqui
-          </Link>
-          <ClerkSignInButton mode="modal">
-            <Button variant="ghost" className="text-neon-blue-dark hover:bg-neon-blue/5 hover:text-neon-blue">
-              Login
-            </Button>
-          </ClerkSignInButton>
+          <a href="#expectations" className="hover:text-neon-blue-dark transition-colors">
+            Expectativas
+          </a>
+          <a href="#onboarding" className="hover:text-neon-blue-dark transition-colors">
+            Primeiros Passos
+          </a>
+          <a href="#faq" className="hover:text-neon-blue-dark transition-colors">
+            FAQ
+          </a>
           <ClerkSignInButton mode="modal">
             <Button size="sm" className="bg-neon-blue-dark hover:bg-neon-blue text-white shadow-md hover:shadow-lg transition-all">
-              Começar Agora
+              Entrar
             </Button>
           </ClerkSignInButton>
         </nav>
@@ -244,6 +245,242 @@ export default function LandingPage() {
               <p className="text-sm text-muted-foreground leading-relaxed">
                 Crie o hábito de abrir a plataforma diariamente. Use-a para gerenciar tarefas, produção de conteúdo, hábitos e rotina. Transforme disciplina em dados.
               </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Expectations Section: "O Que Espero de Você" */}
+      <section id="expectations" className="py-24 bg-white relative">
+        <div className="container mx-auto px-4">
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <h2 className="text-3xl font-bold text-neon-blue-dark mb-4">
+              O Que Espero de Você
+            </h2>
+            <p className="text-muted-foreground text-lg">
+              Para que a mentoria funcione, preciso do seu compromisso com estes princípios.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+            <div className="bg-neon-gray/20 p-8 rounded-2xl border border-neon-border/50 hover:border-neon-gold/50 transition-colors group">
+              <div className="w-12 h-12 rounded-xl bg-neon-gold/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                <Zap className="w-6 h-6 text-neon-gold" />
+              </div>
+              <h3 className="text-lg font-bold text-neon-blue-dark mb-3">Execução Radical</h3>
+              <p className="text-muted-foreground text-sm leading-relaxed">
+                O conhecimento só tem poder quando aplicado. Não acumule teoria. <strong>Execute.</strong>
+              </p>
+            </div>
+
+            <div className="bg-neon-gray/20 p-8 rounded-2xl border border-neon-border/50 hover:border-neon-gold/50 transition-colors group">
+              <div className="w-12 h-12 rounded-xl bg-neon-blue/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                <Shield className="w-6 h-6 text-neon-blue" />
+              </div>
+              <h3 className="text-lg font-bold text-neon-blue-dark mb-3">Não Maratone</h3>
+              <p className="text-muted-foreground text-sm leading-relaxed">
+                Respeite o processo. Implemente uma aula antes de passar para a próxima.
+              </p>
+            </div>
+
+            <div className="bg-neon-gray/20 p-8 rounded-2xl border border-neon-border/50 hover:border-neon-gold/50 transition-colors group">
+              <div className="w-12 h-12 rounded-xl bg-neon-gold/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                <Star className="w-6 h-6 text-neon-gold" />
+              </div>
+              <h3 className="text-lg font-bold text-neon-blue-dark mb-3">Constância</h3>
+              <p className="text-muted-foreground text-sm leading-relaxed">
+                O resultado vem do trabalho diário e consistente. <strong>Apareça todos os dias.</strong>
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Onboarding Section: "Primeiros Passos" */}
+      <section id="onboarding" className="py-24 bg-neon-blue-dark text-white relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-neon-gold/10 rounded-full blur-[120px] pointer-events-none" />
+
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <h2 className="text-3xl font-bold mb-4">
+              Primeiros Passos no Sistema
+            </h2>
+            <p className="text-neon-blue-light/80 text-lg">
+              Siga este guia rápido para começar a usar a plataforma.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 max-w-5xl mx-auto">
+            {/* Step 1 */}
+            <div className="bg-white/5 backdrop-blur-sm p-6 rounded-2xl border border-white/10 text-center hover:bg-white/10 transition-colors">
+              <div className="w-14 h-14 rounded-full bg-neon-gold text-neon-blue-dark flex items-center justify-center font-bold text-xl mx-auto mb-4 shadow-lg">
+                1
+              </div>
+              <h3 className="font-bold text-lg mb-2">Login</h3>
+              <p className="text-sm text-white/70">
+                Clique em "Entrar" e use o e-mail cadastrado na compra.
+              </p>
+            </div>
+
+            {/* Step 2 */}
+            <div className="bg-white/5 backdrop-blur-sm p-6 rounded-2xl border border-white/10 text-center hover:bg-white/10 transition-colors">
+              <div className="w-14 h-14 rounded-full bg-neon-gold text-neon-blue-dark flex items-center justify-center font-bold text-xl mx-auto mb-4 shadow-lg">
+                2
+              </div>
+              <h3 className="font-bold text-lg mb-2">Perfil</h3>
+              <p className="text-sm text-white/70">
+                Verifique seus dados básicos no primeiro acesso.
+              </p>
+            </div>
+
+            {/* Step 3 */}
+            <div className="bg-white/5 backdrop-blur-sm p-6 rounded-2xl border border-white/10 text-center hover:bg-white/10 transition-colors relative">
+              <div className="absolute -top-2 left-1/2 -translate-x-1/2 bg-neon-gold text-neon-blue-dark text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+                Vital
+              </div>
+              <div className="w-14 h-14 rounded-full bg-neon-gold text-neon-blue-dark flex items-center justify-center font-bold text-xl mx-auto mb-4 shadow-lg animate-pulse">
+                3
+              </div>
+              <h3 className="font-bold text-lg mb-2">Lançar Métricas</h3>
+              <p className="text-sm text-white/70">
+                Preencha seus dados atuais do negócio para acompanhamento.
+              </p>
+            </div>
+
+            {/* Step 4 */}
+            <div className="bg-white/5 backdrop-blur-sm p-6 rounded-2xl border border-white/10 text-center hover:bg-white/10 transition-colors">
+              <div className="w-14 h-14 rounded-full bg-neon-gold text-neon-blue-dark flex items-center justify-center font-bold text-xl mx-auto mb-4 shadow-lg">
+                4
+              </div>
+              <h3 className="font-bold text-lg mb-2">Feedback</h3>
+              <p className="text-sm text-white/70">
+                Acompanhe os feedbacks mensais na aba "Visão Geral".
+              </p>
+            </div>
+          </div>
+
+          <div className="text-center mt-12">
+            <ClerkSignInButton mode="modal">
+              <Button size="lg" className="bg-neon-gold hover:bg-neon-gold/90 text-neon-blue-dark font-bold px-8 shadow-xl hover:shadow-neon-gold/20 transition-all">
+                Fazer Login Agora
+                <ArrowRight className="ml-2 w-4 h-4" />
+              </Button>
+            </ClerkSignInButton>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ Section */}
+      <section id="faq" className="py-24 bg-white relative">
+        <div className="container mx-auto px-4 max-w-3xl">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl font-bold text-neon-blue-dark mb-4">
+              Perguntas Frequentes
+            </h2>
+            <p className="text-muted-foreground">
+              Tire suas dúvidas sobre a plataforma.
+            </p>
+          </div>
+
+          <div className="space-y-4">
+            <details className="group bg-neon-gray/20 rounded-xl border border-neon-border/50 overflow-hidden">
+              <summary className="flex items-center justify-between p-6 cursor-pointer font-medium text-neon-blue-dark hover:bg-neon-gray/30 transition-colors">
+                Para que serve este Portal?
+                <CheckCircle2 className="w-5 h-5 text-neon-gold group-open:rotate-180 transition-transform" />
+              </summary>
+              <div className="px-6 pb-6 text-muted-foreground">
+                É seu centro de comando. Aqui você encontra ferramentas, registra métricas, acompanha seu progresso e acessa materiais de apoio complementar às aulas.
+              </div>
+            </details>
+
+            <details className="group bg-neon-gray/20 rounded-xl border border-neon-border/50 overflow-hidden">
+              <summary className="flex items-center justify-between p-6 cursor-pointer font-medium text-neon-blue-dark hover:bg-neon-gray/30 transition-colors">
+                Como usar este sistema?
+                <CheckCircle2 className="w-5 h-5 text-neon-gold group-open:rotate-180 transition-transform" />
+              </summary>
+              <div className="px-6 pb-6 text-muted-foreground">
+                Acesse diariamente. Mantenha suas métricas atualizadas na aba de Dashboard. Use o Caderno Digital para suas anotações de aula.
+              </div>
+            </details>
+
+            <details className="group bg-neon-gray/20 rounded-xl border border-neon-border/50 overflow-hidden">
+              <summary className="flex items-center justify-between p-6 cursor-pointer font-medium text-neon-blue-dark hover:bg-neon-gray/30 transition-colors">
+                Onde estão as aulas gravadas?
+                <CheckCircle2 className="w-5 h-5 text-neon-gold group-open:rotate-180 transition-transform" />
+              </summary>
+              <div className="px-6 pb-6 text-muted-foreground">
+                As aulas estão hospedadas na nossa área de membros oficial. Este portal é focado na <strong>GESTÃO e EXECUÇÃO</strong> do aprendizado.
+              </div>
+            </details>
+
+            <details className="group bg-neon-gray/20 rounded-xl border border-neon-border/50 overflow-hidden">
+              <summary className="flex items-center justify-between p-6 cursor-pointer font-medium text-neon-blue-dark hover:bg-neon-gray/30 transition-colors">
+                Posso acessar pelo celular?
+                <CheckCircle2 className="w-5 h-5 text-neon-gold group-open:rotate-180 transition-transform" />
+              </summary>
+              <div className="px-6 pb-6 text-muted-foreground">
+                Sim! A plataforma é 100% responsiva. Acesse de qualquer dispositivo com internet.
+              </div>
+            </details>
+          </div>
+        </div>
+      </section>
+
+      {/* Team Section */}
+      <section id="team" className="py-24 bg-neon-gray/30 relative">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl font-bold text-neon-blue-dark mb-4">
+              Conheça o Time
+            </h2>
+            <p className="text-muted-foreground">
+              A equipe por trás da sua transformação.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto">
+            {/* Sacha */}
+            <div className="text-center group">
+              <div className="w-28 h-28 mx-auto rounded-full bg-gradient-to-br from-neon-blue to-neon-blue-dark mb-4 overflow-hidden border-4 border-transparent group-hover:border-neon-gold transition-all shadow-lg">
+                <div className="w-full h-full flex items-center justify-center text-white font-bold text-3xl">
+                  S
+                </div>
+              </div>
+              <h3 className="font-bold text-neon-blue-dark">Sacha Gualberto</h3>
+              <p className="text-sm text-neon-blue-medium">Mentor Principal</p>
+            </div>
+
+            {/* Maurício */}
+            <div className="text-center group">
+              <div className="w-28 h-28 mx-auto rounded-full bg-gradient-to-br from-neon-gold to-neon-gold/80 mb-4 overflow-hidden border-4 border-transparent group-hover:border-neon-blue transition-all shadow-lg">
+                <div className="w-full h-full flex items-center justify-center text-neon-blue-dark font-bold text-3xl">
+                  M
+                </div>
+              </div>
+              <h3 className="font-bold text-neon-blue-dark">Maurício Magalhães</h3>
+              <p className="text-sm text-neon-blue-medium">Financeiro & Tech</p>
+            </div>
+
+            {/* Suporte */}
+            <div className="text-center group">
+              <div className="w-28 h-28 mx-auto rounded-full bg-gradient-to-br from-slate-400 to-slate-500 mb-4 overflow-hidden border-4 border-transparent group-hover:border-neon-gold transition-all shadow-lg">
+                <div className="w-full h-full flex items-center justify-center text-white font-bold text-3xl">
+                  <Users className="w-10 h-10" />
+                </div>
+              </div>
+              <h3 className="font-bold text-neon-blue-dark">Suporte Neon</h3>
+              <p className="text-sm text-neon-blue-medium">Customer Success</p>
+            </div>
+
+            {/* Comunidade */}
+            <div className="text-center group">
+              <div className="w-28 h-28 mx-auto rounded-full bg-gradient-to-br from-neon-blue-light to-neon-blue-medium mb-4 overflow-hidden border-4 border-transparent group-hover:border-neon-gold transition-all shadow-lg">
+                <div className="w-full h-full flex items-center justify-center text-white font-bold text-3xl">
+                  +50
+                </div>
+              </div>
+              <h3 className="font-bold text-neon-blue-dark">Comunidade</h3>
+              <p className="text-sm text-neon-blue-medium">Mentorados Ativos</p>
             </div>
           </div>
         </div>
