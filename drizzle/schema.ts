@@ -481,6 +481,8 @@ export const tasks = pgTable(
     title: text("title").notNull(),
     status: text("status").notNull().default("todo"), // "todo" | "done"
     category: text("category").default("geral"),
+    source: text("source").default("manual"), // "manual" | "atividade"
+    atividadeCodigo: varchar("atividade_codigo", { length: 100 }), // Link to origin activity
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().notNull(),
   },
@@ -627,6 +629,7 @@ export const atividadeProgress = pgTable(
     stepCodigo: varchar("step_codigo", { length: 100 }).notNull(),
     completed: simNaoEnum("completed").default("nao").notNull(),
     completedAt: timestamp("completed_at"),
+    notes: text("notes"), // Notas do mentorado para este passo
     createdAt: timestamp("created_at").defaultNow().notNull(),
   },
   table => [

@@ -5,7 +5,8 @@ import { NeonCard } from "@/components/ui/neon-card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Plus, Trash2, CheckCircle2, Circle } from "lucide-react";
+import { Plus, Trash2, CheckCircle2, Circle, Play } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
@@ -96,6 +97,12 @@ export function TaskBoard({ mentoradoId }: { mentoradoId?: number }) {
                         className="border-slate-600 data-[state=checked]:bg-neon-gold data-[state=checked]:text-black"
                       />
                       <span className="text-sm text-slate-300 font-mono">{task.title}</span>
+                      {task.source === "atividade" && (
+                        <Badge variant="outline" className="ml-2 border-yellow-500/50 text-yellow-400 text-[10px] px-1.5 py-0 h-5 font-mono">
+                          <Play className="w-2.5 h-2.5 mr-0.5" />
+                          PLAY
+                        </Badge>
+                      )}
                     </div>
                     <Button
                       variant="ghost"
@@ -131,6 +138,12 @@ export function TaskBoard({ mentoradoId }: { mentoradoId?: number }) {
                         className="border-slate-600"
                       />
                       <span className="text-sm text-slate-400 font-mono line-through">{task.title}</span>
+                      {task.source === "atividade" && (
+                        <Badge variant="outline" className="ml-2 border-yellow-500/30 text-yellow-500/50 text-[10px] px-1.5 py-0 h-5 font-mono">
+                          <Play className="w-2.5 h-2.5 mr-0.5" />
+                          PLAY
+                        </Badge>
+                      )}
                     </div>
                     <Button
                       variant="ghost"

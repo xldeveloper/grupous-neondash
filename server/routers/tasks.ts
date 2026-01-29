@@ -40,7 +40,9 @@ export const tasksRouter = router({
     .input(
       z.object({
         title: z.string().min(1),
-        category: z.enum(["geral", "aula", "crm", "financeiro"]).default("geral"),
+        category: z.enum(["geral", "aula", "crm", "financeiro", "atividade"]).default("geral"),
+        source: z.enum(["manual", "atividade"]).default("manual"),
+        atividadeCodigo: z.string().optional(),
         mentoradoId: z.number().optional(), // Admin override
       })
     )
@@ -66,6 +68,8 @@ export const tasksRouter = router({
           mentoradoId: targetMentoradoId,
           title: input.title,
           category: input.category,
+          source: input.source,
+          atividadeCodigo: input.atividadeCodigo,
           status: "todo",
         })
         .returning();

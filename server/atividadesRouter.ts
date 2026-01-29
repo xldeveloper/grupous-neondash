@@ -4,9 +4,15 @@ import { getDb } from "./db";
 import { atividadeProgress } from "../drizzle/schema";
 import { eq, and } from "drizzle-orm";
 
+// Progress map with optional notes
+interface ProgressData {
+  completed: boolean;
+  notes?: string | null;
+}
+
 export const atividadesRouter = router({
   /**
-   * Get all progress for the current mentorado
+   * Get all progress for the current mentorado (includes notes)
    */
   getProgress: mentoradoProcedure.query(async ({ ctx }) => {
     const db = getDb();
@@ -15,11 +21,14 @@ export const atividadesRouter = router({
       .from(atividadeProgress)
       .where(eq(atividadeProgress.mentoradoId, ctx.mentorado.id));
 
-    // Convert to a map for easy lookup
-    const progressMap: Record<string, boolean> = {};
+    // Convert to a map with completed status and notes
+    const progressMap: Record<string, ProgressData> = {};
     for (const p of progress) {
       const key = `${p.atividadeCodigo}:${p.stepCodigo}`;
-      progressMap[key] = p.completed === "sim";
+      progressMap[key] = {
+        completed: p.completed === "sim",
+        notes: p.notes,
+      };
     }
     return progressMap;
   }),
@@ -36,10 +45,13 @@ export const atividadesRouter = router({
         .from(atividadeProgress)
         .where(eq(atividadeProgress.mentoradoId, input.mentoradoId));
 
-      const progressMap: Record<string, boolean> = {};
+      const progressMap: Record<string, ProgressData> = {};
       for (const p of progress) {
         const key = `${p.atividadeCodigo}:${p.stepCodigo}`;
-        progressMap[key] = p.completed === "sim";
+        progressMap[key] = {
+          completed: p.completed === "sim",
+          notes: p.notes,
+        };
       }
       return progressMap;
     }),
@@ -70,7 +82,6 @@ export const atividadesRouter = router({
         .limit(1);
 
       if (existing.length > 0) {
-        // Update existing
         await db
           .update(atividadeProgress)
           .set({
@@ -79,13 +90,56 @@ export const atividadesRouter = router({
           })
           .where(eq(atividadeProgress.id, existing[0].id));
       } else {
-        // Insert new
         await db.insert(atividadeProgress).values({
           mentoradoId: ctx.mentorado.id,
           atividadeCodigo: input.atividadeCodigo,
           stepCodigo: input.stepCodigo,
           completed: input.completed ? "sim" : "nao",
           completedAt: input.completed ? new Date() : null,
+        });
+      }
+
+      return { success: true };
+    }),
+
+  /**
+   * Update notes for a specific step
+   */
+  updateNote: mentoradoProcedure
+    .input(
+      z.object({
+        atividadeCodigo: z.string(),
+        stepCodigo: z.string(),
+        notes: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const db = getDb();
+      const existing = await db
+        .select()
+        .from(atividadeProgress)
+        .where(
+          and(
+            eq(atividadeProgress.mentoradoId, ctx.mentorado.id),
+            eq(atividadeProgress.atividadeCodigo, input.atividadeCodigo),
+            eq(atividadeProgress.stepCodigo, input.stepCodigo)
+          )
+        )
+        .limit(1);
+
+      if (existing.length > 0) {
+        await db
+          .update(atividadeProgress)
+          .set({ notes: input.notes || null })
+          .where(eq(atividadeProgress.id, existing[0].id));
+      } else {
+        // Create entry with note (even if not completed)
+        await db.insert(atividadeProgress).values({
+          mentoradoId: ctx.mentorado.id,
+          atividadeCodigo: input.atividadeCodigo,
+          stepCodigo: input.stepCodigo,
+          completed: "nao",
+          notes: input.notes || null,
         });
       }
 

@@ -6,6 +6,9 @@ import {
   Circle,
   Play,
   Loader2,
+  StickyNote,
+  Plus,
+  ListTodo,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
@@ -16,6 +19,16 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import { trpc } from "@/lib/trpc";
 import {
   ATIVIDADES,
@@ -29,38 +42,129 @@ interface AtividadesContentProps {
   mentoradoId?: number; // For admin viewing specific mentorado
 }
 
+interface NoteDialogState {
+  open: boolean;
+  atividadeCodigo: string;
+  stepCodigo: string;
+  stepLabel: string;
+  currentNote: string;
+}
+
+interface TaskDialogState {
+  open: boolean;
+  atividadeCodigo: string;
+  atividadeTitulo: string;
+  taskTitle: string;
+}
+
 /**
  * Componente interativo para atividades do PLAY NEON
  * - Lista atividades expansíveis (Accordion)
  * - Checkboxes para marcar passos como concluídos
+ * - Notas pessoais para cada passo
+ * - Criação de tarefas a partir de atividades
  * - Barra de progresso geral
  */
 export function AtividadesContent({ mentoradoId }: AtividadesContentProps) {
+  // Dialog states
+  const [noteDialog, setNoteDialog] = useState<NoteDialogState>({
+    open: false,
+    atividadeCodigo: "",
+    stepCodigo: "",
+    stepLabel: "",
+    currentNote: "",
+  });
+
+  const [taskDialog, setTaskDialog] = useState<TaskDialogState>({
+    open: false,
+    atividadeCodigo: "",
+    atividadeTitulo: "",
+    taskTitle: "",
+  });
+
   // Fetch progress from server
   const progressQuery = mentoradoId
     ? trpc.atividades.getProgressById.useQuery({ mentoradoId })
     : trpc.atividades.getProgress.useQuery();
 
   const toggleMutation = trpc.atividades.toggleStep.useMutation({
+    onSuccess: () => progressQuery.refetch(),
+  });
+
+  const updateNoteMutation = trpc.atividades.updateNote.useMutation({
     onSuccess: () => {
       progressQuery.refetch();
+      setNoteDialog((prev) => ({ ...prev, open: false }));
+    },
+  });
+
+  const createTaskMutation = trpc.tasks.create.useMutation({
+    onSuccess: () => {
+      setTaskDialog((prev) => ({ ...prev, open: false, taskTitle: "" }));
     },
   });
 
   const progressMap = progressQuery.data ?? {};
-  const { total, completed, percentage } = calcularProgresso(progressMap);
+  const { total, completed, percentage } = calcularProgresso(
+    Object.fromEntries(
+      Object.entries(progressMap).map(([k, v]) => [k, v.completed])
+    )
+  );
   const atividadesByEtapa = getAtividadesByEtapa();
 
   const handleToggle = (atividadeCodigo: string, stepCodigo: string) => {
     if (mentoradoId) return; // Admin can't toggle for mentorado
 
     const key = `${atividadeCodigo}:${stepCodigo}`;
-    const currentlyCompleted = progressMap[key] ?? false;
+    const currentlyCompleted = progressMap[key]?.completed ?? false;
 
     toggleMutation.mutate({
       atividadeCodigo,
       stepCodigo,
       completed: !currentlyCompleted,
+    });
+  };
+
+  const openNoteDialog = (
+    atividadeCodigo: string,
+    stepCodigo: string,
+    stepLabel: string
+  ) => {
+    const key = `${atividadeCodigo}:${stepCodigo}`;
+    const currentNote = progressMap[key]?.notes ?? "";
+    setNoteDialog({
+      open: true,
+      atividadeCodigo,
+      stepCodigo,
+      stepLabel,
+      currentNote,
+    });
+  };
+
+  const saveNote = () => {
+    updateNoteMutation.mutate({
+      atividadeCodigo: noteDialog.atividadeCodigo,
+      stepCodigo: noteDialog.stepCodigo,
+      notes: noteDialog.currentNote,
+    });
+  };
+
+  const openTaskDialog = (atividadeCodigo: string, atividadeTitulo: string) => {
+    setTaskDialog({
+      open: true,
+      atividadeCodigo,
+      atividadeTitulo,
+      taskTitle: "",
+    });
+  };
+
+  const createTask = () => {
+    if (!taskDialog.taskTitle.trim()) return;
+    createTaskMutation.mutate({
+      title: taskDialog.taskTitle,
+      category: "atividade",
+      source: "atividade",
+      atividadeCodigo: taskDialog.atividadeCodigo,
     });
   };
 
@@ -133,7 +237,7 @@ export function AtividadesContent({ mentoradoId }: AtividadesContentProps) {
               {atividades.map((atividade) => {
                 const atividadeCompleted = atividade.steps.filter((step) => {
                   const key = `${atividade.codigo}:${step.codigo}`;
-                  return progressMap[key];
+                  return progressMap[key]?.completed;
                 }).length;
                 const atividadeTotal = atividade.steps.length;
                 const atividadePercentage =
@@ -172,10 +276,31 @@ export function AtividadesContent({ mentoradoId }: AtividadesContentProps) {
                           {atividade.descricao}
                         </p>
                       )}
+
+                      {/* Botão para criar tarefa */}
+                      {!isReadOnly && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="mb-3 border-zinc-600 text-zinc-300 hover:bg-zinc-800"
+                          onClick={() =>
+                            openTaskDialog(atividade.codigo, atividade.titulo)
+                          }
+                        >
+                          <Plus className="w-4 h-4 mr-1" />
+                          Criar Tarefa
+                        </Button>
+                      )}
+
                       <div className="space-y-2">
                         {atividade.steps.map((step) => {
                           const key = `${atividade.codigo}:${step.codigo}`;
-                          const isCompleted = progressMap[key] ?? false;
+                          const stepData = progressMap[key] ?? {
+                            completed: false,
+                            notes: null,
+                          };
+                          const isCompleted = stepData.completed;
+                          const hasNote = !!stepData.notes;
                           const isPending =
                             toggleMutation.isPending &&
                             toggleMutation.variables?.atividadeCodigo ===
@@ -186,7 +311,7 @@ export function AtividadesContent({ mentoradoId }: AtividadesContentProps) {
                           return (
                             <div
                               key={step.codigo}
-                              className="flex items-center gap-3 py-1"
+                              className="flex items-center gap-3 py-1 group"
                             >
                               <Checkbox
                                 id={key}
@@ -199,7 +324,7 @@ export function AtividadesContent({ mentoradoId }: AtividadesContentProps) {
                               />
                               <label
                                 htmlFor={key}
-                                className={`text-sm cursor-pointer select-none ${
+                                className={`text-sm cursor-pointer select-none flex-1 ${
                                   isCompleted
                                     ? "text-zinc-500 line-through"
                                     : "text-zinc-200"
@@ -207,6 +332,39 @@ export function AtividadesContent({ mentoradoId }: AtividadesContentProps) {
                               >
                                 {step.label}
                               </label>
+
+                              {/* Ícone de nota */}
+                              {!isReadOnly && (
+                                <button
+                                  type="button"
+                                  onClick={() =>
+                                    openNoteDialog(
+                                      atividade.codigo,
+                                      step.codigo,
+                                      step.label
+                                    )
+                                  }
+                                  className={`p-1 rounded hover:bg-zinc-700 transition-opacity ${
+                                    hasNote
+                                      ? "text-yellow-400"
+                                      : "text-zinc-500 opacity-0 group-hover:opacity-100"
+                                  }`}
+                                  title={hasNote ? "Editar nota" : "Adicionar nota"}
+                                >
+                                  <StickyNote className="w-4 h-4" />
+                                </button>
+                              )}
+
+                              {/* Indicador de nota (readonly) */}
+                              {isReadOnly && hasNote && (
+                                <span
+                                  className="text-yellow-400"
+                                  title={stepData.notes ?? ""}
+                                >
+                                  <StickyNote className="w-4 h-4" />
+                                </span>
+                              )}
+
                               {isPending && (
                                 <Loader2 className="w-3 h-3 animate-spin text-zinc-500" />
                               )}
@@ -229,6 +387,108 @@ export function AtividadesContent({ mentoradoId }: AtividadesContentProps) {
           ? "Visualização do progresso do mentorado"
           : "Marque os passos concluídos para acompanhar seu progresso"}
       </p>
+
+      {/* Dialog para Notas */}
+      <Dialog
+        open={noteDialog.open}
+        onOpenChange={(open) => setNoteDialog((prev) => ({ ...prev, open }))}
+      >
+        <DialogContent className="bg-zinc-900 border-zinc-700">
+          <DialogHeader>
+            <DialogTitle className="text-white flex items-center gap-2">
+              <StickyNote className="w-5 h-5 text-yellow-400" />
+              Nota Pessoal
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-3">
+            <p className="text-sm text-zinc-400">{noteDialog.stepLabel}</p>
+            <Textarea
+              value={noteDialog.currentNote}
+              onChange={(e) =>
+                setNoteDialog((prev) => ({
+                  ...prev,
+                  currentNote: e.target.value,
+                }))
+              }
+              placeholder="Escreva suas anotações aqui..."
+              className="bg-zinc-800 border-zinc-600 text-white min-h-[120px] resize-none"
+            />
+          </div>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              className="border-zinc-600 text-zinc-300"
+              onClick={() => setNoteDialog((prev) => ({ ...prev, open: false }))}
+            >
+              Cancelar
+            </Button>
+            <Button
+              onClick={saveNote}
+              disabled={updateNoteMutation.isPending}
+              className="bg-yellow-500 hover:bg-yellow-600 text-black"
+            >
+              {updateNoteMutation.isPending ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                "Salvar"
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Dialog para Criar Tarefa */}
+      <Dialog
+        open={taskDialog.open}
+        onOpenChange={(open) => setTaskDialog((prev) => ({ ...prev, open }))}
+      >
+        <DialogContent className="bg-zinc-900 border-zinc-700">
+          <DialogHeader>
+            <DialogTitle className="text-white flex items-center gap-2">
+              <ListTodo className="w-5 h-5 text-yellow-400" />
+              Criar Tarefa
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-3">
+            <p className="text-sm text-zinc-400">
+              Vinculada à: <span className="text-zinc-300">{taskDialog.atividadeTitulo}</span>
+            </p>
+            <Input
+              value={taskDialog.taskTitle}
+              onChange={(e) =>
+                setTaskDialog((prev) => ({
+                  ...prev,
+                  taskTitle: e.target.value,
+                }))
+              }
+              placeholder="Título da tarefa..."
+              className="bg-zinc-800 border-zinc-600 text-white"
+            />
+          </div>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              className="border-zinc-600 text-zinc-300"
+              onClick={() => setTaskDialog((prev) => ({ ...prev, open: false }))}
+            >
+              Cancelar
+            </Button>
+            <Button
+              onClick={createTask}
+              disabled={
+                createTaskMutation.isPending || !taskDialog.taskTitle.trim()
+              }
+              className="bg-yellow-500 hover:bg-yellow-600 text-black"
+            >
+              {createTaskMutation.isPending ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                "Criar"
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
