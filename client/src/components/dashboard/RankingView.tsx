@@ -1,4 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { BentoCard, BentoCardContent } from "@/components/ui/bento-grid";
 import {
   Select,
   SelectContent,
@@ -109,26 +110,33 @@ export function RankingView({ selectedMonth, selectedYear }: RankingViewProps) {
         <>
           {/* Top 3 Podium */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-            {[1, 0, 2].map(idx => {
+            {[1, 0, 2].map((idx, i) => {
               const item = ranking[idx];
               if (!item) return <div key={idx} className="hidden md:block" />;
               const isCurrentUser = mentorado?.id === item.mentorado.id;
+              
+              // Determine delay based on visual order (center first, then left, then right)
+              // Center (idx 0) -> delay 0
+              // Left (idx 1) -> delay 0.1
+              // Right (idx 2) -> delay 0.2
+              const delay = idx === 0 ? 0 : idx === 1 ? 0.1 : 0.2;
 
               return (
-                <Card
+                <BentoCard
                   key={item.ranking.id}
+                  delay={delay}
                   className={cn(
-                    "border-none shadow-lg text-center relative overflow-hidden",
-                    idx === 0 && "md:-mt-4",
+                    "text-center relative overflow-hidden",
+                    idx === 0 && "md:-mt-4 z-10",
                     getPosicaoStyle(item.ranking.posicao),
                     isCurrentUser && "ring-2 ring-neon-green"
                   )}
                 >
-                  <CardContent className="pt-6 pb-4">
-                    <div className="mb-3">
+                  <BentoCardContent className="pt-6 pb-4">
+                    <div className="mb-3 flex justify-center">
                       {getPosicaoIcon(item.ranking.posicao)}
                     </div>
-                    <div className="w-16 h-16 mx-auto rounded-full bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center mb-3 overflow-hidden">
+                    <div className="w-16 h-16 mx-auto rounded-full bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center mb-3 overflow-hidden shadow-inner">
                       {item.mentorado.fotoUrl ? (
                         <img
                           src={item.mentorado.fotoUrl}
@@ -141,10 +149,10 @@ export function RankingView({ selectedMonth, selectedYear }: RankingViewProps) {
                         </span>
                       )}
                     </div>
-                    <h3 className="font-bold text-slate-900 mb-1 truncate px-2">
+                    <h3 className="font-bold text-slate-900 mb-1 truncate px-2 text-lg">
                       {item.mentorado.nomeCompleto.split(" ")[0]}
                     </h3>
-                    <Badge variant="outline" className="text-xs mb-2">
+                    <Badge variant="outline" className="text-xs mb-2 bg-white/50 backdrop-blur-sm">
                       {item.mentorado.turma === "neon_estrutura"
                         ? "Estrutura"
                         : "Escala"}
@@ -154,12 +162,12 @@ export function RankingView({ selectedMonth, selectedYear }: RankingViewProps) {
                       <span className="text-sm text-slate-500 ml-1">pts</span>
                     </div>
                     {item.ranking.pontosBonus > 0 && (
-                      <p className="text-xs text-purple-600 mt-1">
+                      <p className="text-xs text-purple-600 mt-1 font-medium bg-purple-50 inline-block px-2 py-0.5 rounded-full">
                         +{item.ranking.pontosBonus} bônus
                       </p>
                     )}
-                  </CardContent>
-                </Card>
+                  </BentoCardContent>
+                </BentoCard>
               );
             })}
           </div>

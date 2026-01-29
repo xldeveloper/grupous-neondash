@@ -23,12 +23,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from "@/components/ui/dialog";
+  Drawer,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerFooter,
+  DrawerClose,
+} from "@/components/ui/drawer";
 import { trpc } from "@/lib/trpc";
 import {
   ATIVIDADES,
@@ -98,9 +99,16 @@ export function AtividadesContent({ mentoradoId }: AtividadesContentProps) {
     },
   });
 
+
+  const utils = trpc.useUtils();
+
   const createTaskMutation = trpc.tasks.create.useMutation({
     onSuccess: () => {
+      utils.tasks.list.invalidate();
       setTaskDialog((prev) => ({ ...prev, open: false, taskTitle: "" }));
+    },
+    onError: (error) => {
+      console.error("Erro ao criar tarefa:", error);
     },
   });
 
@@ -388,19 +396,19 @@ export function AtividadesContent({ mentoradoId }: AtividadesContentProps) {
           : "Marque os passos concluídos para acompanhar seu progresso"}
       </p>
 
-      {/* Dialog para Notas */}
-      <Dialog
+      {/* Drawer para Notas */}
+      <Drawer
         open={noteDialog.open}
         onOpenChange={(open) => setNoteDialog((prev) => ({ ...prev, open }))}
       >
-        <DialogContent className="bg-zinc-900 border-zinc-700">
-          <DialogHeader>
-            <DialogTitle className="text-white flex items-center gap-2">
+        <DrawerContent className="bg-zinc-900 border-zinc-700">
+          <DrawerHeader>
+            <DrawerTitle className="text-white flex items-center gap-2">
               <StickyNote className="w-5 h-5 text-yellow-400" />
               Nota Pessoal
-            </DialogTitle>
-          </DialogHeader>
-          <div className="space-y-3">
+            </DrawerTitle>
+          </DrawerHeader>
+          <div className="px-4 pb-2 space-y-3">
             <p className="text-sm text-zinc-400">{noteDialog.stepLabel}</p>
             <Textarea
               value={noteDialog.currentNote}
@@ -414,18 +422,19 @@ export function AtividadesContent({ mentoradoId }: AtividadesContentProps) {
               className="bg-zinc-800 border-zinc-600 text-white min-h-[120px] resize-none"
             />
           </div>
-          <DialogFooter>
-            <Button
-              variant="outline"
-              className="border-zinc-600 text-zinc-300"
-              onClick={() => setNoteDialog((prev) => ({ ...prev, open: false }))}
-            >
-              Cancelar
-            </Button>
+          <DrawerFooter className="flex-row gap-2">
+            <DrawerClose asChild>
+              <Button
+                variant="outline"
+                className="flex-1 border-zinc-600 text-zinc-300"
+              >
+                Cancelar
+              </Button>
+            </DrawerClose>
             <Button
               onClick={saveNote}
               disabled={updateNoteMutation.isPending}
-              className="bg-yellow-500 hover:bg-yellow-600 text-black"
+              className="flex-1 bg-yellow-500 hover:bg-yellow-600 text-black"
             >
               {updateNoteMutation.isPending ? (
                 <Loader2 className="w-4 h-4 animate-spin" />
@@ -433,23 +442,23 @@ export function AtividadesContent({ mentoradoId }: AtividadesContentProps) {
                 "Salvar"
               )}
             </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+          </DrawerFooter>
+        </DrawerContent>
+      </Drawer>
 
-      {/* Dialog para Criar Tarefa */}
-      <Dialog
+      {/* Drawer para Criar Tarefa */}
+      <Drawer
         open={taskDialog.open}
         onOpenChange={(open) => setTaskDialog((prev) => ({ ...prev, open }))}
       >
-        <DialogContent className="bg-zinc-900 border-zinc-700">
-          <DialogHeader>
-            <DialogTitle className="text-white flex items-center gap-2">
+        <DrawerContent className="bg-zinc-900 border-zinc-700">
+          <DrawerHeader>
+            <DrawerTitle className="text-white flex items-center gap-2">
               <ListTodo className="w-5 h-5 text-yellow-400" />
               Criar Tarefa
-            </DialogTitle>
-          </DialogHeader>
-          <div className="space-y-3">
+            </DrawerTitle>
+          </DrawerHeader>
+          <div className="px-4 pb-2 space-y-3">
             <p className="text-sm text-zinc-400">
               Vinculada à: <span className="text-zinc-300">{taskDialog.atividadeTitulo}</span>
             </p>
@@ -465,20 +474,21 @@ export function AtividadesContent({ mentoradoId }: AtividadesContentProps) {
               className="bg-zinc-800 border-zinc-600 text-white"
             />
           </div>
-          <DialogFooter>
-            <Button
-              variant="outline"
-              className="border-zinc-600 text-zinc-300"
-              onClick={() => setTaskDialog((prev) => ({ ...prev, open: false }))}
-            >
-              Cancelar
-            </Button>
+          <DrawerFooter className="flex-row gap-2">
+            <DrawerClose asChild>
+              <Button
+                variant="outline"
+                className="flex-1 border-zinc-600 text-zinc-300"
+              >
+                Cancelar
+              </Button>
+            </DrawerClose>
             <Button
               onClick={createTask}
               disabled={
                 createTaskMutation.isPending || !taskDialog.taskTitle.trim()
               }
-              className="bg-yellow-500 hover:bg-yellow-600 text-black"
+              className="flex-1 bg-yellow-500 hover:bg-yellow-600 text-black"
             >
               {createTaskMutation.isPending ? (
                 <Loader2 className="w-4 h-4 animate-spin" />
@@ -486,9 +496,9 @@ export function AtividadesContent({ mentoradoId }: AtividadesContentProps) {
                 "Criar"
               )}
             </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+          </DrawerFooter>
+        </DrawerContent>
+      </Drawer>
     </div>
   );
 }

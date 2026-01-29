@@ -1,5 +1,5 @@
 import { MentoradoAnalise } from "@/lib/data";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import { BentoCard, BentoCardHeader, BentoCardContent, BentoCardFooter } from "./ui/bento-grid";
 import { Badge } from "./ui/badge";
 import { Progress } from "./ui/progress";
 import { cn } from "@/lib/utils";
@@ -46,55 +46,40 @@ export default function MentoradoCard({
   };
 
   return (
-    <motion.div
-      layout
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
-    >
-      <Card
+      <BentoCard
         className={cn(
-          "overflow-hidden border-slate-100 shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer group",
-          isExpanded ? "ring-2 ring-neon-purple/20" : ""
+          "h-full relative overflow-hidden",
+          isExpanded ? "ring-2 ring-neon-purple/20 md:col-span-2 md:row-span-2" : ""
         )}
         onClick={() => setIsExpanded(!isExpanded)}
       >
-        <CardHeader className="pb-2 relative">
-          <div className="flex justify-between items-start">
-            <div className="flex items-center gap-3">
-              <div
+        <BentoCardHeader
+          title={nome}
+          subtitle={
+            <div className="flex items-center gap-2 mt-1">
+              <Badge
+                variant="secondary"
                 className={cn(
-                  "flex items-center justify-center w-8 h-8 rounded-full font-bold text-sm",
-                  rank <= 3
-                    ? "bg-neon-purple text-white"
-                    : "bg-slate-100 text-slate-500"
+                  "text-[10px] font-medium px-2 py-0.5",
+                  data.classificacao === "Excelente"
+                    ? "bg-neon-green/10 text-neon-green-dark"
+                    : data.classificacao === "Bom"
+                      ? "bg-blue-50 text-blue-600"
+                      : data.classificacao === "Regular"
+                        ? "bg-yellow-50 text-yellow-600"
+                        : "bg-red-50 text-red-600"
                 )}
               >
-                {rank}
-              </div>
-              <div>
-                <CardTitle className="text-lg font-bold text-slate-900 group-hover:text-neon-purple transition-colors">
-                  {nome}
-                </CardTitle>
-                <div className="flex items-center gap-2 mt-1">
-                  <Badge
-                    variant="secondary"
-                    className={cn(
-                      "text-[10px] font-medium px-2 py-0.5",
-                      data.classificacao === "Excelente"
-                        ? "bg-neon-green/10 text-neon-green-dark"
-                        : data.classificacao === "Bom"
-                          ? "bg-blue-50 text-blue-600"
-                          : data.classificacao === "Regular"
-                            ? "bg-yellow-50 text-yellow-600"
-                            : "bg-red-50 text-red-600"
-                    )}
-                  >
-                    {data.classificacao}
-                  </Badge>
-                </div>
-              </div>
+                {data.classificacao}
+              </Badge>
             </div>
+          }
+          icon={
+            <div className="font-bold text-sm">
+              {rank}º
+            </div>
+          }
+          action={
             <div className="text-right">
               <div
                 className={cn("text-2xl font-bold", getScoreColor(data.score))}
@@ -105,22 +90,22 @@ export default function MentoradoCard({
                 Score
               </div>
             </div>
-          </div>
-        </CardHeader>
+          }
+        />
 
-        <CardContent>
+        <BentoCardContent>
           <div className="grid grid-cols-2 gap-4 mb-4">
-            <div className="bg-slate-50 p-3 rounded-lg">
+            <div className="bg-slate-50 p-3 rounded-lg dark:bg-slate-900/50">
               <div className="flex items-center gap-2 text-slate-500 text-xs mb-1">
                 <DollarSign className="w-3 h-3" /> Faturamento
               </div>
-              <div className="font-bold text-slate-900">
+              <div className="font-bold text-slate-900 dark:text-slate-100">
                 {new Intl.NumberFormat("pt-BR", {
                   style: "currency",
                   currency: "BRL",
                 }).format(data.dados.faturamento)}
               </div>
-              <div className="mt-2 h-1.5 w-full bg-slate-200 rounded-full overflow-hidden">
+              <div className="mt-2 h-1.5 w-full bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
                 <div
                   className={cn(
                     "h-full rounded-full",
@@ -133,17 +118,17 @@ export default function MentoradoCard({
               </div>
             </div>
 
-            <div className="bg-slate-50 p-3 rounded-lg">
+            <div className="bg-slate-50 p-3 rounded-lg dark:bg-slate-900/50">
               <div className="flex items-center gap-2 text-slate-500 text-xs mb-1">
                 <Activity className="w-3 h-3" /> Procedimentos
               </div>
-              <div className="font-bold text-slate-900">
+              <div className="font-bold text-slate-900 dark:text-slate-100">
                 {data.dados.procedimentos}{" "}
                 <span className="text-xs font-normal text-slate-400">
                   realizados
                 </span>
               </div>
-              <div className="mt-2 h-1.5 w-full bg-slate-200 rounded-full overflow-hidden">
+              <div className="mt-2 h-1.5 w-full bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
                 <div
                   className={cn(
                     "h-full rounded-full",
@@ -165,7 +150,7 @@ export default function MentoradoCard({
                 exit={{ height: 0, opacity: 0 }}
                 className="overflow-hidden"
               >
-                <div className="pt-2 border-t border-slate-100 space-y-4">
+                <div className="pt-2 border-t border-slate-100 dark:border-slate-800 space-y-4">
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <div className="flex justify-between text-xs mb-1">
@@ -219,10 +204,10 @@ export default function MentoradoCard({
                     </div>
                   )}
 
-                  <div className="bg-slate-50 p-3 rounded-lg text-xs text-slate-600">
+                  <div className="bg-slate-50 p-3 rounded-lg text-xs text-slate-600 dark:bg-slate-900/50 dark:text-slate-400">
                     <div className="flex justify-between mb-1">
                       <span>Lucro do Mês:</span>
-                      <span className="font-bold text-slate-900">
+                      <span className="font-bold text-slate-900 dark:text-slate-100">
                         {new Intl.NumberFormat("pt-BR", {
                           style: "currency",
                           currency: "BRL",
@@ -235,7 +220,7 @@ export default function MentoradoCard({
                         className={cn(
                           "font-bold",
                           data.dados.faturamento > 0
-                            ? "text-slate-900"
+                            ? "text-slate-900 dark:text-slate-100"
                             : "text-slate-400"
                         )}
                       >
@@ -257,7 +242,7 @@ export default function MentoradoCard({
                           <p className="text-xs font-semibold text-slate-500 uppercase mb-1">
                             Análise Dezembro
                           </p>
-                          <p className="text-sm text-slate-700 leading-relaxed">
+                          <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
                             {data.feedback.analise_dezembro}
                           </p>
                         </div>
@@ -268,17 +253,17 @@ export default function MentoradoCard({
                           </p>
                           <div className="flex items-start gap-2">
                             <ArrowRight className="w-4 h-4 text-neon-purple mt-0.5 flex-shrink-0" />
-                            <p className="text-sm font-medium text-slate-900">
+                            <p className="text-sm font-medium text-slate-900 dark:text-slate-100">
                               {data.feedback.foco_janeiro}
                             </p>
                           </div>
                         </div>
 
-                        <div className="bg-white p-3 rounded-lg border border-slate-100 shadow-sm">
+                        <div className="bg-white p-3 rounded-lg border border-slate-100 shadow-sm dark:bg-slate-800 dark:border-slate-700">
                           <div className="flex items-center gap-2 text-neon-green-dark font-bold text-xs mb-2">
                             <Lightbulb className="w-3 h-3" /> Sugestão do Mentor
                           </div>
-                          <p className="text-sm text-slate-600 italic leading-relaxed">
+                          <p className="text-sm text-slate-600 dark:text-slate-400 italic leading-relaxed">
                             "{data.feedback.sugestao}"
                           </p>
                         </div>
@@ -289,12 +274,11 @@ export default function MentoradoCard({
               </motion.div>
             )}
           </AnimatePresence>
+        </BentoCardContent>
 
-          <div className="mt-2 flex justify-center">
-            <div className="h-1 w-8 bg-slate-200 rounded-full group-hover:bg-neon-purple/50 transition-colors" />
-          </div>
-        </CardContent>
-      </Card>
-    </motion.div>
+        <BentoCardFooter className="flex justify-center p-0 border-t-0 mt-0">
+           <div className="h-1 w-8 bg-slate-200 rounded-full group-hover:bg-neon-purple/50 transition-colors dark:bg-slate-700" />
+        </BentoCardFooter>
+      </BentoCard>
   );
 }

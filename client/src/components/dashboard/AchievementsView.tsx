@@ -1,10 +1,4 @@
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { BentoGrid, BentoCard, BentoCardContent, BentoCardFooter, BentoCardHeader } from "@/components/ui/bento-grid";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { trpc } from "@/lib/trpc";
@@ -103,52 +97,53 @@ export function AchievementsView() {
       ) : (
         <>
           {/* Summary Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <Card className="border-none shadow-sm bg-gradient-to-br from-yellow-50 to-amber-50">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium text-amber-700 uppercase tracking-wider">
+          {/* Summary Cards */}
+          <BentoGrid className="grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <BentoCard delay={0} className="border-none shadow-sm bg-gradient-to-br from-yellow-50 to-amber-50 dark:from-amber-950/30 dark:to-yellow-950/30">
+              <BentoCardHeader className="pb-2">
+                <div className="text-sm font-medium text-amber-700 dark:text-amber-400 uppercase tracking-wider">
                   Badges Conquistados
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-4xl font-bold text-amber-900">
+                </div>
+              </BentoCardHeader>
+              <BentoCardContent>
+                <div className="text-4xl font-bold text-amber-900 dark:text-amber-100">
                   {totalBadges}
-                  <span className="text-lg text-amber-600 ml-1">
+                  <span className="text-lg text-amber-600 dark:text-amber-500 ml-1">
                     / {allBadges?.length || 0}
                   </span>
                 </div>
-              </CardContent>
-            </Card>
+              </BentoCardContent>
+            </BentoCard>
 
-            <Card className="border-none shadow-sm bg-gradient-to-br from-purple-50 to-violet-50">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium text-purple-700 uppercase tracking-wider">
+            <BentoCard delay={0.1} className="border-none shadow-sm bg-gradient-to-br from-purple-50 to-violet-50 dark:from-violet-950/30 dark:to-purple-950/30">
+              <BentoCardHeader className="pb-2">
+                <div className="text-sm font-medium text-purple-700 dark:text-purple-400 uppercase tracking-wider">
                   Pontos Totais
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-4xl font-bold text-purple-900">
+                </div>
+              </BentoCardHeader>
+              <BentoCardContent>
+                <div className="text-4xl font-bold text-purple-900 dark:text-purple-100">
                   {totalPontos}
                 </div>
-              </CardContent>
-            </Card>
+              </BentoCardContent>
+            </BentoCard>
 
-            <Card className="border-none shadow-sm bg-gradient-to-br from-green-50 to-emerald-50">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium text-green-700 uppercase tracking-wider">
+            <BentoCard delay={0.2} className="border-none shadow-sm bg-gradient-to-br from-green-50 to-emerald-50 dark:from-emerald-950/30 dark:to-green-950/30">
+              <BentoCardHeader className="pb-2">
+                <div className="text-sm font-medium text-green-700 dark:text-green-400 uppercase tracking-wider">
                   Progresso
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-4xl font-bold text-green-900">
+                </div>
+              </BentoCardHeader>
+              <BentoCardContent>
+                <div className="text-4xl font-bold text-green-900 dark:text-green-100">
                   {allBadges && allBadges.length > 0
                     ? Math.round((totalBadges / allBadges.length) * 100)
                     : 0}
                   %
                 </div>
-              </CardContent>
-            </Card>
-          </div>
+              </BentoCardContent>
+            </BentoCard>
+          </BentoGrid>
 
           {/* Badges by Category */}
           <Tabs defaultValue="all" className="w-full">
@@ -162,8 +157,8 @@ export function AchievementsView() {
             </TabsList>
 
             <TabsContent value="all">
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                {allBadges?.map(badge => {
+              <BentoGrid className="grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                {allBadges?.map((badge, idx) => {
                   const earned = earnedBadgeIds.has(badge.id);
                   const Icon = iconMap[badge.icone] || Award;
                   const earnedData = myBadges?.find(
@@ -171,34 +166,36 @@ export function AchievementsView() {
                   );
 
                   return (
-                    <Card
+                    <BentoCard
                       key={badge.id}
+                      delay={idx * 0.05}
                       className={cn(
                         "relative overflow-hidden transition-all duration-300",
                         earned
-                          ? "border-none shadow-lg hover:shadow-xl"
-                          : "border-dashed border-2 border-gray-200 bg-gray-50 opacity-60"
+                          ? "border-none shadow-lg hover:shadow-xl dark:bg-card/60"
+                          : "border-dashed border-2 border-gray-200 bg-gray-50 opacity-60 dark:bg-gray-900/40 dark:border-gray-800"
                       )}
                     >
-                      <CardContent className="p-6 text-center">
+                      <BentoCardContent className="p-6 text-center flex flex-col items-center h-full justify-between">
+                        <div>
                         <div
                           className={cn(
                             "w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-4",
                             earned
                               ? `bg-gradient-to-br ${colorMap[badge.cor] || colorMap.gold}`
-                              : "bg-gray-200"
+                              : "bg-gray-200 dark:bg-gray-800"
                           )}
                         >
                           {earned ? (
                             <Icon className="w-8 h-8" />
                           ) : (
-                            <Lock className="w-6 h-6 text-gray-400" />
+                            <Lock className="w-6 h-6 text-gray-400 dark:text-gray-600" />
                           )}
                         </div>
                         <h3
                           className={cn(
                             "font-bold mb-1",
-                            earned ? "text-slate-900" : "text-gray-400"
+                            earned ? "text-slate-900 dark:text-slate-100" : "text-gray-400 dark:text-gray-600"
                           )}
                         >
                           {badge.nome}
@@ -206,11 +203,13 @@ export function AchievementsView() {
                         <p
                           className={cn(
                             "text-xs mb-2",
-                            earned ? "text-slate-500" : "text-gray-400"
+                            earned ? "text-slate-500 dark:text-slate-400" : "text-gray-400 dark:text-gray-600"
                           )}
                         >
                           {badge.descricao}
                         </p>
+                        </div>
+                        <div className="mt-2">
                         <Badge
                           variant={earned ? "default" : "outline"}
                           className="text-xs"
@@ -222,19 +221,20 @@ export function AchievementsView() {
                             Conquistado em {earnedData.mes}/{earnedData.ano}
                           </p>
                         )}
-                      </CardContent>
-                    </Card>
+                        </div>
+                      </BentoCardContent>
+                    </BentoCard>
                   );
                 })}
-              </div>
+              </BentoGrid>
             </TabsContent>
 
             {categorias.map(cat => (
               <TabsContent key={cat} value={cat}>
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                <BentoGrid className="grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                   {allBadges
                     ?.filter(b => b.categoria === cat)
-                    .map(badge => {
+                    .map((badge, idx) => {
                       const earned = earnedBadgeIds.has(badge.id);
                       const Icon = iconMap[badge.icone] || Award;
                       const earnedData = myBadges?.find(
@@ -242,34 +242,36 @@ export function AchievementsView() {
                       );
 
                       return (
-                        <Card
+                        <BentoCard
                           key={badge.id}
+                          delay={idx * 0.05}
                           className={cn(
                             "relative overflow-hidden transition-all duration-300",
                             earned
-                              ? "border-none shadow-lg hover:shadow-xl"
-                              : "border-dashed border-2 border-gray-200 bg-gray-50 opacity-60"
+                              ? "border-none shadow-lg hover:shadow-xl dark:bg-card/60"
+                              : "border-dashed border-2 border-gray-200 bg-gray-50 opacity-60 dark:bg-gray-900/40 dark:border-gray-800"
                           )}
                         >
-                          <CardContent className="p-6 text-center">
+                          <BentoCardContent className="p-6 text-center flex flex-col items-center h-full justify-between">
+                            <div>
                             <div
                               className={cn(
                                 "w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-4",
                                 earned
                                   ? `bg-gradient-to-br ${colorMap[badge.cor] || colorMap.gold}`
-                                  : "bg-gray-200"
+                                  : "bg-gray-200 dark:bg-gray-800"
                                 )}
                             >
                               {earned ? (
                                 <Icon className="w-8 h-8" />
                               ) : (
-                                <Lock className="w-6 h-6 text-gray-400" />
+                                <Lock className="w-6 h-6 text-gray-400 dark:text-gray-600" />
                               )}
                             </div>
                             <h3
                               className={cn(
                                 "font-bold mb-1",
-                                earned ? "text-slate-900" : "text-gray-400"
+                                earned ? "text-slate-900 dark:text-slate-100" : "text-gray-400 dark:text-gray-600"
                               )}
                             >
                               {badge.nome}
@@ -277,11 +279,13 @@ export function AchievementsView() {
                             <p
                               className={cn(
                                 "text-xs mb-2",
-                                earned ? "text-slate-500" : "text-gray-400"
+                                earned ? "text-slate-500 dark:text-slate-400" : "text-gray-400 dark:text-gray-600"
                               )}
                             >
                               {badge.descricao}
                             </p>
+                            </div>
+                            <div className="mt-2">
                             <Badge
                               variant={earned ? "default" : "outline"}
                               className="text-xs"
@@ -294,11 +298,12 @@ export function AchievementsView() {
                                 {earnedData.ano}
                               </p>
                             )}
-                          </CardContent>
-                        </Card>
+                            </div>
+                          </BentoCardContent>
+                        </BentoCard>
                       );
                     })}
-                </div>
+                </BentoGrid>
               </TabsContent>
             ))}
           </Tabs>

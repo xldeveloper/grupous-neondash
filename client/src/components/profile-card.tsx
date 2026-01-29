@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { User, MapPin, Calendar, Mail } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
+import { BentoCard, BentoCardContent, BentoCardFooter } from "@/components/ui/bento-grid";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 
@@ -48,14 +48,10 @@ export function ProfileCard({
       : "bg-gradient-to-r from-neutral-800 to-neutral-600"; // Default
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      whileHover={{ y: -5 }}
-      transition={{ duration: 0.3 }}
-      className={cn("w-full max-w-sm mx-auto", className)}
+    <BentoCard 
+      className={cn("w-full max-w-sm mx-auto p-0 overflow-hidden group", className)}
+      delay={0.1}
     >
-      <Card className="overflow-hidden border-border/50 bg-card/50 backdrop-blur-sm shadow-xl hover:shadow-2xl transition-all duration-300">
         {/* Cover Image */}
         <div className={cn("h-32 w-full relative", gradientClass)}>
           {coverUrl && (
@@ -68,12 +64,11 @@ export function ProfileCard({
           <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
         </div>
 
-        <CardHeader className="relative px-6 pb-0">
-          <div className="absolute -top-12 left-6">
+        <div className="relative px-6 pb-0 -mt-12">
             <motion.div
               whileHover={{ scale: 1.05 }}
               transition={{ type: "spring", stiffness: 300 }}
-              className="rounded-full p-1 bg-background shadow-lg"
+              className="rounded-full p-1 bg-background shadow-lg inline-block"
             >
               <Avatar className="h-24 w-24 border-4 border-background shadow-sm">
                 <AvatarImage src={imageUrl} alt={name} className="object-cover" />
@@ -82,12 +77,11 @@ export function ProfileCard({
                 </AvatarFallback>
               </Avatar>
             </motion.div>
-          </div>
-
-          <div className="pt-14 pb-4">
+        
+          <div className="pt-4 pb-4">
             <div className="flex justify-between items-start">
               <div>
-                <h3 className="font-bold text-2xl tracking-tight text-foreground">
+                <h3 className="font-bold text-2xl tracking-tight text-foreground group-hover:text-neon-purple transition-colors">
                   {name}
                 </h3>
                 <p className="text-sm font-medium text-muted-foreground flex items-center gap-1 mt-1">
@@ -123,14 +117,14 @@ export function ProfileCard({
               </div>
             )}
           </div>
-        </CardHeader>
+        </div>
 
         {stats.length > 0 && (
-          <CardContent className="px-6 py-4">
+          <BentoCardContent className="px-6 py-4">
             <div className="grid grid-cols-3 gap-4 border-t border-border/50 pt-4">
               {stats.map((stat, index) => (
-                <div key={index} className="text-center group cursor-default">
-                  <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1 group-hover:text-primary transition-colors">
+                <div key={index} className="text-center group/stat cursor-default">
+                  <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1 group-hover/stat:text-primary transition-colors">
                     {stat.label}
                   </p>
                   <p className="font-bold text-lg text-foreground">
@@ -139,10 +133,10 @@ export function ProfileCard({
                 </div>
               ))}
             </div>
-          </CardContent>
+          </BentoCardContent>
         )}
 
-        <CardFooter className="px-6 pb-6 pt-0">
+        <BentoCardFooter className="px-6 pb-6 pt-0 border-t-0">
           {footer ? (
             footer
           ) : (
@@ -154,8 +148,7 @@ export function ProfileCard({
               {actionLabel}
             </Button>
           )}
-        </CardFooter>
-      </Card>
-    </motion.div>
+        </BentoCardFooter>
+    </BentoCard>
   );
 }
