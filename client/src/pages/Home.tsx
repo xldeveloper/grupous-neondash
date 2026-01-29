@@ -21,6 +21,7 @@ import { AchievementsView } from "@/components/dashboard/AchievementsView";
 import { TurmaView } from "@/components/dashboard/TurmaView";
 import { motion } from "motion/react";
 import { AnimatedList } from "@/components/ui/animated-list";
+import { AnimatedCounter } from "@/components/ui/animated-counter";
 import { slideUp, staggerContainer, fadeIn } from "@/lib/animation-variants";
 
 export default function Home() {
@@ -158,11 +159,17 @@ export default function Home() {
                 </CardHeader>
                 <CardContent>
                   <div className="text-3xl font-bold text-slate-900">
-                    {new Intl.NumberFormat("pt-BR", {
-                      style: "currency",
-                      currency: "BRL",
-                      maximumFractionDigits: 0,
-                    }).format(faturamentoTotal)}
+                    <AnimatedCounter
+                      to={faturamentoTotal}
+                      duration={1.5}
+                      formatFn={(v) =>
+                        new Intl.NumberFormat("pt-BR", {
+                          style: "currency",
+                          currency: "BRL",
+                          maximumFractionDigits: 0,
+                        }).format(v)
+                      }
+                    />
                   </div>
                   <p className="text-xs text-neon-gold mt-1 font-medium flex items-center gap-1">
                     <TrendingUp className="w-3 h-3 text-neon-gold" /> Dezembro
@@ -185,7 +192,7 @@ export default function Home() {
                 </CardHeader>
                 <CardContent>
                   <div className="text-3xl font-bold text-slate-900">
-                    {totalMentorados}
+                    <AnimatedCounter to={totalMentorados} duration={1} />
                   </div>
                   <div className="flex gap-2 mt-1 text-xs">
                     <span className="bg-neon-gold/20 text-neon-blue-dark px-2 py-0.5 rounded-full font-medium">
@@ -212,7 +219,11 @@ export default function Home() {
                 </CardHeader>
                 <CardContent>
                   <div className="text-3xl font-bold text-slate-900">
-                    {mediaScore}
+                    <AnimatedCounter
+                      to={parseFloat(mediaScore)}
+                      duration={1.2}
+                      formatFn={(v) => v.toFixed(1)}
+                    />
                   </div>
                   <p className="text-xs text-slate-400 mt-1">
                     Pontuação baseada em metas atingidas

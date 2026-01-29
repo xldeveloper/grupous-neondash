@@ -6,16 +6,20 @@ import {
   useDroppable,
   DragEndEvent,
   DragStartEvent,
+  closestCorners,
 } from "@dnd-kit/core";
 import { trpc } from "@/lib/trpc";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { createPortal } from "react-dom";
-import { Phone, MessageSquare, Plus, MessageCircle, CheckSquare, RefreshCw, Trash2, X } from "lucide-react";
+import { 
+  Phone, MessageSquare, Plus, MessageCircle, 
+  CheckSquare, RefreshCw, Trash2, X, MoreHorizontal 
+} from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
 import {
@@ -35,15 +39,15 @@ interface PipelineKanbanProps {
   isReadOnly?: boolean;
 }
 
-// Columns matching the image and updated schema
+// Updated columns with subtle modern colors
 const COLUMNS = [
-  { id: "novo", title: "Novo", color: "bg-yellow-500" },
-  { id: "primeiro_contato", title: "Primeiro Contato", color: "bg-orange-400" },
-  { id: "qualificado", title: "Qualificado", color: "bg-purple-500" },
-  { id: "proposta", title: "Proposta", color: "bg-orange-600" },
-  { id: "negociacao", title: "Negociação", color: "bg-pink-500" },
-  { id: "fechado", title: "Fechado", color: "bg-green-500" },
-  { id: "perdido", title: "Perdido", color: "bg-red-500" },
+  { id: "novo", title: "Novo", color: "text-yellow-500", bg: "bg-yellow-500/10", border: "border-yellow-500/20" },
+  { id: "primeiro_contato", title: "Primeiro Contato", color: "text-orange-400", bg: "bg-orange-400/10", border: "border-orange-400/20" },
+  { id: "qualificado", title: "Qualificado", color: "text-purple-500", bg: "bg-purple-500/10", border: "border-purple-500/20" },
+  { id: "proposta", title: "Proposta", color: "text-orange-600", bg: "bg-orange-600/10", border: "border-orange-600/20" },
+  { id: "negociacao", title: "Negociação", color: "text-pink-500", bg: "bg-pink-500/10", border: "border-pink-500/20" },
+  { id: "fechado", title: "Fechado", color: "text-green-500", bg: "bg-green-500/10", border: "border-green-500/20" },
+  { id: "perdido", title: "Perdido", color: "text-red-500", bg: "bg-red-500/10", border: "border-red-500/20" },
 ];
 
 export function PipelineKanban({ filters, onLeadClick, onCreateOpen, mentoradoId, isReadOnly = false }: PipelineKanbanProps) {
@@ -94,7 +98,7 @@ export function PipelineKanban({ filters, onLeadClick, onCreateOpen, mentoradoId
     }
   };
 
-  const executeBulkStatus = (status: "novo" | "primeiro_contato" | "qualificado" | "proposta" | "negociacao" | "fechado" | "perdido" | "proposta_enviada" | "em_contato" | "reuniao" | "fechado_ganho" | "fechado_perdido") => {
+  const executeBulkStatus = (status: string) => {
      if (selectedIds.length === 0) return;
      bulkUpdateStatus.mutate({ ids: selectedIds, status: status as any });
   };
@@ -121,7 +125,6 @@ export function PipelineKanban({ filters, onLeadClick, onCreateOpen, mentoradoId
         } else if ((lead.status as string) === "fechado_ganho" && groups["fechado"]) {
           groups["fechado"].push(lead);
         } else if ((lead.status as string) === "fechado_perdido" && groups["perdido"]) {
-            // Mapping closed lost to perdido if appropriate, or keeping as separate logic
             if (groups["perdido"]) groups["perdido"].push(lead);
         }
       });
@@ -156,15 +159,17 @@ export function PipelineKanban({ filters, onLeadClick, onCreateOpen, mentoradoId
         // @ts-expect-error Validated by UI columns
         status: newStatus
       });
+      
+      // Optimistic update logic could go here
     }
   };
 
   if (isLoading) {
     return (
       <div className="flex gap-4 overflow-x-auto pb-4 px-1">
-        {[1, 2, 3, 4, 5, 6].map(i => (
-          <div key={i} className="min-w-[280px] w-[280px]">
-            <Skeleton className="h-[600px] w-full rounded-lg bg-card/20" />
+        {[1, 2, 3, 4, 5].map(i => (
+          <div key={i} className="min-w-[300px] w-[300px]">
+            <Skeleton className="h-[600px] w-full rounded-xl bg-muted/40" />
           </div>
         ))}
       </div>
@@ -172,41 +177,52 @@ export function PipelineKanban({ filters, onLeadClick, onCreateOpen, mentoradoId
   }
 
   return (
-    <div className="flex flex-col h-[calc(100vh-220px)]">
+    <div className="flex flex-col h-full bg-background/50 backdrop-blur-sm rounded-xl border border-border/50">
+      {/* Selection Toolbar */}
       {!isReadOnly && (
-        <div className="flex justify-end px-2 mb-2">
+        <div className="flex justify-between items-center px-4 py-3 border-b border-border/50">
+           <h2 className="text-sm font-semibold text-muted-foreground flex items-center gap-2">
+             Pipe de Vendas
+             <Badge variant="outline" className="text-[10px] h-5 px-1.5 bg-muted/50">{data?.leads.length || 0} Leads</Badge>
+           </h2>
            <Button 
-              variant={selectMode ? "secondary" : "outline"} 
+              variant={selectMode ? "secondary" : "ghost"} 
               size="sm" 
               onClick={() => {
                   setSelectMode(!selectMode);
                   setSelectedIds([]);
               }}
-              className="gap-2"
+              className="gap-2 h-8 text-xs font-medium"
            >
-              <CheckSquare className="h-4 w-4" />
-              {selectMode ? "Cancelar Seleção" : "Selecionar Leads"}
+              <CheckSquare className="h-3.5 w-3.5" />
+              {selectMode ? "Cancelar" : "Selecionar"}
            </Button>
         </div>
       )}
-    <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
-      <div className="flex gap-4 overflow-x-auto pb-4 h-[calc(100vh-220px)] items-start px-1">
-        {COLUMNS.map((col) => (
-          <KanbanColumn
-            key={col.id}
-            id={col.id}
-            title={col.title}
-            color={col.color}
-            leads={leadsByStatus[col.id] || []}
-            onLeadClick={onLeadClick}
-            onCreateOpen={onCreateOpen}
-            selectMode={selectMode}
-            selectedIds={selectedIds}
-            onSelect={handleSelectOne}
-            isReadOnly={isReadOnly}
-          />
-        ))}
-      </div>
+
+    <DndContext 
+      onDragStart={handleDragStart} 
+      onDragEnd={handleDragEnd}
+      collisionDetection={closestCorners}
+    >
+      <ScrollArea className="flex-1 w-full bg-muted/5">
+        <div className="flex gap-4 p-4 min-w-max h-full items-stretch">
+          {COLUMNS.map((col) => (
+            <KanbanColumn
+              key={col.id}
+              column={col}
+              leads={leadsByStatus[col.id] || []}
+              onLeadClick={onLeadClick}
+              onCreateOpen={onCreateOpen}
+              selectMode={selectMode}
+              selectedIds={selectedIds}
+              onSelect={handleSelectOne}
+              isReadOnly={isReadOnly}
+            />
+          ))}
+        </div>
+        <ScrollBar orientation="horizontal" />
+      </ScrollArea>
 
       {createPortal(
         <DragOverlay>
@@ -218,38 +234,40 @@ export function PipelineKanban({ filters, onLeadClick, onCreateOpen, mentoradoId
       )}
     </DndContext>
     
+    {/* Bulk Actions Floating Bar */}
     {selectedIds.length > 0 && !isReadOnly && (
-        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 bg-popover border shadow-2xl rounded-xl p-2 flex items-center gap-2 animate-in slide-in-from-bottom-5 fade-in z-50">
-            <div className="bg-primary/10 text-primary px-3 py-1.5 rounded-md text-sm font-medium mr-2">
+        <div className="fixed bottom-8 left-1/2 -translate-x-1/2 bg-popover/90 backdrop-blur-md border border-border shadow-2xl rounded-2xl p-2 flex items-center gap-2 animate-in slide-in-from-bottom-5 fade-in z-50 ring-1 ring-black/5">
+            <div className="bg-primary/10 text-primary px-3 py-1.5 rounded-lg text-xs font-semibold mr-2 border border-primary/20">
                 {selectedIds.length} selecionados
             </div>
             
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                    <Button variant="secondary" size="sm" className="gap-2">
-                        <RefreshCw className="h-4 w-4" />
-                        Status
+                    <Button variant="outline" size="sm" className="h-8 gap-2 bg-background/50">
+                        <RefreshCw className="h-3.5 w-3.5" />
+                        Mudar Status
                     </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                    <DropdownMenuLabel>Mudar Status para...</DropdownMenuLabel>
+                <DropdownMenuContent align="center" className="w-48">
+                    <DropdownMenuLabel>Mover para...</DropdownMenuLabel>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={() => executeBulkStatus("novo")}>Novo</DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => executeBulkStatus("primeiro_contato")}>Primeiro Contato</DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => executeBulkStatus("qualificado")}>Qualificado</DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => executeBulkStatus("proposta")}>Proposta</DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => executeBulkStatus("negociacao")}>Negociação</DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => executeBulkStatus("fechado")}>Fechado</DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => executeBulkStatus("perdido")}>Perdido</DropdownMenuItem>
+                    {COLUMNS.map(col => (
+                        <DropdownMenuItem key={col.id} onClick={() => executeBulkStatus(col.id)}>
+                            <div className={`w-2 h-2 rounded-full ${col.color.replace('text-', 'bg-')} mr-2`} />
+                            {col.title}
+                        </DropdownMenuItem>
+                    ))}
                 </DropdownMenuContent>
             </DropdownMenu>
 
-            <Button variant="destructive" size="sm" className="gap-2" onClick={executeBulkDelete}>
-                <Trash2 className="h-4 w-4" />
+            <div className="h-4 w-[1px] bg-border mx-1" />
+
+            <Button variant="destructive" size="sm" className="h-8 gap-2 shadow-sm" onClick={executeBulkDelete}>
+                <Trash2 className="h-3.5 w-3.5" />
                 Deletar
             </Button>
             
-            <Button variant="ghost" size="icon" onClick={() => setSelectedIds([])} className="ml-2">
+            <Button variant="ghost" size="icon" onClick={() => setSelectedIds([])} className="h-8 w-8 ml-1 rounded-full hover:bg-muted">
                 <X className="h-4 w-4" />
             </Button>
         </div>
@@ -258,42 +276,49 @@ export function PipelineKanban({ filters, onLeadClick, onCreateOpen, mentoradoId
   );
 }
 
-function KanbanColumn({ id, title, color, leads, onLeadClick, onCreateOpen, selectMode, selectedIds, onSelect, isReadOnly }: any) {
-  const { setNodeRef, isOver } = useDroppable({ id });
+function KanbanColumn({ column, leads, onLeadClick, onCreateOpen, selectMode, selectedIds, onSelect, isReadOnly }: any) {
+  const { setNodeRef, isOver } = useDroppable({ id: column.id });
 
   return (
     <div
       ref={setNodeRef}
-      className={`min-w-[280px] w-[280px] flex flex-col h-full transition-colors rounded-xl ${
-        isOver ? "bg-accent/20" : ""
+      className={`min-w-[300px] w-[300px] flex flex-col h-full rounded-2xl transition-all duration-300 ${
+        isOver ? "bg-accent/30 ring-2 ring-primary/20 ring-inset" : "bg-transparent"
       }`}
     >
-      {/* Header */}
-      <div className="mb-4 space-y-3">
-        <div className="flex items-center justify-between px-1">
-          <div className="flex items-center gap-2">
-            <div className={`w-2 h-2 rounded-full ${color}`} />
-            <span className="font-medium text-sm text-foreground/90">{title}</span>
-          </div>
-          <span className="text-xs font-semibold text-muted-foreground">{leads.length}</span>
+      {/* Column Header */}
+      <div className="mb-3 px-1 sticky top-0 z-10">
+        <div className={`flex items-center justify-between p-3 rounded-xl border backdrop-blur-sm bg-background/40 ${column.border} border-t-4`}>
+            <div className="flex items-center gap-2.5">
+                <div className={`text-xs font-bold uppercase tracking-wider ${column.color}`}>
+                    {column.title}
+                </div>
+            </div>
+            <Badge variant="secondary" className="text-[10px] h-5 min-w-[20px] justify-center bg-background/80 font-bold border-border/50">
+                {leads.length}
+            </Badge>
         </div>
 
-        {/* Separator line style from image */}
-        <div className={`h-[1px] w-full bg-gradient-to-r from-transparent via-${color.replace('bg-', '')} to-transparent opacity-20`} />
-
-        {/* Novo Column Special Button */}
-        {id === "novo" && !isReadOnly && (
-           <Button variant="outline" className="w-full border-dashed border-muted-foreground/30 hover:border-primary/50 text-muted-foreground hover:text-primary" onClick={onCreateOpen}>
-             <Plus className="h-4 w-4 mr-2" /> Novo Lead
+        {/* Novo Column Quick Add */}
+        {column.id === "novo" && !isReadOnly && (
+           <Button 
+            variant="ghost" 
+            className="w-full mt-2 border border-dashed border-border/60 hover:border-primary/50 hover:bg-primary/5 text-muted-foreground hover:text-primary h-9 text-xs uppercase tracking-wide font-medium" 
+            onClick={onCreateOpen}
+           >
+             <Plus className="h-3.5 w-3.5 mr-1.5" /> Novo Lead
            </Button>
         )}
       </div>
 
-      <ScrollArea className="flex-1 -mx-2 px-2">
-        <div className="flex flex-col gap-3 pb-2">
-          {leads.length === 0 && id !== "novo" ? (
-             <div className="h-24 border-2 border-dashed border-muted-foreground/10 rounded-lg flex items-center justify-center text-xs text-muted-foreground">
-               Arraste para cá
+      <ScrollArea className="flex-1 -mr-2 pr-2">
+        <div className="flex flex-col gap-3 px-1 pb-4">
+          {leads.length === 0 && column.id !== "novo" ? (
+             <div className="h-32 border-2 border-dashed border-muted-foreground/5 rounded-xl flex flex-col items-center justify-center text-center p-4 gap-2 opacity-50">
+               <div className="p-3 bg-muted/20 rounded-full">
+                  <Plus className="h-4 w-4 text-muted-foreground/50" />
+               </div>
+               <span className="text-xs text-muted-foreground/70">Arraste leads para cá</span>
              </div>
           ) : (
             leads.map((lead: any) => (
@@ -325,78 +350,105 @@ function DraggableLeadCard({ lead, onClick, selectMode, selected, onSelect, isRe
   } : undefined;
 
   return (
-    <div ref={setNodeRef} style={style} {...listeners} {...attributes} className={`${isDragging ? "opacity-50 rotate-2 scale-105" : ""} transition-all duration-200`}>
+    <div 
+        ref={setNodeRef} 
+        style={style} 
+        {...listeners} 
+        {...attributes} 
+        className={`${isDragging ? "shadow-2xl rotate-2 scale-105 z-50 cursor-grabbing" : "cursor-grab hover:scale-[1.02]"} transition-all duration-200 ease-out`}
+    >
       <LeadCard 
         lead={lead} 
         onClick={onClick} 
         selectMode={selectMode} 
         selected={selected} 
         onSelect={onSelect}
+        isDragging={isDragging}
       />
     </div>
   );
 }
 
-function LeadCard({ lead, onClick, isOverlay, selectMode, selected, onSelect }: any) {
+function LeadCard({ lead, onClick, isOverlay, selectMode, selected, onSelect, isDragging }: any) {
   return (
     <Card
       onClick={onClick}
       className={`
-        cursor-grab active:cursor-grabbing border-none shadow-sm hover:shadow-md transition-all bg-card/50 hover:bg-card
-        ${isOverlay ? "shadow-xl ring-2 ring-primary/20" : ""}
+        relative overflow-hidden group border
+        ${isOverlay 
+            ? "shadow-2xl ring-2 ring-primary/30 bg-background" 
+            : "shadow-sm hover:shadow-lg bg-card/60 hover:bg-card hover:border-sidebar-accent/50"
+        }
+        ${selected ? "ring-2 ring-primary border-primary bg-primary/5" : "border-transparent"}
+        transition-all duration-300 backdrop-blur-sm
       `}
     >
-      <CardContent className="p-3">
-        {/* Header: Avatar + Name + Actions */}
-        <div className="flex items-start justify-between mb-3">
-          <div className="flex items-center gap-3">
+      {/* Left colored border stripe based on status (optional, using hardcoded primary for now) */}
+      <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-transparent via-primary/20 to-transparent group-hover:via-primary/50 transition-all opacity-0 group-hover:opacity-100" />
+
+      <CardContent className="p-3.5 space-y-3">
+        {/* Header: Avatar + Name */}
+        <div className="flex items-start justify-between gap-2">
+          <div className="flex items-center gap-3 min-w-0">
              {selectMode && (
-                <div onClick={(e) => e.stopPropagation()}>
+                <div onClick={(e) => e.stopPropagation()} className="shrink-0">
                     <Checkbox checked={selected} onCheckedChange={onSelect} />
                 </div>
              )}
-             <Avatar className="h-8 w-8 bg-muted border border-border">
-               <AvatarFallback className="text-xs font-medium text-muted-foreground">
+             
+             <Avatar className="h-9 w-9 border-2 border-background shadow-sm shrink-0">
+               <AvatarFallback className="text-[10px] font-bold bg-primary/10 text-primary">
                  {lead.nome.substring(0, 2).toUpperCase()}
                </AvatarFallback>
              </Avatar>
-             <div>
-               <h4 className="font-medium text-sm leading-tight text-foreground/90">{lead.nome}</h4>
-               {lead.tags && lead.tags.length > 0 && (
-                 <div className="flex flex-wrap gap-1 mt-0.5">
-                   {lead.tags.slice(0, 2).map((tag: string) => (
-                     <span key={tag} className="text-[10px] text-muted-foreground bg-muted px-1 rounded-sm">
-                       {tag}
-                     </span>
-                   ))}
-                   {lead.tags.length > 2 && <span className="text-[10px] text-muted-foreground">+</span>}
-                 </div>
+             
+             <div className="min-w-0">
+               <h4 className="font-semibold text-sm leading-tight text-foreground/90 truncate pr-2 group-hover:text-primary transition-colors">
+                  {lead.nome}
+               </h4>
+               {lead.empresa && (
+                   <p className="text-[11px] text-muted-foreground truncate opacity-80 mt-0.5">
+                       {lead.empresa}
+                   </p>
                )}
              </div>
           </div>
 
-          <div className="flex gap-1 text-muted-foreground">
-            <Button size="icon" variant="ghost" className="h-6 w-6 hover:text-primary">
-              <Phone className="h-3.5 w-3.5" />
-            </Button>
-            <Button size="icon" variant="ghost" className="h-6 w-6 hover:text-primary">
-               <MessageSquare className="h-3.5 w-3.5" />
-            </Button>
-          </div>
+          {!isOverlay && !selectMode && (
+              <Button variant="ghost" size="icon" className="h-6 w-6 -mr-1 text-muted-foreground/30 hover:text-foreground opacity-0 group-hover:opacity-100 transition-opacity">
+                  <MoreHorizontal className="h-4 w-4" />
+              </Button>
+          )}
         </div>
 
-        {/* Footer: Whatsapp Button */}
-        <Button
-          variant="outline"
-          className="w-full h-7 text-xs border-green-900/30 text-green-500 hover:text-green-400 hover:bg-green-950/30 hover:border-green-800"
-          onClick={(e) => {
-            e.stopPropagation();
-            // Open whatsapp functionality
-          }}
-        >
-          <MessageCircle className="h-3 w-3 mr-1.5" />
-          WhatsApp
-        </Button>
+        {/* Tags */}
+        {lead.tags && lead.tags.length > 0 && (
+            <div className="flex flex-wrap gap-1.5">
+            {lead.tags.slice(0, 3).map((tag: string) => (
+                <span key={tag} className="text-[10px] font-medium text-muted-foreground bg-muted/50 px-1.5 py-0.5 rounded-md border border-border/50">
+                {tag}
+                </span>
+            ))}
+            {lead.tags.length > 3 && <span className="text-[10px] text-muted-foreground pl-1">+{lead.tags.length - 3}</span>}
+            </div>
+        )}
+
+        {/* Footer Actions */}
+        <div className="flex items-center justify-between pt-2 border-t border-border/40">
+           <div className="flex items-center gap-2">
+              <span className="text-[10px] font-medium text-muted-foreground/70 bg-secondary/30 px-1.5 py-0.5 rounded">
+                 {lead.valorEstimado 
+                    ? new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL", notation: "compact" }).format(lead.valorEstimado / 100)
+                    : "R$ -"}
+              </span>
+           </div>
+
+           <div className="flex gap-1 opacity-60 group-hover:opacity-100 transition-opacity">
+             <Button size="icon" variant="ghost" className="h-6 w-6 hover:bg-green-500/10 hover:text-green-600" onClick={(e) => { e.stopPropagation(); /* WhatsApp */ }}>
+               <MessageCircle className="h-3.5 w-3.5" />
+             </Button>
+           </div>
+        </div>
 
       </CardContent>
     </Card>

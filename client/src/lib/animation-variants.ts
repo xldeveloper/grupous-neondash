@@ -1,16 +1,37 @@
 import { Variants } from "motion/react";
 
-export const transition = {
-  type: "spring",
-  stiffness: 300,
-  damping: 30,
+// Prefers-reduced-motion detection
+const prefersReducedMotion =
+  typeof window !== "undefined" &&
+  window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+
+// No-op variants for reduced motion
+const noOpVariants: Variants = {
+  initial: {},
+  animate: {},
+  exit: {},
 };
 
-export const springTransition = {
-  type: "spring",
-  stiffness: 500,
-  damping: 30,
-};
+// Helper to conditionally return variants based on motion preference
+export function getVariants(variants: Variants): Variants {
+  return prefersReducedMotion ? noOpVariants : variants;
+}
+
+export const transition = prefersReducedMotion
+  ? { duration: 0 }
+  : {
+      type: "spring",
+      stiffness: 300,
+      damping: 30,
+    };
+
+export const springTransition = prefersReducedMotion
+  ? { duration: 0 }
+  : {
+      type: "spring",
+      stiffness: 500,
+      damping: 30,
+    };
 
 export const fadeIn: Variants = {
   initial: { opacity: 0 },
@@ -51,7 +72,7 @@ export const scaleIn: Variants = {
 export const staggerContainer: Variants = {
   animate: {
     transition: {
-      staggerChildren: 0.05,
+      staggerChildren: prefersReducedMotion ? 0 : 0.05,
     },
   },
 };

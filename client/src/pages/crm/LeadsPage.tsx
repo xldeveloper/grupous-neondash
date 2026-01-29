@@ -14,17 +14,8 @@ import { useUser } from "@clerk/clerk-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useSearch } from "wouter";
-import { motion } from "framer-motion";
-
-const staggerContainer = {
-  initial: { opacity: 0 },
-  animate: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1,
-    },
-  },
-};
+import { motion } from "motion/react";
+import { staggerContainer, fadeIn } from "@/lib/animation-variants";
 
 export function LeadsPage() {
   const { user } = useUser();
