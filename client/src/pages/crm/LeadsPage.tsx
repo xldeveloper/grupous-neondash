@@ -189,13 +189,7 @@ export function LeadsPage() {
             </div>
           ) : (
             <div className="p-4 flex-1 overflow-auto bg-muted/10">
-              <PipelineKanban
-                filters={filters}
-                onLeadClick={handleLeadClick}
-                onCreateOpen={() => setCreateDialogOpen(true)}
-                mentoradoId={viewMentoradoId}
-                isReadOnly={isReadOnly}
-              />
+              <PipelineKanban />
             </div>
           )}
         </div>
