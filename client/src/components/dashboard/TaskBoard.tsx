@@ -56,7 +56,7 @@ export function TaskBoard({ mentoradoId }: { mentoradoId?: number }) {
 
       <NeonCard className="flex-1 flex flex-col overflow-hidden bg-slate-950/80 border-slate-800">
         <Tabs defaultValue="todo" className="flex-1 flex flex-col p-4 w-full">
-          <TabsList className="grid w-full grid-cols-2 mb-4 bg-slate-900 border border-slate-800">
+          <TabsList className="grid w-full grid-cols-2 mb-4 bg-muted border border-border" >
             <TabsTrigger value="todo" className="data-[state=active]:bg-neon-blue/20 data-[state=active]:text-neon-blue font-mono">
               A Fazer ({todoTasks.length})
             </TabsTrigger>
@@ -70,7 +70,7 @@ export function TaskBoard({ mentoradoId }: { mentoradoId?: number }) {
               value={newTask}
               onChange={(e) => setNewTask(e.target.value)}
               placeholder="Nova tarefa..."
-              className="bg-slate-900 border-slate-800 focus:border-neon-blue font-mono text-sm"
+              className="bg-background border-input focus:border-neon-blue font-mono text-sm"
             />
             <Button 
               type="submit" 
@@ -88,7 +88,7 @@ export function TaskBoard({ mentoradoId }: { mentoradoId?: number }) {
                 {todoTasks.map((task) => (
                   <div
                     key={task.id}
-                    className="flex items-center justify-between p-3 rounded-lg bg-slate-900/50 border border-slate-800 group hover:border-slate-700 transition-colors"
+                    className="flex items-center justify-between p-3 rounded-lg bg-card border border-border group hover:border-primary/50 transition-colors"
                   >
                     <div className="flex items-center gap-3">
                       <Checkbox
@@ -129,7 +129,7 @@ export function TaskBoard({ mentoradoId }: { mentoradoId?: number }) {
                 {doneTasks.map((task) => (
                   <div
                     key={task.id}
-                    className="flex items-center justify-between p-3 rounded-lg bg-slate-900/30 border border-slate-800/50"
+                    className="flex items-center justify-between p-3 rounded-lg bg-card/50 border border-border/50"
                   >
                     <div className="flex items-center gap-3 opacity-60">
                       <Checkbox

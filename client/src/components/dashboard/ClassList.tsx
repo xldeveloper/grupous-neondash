@@ -36,7 +36,7 @@ export function ClassList({ mentoradoId }: { mentoradoId?: number }) {
 
       <NeonCard className="flex-1 flex flex-col overflow-hidden bg-slate-950/80 border-slate-800 p-4">
         {/* Progress Bar */}
-        <div className="w-full h-1 bg-slate-900 rounded-full mb-6 overflow-hidden">
+        <div className="w-full h-1 bg-muted rounded-full mb-6 overflow-hidden">
           <div 
             className="h-full bg-gradient-to-r from-purple-500 to-neon-blue transition-all duration-1000"
             style={{ width: `${progress}%` }}
@@ -52,7 +52,7 @@ export function ClassList({ mentoradoId }: { mentoradoId?: number }) {
                   "flex items-start justify-between p-4 rounded-lg border transition-all duration-300",
                   item.watched 
                     ? "bg-slate-950/30 border-slate-800/50 opacity-60" 
-                    : "bg-slate-900/50 border-slate-700 hover:border-purple-500/50"
+                    : "bg-card border-border hover:border-primary/50"
                 )}
               >
                 <div className="flex-1 mr-4">

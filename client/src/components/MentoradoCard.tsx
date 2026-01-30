@@ -95,7 +95,7 @@ export default function MentoradoCard({
 
         <BentoCardContent>
           <div className="grid grid-cols-2 gap-4 mb-4">
-            <div className="bg-slate-50 p-3 rounded-lg dark:bg-slate-900/50">
+            <div className="bg-muted/50 p-3 rounded-lg">
               <div className="flex items-center gap-2 text-slate-500 text-xs mb-1">
                 <DollarSign className="w-3 h-3" /> Faturamento
               </div>
@@ -118,7 +118,7 @@ export default function MentoradoCard({
               </div>
             </div>
 
-            <div className="bg-slate-50 p-3 rounded-lg dark:bg-slate-900/50">
+            <div className="bg-muted/50 p-3 rounded-lg">
               <div className="flex items-center gap-2 text-slate-500 text-xs mb-1">
                 <Activity className="w-3 h-3" /> Procedimentos
               </div>

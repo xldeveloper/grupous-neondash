@@ -15,7 +15,7 @@ const NeonCard = React.forwardRef<
         // Glow: For prominent KPIs
         variant === "glow" && "border-neon-gold/50 shadow-neon-gold/10 hover:shadow-neon-gold/20 hover:border-neon-gold",
         // Glass: Modern frosted look
-        variant === "glass" && "bg-white/80 backdrop-blur-md border-white/20 shadow-lg dark:bg-slate-900/80",
+        variant === "glass" && "bg-card border-border shadow-lg",
         className
       )}
       {...props}

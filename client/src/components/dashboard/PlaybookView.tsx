@@ -79,7 +79,7 @@ export function PlaybookView({ turma }: PlaybookViewProps) {
               <AccordionItem
                 key={module.id}
                 value={`item-${module.id}`}
-                className="border border-white/10 rounded-xl bg-black/20 overflow-hidden data-[state=open]:bg-black/40 transition-colors"
+                className="border border-border rounded-xl bg-card overflow-hidden data-[state=open]:bg-card transition-colors"
               >
                 <AccordionTrigger className="px-6 py-4 hover:no-underline hover:bg-white/5">
                   <div className="flex items-center gap-4 w-full">
@@ -102,7 +102,7 @@ export function PlaybookView({ turma }: PlaybookViewProps) {
                     </div>
 
                     <div className="mr-4">
-                      <Badge variant="outline" className="bg-black/50 border-white/10 text-xs">
+                      <Badge variant="outline" className="bg-card border-border text-xs">
                         {moduleCompleted}/{moduleTotal}
                       </Badge>
                     </div>
