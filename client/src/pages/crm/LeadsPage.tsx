@@ -33,7 +33,7 @@ export function LeadsPage() {
   const viewMentoradoId = adminSelectedMentoradoId;
 
   const [view, setView] = useState<"table" | "kanban">("kanban");
-  const [filtersOpen, setFiltersOpen] = useState(true);
+  const [filtersOpen, setFiltersOpen] = useState(false);
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
   const [selectedLeadId, setSelectedLeadId] = useState<number | null>(null);
 
