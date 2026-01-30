@@ -1,18 +1,19 @@
-
 import { z } from "zod";
+import { router, protectedProcedure, publicProcedure } from "../_core/trpc";
 import {
-  router,
-  protectedProcedure,
-  publicProcedure,
-} from "../_core/trpc";
-import { playbookModules, playbookItems, playbookProgress } from "../../drizzle/schema";
+  playbookModules,
+  playbookItems,
+  playbookProgress,
+} from "../../drizzle/schema";
 import { eq, and, asc, desc, inArray } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
 import { getDb } from "../db";
 
 export const playbookRouter = router({
   getModules: protectedProcedure
-    .input(z.object({ turma: z.enum(["neon_estrutura", "neon_escala"]).optional() }))
+    .input(
+      z.object({ turma: z.enum(["neon_estrutura", "neon_escala"]).optional() })
+    )
     .query(async ({ ctx, input }) => {
       const db = getDb();
       // Fetch modules, optionally filtered by turma or global (null)
@@ -43,18 +44,18 @@ export const playbookRouter = router({
       return modules.map(module => {
         const moduleItems = items.filter(i => i.moduleId === module.id);
         const moduleItemsWithProgress = moduleItems.map(item => {
-           const prog = progress.find(p => p.itemId === item.id);
-           return {
-             ...item,
-             isCompleted: !!prog,
-             completedAt: prog?.completedAt || null,
-             notes: prog?.notes || null
-           };
+          const prog = progress.find(p => p.itemId === item.id);
+          return {
+            ...item,
+            isCompleted: !!prog,
+            completedAt: prog?.completedAt || null,
+            notes: prog?.notes || null,
+          };
         });
 
         return {
           ...module,
-          items: moduleItemsWithProgress
+          items: moduleItemsWithProgress,
         };
       });
     }),
@@ -66,7 +67,10 @@ export const playbookRouter = router({
       const mentoradoId = ctx.mentorado?.id;
 
       if (!mentoradoId) {
-        throw new TRPCError({ code: "UNAUTHORIZED", message: "Mentorado profile required" });
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "Mentorado profile required",
+        });
       }
 
       if (input.completed) {
@@ -77,43 +81,55 @@ export const playbookRouter = router({
             mentoradoId,
             itemId: input.itemId,
             status: "completed",
-            completedAt: new Date()
+            completedAt: new Date(),
           })
           .onConflictDoNothing(); // If already exists, do nothing
       } else {
         // Mark as incomplete (delete progress record)
         await db
           .delete(playbookProgress)
-          .where(and(
-            eq(playbookProgress.mentoradoId, mentoradoId),
-            eq(playbookProgress.itemId, input.itemId)
-          ));
+          .where(
+            and(
+              eq(playbookProgress.mentoradoId, mentoradoId),
+              eq(playbookProgress.itemId, input.itemId)
+            )
+          );
       }
 
       return { success: true };
     }),
 
-    // Admin only: Seed or Manage
-    createModule: protectedProcedure
-      .input(z.object({ title: z.string(), description: z.string().optional(), order: z.number() }))
-      .mutation(async ({ ctx, input }) => {
-         if (ctx.user?.role !== 'admin') throw new TRPCError({ code: 'FORBIDDEN' });
-         const db = getDb();
-         return await db.insert(playbookModules).values(input).returning();
-      }),
+  // Admin only: Seed or Manage
+  createModule: protectedProcedure
+    .input(
+      z.object({
+        title: z.string(),
+        description: z.string().optional(),
+        order: z.number(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      if (ctx.user?.role !== "admin")
+        throw new TRPCError({ code: "FORBIDDEN" });
+      const db = getDb();
+      return await db.insert(playbookModules).values(input).returning();
+    }),
 
-    createItem: protectedProcedure
-      .input(z.object({
+  createItem: protectedProcedure
+    .input(
+      z.object({
         moduleId: z.number(),
         title: z.string(),
         description: z.string().optional(),
-        type: z.enum(['task', 'video', 'link']).default('task'),
+        type: z.enum(["task", "video", "link"]).default("task"),
         contentUrl: z.string().optional(),
-        order: z.number()
-      }))
-      .mutation(async ({ ctx, input }) => {
-         if (ctx.user?.role !== 'admin') throw new TRPCError({ code: 'FORBIDDEN' });
-         const db = getDb();
-         return await db.insert(playbookItems).values(input).returning();
+        order: z.number(),
       })
+    )
+    .mutation(async ({ ctx, input }) => {
+      if (ctx.user?.role !== "admin")
+        throw new TRPCError({ code: "FORBIDDEN" });
+      const db = getDb();
+      return await db.insert(playbookItems).values(input).returning();
+    }),
 });

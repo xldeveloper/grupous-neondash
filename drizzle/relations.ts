@@ -156,4 +156,3 @@ export const interacoesRelations = relations(interacoes, ({ one }) => ({
     references: [mentorados.id],
   }),
 }));
-

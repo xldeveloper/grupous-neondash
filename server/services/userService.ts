@@ -5,7 +5,11 @@ import { createMentorado, getMentoradoByEmail } from "../mentorados";
 
 interface ClerkUserPayload {
   id: string;
-  email_addresses: { email_address: string; id: string; verification: { status: string } }[];
+  email_addresses: {
+    email_address: string;
+    id: string;
+    verification: { status: string };
+  }[];
   first_name: string | null;
   last_name: string | null;
   image_url: string;
@@ -57,7 +61,9 @@ export async function syncClerkUser(user: ClerkUserPayload) {
     });
 
     if (!userRecord) {
-      console.error(`[UserService] Failed to retrieve user after insert: ${user.id}`);
+      console.error(
+        `[UserService] Failed to retrieve user after insert: ${user.id}`
+      );
       return;
     }
 
@@ -67,33 +73,40 @@ export async function syncClerkUser(user: ClerkUserPayload) {
     if (existingMentorado) {
       // Link existing mentorado
       if (!existingMentorado.userId) {
-        console.log(`[UserService] Linking existing mentorado ${existingMentorado.id} to user ${userRecord.id}`);
+        console.log(
+          `[UserService] Linking existing mentorado ${existingMentorado.id} to user ${userRecord.id}`
+        );
         await db
           .update(mentorados)
           .set({ userId: userRecord.id })
           .where(eq(mentorados.id, existingMentorado.id));
       } else {
-        console.log(`[UserService] Mentorado ${existingMentorado.id} already linked to user ${existingMentorado.userId}`);
+        console.log(
+          `[UserService] Mentorado ${existingMentorado.id} already linked to user ${existingMentorado.userId}`
+        );
       }
     } else {
       // Create new mentorado
-      console.log(`[UserService] Creating new mentorado for user ${userRecord.id}`);
-      
-      const turma = (user.public_metadata?.turma as "neon_estrutura" | "neon_escala") || "neon_estrutura";
-      
+      console.log(
+        `[UserService] Creating new mentorado for user ${userRecord.id}`
+      );
+
+      const turma =
+        (user.public_metadata?.turma as "neon_estrutura" | "neon_escala") ||
+        "neon_estrutura";
+
       await createMentorado({
         userId: userRecord.id,
         nomeCompleto: fullName || primaryEmail.split("@")[0],
         email: primaryEmail,
         turma: turma,
-        metaFaturamento: 16000, 
+        metaFaturamento: 16000,
         fotoUrl: user.image_url,
-        ativo: "sim"
+        ativo: "sim",
       });
     }
 
     console.log(`[UserService] Successfully synced user ${user.id}`);
-
   } catch (error) {
     console.error("[UserService] Error syncing user:", error);
     throw error;

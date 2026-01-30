@@ -1,10 +1,5 @@
-
 import { z } from "zod";
-import {
-  router,
-  protectedProcedure,
-  publicProcedure,
-} from "../_core/trpc";
+import { router, protectedProcedure, publicProcedure } from "../_core/trpc";
 import { tasks } from "../../drizzle/schema";
 import { eq, and, desc } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
@@ -15,18 +10,24 @@ export const tasksRouter = router({
     .input(z.object({ mentoradoId: z.number().optional() }).optional())
     .query(async ({ ctx, input }) => {
       const db = getDb();
-      
+
       let targetMentoradoId = ctx.mentorado?.id;
 
       if (input?.mentoradoId) {
         if (ctx.user?.role !== "admin") {
-           throw new TRPCError({ code: "FORBIDDEN", message: "Apenas admins podem visualizar tarefas de outros." });
+          throw new TRPCError({
+            code: "FORBIDDEN",
+            message: "Apenas admins podem visualizar tarefas de outros.",
+          });
         }
         targetMentoradoId = input.mentoradoId;
       }
 
       if (!targetMentoradoId) {
-         throw new TRPCError({ code: "UNAUTHORIZED", message: "Perfil de mentorado não encontrado." });
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "Perfil de mentorado não encontrado.",
+        });
       }
 
       return db
@@ -40,7 +41,9 @@ export const tasksRouter = router({
     .input(
       z.object({
         title: z.string().min(1),
-        category: z.enum(["geral", "aula", "crm", "financeiro", "atividade"]).default("geral"),
+        category: z
+          .enum(["geral", "aula", "crm", "financeiro", "atividade"])
+          .default("geral"),
         source: z.enum(["manual", "atividade"]).default("manual"),
         atividadeCodigo: z.string().optional(),
         mentoradoId: z.number().optional(), // Admin override
@@ -48,18 +51,24 @@ export const tasksRouter = router({
     )
     .mutation(async ({ ctx, input }) => {
       const db = getDb();
-      
+
       let targetMentoradoId = ctx.mentorado?.id;
 
       if (input.mentoradoId) {
         if (ctx.user?.role !== "admin") {
-           throw new TRPCError({ code: "FORBIDDEN", message: "Apenas admins podem criar tarefas para outros." });
+          throw new TRPCError({
+            code: "FORBIDDEN",
+            message: "Apenas admins podem criar tarefas para outros.",
+          });
         }
         targetMentoradoId = input.mentoradoId;
       }
 
       if (!targetMentoradoId) {
-         throw new TRPCError({ code: "UNAUTHORIZED", message: "Perfil de mentorado não encontrado." });
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "Perfil de mentorado não encontrado.",
+        });
       }
 
       const [newTask] = await db
@@ -78,9 +87,11 @@ export const tasksRouter = router({
     }),
 
   toggle: protectedProcedure
-    .input(z.object({
-      id: z.number(),
-    }))
+    .input(
+      z.object({
+        id: z.number(),
+      })
+    )
     .mutation(async ({ ctx, input }) => {
       const db = getDb();
 
@@ -114,8 +125,12 @@ export const tasksRouter = router({
     .input(z.object({ id: z.number() }))
     .mutation(async ({ ctx, input }) => {
       const db = getDb();
-      
-      const [task] = await db.select().from(tasks).where(eq(tasks.id, input.id)).limit(1);
+
+      const [task] = await db
+        .select()
+        .from(tasks)
+        .where(eq(tasks.id, input.id))
+        .limit(1);
       if (!task) throw new TRPCError({ code: "NOT_FOUND" });
 
       const isOwner = ctx.mentorado?.id === task.mentoradoId;

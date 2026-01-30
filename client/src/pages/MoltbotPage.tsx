@@ -28,9 +28,7 @@ export default function MoltbotPage() {
           <Bot className="h-6 w-6 text-primary" />
         </div>
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">
-            Assistente NEON
-          </h1>
+          <h1 className="text-2xl font-bold tracking-tight">Assistente NEON</h1>
           <p className="text-sm text-muted-foreground">
             Seu assistente de mentoria com inteligência artificial
           </p>
@@ -119,7 +117,8 @@ export default function MoltbotPage() {
                     <span className="text-muted-foreground">Faturamento</span>
                     <span className="font-medium">
                       R${" "}
-                      {latestMetrics.faturamento?.toLocaleString("pt-BR") ?? "-"}
+                      {latestMetrics.faturamento?.toLocaleString("pt-BR") ??
+                        "-"}
                     </span>
                   </div>
                   <div className="flex justify-between">

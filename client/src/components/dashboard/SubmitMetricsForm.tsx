@@ -19,9 +19,12 @@ interface SubmitMetricsFormProps {
   className?: string;
 }
 
-export function SubmitMetricsForm({ onSuccess, className }: SubmitMetricsFormProps) {
+export function SubmitMetricsForm({
+  onSuccess,
+  className,
+}: SubmitMetricsFormProps) {
   const currentDate = new Date();
-  
+
   const [ano, setAno] = useState(currentDate.getFullYear());
   const [mes, setMes] = useState(currentDate.getMonth() + 1);
   const [faturamento, setFaturamento] = useState("");
@@ -39,7 +42,7 @@ export function SubmitMetricsForm({ onSuccess, className }: SubmitMetricsFormPro
       toast.success("Métricas enviadas com sucesso!", {
         description: `Dados de ${getMesNome(mes)}/${ano} foram salvos.`,
       });
-      
+
       // Reset form
       setFaturamento("");
       setLucro("");
@@ -48,10 +51,10 @@ export function SubmitMetricsForm({ onSuccess, className }: SubmitMetricsFormPro
       setLeads("");
       setProcedimentos("");
       setObservacoes("");
-      
+
       // Invalidate queries to refresh dashboard data
       utils.mentorados.invalidate();
-      
+
       if (onSuccess) onSuccess();
     },
     onError: error => {
@@ -79,8 +82,18 @@ export function SubmitMetricsForm({ onSuccess, className }: SubmitMetricsFormPro
 
   const getMesNome = (m: number) => {
     const meses = [
-      "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
-      "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro",
+      "Janeiro",
+      "Fevereiro",
+      "Março",
+      "Abril",
+      "Maio",
+      "Junho",
+      "Julho",
+      "Agosto",
+      "Setembro",
+      "Outubro",
+      "Novembro",
+      "Dezembro",
     ];
     return meses[m - 1];
   };

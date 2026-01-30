@@ -36,16 +36,16 @@ export const BentoCard = ({
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ 
-        duration: 0.4, 
+      transition={{
+        duration: 0.4,
         delay: delay,
         type: "spring",
         stiffness: 260,
-        damping: 20
+        damping: 20,
       }}
-      whileHover={{ 
+      whileHover={{
         y: -5,
-        transition: { duration: 0.2 }
+        transition: { duration: 0.2 },
       }}
       className={cn(
         "row-span-1 rounded-xl group/bento hover:shadow-xl transition duration-200 shadow-input dark:shadow-none p-4 bg-card border border-border justify-between flex flex-col space-y-4",
@@ -124,5 +124,14 @@ export const BentoCardFooter = ({
   children: ReactNode;
   className?: string;
 }) => {
-  return <div className={cn("mt-auto pt-4 border-t border-slate-100 dark:border-slate-800", className)}>{children}</div>;
+  return (
+    <div
+      className={cn(
+        "mt-auto pt-4 border-t border-slate-100 dark:border-slate-800",
+        className
+      )}
+    >
+      {children}
+    </div>
+  );
 };

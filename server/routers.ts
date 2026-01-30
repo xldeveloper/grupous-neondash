@@ -27,5 +27,4 @@ export const appRouter = router({
   diagnostico: diagnosticoRouter,
 });
 
-
 export type AppRouter = typeof appRouter;

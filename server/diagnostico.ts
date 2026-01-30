@@ -1,4 +1,3 @@
-
 import { z } from "zod";
 import { router, protectedProcedure } from "./_core/trpc";
 import { diagnosticos, mentorados } from "../drizzle/schema";
@@ -9,12 +8,12 @@ import { TRPCError } from "@trpc/server";
 export const diagnosticoRouter = router({
   get: protectedProcedure.query(async ({ ctx }) => {
     const db = getDb();
-    
+
     // 1. Get user's mentorado record
-    // We can use ctx.mentorado if available, but let's be safe and query via db if needed, 
+    // We can use ctx.mentorado if available, but let's be safe and query via db if needed,
     // though protectedProcedure ensures ctx.mentorado exists for 'mentoradoProcedure'.
     // However, this is 'protectedProcedure' which only ensures 'ctx.user'.
-    
+
     // Let's try to find mentorado for this user
     const mentorado = await db.query.mentorados.findFirst({
       where: eq(mentorados.userId, ctx.user.id),
@@ -61,7 +60,7 @@ export const diagnosticoRouter = router({
     )
     .mutation(async ({ ctx, input }) => {
       const db = getDb();
-      
+
       // 1. Get user's mentorado record
       const mentorado = await db.query.mentorados.findFirst({
         where: eq(mentorados.userId, ctx.user.id),

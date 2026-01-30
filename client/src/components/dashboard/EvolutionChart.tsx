@@ -18,7 +18,9 @@ interface EvolutionChartProps {
 }
 
 export function EvolutionChart({ mentoradoId }: EvolutionChartProps) {
-  const { data: evolutionData, isLoading } = trpc.mentorados.evolution.useQuery({ mentoradoId });
+  const { data: evolutionData, isLoading } = trpc.mentorados.evolution.useQuery(
+    { mentoradoId }
+  );
 
   if (isLoading) {
     return (
@@ -49,7 +51,7 @@ export function EvolutionChart({ mentoradoId }: EvolutionChartProps) {
   }
 
   // Format data for chart
-  const validData = evolutionData.map((item) => ({
+  const validData = evolutionData.map(item => ({
     name: `${item.mes}/${item.ano}`,
     Faturamento: item.faturamento,
     Lucro: item.lucro,
@@ -77,7 +79,7 @@ export function EvolutionChart({ mentoradoId }: EvolutionChartProps) {
               fontSize={12}
               tickLine={false}
               axisLine={false}
-              tickFormatter={(value) => `R$ ${value}`}
+              tickFormatter={value => `R$ ${value}`}
             />
             <Tooltip
               contentStyle={{

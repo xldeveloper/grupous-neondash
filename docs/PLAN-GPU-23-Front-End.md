@@ -1,40 +1,47 @@
 # Plano de Execução: GPU-23 - Front End
 
 ## Visão Geral
+
 Este documento descreve o plano detalhado para executar todos os sub-issues relacionados a melhorias de UI/UX no dashboard do mentorado.
 
 ## Sub-Issues Mapeados
 
-| ID | Título | Prioridade | Complexidade |
-|----|--------|------------|--------------|
-| GPU-24 | Mudar componente de seleção de abas | Alta | Média |
-| GPU-25 | Trocar cores do modo claro (azul petróleo) | Alta | Baixa |
-| GPU-26 | Remover card "Sistema Online" | Média | Baixa |
-| GPU-27 | Trocar seleção de mentorado (Floating Dock) | Alta | Média |
-| GPU-29 | Trocar cores do modo escuro (azul claro/dourado) | Alta | Baixa |
+| ID     | Título                                           | Prioridade | Complexidade |
+| ------ | ------------------------------------------------ | ---------- | ------------ |
+| GPU-24 | Mudar componente de seleção de abas              | Alta       | Média        |
+| GPU-25 | Trocar cores do modo claro (azul petróleo)       | Alta       | Baixa        |
+| GPU-26 | Remover card "Sistema Online"                    | Média      | Baixa        |
+| GPU-27 | Trocar seleção de mentorado (Floating Dock)      | Alta       | Média        |
+| GPU-29 | Trocar cores do modo escuro (azul claro/dourado) | Alta       | Baixa        |
 
 ---
 
 ## GPU-26: Remover Card "Sistema Online" ⚡
 
 ### Descrição
+
 Remover o indicador "Sistema Online" da página Meu Dashboard, que aparece na parte superior direita quando não está em mobile.
 
 ### Localização
+
 Arquivo: `client/src/pages/MyDashboard.tsx`
 Linhas: ~143-149 (dentro do componente `MyDashboard`)
 
 ### Códigos a remover
+
 ```tsx
-{!isMobile && (
-  <div className="flex items-center gap-2 text-sm text-gray-500 bg-black/40 px-3 py-1.5 rounded-full border border-white/5">
-    <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-    Sistema Online
-  </div>
-)}
+{
+  !isMobile && (
+    <div className="flex items-center gap-2 text-sm text-gray-500 bg-black/40 px-3 py-1.5 rounded-full border border-white/5">
+      <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+      Sistema Online
+    </div>
+  );
+}
 ```
 
 ### Verificação
+
 - [ ] Card de "Sistema Online" removido
 - [ ] Layout permanece consistente em desktop
 - [ ] Funcionalidade em mobile não afetada
@@ -44,12 +51,15 @@ Linhas: ~143-149 (dentro do componente `MyDashboard`)
 ## GPU-25: Trocar Cores do Modo Claro 🔵
 
 ### Descrição
+
 Atualizar as cores de texto no modo claro para melhorar o contraste, usando azul petróleo como padrão do projeto.
 
 ### Localizações
+
 Arquivo: `tailwind.config.ts` (definição de cores) ou estilos inline
 
 ### Cores a definir (azul petróleo)
+
 ```css
 --neon-petroleo: #0f4c75;
 --neon-petroleo-light: #3282b8;
@@ -57,13 +67,16 @@ Arquivo: `tailwind.config.ts` (definição de cores) ou estilos inline
 ```
 
 ### Áreas afetadas
+
 1. Títulos principais
 2. Texto de parágrafos
 3. Labels e descrições
 4. Títulos de Cards
 
 ### Implementação
+
 Adicionar ou atualizar as variáveis de cor no tema light:
+
 ```typescript
 // client/tailwind.config.ts
 theme: {
@@ -86,6 +99,7 @@ theme: {
 ```
 
 ### Verificação
+
 - [ ] Corresponde ao azul petróleo do projeto
 - [ ] Contraste WCAG AA (mínimo 4.5:1) atendido
 - [ ] Visual consistente em modo claro
@@ -95,9 +109,11 @@ theme: {
 ## GPU-29: Trocar Cores do Modo Escuro 🌙
 
 ### Descrição
+
 Atualizar as cores de texto no modo escuro para azul claro ou dourado, melhorando o contraste.
 
 ### Cores a definir
+
 ```css
 /* Modo escuro - Azul claro */
 --neon-blue-light: #64b5f6;
@@ -111,7 +127,9 @@ Atualizar as cores de texto no modo escuro para azul claro ou dourado, melhorand
 ### Áreas afetadas (mesmas do GPU-25, mas apenas para dark mode)
 
 ### Implementação
+
 Atualizar as classes `dark:` nos componentes para usar as novas cores:
+
 ```tsx
 // Exemplo de como aplicar
 <h2 className="text-white dark:text-neon-blue-light">Título</h2>
@@ -119,6 +137,7 @@ Atualizar as classes `dark:` nos componentes para usar as novas cores:
 ```
 
 ### Verificação
+
 - [ ] Texto legível no modo escuro
 - [ ] Azul claro ou dourado aplicado
 - [ ] Contraste WCAG AA atendido
@@ -128,13 +147,16 @@ Atualizar as classes `dark:` nos componentes para usar as novas cores:
 ## GPU-24: Melhorar Componente de Seleção de Abas 🎨
 
 ### Descrição
+
 Substituir o `TabsList` do shadcn/ui atual por um componente mais bonito e estilizado que combine com o visual do projeto Neon.
 
 ### Localização
+
 Arquivo: `client/src/pages/MyDashboard.tsx`
 Linhas: ~157-173
 
 ### Abas atuais
+
 1. Visão Geral
 2. Diagnóstico
 3. Evolução
@@ -144,6 +166,7 @@ Linhas: ~157-173
 7. Atividades
 
 ### Opções de componentes shadcn/ui
+
 1. **Animated Tabs** (já existe em `client/src/components/ui/animated-tabs.tsx`)
 2. **Radio Group** (para seleção de botões)
 3. **Toggle Group** (botões de alternância)
@@ -151,6 +174,7 @@ Linhas: ~157-173
 ### Implementação recomendada: Animated Tabs
 
 1. Substituir a importação:
+
 ```tsx
 // De
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -159,6 +183,7 @@ import { AnimatedTabs } from "@/components/ui/animated-tabs";
 ```
 
 2. Substituir o componente:
+
 ```tsx
 <AnimatedTabs
   tabs={[
@@ -182,6 +207,7 @@ import { AnimatedTabs } from "@/components/ui/animated-tabs";
    - Efeito de glow/hover
 
 ### Verificação
+
 - [ ] Visual moderno e consistente com o tema Neon
 - [ ] Animações funcionam corretamente
 - [ ] Compatível com modo claro e escuro
@@ -192,25 +218,36 @@ import { AnimatedTabs } from "@/components/ui/animated-tabs";
 ## GPU-27: Trocar Seleção de Mentorado (Floating Dock) 🚢
 
 ### Descrição
+
 Substituir o componente `Select` atual por uma experiência estilo "Floating Dock" da Aceternity UI, inspirada no componente de link.
 
 ### Localização
+
 Arquivo: `client/src/pages/MyDashboard.tsx`
 Linhas: ~156-167
 
 ### Referência
+
 [Aceternity UI - Floating Dock](https://ui.aceternity.com/components/floating-dock)
 
 ### Implementação
 
 #### Passo 1: Instalar dependências (se necessário)
+
 O componente pode depender de `framer-motion`, que já está instalado no projeto.
 
 #### Passo 2: Criar o componente Floating Dock
+
 Novo arquivo: `client/src/components/ui/floating-dock.tsx`
 
 ```tsx
-import { motion, useSpring, useMotionValue, useTransform, AnimatePresence } from "framer-motion";
+import {
+  motion,
+  useSpring,
+  useMotionValue,
+  useTransform,
+  AnimatePresence,
+} from "framer-motion";
 import { useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 
@@ -243,8 +280,10 @@ export const FloatingDock = ({ items, className }: FloatingDockProps) => {
 #### Passo 3: Integrar no MyDashboard.tsx
 
 Substituir o Select atual:
+
 ```tsx
-{/* Antigo
+{
+  /* Antigo
 <Select value={selectedMentoradoId} onValueChange={setSelectedMentoradoId}>
   <SelectTrigger className="w-[280px] bg-black/40 border-white/10">
     <SelectValue placeholder="Selecione um mentorado" />
@@ -257,9 +296,12 @@ Substituir o Select atual:
     ))}
   </SelectContent>
 </Select>
-*/}
+*/
+}
 
-{/* Novo - Floating Dock */}
+{
+  /* Novo - Floating Dock */
+}
 <div className="relative">
   <FloatingDock
     items={
@@ -289,15 +331,17 @@ Substituir o Select atual:
       </Select>
     </PopoverContent>
   </Popover>
-</div>
+</div>;
 ```
 
 ### Desafios Considerados
+
 - **Muitos mentorados**: Se houver muitos mentorados, o dock pode ficar muito largo.
 - **Solução**: Implementar scroll horizontal ou popover para mostrar todos.
 - **Seleção inicial**: O mentorado selecionado inicialmente precisa ter destaque visual.
 
 ### Verificação
+
 - [ ] Visual elegante estilo dock do macOS
 - [ ] Suporta hover com rótulos
 - [ ] Indica mentorado ativo
@@ -318,26 +362,31 @@ Substituir o Select atual:
 ## Checklist Final
 
 ### GPU-26 - Remover "Sistema Online"
+
 - [ ] Código removido do MyDashboard.tsx
 - [ ] Testado em desktop e mobile
 
 ### GPU-25 - Modo Claro (Azul Petróleo)
+
 - [ ] Cores definidas em tailwind.config.ts
 - [ ] Aplicado em todas áreas relevantes
 - [ ] Contraste validado
 
 ### GPU-29 - Modo Escuro (Azul/Dourado)
+
 - [ ] Cores definidas
 - [ ] Aplicado apenas em dark mode
 - [ ] Contraste validado
 
 ### GPU-24 - Seleção de Abas
+
 - [ ] Componente Animated Tabs implementado
 - [ ] Substituído em MyDashboard.tsx
 - [ ] Animações funcionando
 - [ ] Visual harmonioso
 
 ### GPU-27 - Floating Dock Mentorado
+
 - [ ] Componente Floating Dock criado
 - [ ] Integrado no MyDashboard
 - [ ] Funcionalidade de seleção mantida
@@ -348,6 +397,7 @@ Substituir o Select atual:
 ## Testes a Executar
 
 ### Testes Visuais
+
 - [ ] Verificar modo claro (azul petróleo)
 - [ ] Verificar modo escuro (azul/dourado)
 - [ ] Testar navegação entre abas (animações)
@@ -355,11 +405,13 @@ Substituir o Select atual:
 - [ ] Verify sistema online card removed
 
 ### Testes Funcionais
+
 - [ ] Todas as funcionalidades existentes funcionam
 - [ ] Nenhuma breaking change
 - [ ] Performance não degradou
 
 ### Testes de Responsividade
+
 - [ ] Menu de abas funciona em mobile
 - [ ] Floating dock funciona em mobile
 - [ ] Layout não quebra em diferentes tamanhos

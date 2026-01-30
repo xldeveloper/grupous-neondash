@@ -38,7 +38,10 @@ const CACHE_KEY_PREFIX = "session:";
 // ═══════════════════════════════════════════════════════════════════════════
 
 let redis: Redis | null = null;
-const memoryCache = new Map<string, { data: CachedSession; expiresAt: number }>();
+const memoryCache = new Map<
+  string,
+  { data: CachedSession; expiresAt: number }
+>();
 
 // Stats tracking
 let cacheHits = 0;

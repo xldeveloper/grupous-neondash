@@ -60,19 +60,19 @@ interface QRCodePendingRequest {
 
 class MoltbotGatewayService {
   private gatewayWs: WebSocket | null = null;
-  
+
   // Multi-session support: indexed by sessionId
   private activeSessions: Map<string, SessionContext> = new Map();
-  
+
   // User-to-sessions mapping: userId -> Set<sessionId>
   private userSessions: Map<number, Set<string>> = new Map();
-  
+
   // Client WebSocket connections: userId -> WebSocket
   private clientConnections: Map<number, WebSocket> = new Map();
-  
+
   // Pending QR code requests: keyed by `${userId}:${channelType}`
   private pendingQRRequests: Map<string, QRCodePendingRequest> = new Map();
-  
+
   private reconnectAttempts = 0;
   private maxReconnectAttempts = 5;
   private reconnectDelay = 5000;
@@ -81,8 +81,7 @@ class MoltbotGatewayService {
   private gatewayUrl: string;
 
   constructor() {
-    this.gatewayUrl =
-      process.env.MOLTBOT_GATEWAY_URL || "ws://127.0.0.1:18789";
+    this.gatewayUrl = process.env.MOLTBOT_GATEWAY_URL || "ws://127.0.0.1:18789";
   }
 
   // ─────────────────────────────────────────────────────────────────────────
@@ -298,7 +297,7 @@ class MoltbotGatewayService {
     const session = this.activeSessions.get(sessionId);
     if (session) {
       this.activeSessions.delete(sessionId);
-      
+
       // Remove from user-sessions mapping
       const userSessionSet = this.userSessions.get(session.userId);
       if (userSessionSet) {
@@ -335,7 +334,7 @@ class MoltbotGatewayService {
   async getSessionsForUser(userId: number): Promise<SessionContext[]> {
     const sessionIds = this.userSessions.get(userId);
     if (!sessionIds) return [];
-    
+
     const sessions: SessionContext[] = [];
     for (const sessionId of Array.from(sessionIds)) {
       const session = this.activeSessions.get(sessionId);
@@ -493,7 +492,7 @@ class MoltbotGatewayService {
     channelType: ChannelType = "whatsapp"
   ): Promise<{ qrCode: string; expiresAt: Date }> {
     const requestKey = `${userId}:${channelType}`;
-    
+
     // Clear any existing pending request
     const existing = this.pendingQRRequests.get(requestKey);
     if (existing) {
@@ -646,7 +645,7 @@ class MoltbotGatewayService {
 
   private handleQRCodeResponse(message: GatewayMessage): void {
     const { userId, channelType, qrCode, expiresAt } = message;
-    
+
     if (!userId || !qrCode) {
       console.warn(
         JSON.stringify({
@@ -666,10 +665,12 @@ class MoltbotGatewayService {
     if (pending) {
       clearTimeout(pending.timeout);
       this.pendingQRRequests.delete(requestKey);
-      
+
       pending.resolve({
         qrCode,
-        expiresAt: expiresAt ? new Date(expiresAt) : new Date(Date.now() + 60000),
+        expiresAt: expiresAt
+          ? new Date(expiresAt)
+          : new Date(Date.now() + 60000),
       });
 
       console.log(

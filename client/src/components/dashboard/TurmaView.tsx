@@ -9,20 +9,17 @@ interface TurmaViewProps {
 
 export function TurmaView({ type }: TurmaViewProps) {
   const data =
-    type === "estrutura"
-      ? analiseData.neon_estrutura
-      : analiseData.neon_escala;
-      
+    type === "estrutura" ? analiseData.neon_estrutura : analiseData.neon_escala;
+
   const benchmarks = data.benchmarks;
   const metrics = data.analise;
-  
+
   const totalFaturamento = Object.values(metrics).reduce(
     (acc, curr) => acc + curr.dados.faturamento,
     0
   );
 
-  const mediaFaturamento =
-    totalFaturamento / Object.keys(metrics).length;
+  const mediaFaturamento = totalFaturamento / Object.keys(metrics).length;
 
   const title = type === "estrutura" ? "Neon Estrutura" : "Neon Escala";
   const subtitle =

@@ -35,9 +35,9 @@ const requireMentorado = t.middleware(async opts => {
   }
 
   if (!ctx.mentorado) {
-    throw new TRPCError({ 
-      code: "FORBIDDEN", 
-      message: "Perfil de mentorado não encontrado" 
+    throw new TRPCError({
+      code: "FORBIDDEN",
+      message: "Perfil de mentorado não encontrado",
     });
   }
 

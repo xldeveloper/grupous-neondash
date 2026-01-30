@@ -164,7 +164,8 @@ export const SidebarLink = ({
   className?: string;
 }) => {
   const { open, animate } = useSidebar();
-  const isExternal = link.href.startsWith("http") || link.href.startsWith("mailto");
+  const isExternal =
+    link.href.startsWith("http") || link.href.startsWith("mailto");
 
   const content = (
     <>
@@ -201,11 +202,7 @@ export const SidebarLink = ({
   }
 
   return (
-    <Link
-      href={link.href}
-      className={commonClasses}
-      {...props}
-    >
+    <Link href={link.href} className={commonClasses} {...props}>
       {content}
     </Link>
   );

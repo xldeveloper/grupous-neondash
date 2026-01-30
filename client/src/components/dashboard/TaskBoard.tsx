@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { trpc } from "@/lib/trpc";
 import { NeonCard } from "@/components/ui/neon-card";
@@ -14,9 +13,9 @@ import { cn } from "@/lib/utils";
 export function TaskBoard({ mentoradoId }: { mentoradoId?: number }) {
   const [newTask, setNewTask] = useState("");
   const utils = trpc.useContext();
-  
+
   const { data: tasks, isLoading } = trpc.tasks.list.useQuery({ mentoradoId });
-  
+
   const createTask = trpc.tasks.create.useMutation({
     onSuccess: () => {
       utils.tasks.list.invalidate();
@@ -56,11 +55,17 @@ export function TaskBoard({ mentoradoId }: { mentoradoId?: number }) {
 
       <NeonCard className="flex-1 flex flex-col overflow-hidden bg-card border-border">
         <Tabs defaultValue="todo" className="flex-1 flex flex-col p-4 w-full">
-          <TabsList className="grid w-full grid-cols-2 mb-4 bg-muted border border-border" >
-            <TabsTrigger value="todo" className="data-[state=active]:bg-neon-blue/20 data-[state=active]:text-neon-blue font-mono">
+          <TabsList className="grid w-full grid-cols-2 mb-4 bg-muted border border-border">
+            <TabsTrigger
+              value="todo"
+              className="data-[state=active]:bg-neon-blue/20 data-[state=active]:text-neon-blue font-mono"
+            >
               A Fazer ({todoTasks.length})
             </TabsTrigger>
-            <TabsTrigger value="done" className="data-[state=active]:bg-neon-gold/20 data-[state=active]:text-neon-gold font-mono">
+            <TabsTrigger
+              value="done"
+              className="data-[state=active]:bg-neon-gold/20 data-[state=active]:text-neon-gold font-mono"
+            >
               Concluídas ({doneTasks.length})
             </TabsTrigger>
           </TabsList>
@@ -68,13 +73,13 @@ export function TaskBoard({ mentoradoId }: { mentoradoId?: number }) {
           <form onSubmit={handleCreate} className="flex gap-2 mb-4">
             <Input
               value={newTask}
-              onChange={(e) => setNewTask(e.target.value)}
+              onChange={e => setNewTask(e.target.value)}
               placeholder="Nova tarefa..."
               className="bg-background border-input focus:border-neon-blue font-mono text-sm"
             />
-            <Button 
-              type="submit" 
-              size="icon" 
+            <Button
+              type="submit"
+              size="icon"
               disabled={createTask.isPending}
               className="bg-neon-blue hover:bg-neon-blue/80 text-black"
             >
@@ -85,7 +90,7 @@ export function TaskBoard({ mentoradoId }: { mentoradoId?: number }) {
           <TabsContent value="todo" className="flex-1 mt-0">
             <ScrollArea className="h-[300px] w-full pr-4">
               <div className="space-y-2">
-                {todoTasks.map((task) => (
+                {todoTasks.map(task => (
                   <div
                     key={task.id}
                     className="flex items-center justify-between p-3 rounded-lg bg-card border border-border group hover:border-primary/50 transition-colors"
@@ -93,12 +98,19 @@ export function TaskBoard({ mentoradoId }: { mentoradoId?: number }) {
                     <div className="flex items-center gap-3">
                       <Checkbox
                         checked={false}
-                        onCheckedChange={() => toggleTask.mutate({ id: task.id })}
+                        onCheckedChange={() =>
+                          toggleTask.mutate({ id: task.id })
+                        }
                         className="border-slate-600 data-[state=checked]:bg-neon-gold data-[state=checked]:text-black"
                       />
-                      <span className="text-sm text-slate-300 font-mono">{task.title}</span>
+                      <span className="text-sm text-slate-300 font-mono">
+                        {task.title}
+                      </span>
                       {task.source === "atividade" && (
-                        <Badge variant="outline" className="ml-2 border-yellow-500/50 text-yellow-400 text-[10px] px-1.5 py-0 h-5 font-mono">
+                        <Badge
+                          variant="outline"
+                          className="ml-2 border-yellow-500/50 text-yellow-400 text-[10px] px-1.5 py-0 h-5 font-mono"
+                        >
                           <Play className="w-2.5 h-2.5 mr-0.5" />
                           PLAY
                         </Badge>
@@ -126,7 +138,7 @@ export function TaskBoard({ mentoradoId }: { mentoradoId?: number }) {
           <TabsContent value="done" className="flex-1 mt-0">
             <ScrollArea className="h-[300px] w-full pr-4">
               <div className="space-y-2">
-                {doneTasks.map((task) => (
+                {doneTasks.map(task => (
                   <div
                     key={task.id}
                     className="flex items-center justify-between p-3 rounded-lg bg-muted/40 border border-border/50"
@@ -134,12 +146,19 @@ export function TaskBoard({ mentoradoId }: { mentoradoId?: number }) {
                     <div className="flex items-center gap-3 opacity-60">
                       <Checkbox
                         checked={true}
-                        onCheckedChange={() => toggleTask.mutate({ id: task.id })}
+                        onCheckedChange={() =>
+                          toggleTask.mutate({ id: task.id })
+                        }
                         className="border-slate-600"
                       />
-                      <span className="text-sm text-slate-400 font-mono line-through">{task.title}</span>
+                      <span className="text-sm text-slate-400 font-mono line-through">
+                        {task.title}
+                      </span>
                       {task.source === "atividade" && (
-                        <Badge variant="outline" className="ml-2 border-yellow-500/30 text-yellow-500/50 text-[10px] px-1.5 py-0 h-5 font-mono">
+                        <Badge
+                          variant="outline"
+                          className="ml-2 border-yellow-500/30 text-yellow-500/50 text-[10px] px-1.5 py-0 h-5 font-mono"
+                        >
                           <Play className="w-2.5 h-2.5 mr-0.5" />
                           PLAY
                         </Badge>

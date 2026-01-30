@@ -266,7 +266,11 @@ export function ChatInterface() {
                 disabled={isSending}
                 className="flex-1"
               />
-              <Button type="submit" size="icon" disabled={!input.trim() || isSending}>
+              <Button
+                type="submit"
+                size="icon"
+                disabled={!input.trim() || isSending}
+              >
                 {isSending ? (
                   <Loader2 className="h-4 w-4 animate-spin" />
                 ) : (

@@ -26,25 +26,55 @@ export const ATIVIDADES: Atividade[] = [
   // ═══════════════════════════════════════════════════════════════════════════
   {
     codigo: "primordial-checklist",
-    titulo: "ATIVIDADE PRIMORDIAL: Checklist de Registro de Consultório e Abertura de Empresa (CNPJ)",
+    titulo:
+      "ATIVIDADE PRIMORDIAL: Checklist de Registro de Consultório e Abertura de Empresa (CNPJ)",
     etapa: "Módulo 2",
     icone: "📋",
-    descricao: "Documentação necessária para registro de consultório de saúde e abertura de empresa.",
+    descricao:
+      "Documentação necessária para registro de consultório de saúde e abertura de empresa.",
     steps: [
       { codigo: "doc-1", label: "Autorização do Corpo de Bombeiros" },
       { codigo: "doc-2", label: "Autorização da Vigilância Sanitária" },
-      { codigo: "doc-3", label: "Pedido devidamente preenchido (pelo site da Vigilância)" },
-      { codigo: "doc-4", label: "Cópia do Contrato Social da Empresa (Quando abre CNPJ - Contador)" },
-      { codigo: "doc-5", label: "Cópia do CNPJ ou CPF — no caso de pessoa física" },
-      { codigo: "doc-6", label: "Comprovante do recolhimento da taxa do serviço" },
-      { codigo: "doc-7", label: "Cópia da Carteira Profissional emitida pelo Conselho de Classe do Responsável Técnico" },
+      {
+        codigo: "doc-3",
+        label: "Pedido devidamente preenchido (pelo site da Vigilância)",
+      },
+      {
+        codigo: "doc-4",
+        label:
+          "Cópia do Contrato Social da Empresa (Quando abre CNPJ - Contador)",
+      },
+      {
+        codigo: "doc-5",
+        label: "Cópia do CNPJ ou CPF — no caso de pessoa física",
+      },
+      {
+        codigo: "doc-6",
+        label: "Comprovante do recolhimento da taxa do serviço",
+      },
+      {
+        codigo: "doc-7",
+        label:
+          "Cópia da Carteira Profissional emitida pelo Conselho de Classe do Responsável Técnico",
+      },
       { codigo: "doc-8", label: "Declaração do horário de funcionamento" },
       { codigo: "doc-9", label: "Croqui de localização" },
-      { codigo: "doc-10", label: "Relação dos procedimentos técnicos a serem executados no estabelecimento" },
+      {
+        codigo: "doc-10",
+        label:
+          "Relação dos procedimentos técnicos a serem executados no estabelecimento",
+      },
       { codigo: "doc-11", label: "PGRS" },
-      { codigo: "doc-12", label: "Registro do Consultório enquanto pessoa jurídica (Cartão CNPJ)" },
+      {
+        codigo: "doc-12",
+        label: "Registro do Consultório enquanto pessoa jurídica (Cartão CNPJ)",
+      },
       { codigo: "doc-13", label: "Alvará de Funcionamento da Prefeitura" },
-      { codigo: "doc-14", label: "Cadastro no CNES (registro obrigatório para estabelecimentos de saúde)" },
+      {
+        codigo: "doc-14",
+        label:
+          "Cadastro no CNES (registro obrigatório para estabelecimentos de saúde)",
+      },
     ],
   },
   {
@@ -52,11 +82,21 @@ export const ATIVIDADES: Atividade[] = [
     titulo: "ATIVIDADE PRIMORDIAL: Organização - Agendas e Tarefas",
     etapa: "Módulo 2",
     icone: "📅",
-    descricao: "Organize sua agenda e sistema de tarefas para máxima produtividade.",
+    descricao:
+      "Organize sua agenda e sistema de tarefas para máxima produtividade.",
     steps: [
-      { codigo: "org-1", label: "Escolher ferramenta de agenda (Google Calendar, Notion, etc)" },
-      { codigo: "org-2", label: "Configurar blocos de tempo para atendimentos" },
-      { codigo: "org-3", label: "Definir horários para tarefas administrativas" },
+      {
+        codigo: "org-1",
+        label: "Escolher ferramenta de agenda (Google Calendar, Notion, etc)",
+      },
+      {
+        codigo: "org-2",
+        label: "Configurar blocos de tempo para atendimentos",
+      },
+      {
+        codigo: "org-3",
+        label: "Definir horários para tarefas administrativas",
+      },
       { codigo: "org-4", label: "Criar sistema de lembretes" },
       { codigo: "org-5", label: "Configurar automações de confirmação" },
     ],
@@ -317,9 +357,11 @@ export function getAtividadesByEtapa(): Record<string, Atividade[]> {
 /**
  * Calcula progresso total dado um mapa de progresso
  */
-export function calcularProgresso(
-  progressMap: Record<string, boolean>
-): { total: number; completed: number; percentage: number } {
+export function calcularProgresso(progressMap: Record<string, boolean>): {
+  total: number;
+  completed: number;
+  percentage: number;
+} {
   let total = 0;
   let completed = 0;
 

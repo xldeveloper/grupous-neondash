@@ -3,7 +3,9 @@ import { cn } from "@/lib/utils";
 
 const NeonCard = React.forwardRef<
   HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement> & { variant?: "default" | "glow" | "glass" }
+  React.HTMLAttributes<HTMLDivElement> & {
+    variant?: "default" | "glow" | "glass";
+  }
 >(({ className, variant = "default", ...props }, ref) => {
   return (
     <div
@@ -11,9 +13,11 @@ const NeonCard = React.forwardRef<
       className={cn(
         "rounded-xl border bg-card text-card-foreground shadow-sm transition-all duration-300",
         // Default: Clean white/navy with subtle border
-        variant === "default" && "border-neon-border hover:shadow-md hover:border-neon-blue/30",
+        variant === "default" &&
+          "border-neon-border hover:shadow-md hover:border-neon-blue/30",
         // Glow: For prominent KPIs
-        variant === "glow" && "border-neon-gold/50 shadow-neon-gold/10 hover:shadow-neon-gold/20 hover:border-neon-gold",
+        variant === "glow" &&
+          "border-neon-gold/50 shadow-neon-gold/10 hover:shadow-neon-gold/20 hover:border-neon-gold",
         // Glass: Modern frosted look
         variant === "glass" && "bg-card border-border shadow-lg",
         className

@@ -1,9 +1,9 @@
 import { z } from "zod";
-import { 
-  protectedProcedure, 
-  router, 
-  mentoradoProcedure, 
-  adminProcedure 
+import {
+  protectedProcedure,
+  router,
+  mentoradoProcedure,
+  adminProcedure,
 } from "./_core/trpc";
 import { TRPCError } from "@trpc/server"; // Added import
 import { eq, and } from "drizzle-orm";
@@ -21,9 +21,6 @@ import {
   getMetricasEvolution,
 } from "./mentorados";
 
-
-
-
 export const mentoradosRouter = router({
   // Get current user's mentorado profile
   me: protectedProcedure.query(async ({ ctx }) => {
@@ -35,15 +32,20 @@ export const mentoradosRouter = router({
   getById: protectedProcedure
     .input(z.object({ id: z.number() }))
     .query(async ({ ctx, input }) => {
-        const db = getDb();
-        if (ctx.user?.role !== "admin") {
-            // If not admin, can only see self
-            if (ctx.mentorado?.id !== input.id) throw new TRPCError({ code: "FORBIDDEN" });
-        }
-        
-        const [mentorado] = await db.select().from(mentorados).where(eq(mentorados.id, input.id)).limit(1);
-        if(!mentorado) throw new TRPCError({ code: "NOT_FOUND" });
-        return mentorado;
+      const db = getDb();
+      if (ctx.user?.role !== "admin") {
+        // If not admin, can only see self
+        if (ctx.mentorado?.id !== input.id)
+          throw new TRPCError({ code: "FORBIDDEN" });
+      }
+
+      const [mentorado] = await db
+        .select()
+        .from(mentorados)
+        .where(eq(mentorados.id, input.id))
+        .limit(1);
+      if (!mentorado) throw new TRPCError({ code: "NOT_FOUND" });
+      return mentorado;
     }),
 
   // Get all mentorados (admin only)
@@ -67,10 +69,9 @@ export const mentoradosRouter = router({
     }),
 
   // Get metrics history for a mentorado
-  metricas: mentoradoProcedure
-    .query(async ({ ctx }) => {
-      return await getMetricasMensaisByMentorado(ctx.mentorado.id);
-    }),
+  metricas: mentoradoProcedure.query(async ({ ctx }) => {
+    return await getMetricasMensaisByMentorado(ctx.mentorado.id);
+  }),
 
   // Get metrics history sorted ASC for charts
   evolution: mentoradoProcedure
@@ -81,9 +82,10 @@ export const mentoradosRouter = router({
       // If requested specific ID, verify access
       if (input?.mentoradoId) {
         if (ctx.user?.role !== "admin") {
-          throw new TRPCError({ 
+          throw new TRPCError({
             code: "FORBIDDEN",
-            message: "Apenas administradores podem acessar dados de outros mentorados"
+            message:
+              "Apenas administradores podem acessar dados de outros mentorados",
           });
         }
         targetId = input.mentoradoId;
@@ -91,7 +93,6 @@ export const mentoradosRouter = router({
 
       return await getMetricasEvolution(targetId);
     }),
-
 
   // Get specific month metrics
   metricaMes: mentoradoProcedure

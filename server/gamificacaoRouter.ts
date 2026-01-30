@@ -1,9 +1,9 @@
 import { z } from "zod";
-import { 
-  protectedProcedure, 
-  router, 
-  mentoradoProcedure, 
-  adminProcedure 
+import {
+  protectedProcedure,
+  router,
+  mentoradoProcedure,
+  adminProcedure,
 } from "./_core/trpc";
 import { TRPCError } from "@trpc/server";
 import { eq } from "drizzle-orm";
@@ -54,7 +54,7 @@ export const gamificacaoRouter = router({
       if (ctx.mentorado.id !== input.mentoradoId) {
         throw new TRPCError({
           code: "FORBIDDEN",
-          message: "Acesso negado: você só pode ver suas próprias badges"
+          message: "Acesso negado: você só pode ver suas próprias badges",
         });
       }
 
@@ -86,7 +86,7 @@ export const gamificacaoRouter = router({
     .input(z.object({ notificacaoId: z.number() }))
     .mutation(async ({ ctx, input }) => {
       const db = getDb();
-      
+
       // 1. Fetch notification to verify ownership
       const [notificacao] = await db
         .select()
@@ -95,14 +95,17 @@ export const gamificacaoRouter = router({
         .limit(1);
 
       if (!notificacao) {
-        throw new TRPCError({ code: "NOT_FOUND", message: "Notificação não encontrada" });
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Notificação não encontrada",
+        });
       }
 
       // 2. Strict Ownership Check
       if (notificacao.mentoradoId !== ctx.mentorado.id) {
-        throw new TRPCError({ 
-          code: "FORBIDDEN", 
-          message: "Esta notificação não pertence a você" 
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Esta notificação não pertence a você",
         });
       }
 

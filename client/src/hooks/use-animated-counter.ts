@@ -8,7 +8,7 @@ export function useAnimatedCounter(
   delay = 0
 ) {
   const count = useMotionValue(from);
-  const rounded = useTransform(count, (latest) => Math.round(latest));
+  const rounded = useTransform(count, latest => Math.round(latest));
 
   useEffect(() => {
     const controls = animate(count, to, { duration, delay, ease: "easeOut" });

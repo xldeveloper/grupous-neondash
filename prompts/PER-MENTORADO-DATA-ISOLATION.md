@@ -32,6 +32,7 @@ erDiagram
 ```
 
 **Path de Autorização:**
+
 ```
 Clerk Auth → users.clerkId → users.id → mentorados.userId → mentorados.id
 ```
@@ -123,7 +124,7 @@ import { mentorados } from "../drizzle/schema";
 // ... existing imports and middlewares ...
 
 // Require authenticated user WITH mentorado profile
-const requireMentorado = t.middleware(async (opts) => {
+const requireMentorado = t.middleware(async opts => {
   const { ctx, next } = opts;
 
   if (!ctx.user) {
@@ -311,7 +312,11 @@ export const mentoradosRouter = router({
 ```typescript
 import { mentoradoProcedure, adminProcedure } from "./_core/trpc";
 import { eq } from "drizzle-orm";
-import { mentoradoBadges, metasProgressivas, rankingMensal } from "../drizzle/schema";
+import {
+  mentoradoBadges,
+  metasProgressivas,
+  rankingMensal,
+} from "../drizzle/schema";
 
 export const gamificacaoRouter = router({
   // Mentorado: Get own badges
@@ -441,10 +446,7 @@ export const leadsRouter = router({
         .select()
         .from(leads)
         .where(
-          and(
-            eq(leads.id, input.id),
-            eq(leads.mentoradoId, ctx.mentorado.id)
-          )
+          and(eq(leads.id, input.id), eq(leads.mentoradoId, ctx.mentorado.id))
         )
         .limit(1);
 
@@ -536,7 +538,7 @@ export const moltbotRouter = router({
         .from(moltbotMessages)
         .where(eq(moltbotMessages.sessionId, input.sessionId))
         .orderBy(moltbotMessages.createdAt);
-  }),
+    }),
 });
 ```
 
@@ -556,9 +558,7 @@ export const notificationsRouter = router({
       })
     )
     .query(async ({ ctx, input }) => {
-      const conditions = [
-        eq(notificacoes.mentoradoId, ctx.mentorado.id),
-      ];
+      const conditions = [eq(notificacoes.mentoradoId, ctx.mentorado.id)];
 
       if (input.apenasNaoLidas) {
         conditions.push(eq(notificacoes.lida, "nao"));
@@ -702,6 +702,7 @@ After implementing, verify:
 ## FILES TO MODIFY
 
 ### Modify:
+
 1. `server/_core/context.ts` - Add mentorado loading
 2. `server/_core/trpc.ts` - Add `mentoradoProcedure` middleware
 3. `server/mentoradosRouter.ts` - Apply isolation patterns
@@ -710,6 +711,7 @@ After implementing, verify:
 6. `server/moltbotRouter.ts` - Apply isolation patterns
 
 ### Create (if not exists):
+
 - `server/_core/types.ts` - Add `TrpcContext` interface
 - `server/notificacoesRouter.ts` - Create with isolation patterns
 

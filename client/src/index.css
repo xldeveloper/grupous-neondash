@@ -50,11 +50,22 @@
   --color-neon-blue: #0369a1;
   --color-neon-gold: #b45309;
   --color-neon-paper: #f8fafc;
+
+  /* GPU-25: Light Mode - Azul Petróleo */
+  --color-neon-petroleo: #0f4c75;
+  --color-neon-petroleo-light: #3282b8;
+  --color-neon-petroleo-dark: #1b262c;
+
+  /* GPU-29: Dark Mode - Azul Claro & Dourado */
+  --color-neon-blue-light: #64b5f6;
+  --color-neon-blue-highlight: #90caf9;
+  --color-neon-gold-bright: #ffd700;
+  --color-neon-gold-light: #ffecb3;
 }
 
 :root {
   /* High Contrast Professional Theme - Light Mode */
-  
+
   --color-paper: #ffffff;
   --color-pure-white: #ffffff;
   --color-neon-blue-dark: #0f172a; /* Slate 900 */
@@ -63,7 +74,14 @@
   --color-neon-gray-light: #f1f5f9; /* Slate 100 */
   --color-neon-border: #cbd5e1; /* Slate 300 */
 
-  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  /* GPU-25: Light Mode - Azul Petróleo */
+  --color-neon-petroleo: #0f4c75;
+  --color-neon-petroleo-light: #3282b8;
+  --color-neon-petroleo-dark: #1b262c;
+
+  --font-sans:
+    "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
   --font-mono: "Fira Code", "JetBrains Mono", monospace;
 
   --radius: 0.5rem;
@@ -158,11 +176,20 @@
   --sidebar-accent-foreground: 210 40% 98%;
   --sidebar-border: 217.2 32.6% 17.5%;
   --sidebar-ring: 212.7 26.8% 83.9%;
-  
+
   /* Legacy Color Overrides */
-  --color-neon-blue-dark: #020617; 
+  --color-neon-blue-dark: #020617;
   --color-neon-blue: #0ea5e9;
   --color-neon-gold: #f59e0b;
+
+  /* GPU-29: Dark Mode - Azul Claro & Dourado (prioritário) */
+  --color-neon-blue-light: #64b5f6;
+  --color-neon-blue-highlight: #90caf9;
+  --color-neon-gold-bright: #ffd700;
+  --color-neon-gold-light: #ffecb3;
+  --color-neon-petroleo: #64b5f6; /* Map to light blue in dark mode */
+  --color-neon-petroleo-light: #90caf9;
+  --color-neon-petroleo-dark: #3282b8;
 }
 
 @layer base {
@@ -268,4 +295,3 @@
 @utility border-neon-border {
   border-color: var(--color-neon-border);
 }
-

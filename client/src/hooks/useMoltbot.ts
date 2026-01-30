@@ -84,12 +84,19 @@ export function useMoltbot(): UseMoltbotReturn {
   useEffect(() => {
     if (historyQuery.data?.items) {
       setMessages(
-        historyQuery.data.items.map((m: { id: number; role: string; content: string; createdAt: Date }) => ({
-          id: m.id,
-          role: m.role as "user" | "assistant",
-          content: m.content,
-          createdAt: new Date(m.createdAt),
-        }))
+        historyQuery.data.items.map(
+          (m: {
+            id: number;
+            role: string;
+            content: string;
+            createdAt: Date;
+          }) => ({
+            id: m.id,
+            role: m.role as "user" | "assistant",
+            content: m.content,
+            createdAt: new Date(m.createdAt),
+          })
+        )
       );
     }
   }, [historyQuery.data]);

@@ -15,49 +15,58 @@ export const authRouter = router({
   diagnostic: protectedProcedure.query(async ({ ctx }) => {
     const user = ctx.user!;
     const db = getDb();
-    
+
     // Check for mentorado by userId
     const mentoradoByUserId = await db.query.mentorados.findFirst({
-      where: eq(mentorados.userId, user.id)
+      where: eq(mentorados.userId, user.id),
     });
-    
+
     // Check for mentorado by email (unlinked)
-    const mentoradoByEmail = user.email 
+    const mentoradoByEmail = user.email
       ? await db.query.mentorados.findFirst({
           where: and(
             eq(mentorados.email, user.email),
             isNull(mentorados.userId)
-          )
+          ),
         })
       : null;
-    
+
     // Count total mentorados with same email (linked and unlinked)
     const allMentoradosWithEmail = user.email
-      ? await db.select().from(mentorados).where(eq(mentorados.email, user.email))
+      ? await db
+          .select()
+          .from(mentorados)
+          .where(eq(mentorados.email, user.email))
       : [];
-    
+
     // Build status
     const status = {
       isFullyLinked: !!mentoradoByUserId,
       hasUnlinkedMatch: !!mentoradoByEmail,
       multipleMatches: allMentoradosWithEmail.length > 1,
     };
-    
+
     // Build recommendations
     const recommendations: string[] = [];
-    
+
     if (!status.isFullyLinked && status.hasUnlinkedMatch) {
-      recommendations.push("Existe um mentorado com seu email que pode ser vinculado automaticamente.");
+      recommendations.push(
+        "Existe um mentorado com seu email que pode ser vinculado automaticamente."
+      );
     }
-    
+
     if (!status.isFullyLinked && !status.hasUnlinkedMatch) {
-      recommendations.push("Nenhum mentorado encontrado com seu email. Um novo será criado automaticamente ou contate o administrador.");
+      recommendations.push(
+        "Nenhum mentorado encontrado com seu email. Um novo será criado automaticamente ou contate o administrador."
+      );
     }
-    
+
     if (status.multipleMatches) {
-      recommendations.push("Existem múltiplos registros com seu email. Contate o administrador para resolver duplicatas.");
+      recommendations.push(
+        "Existem múltiplos registros com seu email. Contate o administrador para resolver duplicatas."
+      );
     }
-    
+
     return {
       timestamp: new Date().toISOString(),
       clerk: {
@@ -72,18 +81,22 @@ export const authRouter = router({
         createdAt: user.createdAt,
         lastSignedIn: user.lastSignedIn,
       },
-      mentorado: mentoradoByUserId ? {
-        id: mentoradoByUserId.id,
-        nomeCompleto: mentoradoByUserId.nomeCompleto,
-        turma: mentoradoByUserId.turma,
-        ativo: mentoradoByUserId.ativo,
-      } : null,
+      mentorado: mentoradoByUserId
+        ? {
+            id: mentoradoByUserId.id,
+            nomeCompleto: mentoradoByUserId.nomeCompleto,
+            turma: mentoradoByUserId.turma,
+            ativo: mentoradoByUserId.ativo,
+          }
+        : null,
       status,
       recommendations,
-      contextMentorado: ctx.mentorado ? {
-        id: ctx.mentorado.id,
-        nome: ctx.mentorado.nomeCompleto,
-      } : null,
+      contextMentorado: ctx.mentorado
+        ? {
+            id: ctx.mentorado.id,
+            nome: ctx.mentorado.nomeCompleto,
+          }
+        : null,
     };
   }),
 
@@ -99,17 +112,19 @@ export const authRouter = router({
 
     // If already linked in context, return success
     if (ctx.mentorado) {
-      return { 
-        success: true, 
-        linked: true, 
-        user, 
+      return {
+        success: true,
+        linked: true,
+        user,
         mentoradoId: ctx.mentorado.id,
-        message: "Already linked"
+        message: "Already linked",
       };
     }
 
     // Attempt manual link if context missed it (e.g. race condition or email mismatch handled elsewhere)
-    console.log(`[Auth] Manual sync requested for user ${user.id} (${user.email})`);
+    console.log(
+      `[Auth] Manual sync requested for user ${user.id} (${user.email})`
+    );
 
     let linked = false;
     let mentoradoId = null;
@@ -117,28 +132,28 @@ export const authRouter = router({
     if (user.email) {
       // Find unlinked mentorado with same email
       const existingMentorado = await db.query.mentorados.findFirst({
-        where: and(
-            eq(mentorados.email, user.email),
-            isNull(mentorados.userId)
-        )
+        where: and(eq(mentorados.email, user.email), isNull(mentorados.userId)),
       });
 
       if (existingMentorado) {
-        await db.update(mentorados)
-            .set({ userId: user.id })
-            .where(eq(mentorados.id, existingMentorado.id));
-        
+        await db
+          .update(mentorados)
+          .set({ userId: user.id })
+          .where(eq(mentorados.id, existingMentorado.id));
+
         linked = true;
         mentoradoId = existingMentorado.id;
       }
     }
 
-    return { 
-        success: true, 
-        linked, 
-        user,
-        mentoradoId,
-        message: linked ? "Linked successfully" : "No matching unlinked mentorado found"
+    return {
+      success: true,
+      linked,
+      user,
+      mentoradoId,
+      message: linked
+        ? "Linked successfully"
+        : "No matching unlinked mentorado found",
     };
   }),
 });

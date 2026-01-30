@@ -15,6 +15,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash, browser_subagent
 This skill provides **two testing approaches** based on the scenario:
 
 ### 1. Antigravity Browser (browser_subagent)
+
 **Use for:** Live interaction, visual debugging, complex user flows, authentication testing
 
 ```yaml
@@ -35,6 +36,7 @@ capabilities:
 ```
 
 **Usage Pattern:**
+
 ```
 browser_subagent:
   TaskName: "Testing Login Flow"
@@ -50,6 +52,7 @@ browser_subagent:
 ```
 
 ### 2. Playwright CLI Scripts
+
 **Use for:** Automated headless testing, CI/CD, batch testing, accessibility audits
 
 ```yaml
@@ -72,12 +75,12 @@ capabilities:
 
 **Scripts Available:**
 
-| Script | Purpose | Usage |
-|--------|---------|-------|
-| `scripts/playwright_runner.py` | Basic browser test | `python scripts/playwright_runner.py <url>` |
-| | With screenshot | `python scripts/playwright_runner.py <url> --screenshot` |
-| | Accessibility check | `python scripts/playwright_runner.py <url> --a11y` |
-| `scripts/with_server.py` | Test with local dev server | `python scripts/with_server.py <start_cmd> <url>` |
+| Script                         | Purpose                    | Usage                                                    |
+| ------------------------------ | -------------------------- | -------------------------------------------------------- |
+| `scripts/playwright_runner.py` | Basic browser test         | `python scripts/playwright_runner.py <url>`              |
+|                                | With screenshot            | `python scripts/playwright_runner.py <url> --screenshot` |
+|                                | Accessibility check        | `python scripts/playwright_runner.py <url> --a11y`       |
+| `scripts/with_server.py`       | Test with local dev server | `python scripts/with_server.py <start_cmd> <url>`        |
 
 **Requires:** `pip install playwright && playwright install chromium`
 
@@ -85,18 +88,18 @@ capabilities:
 
 ## 🎯 Decision Matrix: Which Tool to Use?
 
-| Scenario | Tool | Why |
-|----------|------|-----|
-| Debug visual bug | **browser_subagent** | See issue in real-time |
-| Test login flow | **browser_subagent** | Handle auth complexity |
-| Record user flow | **browser_subagent** | Creates WebP recording |
-| CI/CD testing | **Playwright CLI** | Headless, scriptable |
-| Batch URL audit | **Playwright CLI** | JSON output, fast |
-| Accessibility audit | **Playwright CLI** | Structured a11y report |
-| Performance metrics | **Playwright CLI** | Timing data extraction |
-| Investigate console errors | **browser_subagent** | Real-time console access |
-| Test authenticated pages | **browser_subagent** | Browser has session |
-| Screenshot comparison | **Playwright CLI** | Consistent headless capture |
+| Scenario                   | Tool                 | Why                         |
+| -------------------------- | -------------------- | --------------------------- |
+| Debug visual bug           | **browser_subagent** | See issue in real-time      |
+| Test login flow            | **browser_subagent** | Handle auth complexity      |
+| Record user flow           | **browser_subagent** | Creates WebP recording      |
+| CI/CD testing              | **Playwright CLI**   | Headless, scriptable        |
+| Batch URL audit            | **Playwright CLI**   | JSON output, fast           |
+| Accessibility audit        | **Playwright CLI**   | Structured a11y report      |
+| Performance metrics        | **Playwright CLI**   | Timing data extraction      |
+| Investigate console errors | **browser_subagent** | Real-time console access    |
+| Test authenticated pages   | **browser_subagent** | Browser has session         |
+| Screenshot comparison      | **Playwright CLI**   | Consistent headless capture |
 
 ---
 
@@ -105,8 +108,7 @@ capabilities:
 ### Workflow 1: Visual Bug Investigation
 
 ```yaml
-steps:
-  1. Use browser_subagent to navigate to the affected page
+steps: 1. Use browser_subagent to navigate to the affected page
   2. Observe the visual issue
   3. Inspect element states
   4. Capture screenshot with recording
@@ -115,6 +117,7 @@ steps:
 ```
 
 **Example:**
+
 ```
 browser_subagent:
   TaskName: "Investigating Button Bug"
@@ -130,14 +133,14 @@ browser_subagent:
 ### Workflow 2: E2E Flow Testing
 
 ```yaml
-steps:
-  1. Use browser_subagent for complex flows with auth
+steps: 1. Use browser_subagent for complex flows with auth
   2. Navigate through the entire user journey
   3. Verify each step completes correctly
   4. Capture recording for documentation
 ```
 
 **Example:**
+
 ```
 browser_subagent:
   TaskName: "Testing Checkout Flow"
@@ -177,12 +180,12 @@ python .agent/skills/webapp-testing/scripts/playwright_runner.py https://example
 
 ### Discovery First
 
-| Target | How to Find |
-|--------|-------------|
-| Routes | Scan app/, pages/, router files |
-| API endpoints | Grep for HTTP methods |
-| Components | Find component directories |
-| Features | Read documentation |
+| Target        | How to Find                     |
+| ------------- | ------------------------------- |
+| Routes        | Scan app/, pages/, router files |
+| API endpoints | Grep for HTTP methods           |
+| Components    | Find component directories      |
+| Features      | Read documentation              |
 
 ### Systematic Testing
 
@@ -209,19 +212,20 @@ python .agent/skills/webapp-testing/scripts/playwright_runner.py https://example
 
 ## ✅ E2E Best Practices
 
-| Practice | Implementation |
-|----------|----------------|
-| Use data-testid | Stable selectors for both tools |
-| Wait for elements | browser_subagent waits automatically |
-| Clean state | Start fresh for each test |
-| Test user behavior | Not implementation details |
-| Record evidence | Use RecordingName for documentation |
+| Practice           | Implementation                       |
+| ------------------ | ------------------------------------ |
+| Use data-testid    | Stable selectors for both tools      |
+| Wait for elements  | browser_subagent waits automatically |
+| Clean state        | Start fresh for each test            |
+| Test user behavior | Not implementation details           |
+| Record evidence    | Use RecordingName for documentation  |
 
 ---
 
 ## 📸 browser_subagent Output Guidelines
 
 When using browser_subagent, always specify in Task:
+
 1. **What to navigate to** (URL)
 2. **What to interact with** (specific elements)
 3. **What to capture** (screenshots, final state)
@@ -229,6 +233,7 @@ When using browser_subagent, always specify in Task:
 5. **When to stop** (clear completion criteria)
 
 **Good Task Description:**
+
 ```
 1. Navigate to https://app.example.com/settings
 2. Click the "Profile" tab
@@ -238,6 +243,7 @@ Return: SUCCESS if form loaded, FAILURE with error message if not
 ```
 
 **Bad Task Description:**
+
 ```
 Test the settings page
 ```
@@ -282,14 +288,14 @@ The `playwright_runner.py` script returns JSON:
 
 ## 🚫 Anti-Patterns
 
-| ❌ Don't | ✅ Do |
-|----------|-------|
-| Use browser_subagent for batch tests | Use Playwright CLI for batch |
-| Use Playwright for auth flows | Use browser_subagent for auth |
-| Vague task descriptions | Specific step-by-step instructions |
-| Skip recording name | Always name recordings descriptively |
-| Ignore console errors | Check and report errors |
-| Test implementation | Test user behavior |
+| ❌ Don't                             | ✅ Do                                |
+| ------------------------------------ | ------------------------------------ |
+| Use browser_subagent for batch tests | Use Playwright CLI for batch         |
+| Use Playwright for auth flows        | Use browser_subagent for auth        |
+| Vague task descriptions              | Specific step-by-step instructions   |
+| Skip recording name                  | Always name recordings descriptively |
+| Ignore console errors                | Check and report errors              |
+| Test implementation                  | Test user behavior                   |
 
 ---
 
@@ -306,15 +312,15 @@ When `/debug` invokes this skill:
 
 ## 🚀 Quick Reference
 
-| Task | Method |
-|------|--------|
-| See bug live | `browser_subagent` |
-| Test login | `browser_subagent` |
-| Record flow | `browser_subagent` with RecordingName |
-| Batch health check | `playwright_runner.py <url>` |
-| Get screenshot | `playwright_runner.py <url> --screenshot` |
-| A11y audit | `playwright_runner.py <url> --a11y` |
-| Test with dev server | `with_server.py <cmd> <url>` |
+| Task                 | Method                                    |
+| -------------------- | ----------------------------------------- |
+| See bug live         | `browser_subagent`                        |
+| Test login           | `browser_subagent`                        |
+| Record flow          | `browser_subagent` with RecordingName     |
+| Batch health check   | `playwright_runner.py <url>`              |
+| Get screenshot       | `playwright_runner.py <url> --screenshot` |
+| A11y audit           | `playwright_runner.py <url> --a11y`       |
+| Test with dev server | `with_server.py <cmd> <url>`              |
 
 ---
 

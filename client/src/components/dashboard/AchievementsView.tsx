@@ -1,6 +1,17 @@
-import { BentoGrid, BentoCard, BentoCardContent, BentoCardFooter, BentoCardHeader } from "@/components/ui/bento-grid";
+import {
+  BentoGrid,
+  BentoCard,
+  BentoCardContent,
+  BentoCardFooter,
+  BentoCardHeader,
+} from "@/components/ui/bento-grid";
 import { Badge } from "@/components/ui/badge";
-import { AnimatedTabs, AnimatedTabsContent, AnimatedTabsList, AnimatedTabsTrigger } from "@/components/ui/animated-tabs";
+import {
+  AnimatedTabs,
+  AnimatedTabsContent,
+  AnimatedTabsList,
+  AnimatedTabsTrigger,
+} from "@/components/ui/animated-tabs";
 import { trpc } from "@/lib/trpc";
 import {
   Loader2,
@@ -22,7 +33,6 @@ import {
 import { cn } from "@/lib/utils";
 import { calcularProgresso } from "@/data/atividades-data";
 
-
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   Target,
   TrendingUp,
@@ -37,7 +47,7 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   Award,
   Trophy,
   Medal,
-  };
+};
 
 const colorMap: Record<string, string> = {
   gold: "from-yellow-400 to-amber-500 text-yellow-900",
@@ -58,8 +68,6 @@ const categoriaLabels: Record<string, string> = {
   consistencia: "Consistência",
   especial: "Especial",
 };
-
-
 
 // Component helper to isolate logic and avoiding re-fches if parent components re-nder
 function ActivityProgressContent() {
@@ -131,7 +139,10 @@ export function AchievementsView() {
         <>
           {/* Summary Cards */}
           <BentoGrid className="grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <BentoCard delay={0} className="border-none shadow-sm bg-gradient-to-br from-yellow-50 to-amber-50 dark:from-amber-950/30 dark:to-yellow-950/30">
+            <BentoCard
+              delay={0}
+              className="border-none shadow-sm bg-gradient-to-br from-yellow-50 to-amber-50 dark:from-amber-950/30 dark:to-yellow-950/30"
+            >
               <BentoCardHeader className="pb-2">
                 <div className="text-sm font-medium text-amber-700 dark:text-amber-400 uppercase tracking-wider">
                   Badges Conquistados
@@ -147,7 +158,10 @@ export function AchievementsView() {
               </BentoCardContent>
             </BentoCard>
 
-            <BentoCard delay={0.1} className="border-none shadow-sm bg-gradient-to-br from-purple-50 to-violet-50 dark:from-violet-950/30 dark:to-purple-950/30">
+            <BentoCard
+              delay={0.1}
+              className="border-none shadow-sm bg-gradient-to-br from-purple-50 to-violet-50 dark:from-violet-950/30 dark:to-purple-950/30"
+            >
               <BentoCardHeader className="pb-2">
                 <div className="text-sm font-medium text-purple-700 dark:text-purple-400 uppercase tracking-wider">
                   Pontos Totais
@@ -160,7 +174,10 @@ export function AchievementsView() {
               </BentoCardContent>
             </BentoCard>
 
-            <BentoCard delay={0.2} className="border-none shadow-sm bg-gradient-to-br from-green-50 to-emerald-50 dark:from-emerald-950/30 dark:to-green-950/30">
+            <BentoCard
+              delay={0.2}
+              className="border-none shadow-sm bg-gradient-to-br from-green-50 to-emerald-50 dark:from-emerald-950/30 dark:to-green-950/30"
+            >
               <ActivityProgressContent />
             </BentoCard>
           </BentoGrid>
@@ -168,9 +185,15 @@ export function AchievementsView() {
           {/* Badges by Category */}
           <AnimatedTabs defaultValue="all" className="w-full">
             <AnimatedTabsList className="mb-6 overflow-x-auto w-full md:w-auto justify-start bg-slate-100 dark:bg-slate-800 p-1.5 rounded-2xl">
-              <AnimatedTabsTrigger value="all" className="rounded-xl">Todos</AnimatedTabsTrigger>
+              <AnimatedTabsTrigger value="all" className="rounded-xl">
+                Todos
+              </AnimatedTabsTrigger>
               {categorias.map(cat => (
-                <AnimatedTabsTrigger key={cat} value={cat} className="rounded-xl">
+                <AnimatedTabsTrigger
+                  key={cat}
+                  value={cat}
+                  className="rounded-xl"
+                >
                   {categoriaLabels[cat]}
                 </AnimatedTabsTrigger>
               ))}
@@ -198,49 +221,53 @@ export function AchievementsView() {
                     >
                       <BentoCardContent className="p-6 text-center flex flex-col items-center h-full justify-between">
                         <div>
-                        <div
-                          className={cn(
-                            "w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-4",
-                            earned
-                              ? `bg-gradient-to-br ${colorMap[badge.cor] || colorMap.gold}`
-                              : "bg-gray-200 dark:bg-gray-800"
-                          )}
-                        >
-                          {earned ? (
-                            <Icon className="w-8 h-8" />
-                          ) : (
-                            <Lock className="w-6 h-6 text-gray-400 dark:text-gray-600" />
-                          )}
-                        </div>
-                        <h3
-                          className={cn(
-                            "font-bold mb-1",
-                            earned ? "text-slate-900 dark:text-slate-100" : "text-gray-400 dark:text-gray-600"
-                          )}
-                        >
-                          {badge.nome}
-                        </h3>
-                        <p
-                          className={cn(
-                            "text-xs mb-2",
-                            earned ? "text-slate-500 dark:text-slate-400" : "text-gray-400 dark:text-gray-600"
-                          )}
-                        >
-                          {badge.descricao}
-                        </p>
+                          <div
+                            className={cn(
+                              "w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-4",
+                              earned
+                                ? `bg-gradient-to-br ${colorMap[badge.cor] || colorMap.gold}`
+                                : "bg-gray-200 dark:bg-gray-800"
+                            )}
+                          >
+                            {earned ? (
+                              <Icon className="w-8 h-8" />
+                            ) : (
+                              <Lock className="w-6 h-6 text-gray-400 dark:text-gray-600" />
+                            )}
+                          </div>
+                          <h3
+                            className={cn(
+                              "font-bold mb-1",
+                              earned
+                                ? "text-slate-900 dark:text-slate-100"
+                                : "text-gray-400 dark:text-gray-600"
+                            )}
+                          >
+                            {badge.nome}
+                          </h3>
+                          <p
+                            className={cn(
+                              "text-xs mb-2",
+                              earned
+                                ? "text-slate-500 dark:text-slate-400"
+                                : "text-gray-400 dark:text-gray-600"
+                            )}
+                          >
+                            {badge.descricao}
+                          </p>
                         </div>
                         <div className="mt-2">
-                        <Badge
-                          variant={earned ? "default" : "outline"}
-                          className="text-xs"
-                        >
-                          {badge.pontos} pts
-                        </Badge>
-                        {earned && earnedData && (
-                          <p className="text-xs text-neon-green mt-2">
-                            Conquistado em {earnedData.mes}/{earnedData.ano}
-                          </p>
-                        )}
+                          <Badge
+                            variant={earned ? "default" : "outline"}
+                            className="text-xs"
+                          >
+                            {badge.pontos} pts
+                          </Badge>
+                          {earned && earnedData && (
+                            <p className="text-xs text-neon-green mt-2">
+                              Conquistado em {earnedData.mes}/{earnedData.ano}
+                            </p>
+                          )}
                         </div>
                       </BentoCardContent>
                     </BentoCard>
@@ -274,50 +301,54 @@ export function AchievementsView() {
                         >
                           <BentoCardContent className="p-6 text-center flex flex-col items-center h-full justify-between">
                             <div>
-                            <div
-                              className={cn(
-                                "w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-4",
-                                earned
-                                  ? `bg-gradient-to-br ${colorMap[badge.cor] || colorMap.gold}`
-                                  : "bg-gray-200 dark:bg-gray-800"
+                              <div
+                                className={cn(
+                                  "w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-4",
+                                  earned
+                                    ? `bg-gradient-to-br ${colorMap[badge.cor] || colorMap.gold}`
+                                    : "bg-gray-200 dark:bg-gray-800"
                                 )}
-                            >
-                              {earned ? (
-                                <Icon className="w-8 h-8" />
-                              ) : (
-                                <Lock className="w-6 h-6 text-gray-400 dark:text-gray-600" />
-                              )}
-                            </div>
-                            <h3
-                              className={cn(
-                                "font-bold mb-1",
-                                earned ? "text-slate-900 dark:text-slate-100" : "text-gray-400 dark:text-gray-600"
-                              )}
-                            >
-                              {badge.nome}
-                            </h3>
-                            <p
-                              className={cn(
-                                "text-xs mb-2",
-                                earned ? "text-slate-500 dark:text-slate-400" : "text-gray-400 dark:text-gray-600"
-                              )}
-                            >
-                              {badge.descricao}
-                            </p>
+                              >
+                                {earned ? (
+                                  <Icon className="w-8 h-8" />
+                                ) : (
+                                  <Lock className="w-6 h-6 text-gray-400 dark:text-gray-600" />
+                                )}
+                              </div>
+                              <h3
+                                className={cn(
+                                  "font-bold mb-1",
+                                  earned
+                                    ? "text-slate-900 dark:text-slate-100"
+                                    : "text-gray-400 dark:text-gray-600"
+                                )}
+                              >
+                                {badge.nome}
+                              </h3>
+                              <p
+                                className={cn(
+                                  "text-xs mb-2",
+                                  earned
+                                    ? "text-slate-500 dark:text-slate-400"
+                                    : "text-gray-400 dark:text-gray-600"
+                                )}
+                              >
+                                {badge.descricao}
+                              </p>
                             </div>
                             <div className="mt-2">
-                            <Badge
-                              variant={earned ? "default" : "outline"}
-                              className="text-xs"
-                            >
-                              {badge.pontos} pts
-                            </Badge>
-                            {earned && earnedData && (
-                              <p className="text-xs text-neon-green mt-2">
-                                Conquistado em {earnedData.mes}/
-                                {earnedData.ano}
-                              </p>
-                            )}
+                              <Badge
+                                variant={earned ? "default" : "outline"}
+                                className="text-xs"
+                              >
+                                {badge.pontos} pts
+                              </Badge>
+                              {earned && earnedData && (
+                                <p className="text-xs text-neon-green mt-2">
+                                  Conquistado em {earnedData.mes}/
+                                  {earnedData.ano}
+                                </p>
+                              )}
                             </div>
                           </BentoCardContent>
                         </BentoCard>
@@ -332,4 +363,3 @@ export function AchievementsView() {
     </div>
   );
 }
-

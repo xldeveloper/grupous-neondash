@@ -6,16 +6,16 @@ import { toast } from "sonner";
 export function AuthSync() {
   const { isSignedIn, isLoaded } = useAuth();
   const hasSynced = useRef(false);
-  
+
   const { mutate: syncUser } = trpc.auth.syncUser.useMutation({
-    onSuccess: (data) => {
+    onSuccess: data => {
       if (data.linked) {
         toast.success("Perfil de mentorado vinculado com sucesso!");
       }
     },
-    onError: (err) => {
-        console.error("Auth sync failed", err);
-    }
+    onError: err => {
+      console.error("Auth sync failed", err);
+    },
   });
 
   useEffect(() => {

@@ -29,7 +29,7 @@ export function AdminMentoradoSelector({
   const [open, setOpen] = useState(false);
   const { data: mentorados, isLoading } = trpc.mentorados.list.useQuery();
 
-  const selectedMentorado = mentorados?.find((m) => m.id === selectedMentoradoId);
+  const selectedMentorado = mentorados?.find(m => m.id === selectedMentoradoId);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -41,19 +41,19 @@ export function AdminMentoradoSelector({
           className="w-[250px] justify-between"
         >
           {selectedMentorado ? (
-             <div className="flex items-center gap-2 overflow-hidden">
-                <Avatar className="h-5 w-5">
-                    <AvatarImage src={selectedMentorado.fotoUrl || undefined} />
-                    <AvatarFallback className="text-[10px]">
-                        {selectedMentorado.nomeCompleto.substring(0, 2).toUpperCase()}
-                    </AvatarFallback>
-                </Avatar>
-                <span className="truncate">{selectedMentorado.nomeCompleto}</span>
-             </div>
+            <div className="flex items-center gap-2 overflow-hidden">
+              <Avatar className="h-5 w-5">
+                <AvatarImage src={selectedMentorado.fotoUrl || undefined} />
+                <AvatarFallback className="text-[10px]">
+                  {selectedMentorado.nomeCompleto.substring(0, 2).toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+              <span className="truncate">{selectedMentorado.nomeCompleto}</span>
+            </div>
           ) : (
             <span className="text-muted-foreground flex items-center gap-2">
-                <User className="h-4 w-4" />
-                Filtrar por Mentorado...
+              <User className="h-4 w-4" />
+              Filtrar por Mentorado...
             </span>
           )}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
@@ -65,40 +65,48 @@ export function AdminMentoradoSelector({
           <CommandEmpty>Nenhum mentorado encontrado.</CommandEmpty>
           <CommandGroup className="max-h-[300px] overflow-auto">
             <CommandItem
-                value="todos"
-                onSelect={() => {
-                    onSelect(undefined);
-                    setOpen(false);
-                }}
+              value="todos"
+              onSelect={() => {
+                onSelect(undefined);
+                setOpen(false);
+              }}
             >
-                <Check
-                  className={cn(
-                    "mr-2 h-4 w-4",
-                    !selectedMentoradoId ? "opacity-100" : "opacity-0"
-                  )}
-                />
-                <span className="font-medium text-muted-foreground">Remover Filtro (Ver Leads Próprios)</span>
+              <Check
+                className={cn(
+                  "mr-2 h-4 w-4",
+                  !selectedMentoradoId ? "opacity-100" : "opacity-0"
+                )}
+              />
+              <span className="font-medium text-muted-foreground">
+                Remover Filtro (Ver Leads Próprios)
+              </span>
             </CommandItem>
-            {mentorados?.map((mentorado) => (
+            {mentorados?.map(mentorado => (
               <CommandItem
                 key={mentorado.id}
                 value={mentorado.nomeCompleto}
                 onSelect={() => {
-                  onSelect(mentorado.id === selectedMentoradoId ? undefined : mentorado.id);
+                  onSelect(
+                    mentorado.id === selectedMentoradoId
+                      ? undefined
+                      : mentorado.id
+                  );
                   setOpen(false);
                 }}
               >
                 <Check
                   className={cn(
                     "mr-2 h-4 w-4",
-                    selectedMentoradoId === mentorado.id ? "opacity-100" : "opacity-0"
+                    selectedMentoradoId === mentorado.id
+                      ? "opacity-100"
+                      : "opacity-0"
                   )}
                 />
-                 <Avatar className="h-5 w-5 mr-2">
-                    <AvatarImage src={mentorado.fotoUrl || undefined} />
-                    <AvatarFallback className="text-[10px]">
-                        {mentorado.nomeCompleto.substring(0, 2).toUpperCase()}
-                    </AvatarFallback>
+                <Avatar className="h-5 w-5 mr-2">
+                  <AvatarImage src={mentorado.fotoUrl || undefined} />
+                  <AvatarFallback className="text-[10px]">
+                    {mentorado.nomeCompleto.substring(0, 2).toUpperCase()}
+                  </AvatarFallback>
                 </Avatar>
                 {mentorado.nomeCompleto}
               </CommandItem>

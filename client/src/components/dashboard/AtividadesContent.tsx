@@ -95,19 +95,18 @@ export function AtividadesContent({ mentoradoId }: AtividadesContentProps) {
   const updateNoteMutation = trpc.atividades.updateNote.useMutation({
     onSuccess: () => {
       progressQuery.refetch();
-      setNoteDialog((prev) => ({ ...prev, open: false }));
+      setNoteDialog(prev => ({ ...prev, open: false }));
     },
   });
-
 
   const utils = trpc.useUtils();
 
   const createTaskMutation = trpc.tasks.create.useMutation({
     onSuccess: () => {
       utils.tasks.list.invalidate();
-      setTaskDialog((prev) => ({ ...prev, open: false, taskTitle: "" }));
+      setTaskDialog(prev => ({ ...prev, open: false, taskTitle: "" }));
     },
-    onError: (error) => {
+    onError: error => {
       console.error("Erro ao criar tarefa:", error);
     },
   });
@@ -242,8 +241,8 @@ export function AtividadesContent({ mentoradoId }: AtividadesContentProps) {
             </h3>
 
             <Accordion type="multiple" className="space-y-2">
-              {atividades.map((atividade) => {
-                const atividadeCompleted = atividade.steps.filter((step) => {
+              {atividades.map(atividade => {
+                const atividadeCompleted = atividade.steps.filter(step => {
                   const key = `${atividade.codigo}:${step.codigo}`;
                   return progressMap[key]?.completed;
                 }).length;
@@ -301,7 +300,7 @@ export function AtividadesContent({ mentoradoId }: AtividadesContentProps) {
                       )}
 
                       <div className="space-y-2">
-                        {atividade.steps.map((step) => {
+                        {atividade.steps.map(step => {
                           const key = `${atividade.codigo}:${step.codigo}`;
                           const stepData = progressMap[key] ?? {
                             completed: false,
@@ -357,7 +356,9 @@ export function AtividadesContent({ mentoradoId }: AtividadesContentProps) {
                                       ? "text-yellow-400"
                                       : "text-zinc-500 opacity-0 group-hover:opacity-100"
                                   }`}
-                                  title={hasNote ? "Editar nota" : "Adicionar nota"}
+                                  title={
+                                    hasNote ? "Editar nota" : "Adicionar nota"
+                                  }
                                 >
                                   <StickyNote className="w-4 h-4" />
                                 </button>
@@ -399,7 +400,7 @@ export function AtividadesContent({ mentoradoId }: AtividadesContentProps) {
       {/* Drawer para Notas */}
       <Drawer
         open={noteDialog.open}
-        onOpenChange={(open) => setNoteDialog((prev) => ({ ...prev, open }))}
+        onOpenChange={open => setNoteDialog(prev => ({ ...prev, open }))}
       >
         <DrawerContent className="bg-zinc-900 border-zinc-700">
           <DrawerHeader>
@@ -412,8 +413,8 @@ export function AtividadesContent({ mentoradoId }: AtividadesContentProps) {
             <p className="text-sm text-zinc-400">{noteDialog.stepLabel}</p>
             <Textarea
               value={noteDialog.currentNote}
-              onChange={(e) =>
-                setNoteDialog((prev) => ({
+              onChange={e =>
+                setNoteDialog(prev => ({
                   ...prev,
                   currentNote: e.target.value,
                 }))
@@ -449,7 +450,7 @@ export function AtividadesContent({ mentoradoId }: AtividadesContentProps) {
       {/* Drawer para Criar Tarefa */}
       <Drawer
         open={taskDialog.open}
-        onOpenChange={(open) => setTaskDialog((prev) => ({ ...prev, open }))}
+        onOpenChange={open => setTaskDialog(prev => ({ ...prev, open }))}
       >
         <DrawerContent className="bg-zinc-900 border-zinc-700">
           <DrawerHeader>
@@ -460,12 +461,15 @@ export function AtividadesContent({ mentoradoId }: AtividadesContentProps) {
           </DrawerHeader>
           <div className="px-4 pb-2 space-y-3">
             <p className="text-sm text-zinc-400">
-              Vinculada à: <span className="text-zinc-300">{taskDialog.atividadeTitulo}</span>
+              Vinculada à:{" "}
+              <span className="text-zinc-300">
+                {taskDialog.atividadeTitulo}
+              </span>
             </p>
             <Input
               value={taskDialog.taskTitle}
-              onChange={(e) =>
-                setTaskDialog((prev) => ({
+              onChange={e =>
+                setTaskDialog(prev => ({
                   ...prev,
                   taskTitle: e.target.value,
                 }))

@@ -1,5 +1,8 @@
 import { useDroppable } from "@dnd-kit/core";
-import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
+import {
+  SortableContext,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
 import { LeadCard } from "./LeadCard";
 import { cn } from "@/lib/utils";
 
@@ -43,27 +46,34 @@ export function KanbanColumn({
 
   // Safe check for leads
   const safeLeads = leads || [];
-  const leadIds = safeLeads.map((l) => `lead-${l.id}`);
-  const totalValue = safeLeads.reduce((acc, lead) => acc + (lead.valor || 0), 0);
+  const leadIds = safeLeads.map(l => `lead-${l.id}`);
+  const totalValue = safeLeads.reduce(
+    (acc, lead) => acc + (lead.valor || 0),
+    0
+  );
 
   // Extract color class for border/bg accent
   // Typically: "bg-blue-500" -> we might want lighter versions or border
-  const borderColor = accentColor.replace("bg-", "border-").replace("500", "500/30");
+  const borderColor = accentColor
+    .replace("bg-", "border-")
+    .replace("500", "500/30");
   const badgeColor = accentColor.replace("bg-", "text-"); // rudimentary, better to pass separate props or map
 
   return (
     <div className="flex flex-col h-full min-w-[320px] w-[320px]">
       {/* Header */}
-      <div className={cn(
+      <div
+        className={cn(
           "flex items-center justify-between p-3 mb-3 rounded-lg border bg-card/50 backdrop-blur-sm",
           borderColor
-      )}>
+        )}
+      >
         <div className="flex items-center gap-2">
-            <div className={cn("w-2 h-2 rounded-full", accentColor)} />
-            <h3 className="font-semibold text-sm text-foreground">{title}</h3>
-            <span className="text-xs text-muted-foreground bg-muted px-2 py-0.5 rounded-full">
-                {safeLeads.length}
-            </span>
+          <div className={cn("w-2 h-2 rounded-full", accentColor)} />
+          <h3 className="font-semibold text-sm text-foreground">{title}</h3>
+          <span className="text-xs text-muted-foreground bg-muted px-2 py-0.5 rounded-full">
+            {safeLeads.length}
+          </span>
         </div>
       </div>
 
@@ -71,13 +81,15 @@ export function KanbanColumn({
       <div
         ref={setNodeRef}
         className={cn(
-            "flex-1 rounded-xl p-2 transition-colors duration-200 gap-3 flex flex-col",
-            "bg-muted/30 border border-transparent",
-            activeId && !activeId.includes(id) && "border-dashed border-border bg-muted/50"
+          "flex-1 rounded-xl p-2 transition-colors duration-200 gap-3 flex flex-col",
+          "bg-muted/30 border border-transparent",
+          activeId &&
+            !activeId.includes(id) &&
+            "border-dashed border-border bg-muted/50"
         )}
       >
         <SortableContext items={leadIds} strategy={verticalListSortingStrategy}>
-          {safeLeads.map((lead) => (
+          {safeLeads.map(lead => (
             <LeadCard
               key={lead.id}
               lead={lead}
@@ -88,21 +100,25 @@ export function KanbanColumn({
             />
           ))}
         </SortableContext>
-        
+
         {safeLeads.length === 0 && (
-            <div className="h-24 flex items-center justify-center text-xs text-muted-foreground/50 border-2 border-dashed border-border/50 rounded-lg">
-                Arraste leads para cá
-            </div>
+          <div className="h-24 flex items-center justify-center text-xs text-muted-foreground/50 border-2 border-dashed border-border/50 rounded-lg">
+            Arraste leads para cá
+          </div>
         )}
       </div>
-      
+
       {/* Footer Summary - Optional */}
       {totalValue > 0 && (
-          <div className="mt-2 text-right px-2">
-              <span className="text-xs font-medium text-muted-foreground">
-                Total: {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(totalValue)}
-              </span>
-          </div>
+        <div className="mt-2 text-right px-2">
+          <span className="text-xs font-medium text-muted-foreground">
+            Total:{" "}
+            {new Intl.NumberFormat("pt-BR", {
+              style: "currency",
+              currency: "BRL",
+            }).format(totalValue)}
+          </span>
+        </div>
       )}
     </div>
   );

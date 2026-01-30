@@ -34,7 +34,11 @@ async function validateSessionOwnership(
   userId: number
 ): Promise<typeof moltbotSessions.$inferSelect> {
   const db = await getDb();
-  if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
+  if (!db)
+    throw new TRPCError({
+      code: "INTERNAL_SERVER_ERROR",
+      message: "Database not available",
+    });
 
   const [session] = await db
     .select()
@@ -101,7 +105,11 @@ export const moltbotRouter = router({
    */
   getActiveSessions: protectedProcedure.query(async ({ ctx }) => {
     const db = await getDb();
-    if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
+    if (!db)
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "Database not available",
+      });
 
     const sessions = await db
       .select()
@@ -200,7 +208,11 @@ export const moltbotRouter = router({
       );
 
       const db = await getDb();
-      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
+      if (!db)
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Database not available",
+        });
 
       const messages = await db
         .select()
@@ -224,7 +236,11 @@ export const moltbotRouter = router({
    */
   getMoltbotContext: protectedProcedure.query(async ({ ctx }) => {
     const db = await getDb();
-    if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
+    if (!db)
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "Database not available",
+      });
 
     // Handle case where user has no mentorado profile
     if (!ctx.mentorado) {
@@ -331,7 +347,11 @@ export const moltbotRouter = router({
    */
   getStatus: protectedProcedure.query(async ({ ctx }) => {
     const db = await getDb();
-    if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
+    if (!db)
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "Database not available",
+      });
 
     // Get active sessions for user
     const sessions = await db
@@ -345,15 +365,13 @@ export const moltbotRouter = router({
       );
 
     // Check for WhatsApp session
-    const whatsappSession = sessions.find(
-      (s) => s.channelType === "whatsapp"
-    );
+    const whatsappSession = sessions.find(s => s.channelType === "whatsapp");
 
     return {
       isGatewayConnected: moltbotService.isConnected(),
       activeSessionCount: sessions.length,
       whatsappConnected: !!whatsappSession,
-      webchatActive: sessions.some((s) => s.channelType === "webchat"),
+      webchatActive: sessions.some(s => s.channelType === "webchat"),
     };
   }),
 });

@@ -49,12 +49,12 @@ interface AddInteractionDialogProps {
   onSuccess?: () => void;
 }
 
-export function AddInteractionDialog({ 
-  leadId, 
-  isOpen, 
-  onClose, 
-  defaultType = "nota", 
-  onSuccess 
+export function AddInteractionDialog({
+  leadId,
+  isOpen,
+  onClose,
+  defaultType = "nota",
+  onSuccess,
 }: AddInteractionDialogProps) {
   const trpcUtils = trpc.useUtils();
   const form = useForm<InteractionFormValues>({
@@ -90,7 +90,10 @@ export function AddInteractionDialog({
   });
 
   const [templatesOpen, setTemplatesOpen] = useState(false);
-  const { data: templates } = trpc.interactionTemplates.list.useQuery(undefined, { enabled: isOpen });
+  const { data: templates } = trpc.interactionTemplates.list.useQuery(
+    undefined,
+    { enabled: isOpen }
+  );
 
   const onSubmit = (values: InteractionFormValues) => {
     mutation.mutate({
@@ -104,112 +107,126 @@ export function AddInteractionDialog({
   const watchTipo = form.watch("tipo");
 
   const handleTemplateSelect = (template: any) => {
-      form.setValue("notas", template.content);
-      // Optional: change type if template dictates?
-      if (template.type) {
-          form.setValue("tipo", template.type);
-      }
-      setTemplatesOpen(false);
-  }
+    form.setValue("notas", template.content);
+    // Optional: change type if template dictates?
+    if (template.type) {
+      form.setValue("tipo", template.type);
+    }
+    setTemplatesOpen(false);
+  };
 
   return (
     <>
-    <InteractionTemplatesDialog 
-        isOpen={templatesOpen} 
-        onClose={() => setTemplatesOpen(false)} 
+      <InteractionTemplatesDialog
+        isOpen={templatesOpen}
+        onClose={() => setTemplatesOpen(false)}
         onSelectTemplate={handleTemplateSelect}
-    />
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle>Nova Interação</DialogTitle>
-        </DialogHeader>
-        
-        {/* Template Quick Select */}
-        <div className="flex gap-2 mb-2 overflow-x-auto pb-2">
-            <Button variant="outline" size="sm" className="gap-2 shrink-0" onClick={() => setTemplatesOpen(true)}>
-                <BookTemplate className="h-4 w-4" /> Gerenciar Templates
+      />
+      <Dialog open={isOpen} onOpenChange={onClose}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Nova Interação</DialogTitle>
+          </DialogHeader>
+
+          {/* Template Quick Select */}
+          <div className="flex gap-2 mb-2 overflow-x-auto pb-2">
+            <Button
+              variant="outline"
+              size="sm"
+              className="gap-2 shrink-0"
+              onClick={() => setTemplatesOpen(true)}
+            >
+              <BookTemplate className="h-4 w-4" /> Gerenciar Templates
             </Button>
             {templates?.templates.slice(0, 3).map((t: any) => (
-                <Button key={t.id} variant="secondary" size="sm" className="shrink-0 text-xs" onClick={() => handleTemplateSelect(t)}>
-                    {t.title}
-                </Button>
+              <Button
+                key={t.id}
+                variant="secondary"
+                size="sm"
+                className="shrink-0 text-xs"
+                onClick={() => handleTemplateSelect(t)}
+              >
+                {t.title}
+              </Button>
             ))}
-        </div>
+          </div>
 
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <FormField
-              control={form.control}
-              name="tipo"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Tipo</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Selecione o tipo" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value="nota">Nota</SelectItem>
-                      <SelectItem value="ligacao">Ligação</SelectItem>
-                      <SelectItem value="whatsapp">WhatsApp</SelectItem>
-                      <SelectItem value="email">Email</SelectItem>
-                      <SelectItem value="reuniao">Reunião</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="notas"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Notas</FormLabel>
-                  <FormControl>
-                    <Textarea 
-                      placeholder="Descreva a interação..." 
-                      className="min-h-[100px]"
-                      {...field} 
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {watchTipo === "ligacao" && (
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               <FormField
                 control={form.control}
-                name="duracao"
+                name="tipo"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Duração (minutos)</FormLabel>
+                    <FormLabel>Tipo</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Selecione o tipo" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="nota">Nota</SelectItem>
+                        <SelectItem value="ligacao">Ligação</SelectItem>
+                        <SelectItem value="whatsapp">WhatsApp</SelectItem>
+                        <SelectItem value="email">Email</SelectItem>
+                        <SelectItem value="reuniao">Reunião</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="notas"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Notas</FormLabel>
                     <FormControl>
-                      <Input type="number" {...field} />
+                      <Textarea
+                        placeholder="Descreva a interação..."
+                        className="min-h-[100px]"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-            )}
 
-            <DialogFooter>
-              <Button type="button" variant="secondary" onClick={onClose}>
-                Cancelar
-              </Button>
-              <Button type="submit" disabled={mutation.isPending}>
-                {mutation.isPending ? "Salvando..." : "Salvar"}
-              </Button>
-            </DialogFooter>
-          </form>
-        </Form>
-      </DialogContent>
-    </Dialog>
+              {watchTipo === "ligacao" && (
+                <FormField
+                  control={form.control}
+                  name="duracao"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Duração (minutos)</FormLabel>
+                      <FormControl>
+                        <Input type="number" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )}
+
+              <DialogFooter>
+                <Button type="button" variant="secondary" onClick={onClose}>
+                  Cancelar
+                </Button>
+                <Button type="submit" disabled={mutation.isPending}>
+                  {mutation.isPending ? "Salvando..." : "Salvar"}
+                </Button>
+              </DialogFooter>
+            </form>
+          </Form>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }

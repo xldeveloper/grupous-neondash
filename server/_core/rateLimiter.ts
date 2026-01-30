@@ -54,7 +54,8 @@ export const userRateLimiter = rateLimit({
   skip: isAdmin,
   message: {
     error: "Too many requests",
-    message: "Você excedeu o limite de requisições. Tente novamente em alguns minutos.",
+    message:
+      "Você excedeu o limite de requisições. Tente novamente em alguns minutos.",
     retryAfterMs: WINDOW_MS,
   },
   handler: (req: Request, res: Response) => {
@@ -71,7 +72,8 @@ export const userRateLimiter = rateLimit({
 
     res.status(429).json({
       error: "Too many requests",
-      message: "Você excedeu o limite de requisições. Tente novamente em alguns minutos.",
+      message:
+        "Você excedeu o limite de requisições. Tente novamente em alguns minutos.",
     });
   },
 });

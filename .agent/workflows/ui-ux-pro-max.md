@@ -1,5 +1,5 @@
 ---
-description: 
+description:
 ---
 
 # ui-ux-pro-max
@@ -149,13 +149,13 @@ Available stacks: `html-tailwind`, `react`, `nextjs`, `vue`, `svelte`, `swiftui`
 
 ### Available Stacks
 
-| Stack             | Focus                                                 |
-| ----------------- | ----------------------------------------------------- |
-| `html-tailwind`   | Tailwind utilities, responsive, a11y (DEFAULT)        |
-| `react`           | State, hooks, performance, patterns                   |
-| `nextjs`          | SSR, routing, images, API routes                      |
-| `react-native`    | Components, Navigation, Lists                         |
-| `shadcn`          | shadcn/ui components, theming, forms, patterns        |
+| Stack           | Focus                                          |
+| --------------- | ---------------------------------------------- |
+| `html-tailwind` | Tailwind utilities, responsive, a11y (DEFAULT) |
+| `react`         | State, hooks, performance, patterns            |
+| `nextjs`        | SSR, routing, images, API routes               |
+| `react-native`  | Components, Navigation, Lists                  |
+| `shadcn`        | shadcn/ui components, theming, forms, patterns |
 
 ---
 

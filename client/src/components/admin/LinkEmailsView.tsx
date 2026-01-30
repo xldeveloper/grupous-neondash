@@ -86,9 +86,7 @@ export function LinkEmailsView() {
                     {mentorados?.map(m => (
                       <SelectItem key={m.id} value={m.id.toString()}>
                         {m.nomeCompleto} -{" "}
-                        {m.turma === "neon_estrutura"
-                          ? "Estrutura"
-                          : "Escala"}
+                        {m.turma === "neon_estrutura" ? "Estrutura" : "Escala"}
                         {m.email && ` (${m.email})`}
                       </SelectItem>
                     ))}
@@ -107,8 +105,8 @@ export function LinkEmailsView() {
                   required
                 />
                 <p className="text-xs text-muted-foreground">
-                  Este deve ser o email que o mentorado usa para fazer login
-                  no sistema
+                  Este deve ser o email que o mentorado usa para fazer login no
+                  sistema
                 </p>
               </div>
 
@@ -176,9 +174,7 @@ export function LinkEmailsView() {
       {/* Instruções */}
       <Card className="border-neon-gold/30 bg-neon-gold/5">
         <CardHeader>
-          <CardTitle className="text-neon-blue-dark">
-            Como funciona?
-          </CardTitle>
+          <CardTitle className="text-neon-blue-dark">Como funciona?</CardTitle>
         </CardHeader>
         <CardContent className="space-y-2 text-sm text-muted-foreground">
           <p>
@@ -193,8 +189,7 @@ export function LinkEmailsView() {
             ele verá automaticamente apenas seus dados
           </p>
           <p className="text-xs mt-4 text-amber-700">
-            ⚠️ Atenção: O email deve ser exatamente o mesmo usado no login
-            OAuth
+            ⚠️ Atenção: O email deve ser exatamente o mesmo usado no login OAuth
           </p>
         </CardContent>
       </Card>

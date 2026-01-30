@@ -39,7 +39,7 @@ async function startServer() {
 
   const app = express();
   const server = createServer(app);
-  
+
   // ─────────────────────────────────────────────────────────────────────────
   // WebSocket Server for Moltbot Client Connections
   // ─────────────────────────────────────────────────────────────────────────
@@ -61,7 +61,7 @@ async function startServer() {
     moltbotService.registerClientConnection(userId, ws);
 
     // Handle incoming messages
-    ws.on("message", async (data) => {
+    ws.on("message", async data => {
       try {
         const message = JSON.parse(data.toString());
         await moltbotService.handleClientMessage(userId, message);
@@ -114,7 +114,7 @@ async function startServer() {
       return;
     }
 
-    wss.handleUpgrade(request, socket, head, (ws) => {
+    wss.handleUpgrade(request, socket, head, ws => {
       wss.emit("connection", ws, userId);
     });
   });
@@ -122,7 +122,7 @@ async function startServer() {
   // ─────────────────────────────────────────────────────────────────────────
   // Express Middleware
   // ─────────────────────────────────────────────────────────────────────────
-  
+
   // ─────────────────────────────────────────────────────────────────────────
   // Webhooks (Must be before global body parser)
   // ─────────────────────────────────────────────────────────────────────────
@@ -164,7 +164,7 @@ async function startServer() {
   // ─────────────────────────────────────────────────────────────────────────
   // Initialize Moltbot Gateway Connection
   // ─────────────────────────────────────────────────────────────────────────
-  
+
   try {
     await moltbotService.connect();
     console.log(
@@ -210,13 +210,13 @@ async function startServer() {
 
   const shutdown = async () => {
     console.log("\nShutting down gracefully...");
-    
+
     // Disconnect moltbot service
     await moltbotService.disconnect();
-    
+
     // Close WebSocket server
     wss.close();
-    
+
     // Close HTTP server
     server.close(() => {
       console.log("Server closed");
@@ -229,4 +229,3 @@ async function startServer() {
 }
 
 startServer().catch(console.error);
-

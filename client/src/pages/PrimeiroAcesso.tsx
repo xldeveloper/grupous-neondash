@@ -9,32 +9,47 @@ import {
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { trpc } from "@/lib/trpc";
-import { Mail, UserCircle, AlertCircle, CheckCircle2, RefreshCw, Loader2, Database, ShieldCheck, AlertTriangle } from "lucide-react";
+import {
+  Mail,
+  UserCircle,
+  AlertCircle,
+  CheckCircle2,
+  RefreshCw,
+  Loader2,
+  Database,
+  ShieldCheck,
+  AlertTriangle,
+} from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 
 export default function PrimeiroAcesso() {
   const { user } = useAuth();
-  
+
   // Fetch diagnostic data
-  const { data: diagnostic, isLoading: loadingDiag, refetch: refetchDiag } = trpc.auth.diagnostic.useQuery(undefined, {
+  const {
+    data: diagnostic,
+    isLoading: loadingDiag,
+    refetch: refetchDiag,
+  } = trpc.auth.diagnostic.useQuery(undefined, {
     refetchOnWindowFocus: false,
   });
-  
+
   // Sync mutation
-  const { mutate: syncUser, isPending: syncing } = trpc.auth.syncUser.useMutation({
-    onSuccess: (result) => {
-      if (result.linked) {
-        toast.success("Perfil vinculado com sucesso! Recarregue a página.");
-        refetchDiag();
-      } else {
-        toast.info(result.message);
-      }
-    },
-    onError: (err) => {
-      toast.error("Erro ao sincronizar: " + err.message);
-    }
-  });
+  const { mutate: syncUser, isPending: syncing } =
+    trpc.auth.syncUser.useMutation({
+      onSuccess: result => {
+        if (result.linked) {
+          toast.success("Perfil vinculado com sucesso! Recarregue a página.");
+          refetchDiag();
+        } else {
+          toast.info(result.message);
+        }
+      },
+      onError: err => {
+        toast.error("Erro ao sincronizar: " + err.message);
+      },
+    });
 
   const handleSync = () => {
     syncUser();
@@ -68,21 +83,23 @@ export default function PrimeiroAcesso() {
               <Database className="w-5 h-5" />
               Diagnóstico de Sincronização
             </CardTitle>
-            <CardDescription>
-              Status detalhado da sua conta
-            </CardDescription>
+            <CardDescription>Status detalhado da sua conta</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             {loadingDiag ? (
               <div className="flex items-center justify-center py-8">
                 <Loader2 className="w-6 h-6 animate-spin text-neon-blue" />
-                <span className="ml-2 text-muted-foreground">Verificando...</span>
+                <span className="ml-2 text-muted-foreground">
+                  Verificando...
+                </span>
               </div>
             ) : diagnostic ? (
               <div className="space-y-4">
                 {/* Status Summary */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                  <div className={`p-4 rounded-lg border ${diagnostic.status.isFullyLinked ? 'bg-green-50 border-green-200' : 'bg-amber-50 border-amber-200'}`}>
+                  <div
+                    className={`p-4 rounded-lg border ${diagnostic.status.isFullyLinked ? "bg-green-50 border-green-200" : "bg-amber-50 border-amber-200"}`}
+                  >
                     <div className="flex items-center gap-2">
                       {diagnostic.status.isFullyLinked ? (
                         <CheckCircle2 className="w-5 h-5 text-green-600" />
@@ -90,27 +107,33 @@ export default function PrimeiroAcesso() {
                         <AlertCircle className="w-5 h-5 text-amber-600" />
                       )}
                       <span className="font-medium text-sm">
-                        {diagnostic.status.isFullyLinked ? "Vinculado" : "Pendente"}
+                        {diagnostic.status.isFullyLinked
+                          ? "Vinculado"
+                          : "Pendente"}
                       </span>
                     </div>
                     <p className="text-xs text-muted-foreground mt-1">
                       Mentorado
                     </p>
                   </div>
-                  
+
                   <div className="p-4 rounded-lg border bg-blue-50 border-blue-200">
                     <div className="flex items-center gap-2">
                       <ShieldCheck className="w-5 h-5 text-blue-600" />
                       <span className="font-medium text-sm">
-                        {diagnostic.clerk.role === 'admin' ? 'Admin' : 'Usuário'}
+                        {diagnostic.clerk.role === "admin"
+                          ? "Admin"
+                          : "Usuário"}
                       </span>
                     </div>
                     <p className="text-xs text-muted-foreground mt-1">
                       Nível de Acesso
                     </p>
                   </div>
-                  
-                  <div className={`p-4 rounded-lg border ${diagnostic.status.multipleMatches ? 'bg-red-50 border-red-200' : 'bg-slate-50 border-slate-200'}`}>
+
+                  <div
+                    className={`p-4 rounded-lg border ${diagnostic.status.multipleMatches ? "bg-red-50 border-red-200" : "bg-slate-50 border-slate-200"}`}
+                  >
                     <div className="flex items-center gap-2">
                       {diagnostic.status.multipleMatches ? (
                         <AlertTriangle className="w-5 h-5 text-red-600" />
@@ -118,7 +141,9 @@ export default function PrimeiroAcesso() {
                         <Database className="w-5 h-5 text-slate-600" />
                       )}
                       <span className="font-medium text-sm">
-                        {diagnostic.status.multipleMatches ? "Duplicatas" : "OK"}
+                        {diagnostic.status.multipleMatches
+                          ? "Duplicatas"
+                          : "OK"}
                       </span>
                     </div>
                     <p className="text-xs text-muted-foreground mt-1">
@@ -132,12 +157,16 @@ export default function PrimeiroAcesso() {
                   <div className="flex items-center gap-2 text-sm">
                     <Mail className="w-4 h-4 text-muted-foreground" />
                     <span className="font-medium">Email:</span>
-                    <span className="text-muted-foreground">{diagnostic.clerk.email || "N/A"}</span>
+                    <span className="text-muted-foreground">
+                      {diagnostic.clerk.email || "N/A"}
+                    </span>
                   </div>
                   <div className="flex items-center gap-2 text-sm">
                     <UserCircle className="w-4 h-4 text-muted-foreground" />
                     <span className="font-medium">Nome:</span>
-                    <span className="text-muted-foreground">{diagnostic.clerk.name || "Não definido"}</span>
+                    <span className="text-muted-foreground">
+                      {diagnostic.clerk.name || "Não definido"}
+                    </span>
                   </div>
                   <div className="flex items-center gap-2 text-sm">
                     <Database className="w-4 h-4 text-muted-foreground" />
@@ -151,7 +180,8 @@ export default function PrimeiroAcesso() {
                       <CheckCircle2 className="w-4 h-4 text-green-600" />
                       <span className="font-medium">Mentorado:</span>
                       <span className="text-muted-foreground">
-                        {diagnostic.mentorado.nomeCompleto} ({diagnostic.mentorado.turma})
+                        {diagnostic.mentorado.nomeCompleto} (
+                        {diagnostic.mentorado.turma})
                       </span>
                     </div>
                   )}
@@ -160,10 +190,15 @@ export default function PrimeiroAcesso() {
                 {/* Recommendations */}
                 {diagnostic.recommendations.length > 0 && (
                   <div className="bg-amber-50 rounded-lg p-4 border border-amber-200">
-                    <h4 className="font-medium text-amber-900 mb-2 text-sm">Recomendações:</h4>
+                    <h4 className="font-medium text-amber-900 mb-2 text-sm">
+                      Recomendações:
+                    </h4>
                     <ul className="space-y-1">
                       {diagnostic.recommendations.map((rec, idx) => (
-                        <li key={idx} className="text-sm text-amber-800 flex items-start gap-2">
+                        <li
+                          key={idx}
+                          className="text-sm text-amber-800 flex items-start gap-2"
+                        >
                           <span className="text-amber-500">•</span>
                           {rec}
                         </li>
@@ -183,17 +218,22 @@ export default function PrimeiroAcesso() {
                     <RefreshCw className="w-4 h-4 mr-2" />
                     Atualizar
                   </Button>
-                  {!diagnostic.status.isFullyLinked && diagnostic.status.hasUnlinkedMatch && (
-                    <Button
-                      size="sm"
-                      onClick={handleSync}
-                      disabled={syncing}
-                      className="bg-neon-blue hover:bg-neon-blue-dark"
-                    >
-                      {syncing ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <CheckCircle2 className="w-4 h-4 mr-2" />}
-                      Vincular Agora
-                    </Button>
-                  )}
+                  {!diagnostic.status.isFullyLinked &&
+                    diagnostic.status.hasUnlinkedMatch && (
+                      <Button
+                        size="sm"
+                        onClick={handleSync}
+                        disabled={syncing}
+                        className="bg-neon-blue hover:bg-neon-blue-dark"
+                      >
+                        {syncing ? (
+                          <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                        ) : (
+                          <CheckCircle2 className="w-4 h-4 mr-2" />
+                        )}
+                        Vincular Agora
+                      </Button>
+                    )}
                 </div>
               </div>
             ) : (
@@ -235,8 +275,8 @@ export default function PrimeiroAcesso() {
               <div className="text-sm text-amber-800 space-y-2">
                 <p>
                   Para acessar seu dashboard personalizado com suas métricas e
-                  feedbacks, é necessário que o administrador vincule seu email ao
-                  seu perfil de mentorado.
+                  feedbacks, é necessário que o administrador vincule seu email
+                  ao seu perfil de mentorado.
                 </p>
               </div>
             </CardContent>
@@ -258,7 +298,7 @@ export default function PrimeiroAcesso() {
             <CardContent>
               <Button
                 className="w-full bg-green-600 hover:bg-green-700"
-                onClick={() => window.location.href = "/meu-dashboard"}
+                onClick={() => (window.location.href = "/meu-dashboard")}
               >
                 Ir para Meu Dashboard
               </Button>

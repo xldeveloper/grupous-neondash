@@ -35,7 +35,14 @@ const createLeadFormSchema = z.object({
   email: z.string().email("Email inválido"),
   telefone: z.string().optional(),
   empresa: z.string().optional(),
-  origem: z.enum(["instagram", "whatsapp", "google", "indicacao", "site", "outro"]),
+  origem: z.enum([
+    "instagram",
+    "whatsapp",
+    "google",
+    "indicacao",
+    "site",
+    "outro",
+  ]),
   valorEstimado: z.string().optional(),
 });
 
@@ -47,7 +54,11 @@ interface CreateLeadDialogProps {
   onSuccess?: () => void;
 }
 
-export function CreateLeadDialog({ isOpen, onClose, onSuccess }: CreateLeadDialogProps) {
+export function CreateLeadDialog({
+  isOpen,
+  onClose,
+  onSuccess,
+}: CreateLeadDialogProps) {
   const trpcUtils = trpc.useUtils();
   const form = useForm<CreateLeadFormValues>({
     resolver: zodResolver(createLeadFormSchema),
@@ -73,15 +84,22 @@ export function CreateLeadDialog({ isOpen, onClose, onSuccess }: CreateLeadDialo
       if (onSuccess) onSuccess();
       onClose();
     },
-    onError: (err) => {
+    onError: err => {
       toast.error(`Erro ao criar lead: ${err.message}`);
     },
   });
 
   const onSubmit = (values: CreateLeadFormValues) => {
     // Convert valorEstimado from string to cents (number)
-    const valorEstimadoCents = values.valorEstimado 
-      ? Math.round(parseFloat(values.valorEstimado.replace("R$", "").replace(".", "").replace(",", ".")) * 100) 
+    const valorEstimadoCents = values.valorEstimado
+      ? Math.round(
+          parseFloat(
+            values.valorEstimado
+              .replace("R$", "")
+              .replace(".", "")
+              .replace(",", ".")
+          ) * 100
+        )
       : undefined;
 
     mutation.mutate({
@@ -117,32 +135,32 @@ export function CreateLeadDialog({ isOpen, onClose, onSuccess }: CreateLeadDialo
             />
 
             <div className="grid grid-cols-2 gap-4">
-                <FormField
+              <FormField
                 control={form.control}
                 name="email"
                 render={({ field }) => (
-                    <FormItem>
+                  <FormItem>
                     <FormLabel>Email</FormLabel>
                     <FormControl>
-                        <Input placeholder="john@example.com" {...field} />
+                      <Input placeholder="john@example.com" {...field} />
                     </FormControl>
                     <FormMessage />
-                    </FormItem>
+                  </FormItem>
                 )}
-                />
-                <FormField
+              />
+              <FormField
                 control={form.control}
                 name="telefone"
                 render={({ field }) => (
-                    <FormItem>
+                  <FormItem>
                     <FormLabel>Telefone</FormLabel>
                     <FormControl>
-                        <Input placeholder="(11) 99999-9999" {...field} />
+                      <Input placeholder="(11) 99999-9999" {...field} />
                     </FormControl>
                     <FormMessage />
-                    </FormItem>
+                  </FormItem>
                 )}
-                />
+              />
             </div>
 
             <FormField
@@ -160,44 +178,52 @@ export function CreateLeadDialog({ isOpen, onClose, onSuccess }: CreateLeadDialo
             />
 
             <div className="grid grid-cols-2 gap-4">
-                <FormField
+              <FormField
                 control={form.control}
                 name="origem"
                 render={({ field }) => (
-                    <FormItem>
+                  <FormItem>
                     <FormLabel>Origem</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                        <FormControl>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
                         <SelectTrigger>
-                            <SelectValue placeholder="Selecione" />
+                          <SelectValue placeholder="Selecione" />
                         </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
+                      </FormControl>
+                      <SelectContent>
                         <SelectItem value="instagram">Instagram</SelectItem>
                         <SelectItem value="whatsapp">WhatsApp</SelectItem>
                         <SelectItem value="google">Google</SelectItem>
                         <SelectItem value="indicacao">Indicação</SelectItem>
                         <SelectItem value="site">Site</SelectItem>
                         <SelectItem value="outro">Outro</SelectItem>
-                        </SelectContent>
+                      </SelectContent>
                     </Select>
                     <FormMessage />
-                    </FormItem>
+                  </FormItem>
                 )}
-                />
-                <FormField
+              />
+              <FormField
                 control={form.control}
                 name="valorEstimado"
                 render={({ field }) => (
-                    <FormItem>
+                  <FormItem>
                     <FormLabel>Valor (R$)</FormLabel>
                     <FormControl>
-                        <Input type="number" placeholder="1000.00" {...field} step="0.01" />
+                      <Input
+                        type="number"
+                        placeholder="1000.00"
+                        {...field}
+                        step="0.01"
+                      />
                     </FormControl>
                     <FormMessage />
-                    </FormItem>
+                  </FormItem>
                 )}
-                />
+              />
             </div>
 
             <DialogFooter className="pt-4">

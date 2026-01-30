@@ -33,7 +33,9 @@ const AnimatedTabs = React.forwardRef<
   };
 
   return (
-    <TabsContext.Provider value={{ activeTab, setActiveTab: handleValueChange }}>
+    <TabsContext.Provider
+      value={{ activeTab, setActiveTab: handleValueChange }}
+    >
       <TabsPrimitive.Root
         ref={ref}
         value={value !== undefined ? value : activeTab}

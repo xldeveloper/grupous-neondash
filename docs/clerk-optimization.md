@@ -1,4 +1,5 @@
 # 🚀 Implementação: Otimizações Clerk + Neon
+
 ## Código pronto para production
 
 ---
@@ -31,7 +32,7 @@ export async function initRedis() {
   if (process.env.REDIS_URL) {
     try {
       redisClient = createClient({ url: process.env.REDIS_URL });
-      redisClient.on("error", (err) => console.error("Redis error:", err));
+      redisClient.on("error", err => console.error("Redis error:", err));
       await redisClient.connect();
       console.log("[Redis] Connected");
     } catch (error) {
@@ -40,10 +41,15 @@ export async function initRedis() {
   }
 }
 
-const IN_MEMORY_CACHE = new Map<string, { data: CachedSession; timestamp: number }>();
+const IN_MEMORY_CACHE = new Map<
+  string,
+  { data: CachedSession; timestamp: number }
+>();
 const CACHE_TTL = 60 * 60; // 1 hour in seconds
 
-export async function getCachedSession(clerkId: string): Promise<CachedSession | null> {
+export async function getCachedSession(
+  clerkId: string
+): Promise<CachedSession | null> {
   const cacheKey = `session:${clerkId}`;
 
   // Try Redis first
@@ -241,7 +247,11 @@ interface WebhookTask {
   timestamp: Date;
 }
 
-const webhookQueue = new PQueue({ concurrency: 5, interval: 1000, intervalCap: 10 });
+const webhookQueue = new PQueue({
+  concurrency: 5,
+  interval: 1000,
+  intervalCap: 10,
+});
 const failedTasks: WebhookTask[] = [];
 
 export async function queueWebhookTask(task: WebhookTask): Promise<void> {
@@ -320,7 +330,7 @@ import rateLimit from "express-rate-limit";
 import { getAuth } from "@clerk/express";
 
 export const userRateLimiter = rateLimit({
-  keyGenerator: (req) => {
+  keyGenerator: req => {
     const auth = getAuth(req as any);
     return auth.userId || req.ip || "unknown";
   },
@@ -329,14 +339,14 @@ export const userRateLimiter = rateLimit({
   message: "Too many requests from this account, please try again later",
   standardHeaders: true,
   legacyHeaders: false,
-  skip: (req) => {
+  skip: req => {
     const auth = getAuth(req as any);
     return auth.sessionClaims?.metadata?.role === "admin";
   },
 });
 
 export const authRateLimiter = rateLimit({
-  keyGenerator: (req) => req.ip || "unknown",
+  keyGenerator: req => req.ip || "unknown",
   windowMs: 15 * 60 * 1000,
   max: 5,
   skipSuccessfulRequests: true,
@@ -375,7 +385,9 @@ export function createLogger(context: Partial<LogContext>) {
 
   return {
     info: (action: string, data?: Record<string, any>) => {
-      console.log(JSON.stringify({ ...baseContext, level: "info", action, ...data }));
+      console.log(
+        JSON.stringify({ ...baseContext, level: "info", action, ...data })
+      );
     },
     warn: (action: string, error: unknown, data?: Record<string, any>) => {
       console.warn(

@@ -37,13 +37,16 @@ export function AnimatedList<T>({
     },
   };
 
-  const itemVariant = typeof variant === 'string' ? animations[variant as keyof typeof animations] : variant;
+  const itemVariant =
+    typeof variant === "string"
+      ? animations[variant as keyof typeof animations]
+      : variant;
 
   return (
     <motion.div
       variants={containerVariants}
-      initial={typeof initial === 'string' ? initial : (initial as any)}
-      animate={typeof animate === 'string' ? animate : (animate as any)}
+      initial={typeof initial === "string" ? initial : (initial as any)}
+      animate={typeof animate === "string" ? animate : (animate as any)}
       className={cn("w-full", className, listClassName)}
     >
       <AnimatePresence mode="popLayout">
@@ -52,9 +55,9 @@ export function AnimatedList<T>({
             key={keyExtractor(item)}
             layout
             variants={itemVariant}
-            initial={typeof initial === 'string' ? initial : (initial as any)}
-            animate={typeof animate === 'string' ? animate : (animate as any)}
-            exit={typeof exit === 'string' ? exit : (exit as any)}
+            initial={typeof initial === "string" ? initial : (initial as any)}
+            animate={typeof animate === "string" ? animate : (animate as any)}
+            exit={typeof exit === "string" ? exit : (exit as any)}
             className={cn(itemClassName)}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
           >

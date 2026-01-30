@@ -3,6 +3,7 @@
 Execute este plano de migração completa do Wouter para TanStack Router.
 
 ## PROJECT CONTEXT
+
 - **Project**: NEON Dashboard (Portal mentorias.black)
 - **Tech Stack**: React 19.2 + Vite 7 + tRPC 11 + Drizzle ORM + Neon PostgreSQL + Express + Clerk + Bun 1.3+
 - **Current Router**: Wouter 3.7.1 (com patch customizado em `patches/wouter@3.7.1.patch`)
@@ -11,6 +12,7 @@ Execute este plano de migração completa do Wouter para TanStack Router.
 ## MIGRATION SCOPE
 
 ### 1. INSTALLATION & SETUP
+
 ```bash
 # Install TanStack Router and devtools
 bun add @tanstack/react-router @tanstack/router-devtools
@@ -20,22 +22,26 @@ bun add -d @tanstack/router-plugin
 ```
 
 ### 2. CONFIGURE VITE
+
 Edit `vite.config.ts` to add TanStack Router plugin:
+
 ```typescript
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
-import { tanStackRouter } from '@tanstack/router-plugin/vite'
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import { tanStackRouter } from "@tanstack/router-plugin/vite";
 
 export default defineConfig({
   plugins: [
     react(),
     tanStackRouter(), // <-- ADD THIS
   ],
-})
+});
 ```
 
 ### 3. CREATE ROUTER INSTANCE
+
 Create `client/src/router.tsx`:
+
 ```typescript
 import { createRouter, createRootRoute, createRoute, createRouter, RouterProvider } from '@tanstack/react-router'
 import { trpc } from '@/lib/trpc'
@@ -69,9 +75,11 @@ export { router }
 ```
 
 ### 4. MIGRATE App.tsx
+
 Replace Wouter's `<Switch>` with TanStack Router's `<RouterProvider>`:
 
 **BEFORE:**
+
 ```typescript
 import { Route, Switch } from "wouter"
 
@@ -86,6 +94,7 @@ function Router() {
 ```
 
 **AFTER:**
+
 ```typescript
 import { RouterProvider } from '@tanstack/react-router'
 import { router } from './router'
@@ -97,9 +106,11 @@ export default function App() {
 ```
 
 ### 5. CREATE FILE-BASED ROUTES
+
 Create directory structure `client/src/routes/`:
 
 #### 5.1 Root Layout (`client/src/routes/__root.tsx`)
+
 ```typescript
 import { createRootRoute, Outlet } from '@tanstack/react-router'
 import { ThemeProvider } from '../contexts/ThemeContext'
@@ -136,59 +147,63 @@ function RootLayout() {
 ```
 
 #### 5.2 Landing Page (`client/src/routes/index.tsx`)
-```typescript
-import { createFileRoute } from '@tanstack/react-router'
-import LandingPage from '../pages/LandingPage'
 
-export const Route = createFileRoute('/')({
+```typescript
+import { createFileRoute } from "@tanstack/react-router";
+import LandingPage from "../pages/LandingPage";
+
+export const Route = createFileRoute("/")({
   component: LandingPage,
-})
+});
 ```
 
 #### 5.3 Dashboard Routes
 
 **`client/src/routes/dashboard.tsx`:**
-```typescript
-import { createFileRoute, redirect } from '@tanstack/react-router'
-import { trpc } from '@/lib/trpc'
-import DashboardLayout from '../components/DashboardLayout'
 
-export const Route = createFileRoute('/dashboard')({
+```typescript
+import { createFileRoute, redirect } from "@tanstack/react-router";
+import { trpc } from "@/lib/trpc";
+import DashboardLayout from "../components/DashboardLayout";
+
+export const Route = createFileRoute("/dashboard")({
   beforeLoad: async ({ context: { trpc } }) => {
     // Check auth via Clerk (or use tRPC auth check)
     // This is where you'd perform auth validation
   },
   loader: async ({ context: { trpc } }) => {
     // Preload dashboard data via tRPC
-    return {}
+    return {};
   },
   component: DashboardLayout,
-})
+});
 ```
 
 **`client/src/routes/dashboard_.$id.tsx`** (Example for dynamic route):
-```typescript
-import { createFileRoute } from '@tanstack/react-router'
-import { trpc } from '@/lib/trpc'
-import Estrutura from '../pages/Estrutura'
-import Escala from '../pages/Escala'
 
-export const Route = createFileRoute('/dashboard_.$id')({
+```typescript
+import { createFileRoute } from "@tanstack/react-router";
+import { trpc } from "@/lib/trpc";
+import Estrutura from "../pages/Estrutura";
+import Escala from "../pages/Escala";
+
+export const Route = createFileRoute("/dashboard_.$id")({
   loader: async ({ params: { id }, context: { trpc } }) => {
     // Preload data for specific mentorado
-    return { mentorado: await trpc.mentorados.byId.query(parseInt(id)) }
+    return { mentorado: await trpc.mentorados.byId.query(parseInt(id)) };
   },
   component: MentoradoDetail,
-})
+});
 
 function MentoradoDetail() {
- const { id } = Route.useParams()
- const data = Route.useLoaderData()
- // Render page
+  const { id } = Route.useParams();
+  const data = Route.useLoaderData();
+  // Render page
 }
 ```
 
 **All other routes to migrate:**
+
 ```
 /client/src/
 ├── routes/
@@ -211,6 +226,7 @@ function MentoradoDetail() {
 ```
 
 ### 6. UPDATE DashboardLayout
+
 Update Link components in `client/src/components/DashboardLayout.tsx`:
 
 ```typescript
@@ -224,6 +240,7 @@ import { Link } from '@tanstack/react-router'
 ```
 
 ### 7. UPDATE ProtectedRoute
+
 Update redirect pattern:
 
 ```typescript
@@ -241,33 +258,34 @@ if (!user) throw redirect({ to: '/' })
 #### Example: `/comparativo` with search params
 
 **`client/src/routes/comparativo.tsx`:**
+
 ```typescript
-import { createFileRoute } from '@tanstack/react-router'
-import { z } from 'zod'
-import { trpc } from '@/lib/trpc'
-import DashboardComparativo from '../pages/DashboardComparativo'
+import { createFileRoute } from "@tanstack/react-router";
+import { z } from "zod";
+import { trpc } from "@/lib/trpc";
+import DashboardComparativo from "../pages/DashboardComparativo";
 
 // Define typed search params with Zod
 const searchSchema = z.object({
   ano: z.coerce.number().default(new Date().getFullYear()),
   mes: z.coerce.number().default(new Date().getMonth() + 1),
-  turma: z.enum(['neon_estrutura', 'neon_escala']).optional(),
-})
+  turma: z.enum(["neon_estrutura", "neon_escala"]).optional(),
+});
 
-export const Route = createFileRoute('/comparativo')({
+export const Route = createFileRoute("/comparativo")({
   validateSearch: searchSchema,
   loader: async ({ context: { trpc }, searchParams }) => {
     return {
       dados: await trpc.metricas.comparativo.fetch(searchParams),
-    }
+    };
   },
   component: DashboardComparativo,
-})
+});
 
 // In the component:
 function DashboardComparativo() {
-  const search = Route.useSearch()
-  const { dados } = Route.useLoaderData()
+  const search = Route.useSearch();
+  const { dados } = Route.useLoaderData();
   // Access typed search params: search.ano, search.mes, search.turma
 }
 ```
@@ -275,23 +293,24 @@ function DashboardComparativo() {
 #### Example: `/meu-dashboard` with auth check
 
 **`client/src/routes/meu-dashboard.tsx`:**
-```typescript
-import { createFileRoute, redirect } from '@tanstack/react-router'
-import { trpc } from '@/lib/trpc'
-import MyDashboard from '../pages/MyDashboard'
 
-export const Route = createFileRoute('/meu-dashboard')({
+```typescript
+import { createFileRoute, redirect } from "@tanstack/react-router";
+import { trpc } from "@/lib/trpc";
+import MyDashboard from "../pages/MyDashboard";
+
+export const Route = createFileRoute("/meu-dashboard")({
   loader: async ({ context: { trpc } }) => {
-    const mentorados = await trpc.mentorados.listMine.fetch()
+    const mentorados = await trpc.mentorados.listMine.fetch();
 
     if (!mentorados || mentorados.length === 0) {
-      throw redirect({ to: '/primeiro-acesso' })
+      throw redirect({ to: "/primeiro-acesso" });
     }
 
-    return { mentorados }
+    return { mentorados };
   },
   component: MyDashboard,
-})
+});
 ```
 
 ### 9. REMOVE WOUTER & PATCH
@@ -309,18 +328,21 @@ rm -rf patches/
 ```
 
 ### 10. UPDATE PAGES
+
 Replace `useLocation` usage in pages:
 
 **BEFORE (all pages):**
+
 ```typescript
-import { useLocation } from "wouter"
-const [location] = useLocation()
+import { useLocation } from "wouter";
+const [location] = useLocation();
 ```
 
 **AFTER:**
+
 ```typescript
-import { useLocation } from '@tanstack/react-router'
-const location = useLocation().pathname
+import { useLocation } from "@tanstack/react-router";
+const location = useLocation().pathname;
 ```
 
 ## VALIDATION CRITERIA
@@ -338,6 +360,7 @@ const location = useLocation().pathname
 ## FILES TO CREATE/MODIFY
 
 ### CREATE:
+
 - `client/src/router.tsx` - Router instance
 - `client/src/routes/__root.tsx` - Root layout
 - `client/src/routes/index.tsx` - Landing page
@@ -357,6 +380,7 @@ const location = useLocation().pathname
 - `client/src/routes/404.tsx` - Not Found (optional, or handle via throwNotFound)
 
 ### MODIFY:
+
 - `vite.config.ts` - Add tanStackRouter plugin
 - `client/src/App.tsx` - Replace Switch with RouterProvider
 - `client/src/components/DashboardLayout.tsx` - Update Link imports
@@ -366,21 +390,26 @@ const location = useLocation().pathname
 - `client/src/pages/NotFound.tsx` - Update useLocation import
 
 ### DELETE:
+
 - `patches/wouter@3.7.1.patch`
 - `patches/` directory (if empty)
 
 ## TROUBLESHOOTING
 
 ### Issue: "Cannot find module './routeTree.gen'"
+
 **Solution**: The `@tanstack/router-plugin` generates this file. Make sure it's in `vite.config.ts`. Run `bun dev` to trigger generation.
 
 ### Issue: "Type 'trpc' does not exist on RouterContext"
+
 **Solution**: Ensure `declare module '@tanstack/react-router'` is in `client/src/router.tsx` and `trpc` is passed in context.
 
 ### Issue: Loader not running
+
 **Solution**: Check if route is wrapped in layout. Loaders only run on routes that are actually visited, not on parent routes.
 
 ### Issue: Search params not validated
+
 **Solution**: Ensure `validateSearch` returns a function or object. Use `z.coerce.number()` for numeric params.
 
 ## SUCCESS METRICS

@@ -18,7 +18,11 @@ import {
   SheetFooter,
   SheetClose,
 } from "@/components/ui/sheet";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 import { Badge } from "@/components/ui/badge";
 import { Search, Filter, ChevronDown, ChevronUp, X } from "lucide-react";
 
@@ -75,7 +79,7 @@ export function FiltersPanel({
             placeholder="Nome, email ou telefone..."
             className="pl-8"
             value={filters.busca}
-            onChange={(e) => handleChange("busca", e.target.value)}
+            onChange={e => handleChange("busca", e.target.value)}
           />
         </div>
       </div>
@@ -84,12 +88,12 @@ export function FiltersPanel({
         <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
           Filtros Básicos
         </h3>
-        
+
         <div className="space-y-2">
           <label className="text-sm font-medium">Status</label>
           <Select
             value={filters.status}
-            onValueChange={(val) => handleChange("status", val)}
+            onValueChange={val => handleChange("status", val)}
           >
             <SelectTrigger>
               <SelectValue placeholder="Todos os status" />
@@ -111,7 +115,7 @@ export function FiltersPanel({
           <label className="text-sm font-medium">Origem</label>
           <Select
             value={filters.origem}
-            onValueChange={(val) => handleChange("origem", val)}
+            onValueChange={val => handleChange("origem", val)}
           >
             <SelectTrigger>
               <SelectValue placeholder="Todas as origens" />
@@ -132,7 +136,7 @@ export function FiltersPanel({
           <label className="text-sm font-medium">Período</label>
           <Select
             value={filters.periodo}
-            onValueChange={(val) => handleChange("periodo", val)}
+            onValueChange={val => handleChange("periodo", val)}
           >
             <SelectTrigger>
               <SelectValue placeholder="Selecione o período" />
@@ -147,9 +151,17 @@ export function FiltersPanel({
         </div>
       </div>
 
-      <Collapsible open={advancedOpen} onOpenChange={setAdvancedOpen} className="space-y-4">
+      <Collapsible
+        open={advancedOpen}
+        onOpenChange={setAdvancedOpen}
+        className="space-y-4"
+      >
         <CollapsibleTrigger asChild>
-          <Button variant="ghost" size="sm" className="w-full justify-between p-0 hover:bg-transparent">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="w-full justify-between p-0 hover:bg-transparent"
+          >
             <span className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
               Filtros Avançados
             </span>
@@ -160,13 +172,14 @@ export function FiltersPanel({
             )}
           </Button>
         </CollapsibleTrigger>
-        
+
         <CollapsibleContent className="space-y-6 pt-2">
           <div className="space-y-4">
             <div className="flex justify-between">
               <label className="text-sm font-medium">Valor Estimado</label>
               <span className="text-xs text-muted-foreground">
-                R$ {filters.valorMin.toLocaleString()} - {filters.valorMax.toLocaleString()}
+                R$ {filters.valorMin.toLocaleString()} -{" "}
+                {filters.valorMax.toLocaleString()}
               </span>
             </div>
             <Slider
@@ -175,18 +188,25 @@ export function FiltersPanel({
               max={100000}
               step={1000}
               minStepsBetweenThumbs={1}
-              onValueChange={(vals) => {
-                onFiltersChange({ ...filters, valorMin: vals[0], valorMax: vals[1] });
+              onValueChange={vals => {
+                onFiltersChange({
+                  ...filters,
+                  valorMin: vals[0],
+                  valorMax: vals[1],
+                });
               }}
             />
           </div>
 
           <div className="space-y-2">
             <label className="text-sm font-medium">Tags</label>
-            <Input 
-              placeholder="Digite tags separadas por vírgula..." 
-              onChange={(e) => {
-                const tags = e.target.value.split(",").map(t => t.trim()).filter(Boolean);
+            <Input
+              placeholder="Digite tags separadas por vírgula..."
+              onChange={e => {
+                const tags = e.target.value
+                  .split(",")
+                  .map(t => t.trim())
+                  .filter(Boolean);
                 handleChange("tags", tags);
               }}
             />
@@ -217,7 +237,10 @@ export function FiltersPanel({
   if (isMobile) {
     return (
       <Sheet open={isOpen} onOpenChange={onClose}>
-        <SheetContent side="right" className="w-full sm:w-[400px] overflow-y-auto">
+        <SheetContent
+          side="right"
+          className="w-full sm:w-[400px] overflow-y-auto"
+        >
           <SheetHeader className="mb-6">
             <SheetTitle>Filtrar Leads</SheetTitle>
           </SheetHeader>
@@ -229,10 +252,12 @@ export function FiltersPanel({
 
   // Desktop sidebar version
   return (
-    <div className={`
+    <div
+      className={`
       fixed inset-y-0 right-0 z-50 w-[300px] bg-background border-l shadow-lg transform transition-transform duration-300 ease-in-out p-6 overflow-y-auto
       ${isOpen ? "translate-x-0" : "translate-x-full"}
-    `}>
+    `}
+    >
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-lg font-semibold">Filtros</h2>
         <Button variant="ghost" size="icon" onClick={onClose}>

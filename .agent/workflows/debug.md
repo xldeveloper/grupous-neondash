@@ -11,6 +11,7 @@ $ARGUMENTS
 ## 🔴 CRITICAL: Activate Resources
 
 **MANDATORY**: Before proceeding, read and follow:
+
 1. `.agent/agents/debugger.md` — Debugger agent with 4-phase methodology
 2. `.agent/skills/webapp-testing/SKILL.md` — E2E testing, Playwright, audit strategies
 
@@ -30,25 +31,25 @@ flowchart TD
     B --> C[Phase 2: Hypothesis Formation]
     C --> D[Phase 3: Investigation]
     D --> E{Issue Found?}
-    
+
     E -->|Yes| F[Phase 4: Fix & Validate]
     F --> G[Phase 5: QA Pipeline]
-    
+
     E -->|No| H[Expand Search]
     H --> C
-    
+
     G --> I{All Tests Pass?}
     I -->|Yes| J[✅ DEBUG COMPLETE]
     I -->|No| K[Auto-Research & Fix]
     K --> G
-    
+
     subgraph "Debugger Agent"
     B
     C
     D
     F
     end
-    
+
     subgraph "QA Pipeline"
     G
     K
@@ -75,6 +76,7 @@ tools:
 ```
 
 **Commands to run:**
+
 ```bash
 # Check logs
 railway logs --latest -n 100
@@ -120,6 +122,7 @@ tools:
 ```
 
 **Webapp Testing Script:**
+
 ```bash
 python .agent/skills/webapp-testing/scripts/playwright_runner.py <url> --screenshot --a11y
 ```
@@ -149,11 +152,12 @@ prevention:
 > **🔴 CRITICAL GATE**: Ensure fix doesn't break other things
 
 ### 5.1 Local Quality Checks
+
 ```bash
 # Code quality & linting
 bun run lint:check
 
-# Type safety & build verification  
+# Type safety & build verification
 bun run build
 
 # Test coverage
@@ -161,6 +165,7 @@ bun run test
 ```
 
 ### 5.2 Deployment Validation
+
 ```bash
 # Railway deployment status
 railway status
@@ -174,6 +179,7 @@ bunx convex logs --prod --failure
 ```
 
 ### 5.3 E2E Validation (if UI affected)
+
 ```bash
 # Run E2E tests
 bun run test:e2e
@@ -195,9 +201,11 @@ If errors are detected after fix:
    - Logs de erro
 
 2. **Invoke Research**
+
    > `/research "Debug Fix: [resumo]. Context: [logs]. GOAL: Research docs and plan atomic fixes."`
 
 3. **Generate Atomic Tasks**
+
    ```yaml
    tasks:
      - [ ] Research API/pattern (if unknown)
@@ -211,19 +219,22 @@ If errors are detected after fix:
 
 ## Output Format
 
-```markdown
+````markdown
 ## 🔍 Debug: [Issue]
 
 ### 1. Symptom
+
 [What's happening]
 
 ### 2. Information Gathered
+
 - **Error**: `[error message]`
 - **File**: `[filepath]`
 - **Line**: [line number]
 - **Logs**: [relevant log snippets]
 
 ### 3. Hypotheses
+
 1. ❓ [Most likely cause] — Testing: [method]
 2. ❓ [Second possibility] — Testing: [method]
 3. ❓ [Less likely cause] — Testing: [method]
@@ -237,34 +248,42 @@ If errors are detected after fix:
 [What I checked] → [Result] → ✅/❌
 
 ### 5. Root Cause
+
 🎯 **[Explanation of why this happened]**
 
 Evidence:
+
 - [Evidence 1]
 - [Evidence 2]
 
 ### 6. Fix Applied
+
 ```[language]
 // Before
 [broken code]
 
-// After  
+// After
 [fixed code]
 ```
+````
 
 ### 7. QA Validation
-| Check | Status | Notes |
-|-------|--------|-------|
-| Lint | ✅/❌ | |
-| Build | ✅/❌ | |
-| Tests | ✅/❌ | |
-| E2E | ✅/❌ | (if applicable) |
+
+| Check | Status | Notes           |
+| ----- | ------ | --------------- |
+| Lint  | ✅/❌  |                 |
+| Build | ✅/❌  |                 |
+| Tests | ✅/❌  |                 |
+| E2E   | ✅/❌  | (if applicable) |
 
 ### 8. Prevention
+
 🛡️ [How to prevent this in the future]
+
 - [ ] Test added
 - [ ] Documentation updated
 - [ ] Validation improved
+
 ```
 
 ---
@@ -309,12 +328,14 @@ Evidence:
 ## Examples
 
 ```
+
 /debug login not working
 /debug API returns 500
 /debug form doesn't submit
 /debug data not saving
 /debug payment failing in prod
 /debug component not rendering
+
 ```
 
 ---
@@ -322,7 +343,7 @@ Evidence:
 ## Key Principles
 
 - **Ask before assuming** — get full error context
-- **Test hypotheses** — don't guess randomly  
+- **Test hypotheses** — don't guess randomly
 - **Evidence-based** — document what you found
 - **Explain why** — not just what to fix
 - **Prevent recurrence** — add tests, validation
@@ -344,3 +365,4 @@ Evidence:
 ---
 
 **Pipeline completo: `/debug` → investigar → fix → QA validate → (se falhar) → auto-research → re-fix → QA validate**
+```

@@ -227,9 +227,7 @@ export function ComparativoView() {
           </h2>
           <p className="text-sm text-slate-500">
             Compare sua performance com a média da turma{" "}
-            {mentorado.turma === "neon_estrutura"
-              ? "Estrutura"
-              : "Escala"}
+            {mentorado.turma === "neon_estrutura" ? "Estrutura" : "Escala"}
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -288,65 +286,86 @@ export function ComparativoView() {
             <Card className="border-none shadow-sm">
               <CardContent className="pt-4 p-4">
                 <div className="flex items-center justify-between mb-1">
-                   <span className="text-xs text-slate-500 uppercase tracking-wider">Ranking</span>
-                   <Award className="w-4 h-4 text-neon-gold/50" />
+                  <span className="text-xs text-slate-500 uppercase tracking-wider">
+                    Ranking
+                  </span>
+                  <Award className="w-4 h-4 text-neon-gold/50" />
                 </div>
                 {stats.percentiles && (
                   <>
-                    <div className={`text-xl font-bold ${getPercentileColor(stats.percentiles.faturamento)}`}>
-                       Top {100 - stats.percentiles.faturamento}%
+                    <div
+                      className={`text-xl font-bold ${getPercentileColor(stats.percentiles.faturamento)}`}
+                    >
+                      Top {100 - stats.percentiles.faturamento}%
                     </div>
-                    <div className="text-xs text-slate-400 mt-1">em faturamento</div>
+                    <div className="text-xs text-slate-400 mt-1">
+                      em faturamento
+                    </div>
                   </>
                 )}
               </CardContent>
             </Card>
 
             <Card className="border-none shadow-sm">
-                <CardContent className="pt-4 p-4">
-                  <div className="flex items-center justify-between mb-1">
-                     <span className="text-xs text-slate-500 uppercase tracking-wider">Faturamento</span>
-                     <TrendingUp className="w-4 h-4 text-neon-blue/50" />
-                  </div>
-                  <div className="text-xl font-bold text-slate-900">
-                    {formatCurrency(stats.userMetrics.faturamento)}
-                  </div>
-                  <div className="text-xs text-slate-400 mt-1 flex items-center gap-1">
-                    {getTrendIcon(stats.userMetrics.faturamento, stats.turmaAverage!.faturamento)}
-                     vs média {formatCurrency(stats.turmaAverage!.faturamento)}
-                  </div>
-                </CardContent>
-            </Card>
-            
-            <Card className="border-none shadow-sm">
-                <CardContent className="pt-4 p-4">
-                  <div className="flex items-center justify-between mb-1">
-                     <span className="text-xs text-slate-500 uppercase tracking-wider">Leads</span>
-                     <Users className="w-4 h-4 text-neon-blue/50" />
-                  </div>
-                  <div className="text-xl font-bold text-slate-900">
-                    {stats.userMetrics.leads}
-                  </div>
-                  <div className="text-xs text-slate-400 mt-1 flex items-center gap-1">
-                    {getTrendIcon(stats.userMetrics.leads, stats.turmaAverage!.leads)}
-                     vs média {Math.round(stats.turmaAverage!.leads)}
-                  </div>
-                </CardContent>
+              <CardContent className="pt-4 p-4">
+                <div className="flex items-center justify-between mb-1">
+                  <span className="text-xs text-slate-500 uppercase tracking-wider">
+                    Faturamento
+                  </span>
+                  <TrendingUp className="w-4 h-4 text-neon-blue/50" />
+                </div>
+                <div className="text-xl font-bold text-slate-900">
+                  {formatCurrency(stats.userMetrics.faturamento)}
+                </div>
+                <div className="text-xs text-slate-400 mt-1 flex items-center gap-1">
+                  {getTrendIcon(
+                    stats.userMetrics.faturamento,
+                    stats.turmaAverage!.faturamento
+                  )}
+                  vs média {formatCurrency(stats.turmaAverage!.faturamento)}
+                </div>
+              </CardContent>
             </Card>
 
-             <Card className="border-none shadow-sm">
-                <CardContent className="pt-4 p-4">
-                  <div className="flex items-center justify-between mb-1">
-                     <span className="text-xs text-slate-500 uppercase tracking-wider">Participantes</span>
-                     <BarChart3 className="w-4 h-4 text-slate-300" />
-                  </div>
-                  <div className="text-xl font-bold text-slate-900">
-                    {stats.mentoradosComDados} <span className="text-sm font-normal text-slate-400">/ {stats.totalMentorados}</span>
-                  </div>
-                  <div className="text-xs text-slate-400 mt-1">
-                     dados contabilizados
-                  </div>
-                </CardContent>
+            <Card className="border-none shadow-sm">
+              <CardContent className="pt-4 p-4">
+                <div className="flex items-center justify-between mb-1">
+                  <span className="text-xs text-slate-500 uppercase tracking-wider">
+                    Leads
+                  </span>
+                  <Users className="w-4 h-4 text-neon-blue/50" />
+                </div>
+                <div className="text-xl font-bold text-slate-900">
+                  {stats.userMetrics.leads}
+                </div>
+                <div className="text-xs text-slate-400 mt-1 flex items-center gap-1">
+                  {getTrendIcon(
+                    stats.userMetrics.leads,
+                    stats.turmaAverage!.leads
+                  )}
+                  vs média {Math.round(stats.turmaAverage!.leads)}
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="border-none shadow-sm">
+              <CardContent className="pt-4 p-4">
+                <div className="flex items-center justify-between mb-1">
+                  <span className="text-xs text-slate-500 uppercase tracking-wider">
+                    Participantes
+                  </span>
+                  <BarChart3 className="w-4 h-4 text-slate-300" />
+                </div>
+                <div className="text-xl font-bold text-slate-900">
+                  {stats.mentoradosComDados}{" "}
+                  <span className="text-sm font-normal text-slate-400">
+                    / {stats.totalMentorados}
+                  </span>
+                </div>
+                <div className="text-xs text-slate-400 mt-1">
+                  dados contabilizados
+                </div>
+              </CardContent>
             </Card>
           </div>
 
@@ -358,28 +377,40 @@ export function ComparativoView() {
               </CardHeader>
               <CardContent>
                 <ResponsiveContainer width="100%" height={250}>
-                  <BarChart data={comparisonData} layout="vertical" margin={{ left: 20 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" horizontal={true} vertical={false} />
+                  <BarChart
+                    data={comparisonData}
+                    layout="vertical"
+                    margin={{ left: 20 }}
+                  >
+                    <CartesianGrid
+                      strokeDasharray="3 3"
+                      stroke="hsl(var(--border))"
+                      horizontal={true}
+                      vertical={false}
+                    />
                     <XAxis type="number" tick={{ fontSize: 10 }} hide />
                     <YAxis
                       dataKey="metric"
                       type="category"
-                      tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }}
+                      tick={{
+                        fontSize: 11,
+                        fill: "hsl(var(--muted-foreground))",
+                      }}
                       width={80}
                       axisLine={false}
                       tickLine={false}
                     />
                     <Tooltip
-                      cursor={{ fill: 'transparent' }}
-                      contentStyle={{ 
-                        borderRadius: '8px', 
-                        fontSize: '12px',
+                      cursor={{ fill: "transparent" }}
+                      contentStyle={{
+                        borderRadius: "8px",
+                        fontSize: "12px",
                         backgroundColor: "hsl(var(--card))",
                         borderColor: "hsl(var(--border))",
-                        color: "hsl(var(--foreground))"
+                        color: "hsl(var(--foreground))",
                       }}
                     />
-                    <Legend iconSize={8} wrapperStyle={{ fontSize: '11px' }} />
+                    <Legend iconSize={8} wrapperStyle={{ fontSize: "11px" }} />
                     <Bar
                       dataKey="voce"
                       name="Você"
@@ -409,7 +440,10 @@ export function ComparativoView() {
                     <PolarGrid stroke="hsl(var(--border))" />
                     <PolarAngleAxis
                       dataKey="subject"
-                      tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }}
+                      tick={{
+                        fontSize: 10,
+                        fill: "hsl(var(--muted-foreground))",
+                      }}
                     />
                     <PolarRadiusAxis
                       angle={30}
@@ -431,7 +465,7 @@ export function ComparativoView() {
                       fill="var(--color-neon-gold)"
                       fillOpacity={0.2}
                     />
-                    <Legend iconSize={8} wrapperStyle={{ fontSize: '11px' }} />
+                    <Legend iconSize={8} wrapperStyle={{ fontSize: "11px" }} />
                   </RadarChart>
                 </ResponsiveContainer>
               </CardContent>

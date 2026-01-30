@@ -1,4 +1,3 @@
-
 import { z } from "zod";
 import { router, protectedProcedure } from "./_core/trpc";
 import { interactionTemplates } from "../drizzle/schema";
@@ -6,26 +5,27 @@ import { eq, desc } from "drizzle-orm";
 import { getDb } from "./db";
 
 export const interactionTemplatesRouter = router({
-  list: protectedProcedure
-    .query(async ({ ctx }) => {
-      const db = getDb();
-      const templates = await db
-        .select()
-        .from(interactionTemplates)
-        .where(eq(interactionTemplates.userId, ctx.user.id))
-        .orderBy(desc(interactionTemplates.createdAt));
+  list: protectedProcedure.query(async ({ ctx }) => {
+    const db = getDb();
+    const templates = await db
+      .select()
+      .from(interactionTemplates)
+      .where(eq(interactionTemplates.userId, ctx.user.id))
+      .orderBy(desc(interactionTemplates.createdAt));
 
-      return {
-        templates,
-      };
-    }),
+    return {
+      templates,
+    };
+  }),
 
   create: protectedProcedure
-    .input(z.object({
-      title: z.string().min(1),
-      content: z.string().min(1),
-      type: z.enum(["whatsapp", "email", "ligacao", "reuniao", "nota"]),
-    }))
+    .input(
+      z.object({
+        title: z.string().min(1),
+        content: z.string().min(1),
+        type: z.enum(["whatsapp", "email", "ligacao", "reuniao", "nota"]),
+      })
+    )
     .mutation(async ({ ctx, input }) => {
       const db = getDb();
       const [template] = await db
@@ -42,12 +42,16 @@ export const interactionTemplatesRouter = router({
     }),
 
   update: protectedProcedure
-    .input(z.object({
-      id: z.number(),
-      title: z.string().min(1).optional(),
-      content: z.string().min(1).optional(),
-      type: z.enum(["whatsapp", "email", "ligacao", "reuniao", "nota"]).optional(),
-    }))
+    .input(
+      z.object({
+        id: z.number(),
+        title: z.string().min(1).optional(),
+        content: z.string().min(1).optional(),
+        type: z
+          .enum(["whatsapp", "email", "ligacao", "reuniao", "nota"])
+          .optional(),
+      })
+    )
     .mutation(async ({ ctx, input }) => {
       const db = getDb();
       const [existing] = await db
@@ -62,34 +66,34 @@ export const interactionTemplatesRouter = router({
       const [updated] = await db
         .update(interactionTemplates)
         .set({
-            ...(input.title ? { title: input.title } : {}),
-            ...(input.content ? { content: input.content } : {}),
-            ...(input.type ? { type: input.type as any } : {}),
-            updatedAt: new Date(),
+          ...(input.title ? { title: input.title } : {}),
+          ...(input.content ? { content: input.content } : {}),
+          ...(input.type ? { type: input.type as any } : {}),
+          updatedAt: new Date(),
         })
         .where(eq(interactionTemplates.id, input.id))
         .returning();
-      
+
       return updated;
     }),
 
   delete: protectedProcedure
     .input(z.object({ id: z.number() }))
     .mutation(async ({ ctx, input }) => {
-       const db = getDb();
-       const [existing] = await db
+      const db = getDb();
+      const [existing] = await db
         .select()
         .from(interactionTemplates)
         .where(eq(interactionTemplates.id, input.id));
 
       if (!existing || existing.userId !== ctx.user.id) {
-         throw new Error("Template não encontrado ou não autorizado");
+        throw new Error("Template não encontrado ou não autorizado");
       }
 
       await db
         .delete(interactionTemplates)
         .where(eq(interactionTemplates.id, input.id));
-      
+
       return { success: true };
     }),
 });

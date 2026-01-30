@@ -19,7 +19,7 @@ import {
   Building2,
   Rocket,
   Moon,
-  Sun
+  Sun,
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -28,7 +28,11 @@ import { useTheme } from "@/_core/hooks/useTheme";
 import { Link, useLocation, Redirect } from "wouter";
 import { UserButton } from "@clerk/clerk-react";
 
-export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+export default function DashboardLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const { user, logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const [location] = useLocation();
@@ -62,7 +66,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   ];
 
   const filteredNavItems = navItems.filter(
-    (item) => !item.adminOnly || user.role === "admin"
+    item => !item.adminOnly || user.role === "admin"
   );
 
   return (
@@ -106,7 +110,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 size="icon-sm"
                 onClick={toggleTheme}
                 className="h-7 w-7 flex-shrink-0"
-                aria-label={theme === "light" ? "Ativar modo escuro" : "Ativar modo claro"}
+                aria-label={
+                  theme === "light" ? "Ativar modo escuro" : "Ativar modo claro"
+                }
               >
                 {theme === "light" ? (
                   <Moon className="h-4 w-4 text-muted-foreground" />
@@ -126,24 +132,24 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               )}
             </div>
             <div className="flex items-center gap-2 p-2 rounded-md hover:bg-secondary transition-colors">
-                <div className="h-7 w-7 flex-shrink-0 flex items-center justify-center">
-                   <UserButton afterSignOutUrl="/" />
-                </div>
-                 {open && (
-                     <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        className="text-sm text-muted-foreground whitespace-pre overflow-hidden text-ellipsis"
-                     >
-                        {user.name || "Minha Conta"}
-                     </motion.div>
-                 )}
+              <div className="h-7 w-7 flex-shrink-0 flex items-center justify-center">
+                <UserButton afterSignOutUrl="/" />
+              </div>
+              {open && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="text-sm text-muted-foreground whitespace-pre overflow-hidden text-ellipsis"
+                >
+                  {user.name || "Minha Conta"}
+                </motion.div>
+              )}
             </div>
           </div>
         </SidebarBody>
       </Sidebar>
       <main className="flex-1 overflow-y-auto w-full p-2 md:p-10 border-l border-border bg-background rounded-tl-2xl">
-          {children}
+        {children}
       </main>
     </div>
   );
@@ -155,7 +161,7 @@ export const Logo = () => {
       href="/dashboard"
       className="font-normal flex space-x-2 items-center text-sm text-black py-1 relative z-20"
     >
-       <img
+      <img
         src="/brand/neon-symbol-official.png"
         alt="Neon"
         className="h-6 w-6 flex-shrink-0"

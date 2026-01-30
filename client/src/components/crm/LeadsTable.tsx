@@ -17,7 +17,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { MoreHorizontal, Phone, Mail, MessageSquare, Calendar } from "lucide-react";
+import {
+  MoreHorizontal,
+  Phone,
+  Mail,
+  MessageSquare,
+  Calendar,
+} from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { Skeleton } from "@/components/ui/skeleton";
 import { formatDistanceToNow } from "date-fns";
@@ -36,7 +42,14 @@ interface LeadsTableProps {
   isReadOnly?: boolean;
 }
 
-export function LeadsTable({ filters, page, onPageChange, onLeadClick, mentoradoId, isReadOnly = false }: LeadsTableProps) {
+export function LeadsTable({
+  filters,
+  page,
+  onPageChange,
+  onLeadClick,
+  mentoradoId,
+  isReadOnly = false,
+}: LeadsTableProps) {
   const { data, isLoading } = trpc.leads.list.useQuery({
     ...filters,
     page,
@@ -48,36 +61,36 @@ export function LeadsTable({ filters, page, onPageChange, onLeadClick, mentorado
   const utils = trpc.useUtils();
 
   const bulkUpdateStatus = trpc.leads.bulkUpdateStatus.useMutation({
-    onSuccess: (data) => {
-        toast.success(`${data.count} leads atualizados com sucesso`);
-        utils.leads.list.invalidate();
-        setSelectedIds([]);
+    onSuccess: data => {
+      toast.success(`${data.count} leads atualizados com sucesso`);
+      utils.leads.list.invalidate();
+      setSelectedIds([]);
     },
-    onError: (err) => toast.error(`Erro ao atualizar: ${err.message}`)
+    onError: err => toast.error(`Erro ao atualizar: ${err.message}`),
   });
 
   const bulkDelete = trpc.leads.bulkDelete.useMutation({
-    onSuccess: (data) => {
-        toast.success(`${data.count} leads removidos com sucesso`);
-        utils.leads.list.invalidate();
-        setSelectedIds([]);
+    onSuccess: data => {
+      toast.success(`${data.count} leads removidos com sucesso`);
+      utils.leads.list.invalidate();
+      setSelectedIds([]);
     },
-    onError: (err) => toast.error(`Erro ao deletar: ${err.message}`)
+    onError: err => toast.error(`Erro ao deletar: ${err.message}`),
   });
 
   const handleSelectAll = (checked: boolean) => {
     if (checked && data?.leads) {
-        setSelectedIds(data.leads.map(l => l.id));
+      setSelectedIds(data.leads.map(l => l.id));
     } else {
-        setSelectedIds([]);
+      setSelectedIds([]);
     }
   };
 
   const handleSelectOne = (checked: boolean, id: number) => {
     if (checked) {
-        setSelectedIds(prev => [...prev, id]);
+      setSelectedIds(prev => [...prev, id]);
     } else {
-        setSelectedIds(prev => prev.filter(i => i !== id));
+      setSelectedIds(prev => prev.filter(i => i !== id));
     }
   };
 
@@ -86,22 +99,31 @@ export function LeadsTable({ filters, page, onPageChange, onLeadClick, mentorado
   };
 
   const executeBulkDelete = () => {
-    if (confirm(`Tem certeza que deseja deletar ${selectedIds.length} leads?`)) {
-        bulkDelete.mutate({ ids: selectedIds });
+    if (
+      confirm(`Tem certeza que deseja deletar ${selectedIds.length} leads?`)
+    ) {
+      bulkDelete.mutate({ ids: selectedIds });
     }
   };
 
-
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "novo": return "bg-yellow-500 hover:bg-yellow-600";
-      case "primeiro_contato": return "bg-orange-400 hover:bg-orange-500";
-      case "qualificado": return "bg-purple-500 hover:bg-purple-600";
-      case "proposta": return "bg-orange-600 hover:bg-orange-700";
-      case "negociacao": return "bg-pink-500 hover:bg-pink-600";
-      case "fechado": return "bg-green-500 hover:bg-green-600";
-      case "perdido": return "bg-red-500 hover:bg-red-600";
-      default: return "bg-gray-500 hover:bg-gray-600";
+      case "novo":
+        return "bg-yellow-500 hover:bg-yellow-600";
+      case "primeiro_contato":
+        return "bg-orange-400 hover:bg-orange-500";
+      case "qualificado":
+        return "bg-purple-500 hover:bg-purple-600";
+      case "proposta":
+        return "bg-orange-600 hover:bg-orange-700";
+      case "negociacao":
+        return "bg-pink-500 hover:bg-pink-600";
+      case "fechado":
+        return "bg-green-500 hover:bg-green-600";
+      case "perdido":
+        return "bg-red-500 hover:bg-red-600";
+      default:
+        return "bg-gray-500 hover:bg-gray-600";
     }
   };
 
@@ -129,11 +151,12 @@ export function LeadsTable({ filters, page, onPageChange, onLeadClick, mentorado
     return (
       <div className="flex flex-col items-center justify-center h-64 text-center border rounded-lg border-dashed">
         <div className="bg-primary/20 p-4 rounded-full mb-4">
-            <MoreHorizontal className="h-8 w-8 text-primary" />
+          <MoreHorizontal className="h-8 w-8 text-primary" />
         </div>
         <h3 className="text-lg font-medium">Nenhum lead encontrado</h3>
         <p className="text-sm text-muted-foreground mt-1 max-w-sm">
-          Tente ajustar os filtros ou crie um novo lead para começar a acompanhar seu pipeline.
+          Tente ajustar os filtros ou crie um novo lead para começar a
+          acompanhar seu pipeline.
         </p>
       </div>
     );
@@ -147,9 +170,12 @@ export function LeadsTable({ filters, page, onPageChange, onLeadClick, mentorado
             <TableRow>
               {!isReadOnly && (
                 <TableHead className="w-[50px]">
-                  <Checkbox 
-                      checked={data?.leads.length > 0 && selectedIds.length === data?.leads.length}
-                      onCheckedChange={(checked) => handleSelectAll(!!checked)}
+                  <Checkbox
+                    checked={
+                      data?.leads.length > 0 &&
+                      selectedIds.length === data?.leads.length
+                    }
+                    onCheckedChange={checked => handleSelectAll(!!checked)}
                   />
                 </TableHead>
               )}
@@ -164,33 +190,44 @@ export function LeadsTable({ filters, page, onPageChange, onLeadClick, mentorado
             </TableRow>
           </TableHeader>
           <TableBody>
-            {data.leads.map((lead) => (
+            {data.leads.map(lead => (
               <TableRow
                 key={lead.id}
                 className="cursor-pointer hover:bg-muted/50"
                 onClick={() => onLeadClick(lead.id)}
               >
                 {!isReadOnly && (
-                    <TableCell onClick={(e) => e.stopPropagation()}>
-                      <Checkbox 
-                          checked={selectedIds.includes(lead.id)}
-                          onCheckedChange={(checked) => handleSelectOne(!!checked, lead.id)}
-                      />
-                    </TableCell>
+                  <TableCell onClick={e => e.stopPropagation()}>
+                    <Checkbox
+                      checked={selectedIds.includes(lead.id)}
+                      onCheckedChange={checked =>
+                        handleSelectOne(!!checked, lead.id)
+                      }
+                    />
+                  </TableCell>
                 )}
                 <TableCell className="font-medium">
                   <div className="flex items-center gap-3">
                     <Avatar className="h-8 w-8">
-                        <AvatarFallback>{lead.nome.substring(0, 2).toUpperCase()}</AvatarFallback>
+                      <AvatarFallback>
+                        {lead.nome.substring(0, 2).toUpperCase()}
+                      </AvatarFallback>
                     </Avatar>
                     <div>
-                        <div className="font-semibold">{lead.nome}</div>
-                        {lead.empresa && <div className="text-xs text-muted-foreground">{lead.empresa}</div>}
+                      <div className="font-semibold">{lead.nome}</div>
+                      {lead.empresa && (
+                        <div className="text-xs text-muted-foreground">
+                          {lead.empresa}
+                        </div>
+                      )}
                     </div>
                   </div>
                 </TableCell>
-                <TableCell className="max-w-[200px] truncate" title={lead.email}>
-                    {lead.email}
+                <TableCell
+                  className="max-w-[200px] truncate"
+                  title={lead.email}
+                >
+                  {lead.email}
                 </TableCell>
                 <TableCell>{lead.telefone || "-"}</TableCell>
                 <TableCell>
@@ -199,7 +236,9 @@ export function LeadsTable({ filters, page, onPageChange, onLeadClick, mentorado
                   </Badge>
                 </TableCell>
                 <TableCell>
-                  <Badge className={`${getStatusColor(lead.status)} text-white border-0`}>
+                  <Badge
+                    className={`${getStatusColor(lead.status)} text-white border-0`}
+                  >
                     {statusLabels[lead.status] || lead.status}
                   </Badge>
                 </TableCell>
@@ -214,33 +253,37 @@ export function LeadsTable({ filters, page, onPageChange, onLeadClick, mentorado
                 <TableCell className="text-muted-foreground text-sm">
                   {formatDistanceToNow(new Date(lead.updatedAt), {
                     addSuffix: true,
-                    locale: ptBR
+                    locale: ptBR,
                   })}
                 </TableCell>
                 {!isReadOnly && (
-                    <TableCell onClick={(e) => e.stopPropagation()}>
-                      <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" className="h-8 w-8 p-0">
-                              <span className="sr-only">Open menu</span>
-                              <MoreHorizontal className="h-4 w-4" />
-                          </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                          <DropdownMenuLabel>Ações</DropdownMenuLabel>
-                          <DropdownMenuItem onClick={() => onLeadClick(lead.id)}>
-                              Ver detalhes
-                          </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => navigator.clipboard.writeText(lead.email)}>
-                              Copiar email
-                          </DropdownMenuItem>
-                          <DropdownMenuSeparator />
-                          <DropdownMenuItem className="text-red-600">
-                              Deletar lead
-                          </DropdownMenuItem>
-                          </DropdownMenuContent>
-                      </DropdownMenu>
-                    </TableCell>
+                  <TableCell onClick={e => e.stopPropagation()}>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" className="h-8 w-8 p-0">
+                          <span className="sr-only">Open menu</span>
+                          <MoreHorizontal className="h-4 w-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuLabel>Ações</DropdownMenuLabel>
+                        <DropdownMenuItem onClick={() => onLeadClick(lead.id)}>
+                          Ver detalhes
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() =>
+                            navigator.clipboard.writeText(lead.email)
+                          }
+                        >
+                          Copiar email
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem className="text-red-600">
+                          Deletar lead
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </TableCell>
                 )}
               </TableRow>
             ))}
@@ -258,7 +301,7 @@ export function LeadsTable({ filters, page, onPageChange, onLeadClick, mentorado
           Anterior
         </Button>
         <div className="text-sm text-muted-foreground">
-            Página {page} de {data.totalPages}
+          Página {page} de {data.totalPages}
         </div>
         <Button
           variant="outline"
@@ -272,36 +315,49 @@ export function LeadsTable({ filters, page, onPageChange, onLeadClick, mentorado
 
       {selectedIds.length > 0 && !isReadOnly && (
         <div className="fixed bottom-6 left-1/2 -translate-x-1/2 bg-popover border shadow-2xl rounded-xl p-2 flex items-center gap-2 animate-in slide-in-from-bottom-5 fade-in z-50">
-            <div className="bg-primary/10 text-primary px-3 py-1.5 rounded-md text-sm font-medium mr-2">
-                {selectedIds.length} selecionados
-            </div>
-            
-            <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                    <Button variant="secondary" size="sm" className="gap-2">
-                        <RefreshCw className="h-4 w-4" />
-                        Status
-                    </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                    <DropdownMenuLabel>Mudar Status para...</DropdownMenuLabel>
-                    <DropdownMenuSeparator />
-                    {Object.entries(statusLabels).map(([key, label]) => (
-                        <DropdownMenuItem key={key} onClick={() => executeBulkStatus(key)}>
-                            {label}
-                        </DropdownMenuItem>
-                    ))}
-                </DropdownMenuContent>
-            </DropdownMenu>
+          <div className="bg-primary/10 text-primary px-3 py-1.5 rounded-md text-sm font-medium mr-2">
+            {selectedIds.length} selecionados
+          </div>
 
-            <Button variant="destructive" size="sm" className="gap-2" onClick={executeBulkDelete}>
-                <Trash2 className="h-4 w-4" />
-                Deletar
-            </Button>
-            
-            <Button variant="ghost" size="icon" onClick={() => setSelectedIds([])} className="ml-2">
-                <X className="h-4 w-4" />
-            </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="secondary" size="sm" className="gap-2">
+                <RefreshCw className="h-4 w-4" />
+                Status
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuLabel>Mudar Status para...</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              {Object.entries(statusLabels).map(([key, label]) => (
+                <DropdownMenuItem
+                  key={key}
+                  onClick={() => executeBulkStatus(key)}
+                >
+                  {label}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          <Button
+            variant="destructive"
+            size="sm"
+            className="gap-2"
+            onClick={executeBulkDelete}
+          >
+            <Trash2 className="h-4 w-4" />
+            Deletar
+          </Button>
+
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setSelectedIds([])}
+            className="ml-2"
+          >
+            <X className="h-4 w-4" />
+          </Button>
         </div>
       )}
     </div>

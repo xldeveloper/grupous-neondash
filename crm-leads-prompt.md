@@ -9,6 +9,7 @@
 **Objetivo**: Build um CRM completo e bem estruturado para gerenciamento de leads, focado em eficiência, visualização em pipeline e produtividade para os mentorados/alunos do Neon.
 
 **Princípios de Design CRM 2025** (baseado em pesquisa):
+
 - **Visual Pipeline**: Kanban board para visibilidade clara do fluxo de leads
 - **Touch Targets**: 48px+ para CTAs principais (Fitts' Law)
 - **Progressive Disclosure**: Filtros avançados escondidos até necessário (Hick's Law)
@@ -20,6 +21,7 @@
 ## 🎯 Requisitos Funcionais (MVP)
 
 ### 1. Lista de Leads com Filtros Avançados
+
 ```
 Filtros Básicos (visíveis):
 ├── Busca global (nome, email, telefone)
@@ -36,6 +38,7 @@ Filtros Avançados (collapsible):
 ```
 
 ### 2. Visualização em Pipeline (Kanban View)
+
 ```
 Etapas do Pipeline (configuráveis):
 ├── 🆕 Novo Lead
@@ -53,6 +56,7 @@ Funcionalidades:
 ```
 
 ### 3. Detalhes de Lead (Modal/View)
+
 ```
 Informações do Lead:
 ├── Nome completo
@@ -74,6 +78,7 @@ Histórico de Interações:
 ```
 
 ### 4. Gestão de Interações (Follow-ups)
+
 ```
 Tipos de Interação:
 ├── 📞 Ligação (com duração automática)
@@ -90,6 +95,7 @@ Ações Rápidas:
 ```
 
 ### 5. Dashboard de Analytics Básico
+
 ```
 KPIs Principais:
 ├── Total de leads ativos
@@ -107,12 +113,14 @@ KPIs Principais:
 ### Design Psychology (Frontend-Design Skill)
 
 #### Hick's Law - Redução de Escolhas
+
 ```
 ❌ Anti-pattern: 15+ filtros visíveis de uma vez
 ✅ Filtros prioritários + "Advanced Options ▼" collapsible
 ```
 
 #### Fitts' Law - Alcançabilidade dos CTAs
+
 ```
 Botões primários:
 ├── height: 48px minimum
@@ -124,6 +132,7 @@ Touch targets (mobile):
 ```
 
 #### Miller's Law - Chunking de Conteúdo
+
 ```
 Lista de leads:
 ├── Paginação (20-50 itens por página)
@@ -134,6 +143,7 @@ Card de lead:
 ```
 
 #### Von Restorff - Destaque de Elementos
+
 ```
 CTA primário:
 ├── Cor diferenciada (accent color)
@@ -144,6 +154,7 @@ Pipeline stages ativos:
 ```
 
 #### Serial Position - Ordenação Estratégica
+
 ```
 Pipeline Kanban:
 ├── Primeira coluna: Novo Lead (priorização entrada)
@@ -157,17 +168,20 @@ Filtros principais:
 ### Emotional Design Levels
 
 **VISCERAL (First Impression)**
+
 - Clean, minimal UI com generous whitespace
 - Color palette coerente com branding Neon (a ser definido)
 - Micro-interactions suaves no hover/drag-drop
 
 **BEHAVIORAL (Effective Use)**
+
 - Feedback instantâneo em todas as ações
 - Loading states claros (skeleton screen em vez de spinner)
 - Keyboard navigation completa (tab, arrow keys)
 - Responsivo (mobile, tablet, desktop)
 
 **REFLECTIVE (Identity)**
+
 - Dashboard personalizado por mentorado
 - Histórico de performance visível
 - Progress indicators (gamificação básica)
@@ -177,18 +191,20 @@ Filtros principais:
 ## 🚀 Tech Stack & Convenções
 
 ### Stack do Projeto Neon
-| Layer | Technology | Conventions |
-|-------|-----------|-------------|
-| **Runtime** | **Bun** | `bun install`, `bun run`, `bunx` |
-| **Frontend** | React 19.2 + Vite 7 | Functional components, hooks only |
-| **Styling** | Tailwind CSS 4 + shadcn/ui | `@/components/ui/*` imports |
-| **Data Fetching** | TanStack Query 5 + tRPC 11 | `trpc.*.useQuery()`, `.useMutation()` |
-| **Forms** | react-hook-form + zod | Schema-driven validation |
-| **Backend** | Express 4 + tRPC 11 | Protected procedures with Clerk auth |
-| **Database** | Neon PostgreSQL + Drizzle ORM | `ctx.db.*` for queries |
-| **Auth** | Clerk | `SignedIn`, `UserButton` components |
+
+| Layer             | Technology                    | Conventions                           |
+| ----------------- | ----------------------------- | ------------------------------------- |
+| **Runtime**       | **Bun**                       | `bun install`, `bun run`, `bunx`      |
+| **Frontend**      | React 19.2 + Vite 7           | Functional components, hooks only     |
+| **Styling**       | Tailwind CSS 4 + shadcn/ui    | `@/components/ui/*` imports           |
+| **Data Fetching** | TanStack Query 5 + tRPC 11    | `trpc.*.useQuery()`, `.useMutation()` |
+| **Forms**         | react-hook-form + zod         | Schema-driven validation              |
+| **Backend**       | Express 4 + tRPC 11           | Protected procedures with Clerk auth  |
+| **Database**      | Neon PostgreSQL + Drizzle ORM | `ctx.db.*` for queries                |
+| **Auth**          | Clerk                         | `SignedIn`, `UserButton` components   |
 
 ### Component Architecture
+
 ```
 client/src/
 ├── components/
@@ -221,6 +237,7 @@ client/src/
 ```
 
 ### Database Schema (Drizzle ORM)
+
 ```typescript
 // drizzle/schema.ts - Extensão para CRM
 
@@ -250,6 +267,7 @@ export const interacoes = pgTable("interacoes", {
 ```
 
 ### tRPC Router Pattern
+
 ```typescript
 // server/leadsRouter.ts
 import { z } from "zod";
@@ -257,11 +275,13 @@ import { router, protectedProcedure } from "./_core/trpc";
 
 export const leadsRouter = router({
   list: protectedProcedure
-    .input(z.object({
-      busca: z.string().optional(),
-      status: z.string().optional(),
-      page: z.number().default(1),
-    }))
+    .input(
+      z.object({
+        busca: z.string().optional(),
+        status: z.string().optional(),
+        page: z.number().default(1),
+      })
+    )
     .query(async ({ ctx, input }) => {
       // Query com filtros e paginação
     }),
@@ -273,30 +293,36 @@ export const leadsRouter = router({
     }),
 
   create: protectedProcedure
-    .input(z.object({
-      nome: z.string().min(1),
-      email: z.string().email(),
-      telefone: z.string().optional(),
-    }))
+    .input(
+      z.object({
+        nome: z.string().min(1),
+        email: z.string().email(),
+        telefone: z.string().optional(),
+      })
+    )
     .mutation(async ({ ctx, input }) => {
       // Criar novo lead
     }),
 
   updateStatus: protectedProcedure
-    .input(z.object({
-      id: z.number(),
-      status: z.string(),
-    }))
+    .input(
+      z.object({
+        id: z.number(),
+        status: z.string(),
+      })
+    )
     .mutation(async ({ ctx, input }) => {
       // Mover lead para nova etapa
     }),
 
   addInteraction: protectedProcedure
-    .input(z.object({
-      lead_id: z.number(),
-      tipo: z.string(),
-      notas: z.string().optional(),
-    }))
+    .input(
+      z.object({
+        lead_id: z.number(),
+        tipo: z.string(),
+        notas: z.string().optional(),
+      })
+    )
     .mutation(async ({ ctx, input }) => {
       // Registrar interação
     }),
@@ -308,33 +334,35 @@ export const leadsRouter = router({
 ## 🎨 Design System & Color Palette
 
 ### Palette Sugerida (Luxury CRM Trust)
+
 ```yaml
 Primary (Trust, Stability):
-  - slate-900  # Principal ações, headers
-  - slate-50   # Background light mode
+  - slate-900 # Principal ações, headers
+  - slate-50 # Background light mode
 
 Secondary (Calm, Professional):
-  - slate-600  # Secondary text
+  - slate-600 # Secondary text
   - slate-200 # Borders, dividers
 
 Accent (Action, Urgency):
-  - blue-600   # Primary buttons, CTA
-  - blue-500   # Hover states
+  - blue-600 # Primary buttons, CTA
+  - blue-500 # Hover states
 
 Success (Conversion):
-  - green-500  # Fechado pipeline
-  - green-50   # Background success states
+  - green-500 # Fechado pipeline
+  - green-50 # Background success states
 
 Warning (Negotiation):
-  - amber-500  # Em negociação
-  - amber-50   # Background warning states
+  - amber-500 # Em negociação
+  - amber-50 # Background warning states
 
 Error (Lost):
-  - red-500    # Perdido pipeline
-  - red-50     # Background error states
+  - red-500 # Perdido pipeline
+  - red-50 # Background error states
 ```
 
 ### Typography Scale (Editorial 1.333)
+
 ```yaml
 Scale Ratio: 1.333
 
@@ -350,6 +378,7 @@ X-Small: 12px - Labels, timestamps
 ```
 
 ### Spacing (8-Point Grid)
+
 ```yaml
 Tight: 4px   (half-step for micro)
 Small: 8px
@@ -365,6 +394,7 @@ XL: 32px
 ## 📐 Layout & Component Guidelines
 
 ### Main CRM Page Structure
+
 ```
 ┌─────────────────────────────────────────────────────┐
 │ Header: Neon Dashboard  |  Search   丨  User      │
@@ -384,6 +414,7 @@ XL: 32px
 ```
 
 ### Kanban Pipeline Layout
+
 ```
 Horizontal scroll:
 ┌─────────┬─────────┬────────────┬───────────┬───────┐
@@ -402,6 +433,7 @@ Gap between columns: 24px
 ```
 
 ### Lead Detail Modal
+
 ```
 Size: modal-lg (max-w-4xl, h-[90vh])
 
@@ -441,6 +473,7 @@ Layout:
 ## ✅ Deliverables & Verification
 
 ### Mínimo Viável (MVP)
+
 - [ ] Database schema extendido (leads, interações table)
 - [ ] tRPC router `leads.*` procedures (CRUD + queries)
 - [ ] Página principal de leads com lista + filtros
@@ -453,6 +486,7 @@ Layout:
 ### Verificação por Deliverable
 
 **Backend (Database + API)**
+
 ```bash
 # 1. Database migration
 bun run db:push
@@ -470,6 +504,7 @@ Verify: returns created lead object
 ```
 
 **Frontend (UI Components)**
+
 ```bash
 bun dev
 Verify (in browser):
@@ -482,6 +517,7 @@ Verify (in browser):
 ```
 
 **Integration Tests**
+
 ```typescript
 // server/leads.test.ts
 import { describe, test, expect } from "bun:test";
@@ -502,6 +538,7 @@ test("list leads with filters", async () => {
 ## 🚦 Priority & Sequencing
 
 ### Phase 1: Foundation (Backend + UI Skeleton)
+
 ```
 1. Database schema (leads, interacoes)
 2. tRPC router (basic CRUD)
@@ -510,6 +547,7 @@ test("list leads with filters", async () => {
 ```
 
 ### Phase 2: Core Features (MVP)
+
 ```
 5. Leads list with table view
 6. Filters basic + advanced (collapsible)
@@ -518,6 +556,7 @@ test("list leads with filters", async () => {
 ```
 
 ### Phase 3: Enhancement (Post-MVP)
+
 ```
 9. Interaction logging (quick actions)
 10. Dashboard analytics (KPIs)
@@ -529,11 +568,11 @@ test("list leads with filters", async () => {
 
 ## 📅 Time Estimation
 
-| Phase | Tasks | Est. Time |
-|-------|-------|-----------|
-| Phase 1 | Foundation | 4-6 hours |
-| Phase 2 | MVP | 8-12 hours |
-| Phase 3 | Enhancement | 8-10 hours |
+| Phase     | Tasks             | Est. Time       |
+| --------- | ----------------- | --------------- |
+| Phase 1   | Foundation        | 4-6 hours       |
+| Phase 2   | MVP               | 8-12 hours      |
+| Phase 3   | Enhancement       | 8-10 hours      |
 | **Total** | **Complete MVP+** | **20-28 hours** |
 
 ---
@@ -541,18 +580,21 @@ test("list leads with filters", async () => {
 ## 🔍 Resources & References
 
 ### Best Practices Research
+
 - [Admin Dashboard UI/UX Best Practices 2025](https://medium.com/@CarlosSmith24/admin-dashboard-ui-ux-best-practices-for-2025-8bdc6090c57d)
 - [CRM UX Design in 2025](https://yellowslice.in/bed/crm-ux-design-in-2025-what-works-what-fails-and-whats-next/)
 - [Kanban Sales Pipeline Best Practices](https://pipelinecrm.com/blog/kanban-sales-pipelines/)
 - [Dashboard Design Best Practices](https://www.resolution.de/post/dashboard-design-best-practices/)
 
 ### Project Documentation
+
 - `GEMINI.md` - Project rules & conventions
 - `drizzle/schema.ts` - Existing schema
 - `server/routers.ts` - tRPC router aggregation
 - `client/src/components/ui/` - shadcn/ui components
 
 ### Skills Applied
+
 - `frontend-design` - UX Psychology, Layout Principles
 - `ui-ux-pro-max` - Design patterns, Accessibility, Performance
 - `react-patterns` - React 19 patterns, Hooks
@@ -593,10 +635,14 @@ test("list leads with filters", async () => {
 > **Note**: This prompt incorporates research from modern CRM best practices (2025), UX psychology principles from `frontend-design` skill, UI/UX patterns from `ui-ux-pro-max`, and strictly follows the Neon project conventions (Bun, React 19, Tailwind 4, shadcn/ui, tRPC, Drizzle, Clerk).
 
 > **Anti-Patterns to Avoid**:
+>
 > - ❌ Don't create custom modal/dropdown if shadcn/ui provides it
 > - ❌ Don't use emoji icons (use SVG from Lucide/Heroicons)
 > - ❌ Don't bypass Clerk authentication checks
 > - ❌ Don't add non-essential animations (prefers-reduced-motion)
 > - ❌ Don't hardcode colors (use theme variables)
 > - ❌ Don't ignore mobile responsiveness (mobile-first approach)
+
+```
+
 ```

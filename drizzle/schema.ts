@@ -467,7 +467,6 @@ export const interacoes = pgTable(
 export type Interacao = typeof interacoes.$inferSelect;
 export type InsertInteracao = typeof interacoes.$inferInsert;
 
-
 /**
  * Tasks - Mentorado specific tasks/checklist
  */
@@ -498,18 +497,15 @@ export type InsertTask = typeof tasks.$inferInsert;
 /**
  * Classes - Educational content and meetings
  */
-export const classes = pgTable(
-  "classes",
-  {
-    id: serial("id").primaryKey(),
-    title: text("title").notNull(),
-    description: text("description"),
-    url: text("url"), // Video or meeting URL
-    date: timestamp("date"), // For live events
-    type: text("type").default("aula"), // "aula" | "encontro" | "material"
-    createdAt: timestamp("created_at").defaultNow().notNull(),
-  }
-);
+export const classes = pgTable("classes", {
+  id: serial("id").primaryKey(),
+  title: text("title").notNull(),
+  description: text("description"),
+  url: text("url"), // Video or meeting URL
+  date: timestamp("date"), // For live events
+  type: text("type").default("aula"), // "aula" | "encontro" | "material"
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
 
 export type Class = typeof classes.$inferSelect;
 export type InsertClass = typeof classes.$inferInsert;
@@ -532,7 +528,10 @@ export const classProgress = pgTable(
     createdAt: timestamp("created_at").defaultNow().notNull(),
   },
   table => [
-    uniqueIndex("class_progress_unique_idx").on(table.mentoradoId, table.classId),
+    uniqueIndex("class_progress_unique_idx").on(
+      table.mentoradoId,
+      table.classId
+    ),
     index("class_progress_mentorado_idx").on(table.mentoradoId),
   ]
 );
@@ -607,7 +606,10 @@ export const playbookProgress = pgTable(
     notes: text("notes"),
   },
   table => [
-    uniqueIndex("playbook_progress_unique_idx").on(table.mentoradoId, table.itemId),
+    uniqueIndex("playbook_progress_unique_idx").on(
+      table.mentoradoId,
+      table.itemId
+    ),
     index("playbook_progress_mentorado_idx").on(table.mentoradoId),
   ]
 );
@@ -639,7 +641,10 @@ export const atividadeProgress = pgTable(
       table.stepCodigo
     ),
     index("atividade_progress_mentorado_idx").on(table.mentoradoId),
-    index("atividade_progress_atividade_idx").on(table.mentoradoId, table.atividadeCodigo),
+    index("atividade_progress_atividade_idx").on(
+      table.mentoradoId,
+      table.atividadeCodigo
+    ),
   ]
 );
 
@@ -662,14 +667,13 @@ export const interactionTemplates = pgTable(
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().notNull(),
   },
-  table => [
-    index("interaction_templates_user_idx").on(table.userId),
-  ]
+  table => [index("interaction_templates_user_idx").on(table.userId)]
 );
 
 export type InteractionTemplate = typeof interactionTemplates.$inferSelect;
 
-export type InsertInteractionTemplate = typeof interactionTemplates.$inferInsert;
+export type InsertInteractionTemplate =
+  typeof interactionTemplates.$inferInsert;
 
 /**
  * Diagnosticos - Onboarding diagnostic data
@@ -686,29 +690,26 @@ export const diagnosticos = pgTable(
     tempoLivre: text("tempo_livre"),
     jaAtuaEstetica: text("ja_atua_estetica"),
     temClinica: text("tem_clinica"),
-    
+
     // 2. Resultados Atuais
     rendaMensal: text("renda_mensal"),
     faturaEstetica: text("fatura_estetica"),
     contas: text("contas"), // PJ, PF, Investimento
     custoVida: text("custo_vida"),
-    
+
     // 3. Dores e Desafios
     incomodaRotina: text("incomoda_rotina"),
     dificuldadeCrescer: text("dificuldade_crescer"),
-    
+
     // 4. Objetivos e Sonhos
     objetivo6Meses: text("objetivo_6_meses"),
     resultadoTransformador: text("resultado_transformador"),
-    
+
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().notNull(),
   },
-  table => [
-    uniqueIndex("diagnosticos_mentorado_idx").on(table.mentoradoId),
-  ]
+  table => [uniqueIndex("diagnosticos_mentorado_idx").on(table.mentoradoId)]
 );
 
 export type Diagnostico = typeof diagnosticos.$inferSelect;
 export type InsertDiagnostico = typeof diagnosticos.$inferInsert;
-

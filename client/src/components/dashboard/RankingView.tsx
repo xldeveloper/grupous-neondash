@@ -114,7 +114,7 @@ export function RankingView({ selectedMonth, selectedYear }: RankingViewProps) {
               const item = ranking[idx];
               if (!item) return <div key={idx} className="hidden md:block" />;
               const isCurrentUser = mentorado?.id === item.mentorado.id;
-              
+
               // Determine delay based on visual order (center first, then left, then right)
               // Center (idx 0) -> delay 0
               // Left (idx 1) -> delay 0.1
@@ -152,7 +152,10 @@ export function RankingView({ selectedMonth, selectedYear }: RankingViewProps) {
                     <h3 className="font-bold text-slate-900 mb-1 truncate px-2 text-lg">
                       {item.mentorado.nomeCompleto.split(" ")[0]}
                     </h3>
-                    <Badge variant="outline" className="text-xs mb-2 bg-white/50 backdrop-blur-sm">
+                    <Badge
+                      variant="outline"
+                      className="text-xs mb-2 bg-white/50 backdrop-blur-sm"
+                    >
                       {item.mentorado.turma === "neon_estrutura"
                         ? "Estrutura"
                         : "Escala"}
@@ -175,9 +178,7 @@ export function RankingView({ selectedMonth, selectedYear }: RankingViewProps) {
           {/* Full Ranking List */}
           <Card className="border-none shadow-sm">
             <CardHeader>
-              <CardTitle className="text-lg">
-                Classificação Completa
-              </CardTitle>
+              <CardTitle className="text-lg">Classificação Completa</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-2">
@@ -215,10 +216,7 @@ export function RankingView({ selectedMonth, selectedYear }: RankingViewProps) {
                         <h4 className="font-semibold text-slate-900 truncate">
                           {item.mentorado.nomeCompleto}
                           {isCurrentUser && (
-                            <Badge
-                              variant="secondary"
-                              className="ml-2 text-xs"
-                            >
+                            <Badge variant="secondary" className="ml-2 text-xs">
                               Você
                             </Badge>
                           )}

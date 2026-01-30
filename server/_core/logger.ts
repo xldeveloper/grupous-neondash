@@ -16,8 +16,16 @@ export interface LogContext {
 
 export interface Logger {
   info: (action: string, data?: Record<string, unknown>) => void;
-  warn: (action: string, error?: unknown, data?: Record<string, unknown>) => void;
-  error: (action: string, error: unknown, data?: Record<string, unknown>) => void;
+  warn: (
+    action: string,
+    error?: unknown,
+    data?: Record<string, unknown>
+  ) => void;
+  error: (
+    action: string,
+    error: unknown,
+    data?: Record<string, unknown>
+  ) => void;
   debug: (action: string, data?: Record<string, unknown>) => void;
 }
 

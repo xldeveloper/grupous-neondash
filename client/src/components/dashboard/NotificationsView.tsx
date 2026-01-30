@@ -75,9 +75,7 @@ export function NotificationsView() {
         <div>
           <h3 className="text-lg font-bold text-foreground">Notificações</h3>
           <p className="text-sm text-muted-foreground">
-            {naoLidas > 0
-              ? `${naoLidas} não lida(s)`
-              : "Tudo atualizado"}
+            {naoLidas > 0 ? `${naoLidas} não lida(s)` : "Tudo atualizado"}
           </p>
         </div>
 
@@ -121,7 +119,9 @@ export function NotificationsView() {
                 key={notif.id}
                 className={cn(
                   "border-none shadow-sm transition-all cursor-pointer hover:shadow-md",
-                  isUnread ? "bg-card border-l-4 border-l-neon-green" : "bg-muted/30 opacity-75"
+                  isUnread
+                    ? "bg-card border-l-4 border-l-neon-green"
+                    : "bg-muted/30 opacity-75"
                 )}
                 onClick={() => isUnread && handleMarkRead(notif.id)}
               >
@@ -141,7 +141,9 @@ export function NotificationsView() {
                         <h4
                           className={cn(
                             "font-semibold text-sm",
-                            isUnread ? "text-foreground" : "text-muted-foreground"
+                            isUnread
+                              ? "text-foreground"
+                              : "text-muted-foreground"
                           )}
                         >
                           {notif.titulo}
@@ -156,7 +158,9 @@ export function NotificationsView() {
                       <p
                         className={cn(
                           "text-xs leading-relaxed",
-                          isUnread ? "text-foreground/90" : "text-muted-foreground"
+                          isUnread
+                            ? "text-foreground/90"
+                            : "text-muted-foreground"
                         )}
                       >
                         {notif.mensagem}

@@ -1,6 +1,15 @@
 import { z } from "zod";
 import { router, mentoradoProcedure, protectedProcedure } from "./_core/trpc";
-import { eq, and, desc, sql, gte, lte, arrayContains, inArray } from "drizzle-orm";
+import {
+  eq,
+  and,
+  desc,
+  sql,
+  gte,
+  lte,
+  arrayContains,
+  inArray,
+} from "drizzle-orm";
 import { getDb } from "./db";
 import { leads, interacoes } from "../drizzle/schema";
 import { TRPCError } from "@trpc/server";
@@ -33,7 +42,10 @@ export const leadsRouter = router({
       }
 
       if (!targetMentoradoId) {
-         throw new TRPCError({ code: "FORBIDDEN", message: "Perfil de mentorado necessário" });
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Perfil de mentorado necessário",
+        });
       }
 
       const filters = [eq(leads.mentoradoId, targetMentoradoId)];
@@ -113,7 +125,10 @@ export const leadsRouter = router({
       });
 
       if (!lead) {
-        throw new TRPCError({ code: "NOT_FOUND", message: "Lead não encontrado" });
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Lead não encontrado",
+        });
       }
 
       // Check strict ownership
@@ -134,7 +149,14 @@ export const leadsRouter = router({
         email: z.string().email("Email inválido"),
         telefone: z.string().optional(),
         empresa: z.string().optional(),
-        origem: z.enum(["instagram", "whatsapp", "google", "indicacao", "site", "outro"]),
+        origem: z.enum([
+          "instagram",
+          "whatsapp",
+          "google",
+          "indicacao",
+          "site",
+          "outro",
+        ]),
         valorEstimado: z.number().optional(),
       })
     )
@@ -181,7 +203,10 @@ export const leadsRouter = router({
         .limit(1);
 
       if (!lead) {
-        throw new TRPCError({ code: "NOT_FOUND", message: "Lead não encontrado" });
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Lead não encontrado",
+        });
       }
 
       // 2. Strict Ownership
@@ -232,7 +257,10 @@ export const leadsRouter = router({
         .limit(1);
 
       if (!lead) {
-        throw new TRPCError({ code: "NOT_FOUND", message: "Lead não encontrado" });
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Lead não encontrado",
+        });
       }
 
       // 2. Strict Ownership
@@ -273,7 +301,10 @@ export const leadsRouter = router({
         .limit(1);
 
       if (!lead) {
-        throw new TRPCError({ code: "NOT_FOUND", message: "Lead não encontrado" });
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Lead não encontrado",
+        });
       }
 
       // 2. Strict Ownership (Admin exception removed as per request to have strict separation here)
@@ -307,7 +338,10 @@ export const leadsRouter = router({
         .limit(1);
 
       if (!lead) {
-        throw new TRPCError({ code: "NOT_FOUND", message: "Lead não encontrado" });
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Lead não encontrado",
+        });
       }
 
       // 2. ownership
@@ -336,16 +370,19 @@ export const leadsRouter = router({
     }),
 
   stats: protectedProcedure
-    .input(z.object({
-      periodo: z.enum(["7d", "30d", "90d"]).optional(),
-      mentoradoId: z.number().optional()
-    }))
+    .input(
+      z.object({
+        periodo: z.enum(["7d", "30d", "90d"]).optional(),
+        mentoradoId: z.number().optional(),
+      })
+    )
     .query(async ({ ctx, input }) => {
       const db = getDb();
 
       let targetMentoradoId = ctx.mentorado?.id;
       if (input.mentoradoId) {
-        if (ctx.user?.role !== "admin") throw new TRPCError({ code: "FORBIDDEN" });
+        if (ctx.user?.role !== "admin")
+          throw new TRPCError({ code: "FORBIDDEN" });
         targetMentoradoId = input.mentoradoId;
       }
       if (!targetMentoradoId) throw new TRPCError({ code: "UNAUTHORIZED" });
@@ -369,13 +406,13 @@ export const leadsRouter = router({
 
       // Build query with optional date filter
       const whereClause = dateFilter
-        ? and(eq(leads.mentoradoId, targetMentoradoId), gte(leads.createdAt, dateFilter))
+        ? and(
+            eq(leads.mentoradoId, targetMentoradoId),
+            gte(leads.createdAt, dateFilter)
+          )
         : eq(leads.mentoradoId, targetMentoradoId);
 
-      const allLeads = await db
-        .select()
-        .from(leads)
-        .where(whereClause);
+      const allLeads = await db.select().from(leads).where(whereClause);
 
       const ativos = allLeads.filter(
         l => l.status !== "fechado" && l.status !== "perdido"
@@ -391,7 +428,9 @@ export const leadsRouter = router({
         .reduce((sum, l) => sum + (l.valorEstimado || 0), 0);
 
       // Calculate average time to close for 'fechado' leads
-      const closedLeads = allLeads.filter(l => l.status === "fechado" && l.createdAt && l.updatedAt);
+      const closedLeads = allLeads.filter(
+        l => l.status === "fechado" && l.createdAt && l.updatedAt
+      );
       let tempoMedioFechamento = 0;
       if (closedLeads.length > 0) {
         const totalDays = closedLeads.reduce((sum, l) => {
@@ -403,10 +442,13 @@ export const leadsRouter = router({
       }
 
       // Simple stats for now, can be optimized with aggregations
-      const leadsPorOrigem = allLeads.reduce((acc, curr) => {
-        acc[curr.origem] = (acc[curr.origem] || 0) + 1;
-        return acc;
-      }, {} as Record<string, number>);
+      const leadsPorOrigem = allLeads.reduce(
+        (acc, curr) => {
+          acc[curr.origem] = (acc[curr.origem] || 0) + 1;
+          return acc;
+        },
+        {} as Record<string, number>
+      );
 
       return {
         totalAtivos: ativos,
@@ -433,15 +475,15 @@ export const leadsRouter = router({
     )
     .mutation(async ({ ctx, input }) => {
       const db = getDb();
-      
+
       const targets = await db
         .select({ id: leads.id, mentoradoId: leads.mentoradoId })
         .from(leads)
         .where(inArray(leads.id, input.ids));
 
       const validIds = targets
-        .filter((l) => l.mentoradoId === ctx.mentorado.id)
-        .map((l) => l.id);
+        .filter(l => l.mentoradoId === ctx.mentorado.id)
+        .map(l => l.id);
 
       if (validIds.length === 0) return { count: 0 };
 
@@ -463,8 +505,8 @@ export const leadsRouter = router({
         .where(inArray(leads.id, input.ids));
 
       const validIds = targets
-        .filter((l) => l.mentoradoId === ctx.mentorado.id)
-        .map((l) => l.id);
+        .filter(l => l.mentoradoId === ctx.mentorado.id)
+        .map(l => l.id);
 
       if (validIds.length === 0) return { count: 0 };
 
@@ -476,15 +518,15 @@ export const leadsRouter = router({
     .input(z.object({ ids: z.array(z.number()), tags: z.array(z.string()) }))
     .mutation(async ({ ctx, input }) => {
       const db = getDb();
-      
+
       const targets = await db
         .select({ id: leads.id, mentoradoId: leads.mentoradoId })
         .from(leads)
         .where(inArray(leads.id, input.ids));
 
       const validIds = targets
-        .filter((l) => l.mentoradoId === ctx.mentorado.id)
-        .map((l) => l.id);
+        .filter(l => l.mentoradoId === ctx.mentorado.id)
+        .map(l => l.id);
 
       if (validIds.length === 0) return { count: 0 };
 
@@ -493,16 +535,19 @@ export const leadsRouter = router({
       for (const id of validIds) {
         const lead = await db.query.leads.findFirst({
           where: eq(leads.id, id),
-          columns: { tags: true } 
+          columns: { tags: true },
         });
-        
+
         if (lead) {
           const currentTags = lead.tags || [];
           const newTags = Array.from(new Set([...currentTags, ...input.tags]));
-          
+
           if (newTags.length !== currentTags.length) {
-             await db.update(leads).set({ tags: newTags, updatedAt: new Date() }).where(eq(leads.id, id));
-             updatedCount++;
+            await db
+              .update(leads)
+              .set({ tags: newTags, updatedAt: new Date() })
+              .where(eq(leads.id, id));
+            updatedCount++;
           }
         }
       }

@@ -175,7 +175,8 @@ export function MenteeManagementView() {
     total: mentorados?.length || 0,
     estrutura:
       mentorados?.filter((m: any) => m.turma === "neon_estrutura").length || 0,
-    escala: mentorados?.filter((m: any) => m.turma === "neon_escala").length || 0,
+    escala:
+      mentorados?.filter((m: any) => m.turma === "neon_escala").length || 0,
     comEmail: mentorados?.filter((m: any) => m.email).length || 0,
   };
 
@@ -193,7 +194,7 @@ export function MenteeManagementView() {
       {/* Header Actions */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
-           {/* Header text removed as it will be in the parent tab structure mostly, but we can keep actions here */}
+          {/* Header text removed as it will be in the parent tab structure mostly, but we can keep actions here */}
         </div>
         <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
           <DialogTrigger asChild>
@@ -230,9 +231,7 @@ export function MenteeManagementView() {
                 <Label>URL da Foto</Label>
                 <Input
                   value={form.fotoUrl}
-                  onChange={e =>
-                    setForm({ ...form, fotoUrl: e.target.value })
-                  }
+                  onChange={e => setForm({ ...form, fotoUrl: e.target.value })}
                   placeholder="https://..."
                 />
               </div>
@@ -421,7 +420,9 @@ export function MenteeManagementView() {
 
       {/* Mentorados List */}
       <div className="space-y-4">
-        <h2 className="text-xl font-bold text-slate-900 tracking-tight">Lista de Mentorados</h2>
+        <h2 className="text-xl font-bold text-slate-900 tracking-tight">
+          Lista de Mentorados
+        </h2>
 
         {isLoading ? (
           <div className="text-center py-12 text-slate-500 bg-slate-50 rounded-lg">
@@ -443,33 +444,43 @@ export function MenteeManagementView() {
                 turma={mentorado.turma}
                 badges={[]} // Could add active/inactive here if needed
                 stats={[
-                  { label: "Faturamento", value: `R$ ${(mentorado.metaFaturamento || 0).toLocaleString('pt-BR')}` },
+                  {
+                    label: "Faturamento",
+                    value: `R$ ${(mentorado.metaFaturamento || 0).toLocaleString("pt-BR")}`,
+                  },
                   { label: "Leads", value: mentorado.metaLeads || 0 },
                   { label: "Posts", value: mentorado.metaPosts || 0 },
                 ]}
                 footer={
                   <div className="flex gap-2 w-full mt-2">
-                     <Button
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="flex-1 text-xs h-8"
+                      onClick={() => openEditDialog(mentorado)}
+                    >
+                      <Pencil className="w-3 h-3 mr-1.5" /> Editar
+                    </Button>
+                    <Link
+                      href={`/leads?mentoradoId=${mentorado.id}`}
+                      className="flex-1"
+                    >
+                      <Button
                         variant="outline"
                         size="sm"
-                        className="flex-1 text-xs h-8"
-                        onClick={() => openEditDialog(mentorado)}
-                     >
-                       <Pencil className="w-3 h-3 mr-1.5" /> Editar
-                     </Button>
-                     <Link href={`/leads?mentoradoId=${mentorado.id}`} className="flex-1">
-                        <Button variant="outline" size="sm" className="w-full text-xs h-8">
-                          <LayoutDashboard className="w-3 h-3 mr-1.5" /> CRM
-                        </Button>
-                     </Link>
-                     <Button
-                        variant="ghost"
-                        size="icon"
-                        className="shrink-0 h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10"
-                        onClick={() => openDeleteDialog(mentorado)}
-                     >
-                        <Trash2 className="w-4 h-4" />
-                     </Button>
+                        className="w-full text-xs h-8"
+                      >
+                        <LayoutDashboard className="w-3 h-3 mr-1.5" /> CRM
+                      </Button>
+                    </Link>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="shrink-0 h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10"
+                      onClick={() => openDeleteDialog(mentorado)}
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
                   </div>
                 }
               />
@@ -519,9 +530,7 @@ export function MenteeManagementView() {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="neon_estrutura">
-                    Neon Estrutura
-                  </SelectItem>
+                  <SelectItem value="neon_estrutura">Neon Estrutura</SelectItem>
                   <SelectItem value="neon_escala">Neon Escala</SelectItem>
                 </SelectContent>
               </Select>

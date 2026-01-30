@@ -1,4 +1,10 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { EvolutionChart } from "@/components/dashboard/EvolutionChart";
 import { trpc } from "@/lib/trpc";
 import { formatCurrency } from "@/lib/utils";
@@ -17,7 +23,9 @@ interface EvolucaoViewProps {
 }
 
 export function EvolucaoView({ mentoradoId }: EvolucaoViewProps) {
-  const { data: evolutionData, isLoading } = trpc.mentorados.evolution.useQuery({ mentoradoId });
+  const { data: evolutionData, isLoading } = trpc.mentorados.evolution.useQuery(
+    { mentoradoId }
+  );
 
   if (isLoading) {
     return <Skeleton className="h-[400px] w-full" />;
@@ -58,7 +66,7 @@ export function EvolucaoView({ mentoradoId }: EvolucaoViewProps) {
                     </TableCell>
                   </TableRow>
                 ) : (
-                  tableData.map((metric) => (
+                  tableData.map(metric => (
                     <TableRow key={metric.id}>
                       <TableCell className="font-medium">
                         {metric.mes}/{metric.ano}
@@ -69,9 +77,15 @@ export function EvolucaoView({ mentoradoId }: EvolucaoViewProps) {
                       <TableCell className="text-right">
                         {formatCurrency(metric.lucro)}
                       </TableCell>
-                      <TableCell className="text-right">{metric.leads}</TableCell>
-                      <TableCell className="text-right">{metric.postsFeed}</TableCell>
-                      <TableCell className="text-right">{metric.stories}</TableCell>
+                      <TableCell className="text-right">
+                        {metric.leads}
+                      </TableCell>
+                      <TableCell className="text-right">
+                        {metric.postsFeed}
+                      </TableCell>
+                      <TableCell className="text-right">
+                        {metric.stories}
+                      </TableCell>
                     </TableRow>
                   ))
                 )}

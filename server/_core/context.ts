@@ -1,6 +1,11 @@
 import type { CreateExpressContextOptions } from "@trpc/server/adapters/express";
 import { eq } from "drizzle-orm";
-import { type Mentorado, type User, mentorados, users } from "../../drizzle/schema";
+import {
+  type Mentorado,
+  type User,
+  mentorados,
+  users,
+} from "../../drizzle/schema";
 import { createClerkClient, getAuth } from "@clerk/express";
 import { getDb, upsertUserFromClerk } from "../db";
 import { getCachedSession, setCachedSession } from "./sessionCache";
@@ -23,7 +28,11 @@ export async function createContext(
 ): Promise<TrpcContext> {
   const auth = getAuth(opts.req);
   const requestId = generateRequestId();
-  const logger = createLogger({ userId: auth.userId, requestId, service: "context" });
+  const logger = createLogger({
+    userId: auth.userId,
+    requestId,
+    service: "context",
+  });
 
   if (!auth.userId) {
     return { req: opts.req, res: opts.res, user: null, mentorado: null };
@@ -57,7 +66,9 @@ export async function createContext(
     }
   } else {
     // Cache miss: fetch from Clerk and sync
-    let clerkUser: Awaited<ReturnType<typeof clerkClient.users.getUser>> | null = null;
+    let clerkUser: Awaited<
+      ReturnType<typeof clerkClient.users.getUser>
+    > | null = null;
     try {
       clerkUser = await clerkClient.users.getUser(auth.userId);
     } catch (error) {
@@ -95,9 +106,9 @@ export async function createContext(
           .limit(1);
 
         if (mentoradoByEmail[0]) {
-          logger.info("auto_link_mentorado", { 
-            mentoradoId: mentoradoByEmail[0].id, 
-            userId: user.id 
+          logger.info("auto_link_mentorado", {
+            mentoradoId: mentoradoByEmail[0].id,
+            userId: user.id,
           });
           // Link the user to the mentorado
           await db
@@ -108,24 +119,27 @@ export async function createContext(
           mentorado = { ...mentoradoByEmail[0], userId: user.id };
         } else {
           // Auto-create mentorado if not found
-          logger.info("auto_create_mentorado", { 
-            userId: user.id, 
-            email: user.email 
+          logger.info("auto_create_mentorado", {
+            userId: user.id,
+            email: user.email,
           });
 
-          const [newMentorado] = await db.insert(mentorados).values({
-            userId: user.id,
-            nomeCompleto: user.name || "Novo Usuário",
-            email: user.email,
-            fotoUrl: user.imageUrl,
-            turma: "neon_estrutura", // Default value
-            ativo: "sim",
-            metaFaturamento: 16000,
-            metaLeads: 50,
-            metaProcedimentos: 10,
-            metaPosts: 12,
-            metaStories: 60
-          }).returning();
+          const [newMentorado] = await db
+            .insert(mentorados)
+            .values({
+              userId: user.id,
+              nomeCompleto: user.name || "Novo Usuário",
+              email: user.email,
+              fotoUrl: user.imageUrl,
+              turma: "neon_estrutura", // Default value
+              ativo: "sim",
+              metaFaturamento: 16000,
+              metaLeads: 50,
+              metaProcedimentos: 10,
+              metaPosts: 12,
+              metaStories: 60,
+            })
+            .returning();
 
           mentorado = newMentorado;
         }
@@ -133,10 +147,10 @@ export async function createContext(
     }
   }
 
-  logger.info("context_created", { 
-    cacheHit, 
-    hasUser: !!user, 
-    hasMentorado: !!mentorado 
+  logger.info("context_created", {
+    cacheHit,
+    hasUser: !!user,
+    hasMentorado: !!mentorado,
   });
 
   return {
