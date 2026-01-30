@@ -668,5 +668,47 @@ export const interactionTemplates = pgTable(
 );
 
 export type InteractionTemplate = typeof interactionTemplates.$inferSelect;
+
 export type InsertInteractionTemplate = typeof interactionTemplates.$inferInsert;
+
+/**
+ * Diagnosticos - Onboarding diagnostic data
+ */
+export const diagnosticos = pgTable(
+  "diagnosticos",
+  {
+    id: serial("id").primaryKey(),
+    mentoradoId: integer("mentorado_id")
+      .notNull()
+      .references(() => mentorados.id, { onDelete: "cascade" }),
+    // 1. Sobre o Momento Atual Profissional
+    atuacaoSaude: text("atuacao_saude"),
+    tempoLivre: text("tempo_livre"),
+    jaAtuaEstetica: text("ja_atua_estetica"),
+    temClinica: text("tem_clinica"),
+    
+    // 2. Resultados Atuais
+    rendaMensal: text("renda_mensal"),
+    faturaEstetica: text("fatura_estetica"),
+    contas: text("contas"), // PJ, PF, Investimento
+    custoVida: text("custo_vida"),
+    
+    // 3. Dores e Desafios
+    incomodaRotina: text("incomoda_rotina"),
+    dificuldadeCrescer: text("dificuldade_crescer"),
+    
+    // 4. Objetivos e Sonhos
+    objetivo6Meses: text("objetivo_6_meses"),
+    resultadoTransformador: text("resultado_transformador"),
+    
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().notNull(),
+  },
+  table => [
+    uniqueIndex("diagnosticos_mentorado_idx").on(table.mentoradoId),
+  ]
+);
+
+export type Diagnostico = typeof diagnosticos.$inferSelect;
+export type InsertDiagnostico = typeof diagnosticos.$inferInsert;
 

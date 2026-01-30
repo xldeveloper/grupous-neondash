@@ -10,6 +10,7 @@ import { playbookRouter } from "./routers/playbook";
 import { authRouter } from "./routers/auth";
 import { atividadesRouter } from "./atividadesRouter";
 import { interactionTemplatesRouter } from "./interactionTemplatesRouter";
+import { diagnosticoRouter } from "./diagnostico";
 
 export const appRouter = router({
   system: systemRouter,
@@ -23,6 +24,7 @@ export const appRouter = router({
   playbook: playbookRouter,
   atividades: atividadesRouter,
   interactionTemplates: interactionTemplatesRouter,
+  diagnostico: diagnosticoRouter,
 });
 
 

@@ -106,34 +106,34 @@ export default function Home() {
         </div>
 
         <Tabs defaultValue="overview" className="w-full space-y-6">
-          <TabsList className="bg-slate-100 p-1 rounded-xl flex flex-wrap h-auto">
+          <TabsList className="bg-muted p-1 rounded-xl flex flex-wrap h-auto">
             <TabsTrigger
               value="overview"
-              className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-neon-blue data-[state=active]:shadow-sm flex-1 min-w-[100px]"
+              className="rounded-lg data-[state=active]:bg-card data-[state=active]:text-neon-blue data-[state=active]:shadow-sm flex-1 min-w-[100px]"
             >
               Visão Geral
             </TabsTrigger>
             <TabsTrigger
               value="ranking"
-              className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-neon-blue data-[state=active]:shadow-sm flex-1 min-w-[100px]"
+              className="rounded-lg data-[state=active]:bg-card data-[state=active]:text-neon-blue data-[state=active]:shadow-sm flex-1 min-w-[100px]"
             >
               Ranking
             </TabsTrigger>
             <TabsTrigger
               value="conquistas"
-              className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-neon-blue data-[state=active]:shadow-sm flex-1 min-w-[100px]"
+              className="rounded-lg data-[state=active]:bg-card data-[state=active]:text-neon-blue data-[state=active]:shadow-sm flex-1 min-w-[100px]"
             >
               Conquistas
             </TabsTrigger>
             <TabsTrigger
               value="estrutura"
-              className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-neon-blue data-[state=active]:shadow-sm flex-1 min-w-[100px]"
+              className="rounded-lg data-[state=active]:bg-card data-[state=active]:text-neon-blue data-[state=active]:shadow-sm flex-1 min-w-[100px]"
             >
               Neon Estrutura
             </TabsTrigger>
             <TabsTrigger
               value="escala"
-              className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-neon-blue data-[state=active]:shadow-sm flex-1 min-w-[100px]"
+              className="rounded-lg data-[state=active]:bg-card data-[state=active]:text-neon-blue data-[state=active]:shadow-sm flex-1 min-w-[100px]"
             >
               Neon Escala
             </TabsTrigger>
@@ -148,17 +148,17 @@ export default function Home() {
               variants={staggerContainer}
             >
               <motion.div variants={slideUp}>
-              <Card className="border-none shadow-sm bg-white overflow-hidden relative group">
+              <Card className="border-none shadow-sm bg-card overflow-hidden relative group">
                 <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
                   <DollarSign className="w-16 h-16 text-neon-gold" />
                 </div>
                 <CardHeader className="pb-2">
-                  <CardTitle className="text-sm font-medium text-slate-500 uppercase tracking-wider">
+                  <CardTitle className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
                     Faturamento Total
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-3xl font-bold text-slate-900">
+                  <div className="text-3xl font-bold text-foreground">
                     <AnimatedCounter
                       to={faturamentoTotal}
                       duration={1.5}
@@ -181,17 +181,17 @@ export default function Home() {
 
               <motion.div variants={slideUp}>
 
-              <Card className="border-none shadow-sm bg-white overflow-hidden relative group">
+              <Card className="border-none shadow-sm bg-card overflow-hidden relative group">
                 <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
                   <Users className="w-16 h-16 text-neon-blue" />
                 </div>
                 <CardHeader className="pb-2">
-                  <CardTitle className="text-sm font-medium text-slate-500 uppercase tracking-wider">
+                  <CardTitle className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
                     Mentorados Ativos
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-3xl font-bold text-slate-900">
+                  <div className="text-3xl font-bold text-foreground">
                     <AnimatedCounter to={totalMentorados} duration={1} />
                   </div>
                   <div className="flex gap-2 mt-1 text-xs">
@@ -208,24 +208,24 @@ export default function Home() {
 
               <motion.div variants={slideUp}>
 
-              <Card className="border-none shadow-sm bg-white overflow-hidden relative group">
+              <Card className="border-none shadow-sm bg-card overflow-hidden relative group">
                 <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
                   <Award className="w-16 h-16 text-neon-blue-dark" />
                 </div>
                 <CardHeader className="pb-2">
-                  <CardTitle className="text-sm font-medium text-slate-500 uppercase tracking-wider">
+                  <CardTitle className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
                     Score Médio (Top 5)
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-3xl font-bold text-slate-900">
+                  <div className="text-3xl font-bold text-foreground">
                     <AnimatedCounter
                       to={parseFloat(mediaScore)}
                       duration={1.2}
                       formatFn={(v) => v.toFixed(1)}
                     />
                   </div>
-                  <p className="text-xs text-slate-400 mt-1">
+                  <p className="text-xs text-muted-foreground mt-1">
                     Pontuação baseada em metas atingidas
                   </p>
                 </CardContent>
@@ -296,28 +296,28 @@ export default function Home() {
                     staggerDelay={0.1}
                     renderItem={(performer, index) => (
                       <div
-                        className="flex items-center justify-between p-3 bg-slate-50 rounded-xl hover:bg-slate-100 transition-colors"
+                        className="flex items-center justify-between p-3 bg-muted/30 rounded-xl hover:bg-muted/50 transition-colors"
                       >
                         <div className="flex items-center gap-3">
                           <div
                             className={cn(
                               "w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm",
                               index === 0
-                                ? "bg-yellow-100 text-yellow-700"
+                                ? "bg-yellow-100 text-yellow-700 dark:bg-yellow-500/10 dark:text-yellow-400"
                                 : index === 1
-                                  ? "bg-slate-200 text-slate-700"
+                                  ? "bg-slate-200 text-slate-700 dark:bg-slate-800 dark:text-slate-300"
                                   : index === 2
-                                    ? "bg-orange-100 text-orange-700"
-                                    : "bg-white text-slate-500 border border-slate-200"
+                                    ? "bg-orange-100 text-orange-700 dark:bg-orange-500/10 dark:text-orange-400"
+                                    : "bg-card text-muted-foreground border border-border"
                             )}
                           >
                             {index + 1}
                           </div>
                           <div>
-                            <div className="font-medium text-slate-900">
+                            <div className="font-medium text-foreground">
                               {performer.nome}
                             </div>
-                            <div className="text-xs text-slate-500">
+                            <div className="text-xs text-muted-foreground">
                               {performer.grupo}
                             </div>
                           </div>
