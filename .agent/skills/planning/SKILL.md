@@ -84,21 +84,21 @@ Execute per atomic tasks with validation gates.
 
 ## Operating Modes
 
-| Mode | Behavior | Output |
-|------|----------|--------|
+| Mode                               | Behavior                      | Output                |
+| ---------------------------------- | ----------------------------- | --------------------- |
 | CONSERVATIVE (default for `/plan`) | Research + plan only, no code | `docs/PLAN-{slug}.md` |
-| PROACTIVE (for implementation) | Research → plan → implement | Code + plan file |
+| PROACTIVE (for implementation)     | Research → plan → implement   | Code + plan file      |
 
 ---
 
 ## Complexity Levels
 
-| Level | Indicators | Research Depth |
-|-------|------------|----------------|
-| L1-L2 | Bug fix, single function | Repo-only |
-| L3-L5 | Feature, multi-file | Docs + repo |
-| L6-L8 | Architecture, integration | Deep research |
-| L9-L10 | Migrations, multi-service | Comprehensive |
+| Level  | Indicators                | Research Depth |
+| ------ | ------------------------- | -------------- |
+| L1-L2  | Bug fix, single function  | Repo-only      |
+| L3-L5  | Feature, multi-file       | Docs + repo    |
+| L6-L8  | Architecture, integration | Deep research  |
+| L9-L10 | Migrations, multi-service | Comprehensive  |
 
 > See `references/complexity-guide.md` for detailed classification.
 
@@ -106,12 +106,12 @@ Execute per atomic tasks with validation gates.
 
 ## Anti-Patterns
 
-| Bad | Good |
-|-----|------|
-| "Implement auth" | Research → Search codebase → Query docs → Then implement |
-| Skip research | ALWAYS research first, even for "simple" tasks |
-| Guess file paths | Search and verify paths before referencing |
-| Speculate about code | Read files before making claims |
+| Bad                  | Good                                                     |
+| -------------------- | -------------------------------------------------------- |
+| "Implement auth"     | Research → Search codebase → Query docs → Then implement |
+| Skip research        | ALWAYS research first, even for "simple" tasks           |
+| Guess file paths     | Search and verify paths before referencing               |
+| Speculate about code | Read files before making claims                          |
 
 ---
 

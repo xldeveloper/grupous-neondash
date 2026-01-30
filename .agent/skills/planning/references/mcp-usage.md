@@ -31,7 +31,7 @@ Reference for when and how to use MCP tools during planning.
 User needs: "Add Clerk auth middleware"
 
 1. mcp_context7_resolve-library-id: "clerk"
-2. mcp_context7_query-docs: 
+2. mcp_context7_query-docs:
    - libraryId: "/clerk/clerk-docs"
    - query: "express middleware authentication"
 ```
@@ -65,7 +65,7 @@ Problem: "Neon connection pooling timeout errors"
 1. tavily_search:
    - query: "neon postgresql connection pooling timeout serverless 2024"
    - options: {topic: "general", maxResults: 5}
-   
+
 2. tavily_extract: (if URL looks promising)
    - urls: ["https://neon.tech/docs/..."]
 ```
@@ -96,12 +96,12 @@ mcp_sequential-thinking_sequentialthinking:
 
 ### When to Use
 
-| Situation | Recommended Thoughts |
-|-----------|---------------------|
-| Simple bug | 2-3 thoughts |
-| Feature decision | 4-5 thoughts |
-| Architecture choice | 6-8 thoughts |
-| Complex debugging | 8-10 thoughts |
+| Situation           | Recommended Thoughts |
+| ------------------- | -------------------- |
+| Simple bug          | 2-3 thoughts         |
+| Feature decision    | 4-5 thoughts         |
+| Architecture choice | 6-8 thoughts         |
+| Complex debugging   | 8-10 thoughts        |
 
 ---
 

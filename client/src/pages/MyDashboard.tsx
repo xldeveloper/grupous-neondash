@@ -11,13 +11,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { NeonCard } from "@/components/ui/neon-card";
 // import { SidebarTrigger } from "@/components/ui/sidebar";
 import { useIsMobile } from "@/hooks/use-mobile";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { FloatingDock } from "@/components/ui/floating-dock";
 import { useState } from "react";
 import { NotificationsView } from "@/components/dashboard/NotificationsView";
 import { SubmitMetricsForm } from "@/components/dashboard/SubmitMetricsForm";
@@ -139,21 +133,32 @@ export default function MyDashboard() {
 
           <div className="flex items-center gap-4">
             {isAdmin && (
-              <Select
-                value={selectedMentoradoId}
-                onValueChange={setSelectedMentoradoId}
-              >
-                <SelectTrigger className="w-[280px] bg-black/40 border-white/10">
-                  <SelectValue placeholder="Selecione um mentorado" />
-                </SelectTrigger>
-                <SelectContent>
-                  {allMentorados?.map(m => (
-                    <SelectItem key={m.id} value={m.id.toString()}>
-                      {m.nomeCompleto} ({m.turma})
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <div className="relative">
+                <FloatingDock
+                  items={
+                    allMentorados?.map(m => ({
+                      id: m.id.toString(),
+                      title: `${m.nomeCompleto} (${m.turma})`,
+                      icon: m.fotoUrl ? (
+                        <Avatar className="h-10 w-10">
+                          <AvatarImage src={m.fotoUrl} />
+                          <AvatarFallback className="bg-gradient-to-br from-[#0f4c75] to-[#3282b8] text-white">
+                            {m.nomeCompleto[0]}
+                          </AvatarFallback>
+                        </Avatar>
+                      ) : (
+                        <div className="h-10 w-10 rounded-full bg-gradient-to-br from-[#0f4c75] to-[#3282b8] flex items-center justify-center text-white font-bold">
+                          {m.nomeCompleto[0]}
+                        </div>
+                      ),
+                      onClick: () => setSelectedMentoradoId(m.id.toString()),
+                      isActive: selectedMentoradoId === m.id.toString(),
+                    })) || []
+                  }
+                  activeValue={selectedMentoradoId}
+                  className="bg-black/40 border-white/10"
+                />
+              </div>
             )}
 
             {/* SubmitMetricsSheet button removed, moved to Tab */}

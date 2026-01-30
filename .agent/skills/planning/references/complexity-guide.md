@@ -4,12 +4,12 @@ Reference for determining task complexity level and appropriate thinking budget.
 
 ## Complexity Matrix
 
-| Level  | Indicators                        | Thinking Budget | Research Depth    |
-| ------ | --------------------------------- | --------------- | ----------------- |
-| L1-L2  | Bug fix, single function, typo    | 1K-4K tokens    | Repo-only         |
-| L3-L5  | Feature, multi-file, new endpoint | 8K-16K tokens   | Docs + repo       |
-| L6-L8  | Architecture, integration, API    | 16K-32K tokens  | Deep research     |
-| L9-L10 | Migrations, multi-service, infra  | 32K+ tokens     | Comprehensive     |
+| Level  | Indicators                        | Thinking Budget | Research Depth |
+| ------ | --------------------------------- | --------------- | -------------- |
+| L1-L2  | Bug fix, single function, typo    | 1K-4K tokens    | Repo-only      |
+| L3-L5  | Feature, multi-file, new endpoint | 8K-16K tokens   | Docs + repo    |
+| L6-L8  | Architecture, integration, API    | 16K-32K tokens  | Deep research  |
+| L9-L10 | Migrations, multi-service, infra  | 32K+ tokens     | Comprehensive  |
 
 ---
 
