@@ -64,7 +64,7 @@
   --color-neon-gray-light: #f4f4f5; /* Zinc 100 */
   --color-neon-border: #e4e4e7; /* Zinc 200 */
 
-  --font-sans: "Inter", "Outfit", sans-serif;
+  --font-sans: "Outfit", "Inter", sans-serif;
   --font-mono: "JetBrains Mono", monospace;
 
   --radius: 0.5rem; /* Clean 8px radius */
@@ -79,7 +79,7 @@
   --popover: 0 0% 100%;
   --popover-foreground: 240 10% 3.9%;
 
-  --primary: 240 5.9% 10%;
+  --primary: 203 48% 24%; /* #20445b Neon Blue */
   --primary-foreground: 0 0% 98%;
 
   --secondary: 240 4.8% 95.9%;
@@ -134,8 +134,8 @@
   
   /* Legacy Custom Ops Support */
   --color-neon-blue-dark: #020817; 
-  --color-neon-blue: #0f172a;
-  --color-neon-gold: #fbbf24; /* Amber 400 */
+  --color-neon-blue: #20445b;
+  --color-neon-gold: #ac9469;
 }
 
 @layer base {
