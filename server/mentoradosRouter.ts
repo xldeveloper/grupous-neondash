@@ -6,9 +6,9 @@ import {
   adminProcedure 
 } from "./_core/trpc";
 import { TRPCError } from "@trpc/server"; // Added import
-import { eq } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 import { getDb } from "./db";
-import { mentorados } from "../drizzle/schema";
+import { mentorados, metricasMensais } from "../drizzle/schema";
 import { sendWelcomeEmail } from "./emailService";
 import {
   getAllMentorados,
@@ -78,8 +78,14 @@ export const mentoradosRouter = router({
     .query(async ({ ctx, input }) => {
       let targetId = ctx.mentorado.id;
 
-      // If admin and requested specific ID, verify access
-      if (input?.mentoradoId && ctx.user?.role === "admin") {
+      // If requested specific ID, verify access
+      if (input?.mentoradoId) {
+        if (ctx.user?.role !== "admin") {
+          throw new TRPCError({ 
+            code: "FORBIDDEN",
+            message: "Apenas administradores podem acessar dados de outros mentorados"
+          });
+        }
         targetId = input.mentoradoId;
       }
 
@@ -252,29 +258,41 @@ export const mentoradosRouter = router({
 
       const userMentorado = ctx.mentorado;
 
-      // Get all mentorados from the same turma
-      const turmaResult = await db
-        .select()
+      // Single optimized query with JOIN - replaces N+1 pattern
+      const turmaMetrics = await db
+        .select({
+          mentoradoId: mentorados.id,
+          faturamento: metricasMensais.faturamento,
+          lucro: metricasMensais.lucro,
+          leads: metricasMensais.leads,
+          procedimentos: metricasMensais.procedimentos,
+          postsFeed: metricasMensais.postsFeed,
+          stories: metricasMensais.stories,
+        })
         .from(mentorados)
+        .leftJoin(
+          metricasMensais,
+          and(
+            eq(mentorados.id, metricasMensais.mentoradoId),
+            eq(metricasMensais.ano, input.ano),
+            eq(metricasMensais.mes, input.mes)
+          )
+        )
         .where(eq(mentorados.turma, userMentorado.turma));
 
-      // Get metrics for all mentorados in the turma
-      const allMetrics = await Promise.all(
-        turmaResult.map(async m => {
-          const metric = await getMetricaMensal(m.id, input.ano, input.mes);
-          return { mentoradoId: m.id, metric };
-        })
-      );
+      // Get total count of mentorados in turma
+      const totalMentorados = turmaMetrics.length;
 
-      // Filter out mentorados without metrics
-      const validMetrics = allMetrics.filter(m => m.metric !== null);
+      // Filter out mentorados without metrics (null from leftJoin)
+      const validMetrics = turmaMetrics.filter(m => m.faturamento !== null);
+      const mentoradosComDados = validMetrics.length;
 
-      if (validMetrics.length === 0) {
+      if (mentoradosComDados === 0) {
         return {
           userMetrics: null,
           turmaAverage: null,
           percentiles: null,
-          totalMentorados: turmaResult.length,
+          totalMentorados,
           mentoradosComDados: 0,
         };
       }
@@ -282,34 +300,39 @@ export const mentoradosRouter = router({
       // Calculate turma averages
       const turmaAverage = {
         faturamento:
-          validMetrics.reduce(
-            (acc, m) => acc + (m.metric?.faturamento || 0),
-            0
-          ) / validMetrics.length,
+          validMetrics.reduce((acc, m) => acc + (m.faturamento || 0), 0) /
+          mentoradosComDados,
         lucro:
-          validMetrics.reduce((acc, m) => acc + (m.metric?.lucro || 0), 0) /
-          validMetrics.length,
+          validMetrics.reduce((acc, m) => acc + (m.lucro || 0), 0) /
+          mentoradosComDados,
         leads:
-          validMetrics.reduce((acc, m) => acc + (m.metric?.leads || 0), 0) /
-          validMetrics.length,
+          validMetrics.reduce((acc, m) => acc + (m.leads || 0), 0) /
+          mentoradosComDados,
         procedimentos:
-          validMetrics.reduce(
-            (acc, m) => acc + (m.metric?.procedimentos || 0),
-            0
-          ) / validMetrics.length,
+          validMetrics.reduce((acc, m) => acc + (m.procedimentos || 0), 0) /
+          mentoradosComDados,
         postsFeed:
-          validMetrics.reduce((acc, m) => acc + (m.metric?.postsFeed || 0), 0) /
-          validMetrics.length,
+          validMetrics.reduce((acc, m) => acc + (m.postsFeed || 0), 0) /
+          mentoradosComDados,
         stories:
-          validMetrics.reduce((acc, m) => acc + (m.metric?.stories || 0), 0) /
-          validMetrics.length,
+          validMetrics.reduce((acc, m) => acc + (m.stories || 0), 0) /
+          mentoradosComDados,
       };
 
-      // Get user's metrics
+      // Get user's metrics from the same query results
       const userMetricData = validMetrics.find(
         m => m.mentoradoId === userMentorado.id
       );
-      const userMetrics = userMetricData?.metric || null;
+      const userMetrics = userMetricData
+        ? {
+            faturamento: userMetricData.faturamento || 0,
+            lucro: userMetricData.lucro || 0,
+            leads: userMetricData.leads || 0,
+            procedimentos: userMetricData.procedimentos || 0,
+            postsFeed: userMetricData.postsFeed || 0,
+            stories: userMetricData.stories || 0,
+          }
+        : null;
 
       // Calculate percentiles for user
       const calculatePercentile = (value: number, allValues: number[]) => {
@@ -323,19 +346,19 @@ export const mentoradosRouter = router({
         percentiles = {
           faturamento: calculatePercentile(
             userMetrics.faturamento,
-            validMetrics.map(m => m.metric?.faturamento || 0)
+            validMetrics.map(m => m.faturamento || 0)
           ),
           lucro: calculatePercentile(
             userMetrics.lucro,
-            validMetrics.map(m => m.metric?.lucro || 0)
+            validMetrics.map(m => m.lucro || 0)
           ),
           leads: calculatePercentile(
             userMetrics.leads,
-            validMetrics.map(m => m.metric?.leads || 0)
+            validMetrics.map(m => m.leads || 0)
           ),
           procedimentos: calculatePercentile(
             userMetrics.procedimentos,
-            validMetrics.map(m => m.metric?.procedimentos || 0)
+            validMetrics.map(m => m.procedimentos || 0)
           ),
         };
       }
@@ -344,8 +367,8 @@ export const mentoradosRouter = router({
         userMetrics,
         turmaAverage,
         percentiles,
-        totalMentorados: turmaResult.length,
-        mentoradosComDados: validMetrics.length,
+        totalMentorados,
+        mentoradosComDados,
       };
     }),
 

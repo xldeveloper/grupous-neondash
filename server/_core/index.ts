@@ -11,6 +11,8 @@ import { createContext } from "./context";
 import { serveStatic, setupVite } from "./vite";
 import { moltbotService } from "../services/moltbotService";
 import { handleClerkWebhook } from "../webhooks/clerk";
+import { initRedis } from "./sessionCache";
+import { userRateLimiter } from "./rateLimiter";
 
 function isPortAvailable(port: number): Promise<boolean> {
   return new Promise(resolve => {
@@ -32,6 +34,9 @@ async function findAvailablePort(startPort: number = 3000): Promise<number> {
 }
 
 async function startServer() {
+  // Initialize session cache (Redis or in-memory fallback)
+  await initRedis();
+
   const app = express();
   const server = createServer(app);
   
@@ -137,6 +142,9 @@ async function startServer() {
 
   // Clerk middleware (must be before tRPC if using auth middleware in procedures, but usually globally applied)
   app.use(clerkMiddleware());
+
+  // Rate limiting for API routes
+  app.use("/api/trpc", userRateLimiter);
 
   // tRPC API
   app.use(
