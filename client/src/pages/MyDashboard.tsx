@@ -21,7 +21,12 @@ import {
 import { useState } from "react";
 import { NotificationsView } from "@/components/dashboard/NotificationsView";
 import { SubmitMetricsForm } from "@/components/dashboard/SubmitMetricsForm";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  AnimatedTabs,
+  AnimatedTabsList,
+  AnimatedTabsTrigger,
+} from "@/components/ui/animated-tabs";
+import { TabsContent } from "@/components/ui/tabs";
 import { ComparativoView } from "@/components/dashboard/ComparativoView";
 import { EvolucaoView } from "@/components/dashboard/EvolucaoView";
 import { PlaybookView } from "@/components/dashboard/PlaybookView";
@@ -155,51 +160,51 @@ export default function MyDashboard() {
           </div>
         </div>
 
-        <Tabs defaultValue="visao-geral" className="w-full space-y-6">
-          <TabsList className="bg-black/40 border border-white/5 p-1">
-            <TabsTrigger
+        <AnimatedTabs defaultValue="visao-geral" className="w-full space-y-6">
+          <AnimatedTabsList className="bg-black/40 border border-white/5 p-1 flex-wrap h-auto min-h-[44px] gap-1">
+            <AnimatedTabsTrigger
               value="visao-geral"
               className="data-[state=active]:bg-neon-purple/20 data-[state=active]:text-neon-purple-light"
             >
               Visão Geral
-            </TabsTrigger>
-            <TabsTrigger
+            </AnimatedTabsTrigger>
+            <AnimatedTabsTrigger
               value="diagnostico"
               className="data-[state=active]:bg-purple-500/20 data-[state=active]:text-purple-400"
             >
               Diagnóstico
-            </TabsTrigger>
-            <TabsTrigger
+            </AnimatedTabsTrigger>
+            <AnimatedTabsTrigger
               value="evolucao"
               className="data-[state=active]:bg-blue-500/20 data-[state=active]:text-blue-400"
             >
               Evolução
-            </TabsTrigger>
-            <TabsTrigger
+            </AnimatedTabsTrigger>
+            <AnimatedTabsTrigger
               value="comparativo"
               className="data-[state=active]:bg-neon-blue/20 data-[state=active]:text-neon-blue-light"
             >
               Comparativo da Turma
-            </TabsTrigger>
-            <TabsTrigger
+            </AnimatedTabsTrigger>
+            <AnimatedTabsTrigger
               value="lancar-metricas"
               className="data-[state=active]:bg-neon-gold/20 data-[state=active]:text-neon-gold"
             >
               Lançar Métricas
-            </TabsTrigger>
-            <TabsTrigger
+            </AnimatedTabsTrigger>
+            <AnimatedTabsTrigger
               value="jornada"
               className="data-[state=active]:bg-green-500/20 data-[state=active]:text-green-400"
             >
               Playbook
-            </TabsTrigger>
-            <TabsTrigger
+            </AnimatedTabsTrigger>
+            <AnimatedTabsTrigger
               value="atividades"
               className="data-[state=active]:bg-pink-500/20 data-[state=active]:text-pink-400"
             >
               Atividades
-            </TabsTrigger>
-          </TabsList>
+            </AnimatedTabsTrigger>
+          </AnimatedTabsList>
 
           <TabsContent
             value="visao-geral"
@@ -244,7 +249,7 @@ export default function MyDashboard() {
                         ) : (
                           <>
                             <div className="flex items-center justify-center md:justify-start gap-3">
-                              <h2 className="text-2xl font-bold text-white">
+                              <h2 className="text-2xl font-bold text-neon-petroleo-dark dark:text-neon-gold-bright">
                                 Olá,{" "}
                                 {currentMentorado?.nomeCompleto?.split(" ")[0]}
                               </h2>
@@ -254,7 +259,7 @@ export default function MyDashboard() {
                                   : "Escala"}
                               </span>
                             </div>
-                            <p className="text-gray-400 max-w-md">
+                            <p className="text-neon-petroleo-light dark:text-neon-blue-light max-w-md">
                               Mantenha o foco nas metas de{" "}
                               {new Date().toLocaleString("pt-BR", {
                                 month: "long",
@@ -274,20 +279,22 @@ export default function MyDashboard() {
                 <NeonCard className="h-full flex flex-col justify-between p-6">
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
-                      <h3 className="text-lg font-semibold text-white">
+                      <h3 className="text-lg font-semibold text-neon-petroleo-dark dark:text-neon-gold-bright">
                         Progresso Geral
                       </h3>
-                      <span className="text-sm text-gray-400">Mês Atual</span>
+                      <span className="text-sm text-neon-petroleo-light dark:text-neon-blue-light">
+                        Mês Atual
+                      </span>
                     </div>
                     <div className="flex items-end gap-2">
-                      <span className="text-4xl font-bold text-neon-gold">
+                      <span className="text-4xl font-bold text-neon-petroleo dark:text-neon-gold-bright">
                         75%
                       </span>
                       <span className="text-green-400 flex items-center text-sm">
                         <TrendingUp className="w-4 h-4 mr-1" /> +5%
                       </span>
                     </div>
-                    <p className="text-gray-500 text-sm">
+                    <p className="text-neon-petroleo-light dark:text-neon-blue-highlight text-sm">
                       Você está no caminho certo! Continue assim.
                     </p>
                   </div>
@@ -397,7 +404,7 @@ export default function MyDashboard() {
               </NeonCard>
             </div>
           </TabsContent>
-        </Tabs>
+        </AnimatedTabs>
       </div>
     </DashboardLayout>
   );
