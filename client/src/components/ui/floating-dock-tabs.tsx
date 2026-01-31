@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { useMotionValue, useSpring, useTransform, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import { useRef, useState, createContext, useContext } from "react";
 import { cn } from "@/lib/utils";
 import { ChevronLeft, ChevronRight } from "lucide-react";
@@ -20,6 +20,7 @@ const FloatingDockTabsContext = createContext<{
 export interface FloatingDockTabItem {
   value: string;
   label: string;
+  icon?: React.ElementType;
 }
 
 interface FloatingDockTabsProps {
@@ -35,93 +36,69 @@ interface FloatingDockTabsListProps {
   className?: string;
 }
 
-// Hook for dock item animation
-function useDockItemAnimation(
-  mouseX: ReturnType<typeof useMotionValue<number>>
-) {
-  const ref = useRef<HTMLButtonElement>(null);
-  const [isHovered, setIsHovered] = useState(false);
-
-  const distance = useTransform(mouseX, val => {
-    const bounds = ref.current?.getBoundingClientRect();
-    if (!bounds) return 0;
-    return val - bounds.x - bounds.width / 2;
-  });
-
-  const widthSync = useTransform(distance, [-150, 0, 150], [48, 72, 48]);
-  const heightSync = useTransform(distance, [-150, 0, 150], [48, 72, 48]);
-
-  const width = useSpring(widthSync, {
-    mass: 0.1,
-    stiffness: 150,
-    damping: 12,
-  });
-  const height = useSpring(heightSync, {
-    mass: 0.1,
-    stiffness: 150,
-    damping: 12,
-  });
-
-  return {
-    ref,
-    isHovered,
-    setIsHovered,
-    width,
-    height,
-  };
-}
-
 // Individual dock tab item
 function DockTabItem({
   tab,
-  mouseX,
   isActive,
   onClick,
 }: {
   tab: FloatingDockTabItem;
-  mouseX: ReturnType<typeof useMotionValue<number>>;
   isActive: boolean;
   onClick: () => void;
 }) {
-  const { ref, setIsHovered, width, height } = useDockItemAnimation(mouseX);
+  const [isHovered, setIsHovered] = useState(false);
+  const Icon = tab.icon;
 
   return (
-    <div className="relative">
-      <motion.button
-        ref={ref}
-        onClick={onClick}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-        style={{ width, height }}
+    <button
+      onClick={onClick}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      className={cn(
+        "relative flex items-center justify-center gap-2 rounded-xl transition-colors duration-200",
+        "px-4 py-2.5 font-medium whitespace-nowrap",
+        "ring-0 outline-none focus-visible:ring-0 focus:outline-none focus:ring-0",
+        "z-10" // Ensure clickability
+      )}
+    >
+      {/* Active indicator background */}
+      {isActive && (
+        <motion.div
+          layoutId="activeDockTab"
+          className="absolute inset-0 rounded-xl bg-neon-petroleo dark:bg-neon-gold shadow-sm"
+          transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+        />
+      )}
+
+      {/* Hover indicator (lighter) */}
+      {!isActive && isHovered && (
+        <div className="absolute inset-0 rounded-xl bg-slate-200/50 dark:bg-white/5" />
+      )}
+
+      {/* Icon */}
+      {Icon && (
+        <span className={cn(
+          "relative z-20 transition-colors duration-200",
+           isActive 
+             ? "text-white dark:text-black" 
+             : "text-slate-500 dark:text-slate-400 group-hover:text-slate-700 dark:group-hover:text-slate-200"
+        )}>
+           <Icon className="w-4 h-4" />
+        </span>
+      )}
+
+      {/* Label text */}
+      <span
         className={cn(
-          "relative flex items-center justify-center rounded-2xl transition-colors duration-200",
-          "px-6 py-3 font-medium whitespace-nowrap",
-          "ring-0 outline-none focus-visible:ring-0 focus:outline-none focus:ring-0",
-          "hover:bg-white/10 dark:hover:bg-white/5"
+          "relative z-20 text-sm font-medium whitespace-nowrap transition-colors duration-200",
+          isActive
+            ? "text-white dark:text-black"
+            : "text-slate-600 dark:text-slate-400"
         )}
       >
-        {/* Active indicator background */}
-        {isActive && (
-          <motion.div
-            layoutId="activeDockTab"
-            className="absolute inset-0 rounded-2xl bg-neon-petroleo dark:bg-neon-gold-bright shadow-inner"
-            transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-          />
-        )}
-
-        {/* Label text */}
-        <span
-          className={cn(
-            "relative z-10 text-sm font-medium whitespace-nowrap",
-            isActive
-              ? "text-white dark:text-black"
-              : "text-slate-700 dark:text-slate-200"
-          )}
-        >
-          {tab.label}
-        </span>
-      </motion.button>
-    </div>
+        {tab.label}
+      </span>
+    </button>
   );
 }
 
@@ -169,7 +146,6 @@ const FloatingDockTabsList = React.forwardRef<
   FloatingDockTabsListProps
 >(({ tabs, className }, ref) => {
   const { activeTab, setActiveTab } = useContext(FloatingDockTabsContext);
-  const mouseX = useMotionValue(Infinity);
   const scrollRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
@@ -178,9 +154,15 @@ const FloatingDockTabsList = React.forwardRef<
     if (scrollRef.current) {
       const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
       setCanScrollLeft(scrollLeft > 0);
-      setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10);
+      setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 5); // tolerance
     }
   };
+
+  React.useEffect(() => {
+    checkScroll();
+    window.addEventListener("resize", checkScroll);
+    return () => window.removeEventListener("resize", checkScroll);
+  }, []);
 
   const scroll = (direction: "left" | "right") => {
     if (scrollRef.current) {
@@ -197,19 +179,18 @@ const FloatingDockTabsList = React.forwardRef<
     <div
       ref={ref}
       className={cn(
-        "relative flex items-center justify-center gap-2 px-4 py-3 rounded-2xl backdrop-blur-md overflow-hidden",
-        "bg-white/50 dark:bg-black/40 border border-slate-200/20 dark:border-slate-700/30 shadow-sm",
+        "relative flex items-center gap-2 p-1.5 rounded-2xl backdrop-blur-md",
+        "bg-white/80 dark:bg-[#0A0A0A]/80 border border-slate-200/50 dark:border-white/10 shadow-sm",
+        "w-max max-w-full mx-auto", // Center the dock
         className
       )}
-      onMouseMove={e => mouseX.set(e.clientX)}
-      onMouseLeave={() => mouseX.set(Infinity)}
     >
       {/* Left scroll button */}
       {canScrollLeft && (
         <Button
           variant="ghost"
           size="icon"
-          className="h-8 w-8 shrink-0 rounded-full bg-white/60 dark:bg-black/40 hover:bg-white/80 dark:hover:bg-black/60 ring-0 outline-none focus-visible:ring-0 focus:outline-none focus:ring-0"
+          className="h-8 w-8 shrink-0 rounded-full bg-slate-100/50 dark:bg-white/5 hover:bg-slate-200/50 dark:hover:bg-white/10"
           onClick={() => scroll("left")}
         >
           <ChevronLeft className="h-4 w-4" />
@@ -220,7 +201,7 @@ const FloatingDockTabsList = React.forwardRef<
       <div
         ref={scrollRef}
         onScroll={checkScroll}
-        className="flex items-center gap-2 overflow-x-auto scrollbar-hide"
+        className="flex items-center gap-1 overflow-x-auto scrollbar-hide px-1"
         style={{
           scrollbarWidth: "none",
           msOverflowStyle: "none",
@@ -230,7 +211,6 @@ const FloatingDockTabsList = React.forwardRef<
           <DockTabItem
             key={tab.value}
             tab={tab}
-            mouseX={mouseX}
             isActive={activeTab === tab.value}
             onClick={() => setActiveTab(tab.value)}
           />
@@ -242,7 +222,7 @@ const FloatingDockTabsList = React.forwardRef<
         <Button
           variant="ghost"
           size="icon"
-          className="h-8 w-8 shrink-0 rounded-full bg-white/60 dark:bg-black/40 hover:bg-white/80 dark:hover:bg-black/60 ring-0 outline-none focus-visible:ring-0 focus:outline-none focus:ring-0"
+          className="h-8 w-8 shrink-0 rounded-full bg-slate-100/50 dark:bg-white/5 hover:bg-slate-200/50 dark:hover:bg-white/10"
           onClick={() => scroll("right")}
         >
           <ChevronRight className="h-4 w-4" />

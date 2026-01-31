@@ -16,7 +16,12 @@ import {
   ResponsiveContainer,
   Cell,
 } from "recharts";
-import { TrendingUp, DollarSign, Award, BarChart3, Users } from "lucide-react";
+  LayoutDashboard,
+  Trophy,
+  Medal,
+  Users,
+  TrendingUp,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 import MonthYearFilter from "@/components/MonthYearFilter";
 import { useState } from "react";
@@ -115,22 +120,27 @@ export default function Home() {
               {
                 value: "overview",
                 label: "Visão Geral",
+                icon: LayoutDashboard,
               },
               {
                 value: "ranking",
                 label: "Ranking",
+                icon: Trophy,
               },
               {
                 value: "conquistas",
                 label: "Conquistas",
+                icon: Medal,
               },
               {
                 value: "estrutura",
-                label: "Neon Estrutura",
+                label: "Neurônios Estrutura",
+                icon: Users,
               },
               {
                 value: "escala",
-                label: "Neon Escala",
+                label: "Neurônios Escala",
+                icon: TrendingUp,
               },
             ]}
           />
