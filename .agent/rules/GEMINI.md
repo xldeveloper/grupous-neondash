@@ -28,12 +28,6 @@ Before ANY implementation:
 | `skill-creator` | Creating new skills | Meta work |
 | `theme-factory` | Visual themes | Styling artifacts |
 
-### Agents (1 total)
-
-| Agent | Skills | When to Use |
-|-------|--------|-------------|
-| `debugger` | debug, backend-design | Bugs, errors, testing |
-
 ### Workflows (4 total)
 
 | Command | Description |
@@ -43,7 +37,7 @@ Before ANY implementation:
 | `/implement` | Execute approved implementation plan |
 | `/plan` | Create project plan with research |
 
-**Priority:** GEMINI.md > Agent > Skill
+**Priority:** GEMINI.md > Skill
 
 ---
 
@@ -140,7 +134,24 @@ export const getUserStatus = query({
 
 ---
 
-## 🔧 TypeScript Rules
+## 🔧 Code Quality Standards (Ultracite)
+
+### Type Safety
+
+- Use `unknown` over `any` when type is genuinely unknown
+- Use const assertions (`as const`) for immutable values
+- Use meaningful variable names instead of magic numbers
+- Leverage TypeScript's type narrowing over assertions
+
+### Modern TypeScript
+
+```typescript
+// ✅ Use
+const foo = bar?.baz ?? 'default';   // Optional chaining + nullish
+for (const item of items) { }         // for...of
+const { id, name } = user;            // Destructuring
+const msg = `Hello ${name}`;          // Template literals
+```
 
 ### "Type instantiation is excessively deep"
 
@@ -149,11 +160,34 @@ export const getUserStatus = query({
 const mutate = useMutation((api as any).leads.updateStatus);
 ```
 
-### Biome
+### React 19 Rules
 
-- Never disable rules globally
-- Prefix unused vars with `_` (e.g., `_err`)
-- Run `bun run check` before committing
+- Function components only (no classes)
+- Hooks at top level only (never conditional)
+- Use `ref` as prop (not `React.forwardRef`)
+- Always specify hook dependency arrays correctly
+- Use unique IDs for `key` props (not array indices)
+
+### Error Handling
+
+- No `console.log`/`debugger` in production
+- Throw `Error` objects with descriptive messages
+- Use early returns over nested conditionals
+- Handle async errors with try-catch
+
+### Security
+
+- Add `rel="noopener"` on `target="_blank"` links
+- Avoid `dangerouslySetInnerHTML`
+- Never use `eval()`
+- Validate and sanitize user input
+
+### Performance
+
+- Avoid spread in loop accumulators
+- Use top-level regex literals
+- Prefer specific imports over namespace imports
+- Avoid barrel files (index re-exports)
 
 ---
 
@@ -186,7 +220,6 @@ neondash/
 ├── drizzle/              # Database schema
 │   └── schema.ts         # Neon PostgreSQL tables
 └── .agent/               # AI configuration
-    ├── agents/           # 1 agent (debugger)
     ├── skills/           # 7 skills
     ├── workflows/        # 4 workflows
     └── rules/            # This file
