@@ -1,15 +1,17 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
+// Vitest hoists vi.mock() calls to the top of the file.
+// Factory functions must be self-contained (no external variables).
+
 // Mock the database module
 vi.mock("./db", () => ({
   getDb: vi.fn(() => null),
 }));
 
-// Mock the emailService module
-const mockSendWelcomeEmail = vi.fn(async () => true);
+// Mock the emailService module with fully self-contained factory
 vi.mock("./emailService", () => ({
   sendEmail: vi.fn(async () => true),
-  sendWelcomeEmail: mockSendWelcomeEmail,
+  sendWelcomeEmail: vi.fn(async () => true),
 }));
 
 describe("Mentorados Router", () => {
@@ -77,9 +79,11 @@ describe("Mentorados Router", () => {
   });
 
   describe("Email Service", () => {
-    it("should have sendWelcomeEmail function defined", () => {
-      expect(mockSendWelcomeEmail).toBeDefined();
-      expect(typeof mockSendWelcomeEmail).toBe("function");
+    it("should have sendWelcomeEmail function defined", async () => {
+      // Import the mocked module to verify the mock works
+      const emailService = await import("./emailService");
+      expect(emailService.sendWelcomeEmail).toBeDefined();
+      expect(typeof emailService.sendWelcomeEmail).toBe("function");
     });
   });
 });
