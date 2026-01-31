@@ -77,13 +77,15 @@ function DockTabItem({
 
       {/* Icon */}
       {Icon && (
-        <span className={cn(
-          "relative z-20 transition-colors duration-200",
-           isActive 
-             ? "text-white dark:text-black" 
-             : "text-slate-500 dark:text-slate-400 group-hover:text-slate-700 dark:group-hover:text-slate-200"
-        )}>
-           <Icon className="w-4 h-4" />
+        <span
+          className={cn(
+            "relative z-20 transition-colors duration-200",
+            isActive
+              ? "text-white dark:text-black"
+              : "text-slate-500 dark:text-slate-400 group-hover:text-slate-700 dark:group-hover:text-slate-200"
+          )}
+        >
+          <Icon className="w-4 h-4" />
         </span>
       )}
 

@@ -131,7 +131,7 @@ export async function createContext(
               nomeCompleto: user.name || "Novo Usuário",
               email: user.email,
               fotoUrl: user.imageUrl,
-              turma: "neon_estrutura", // Default value
+              turma: "neon", // Default value
               ativo: "sim",
               metaFaturamento: 16000,
               metaLeads: 50,

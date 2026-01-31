@@ -91,9 +91,7 @@ export async function syncClerkUser(user: ClerkUserPayload) {
         `[UserService] Creating new mentorado for user ${userRecord.id}`
       );
 
-      const turma =
-        (user.public_metadata?.turma as "neon_estrutura" | "neon_escala") ||
-        "neon_estrutura";
+      const turma = "neon";
 
       await createMentorado({
         userId: userRecord.id,

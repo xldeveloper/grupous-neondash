@@ -30,7 +30,7 @@ import MonthYearFilter from "@/components/MonthYearFilter";
 import { useState } from "react";
 import { RankingView } from "@/components/dashboard/RankingView";
 import { AchievementsView } from "@/components/dashboard/AchievementsView";
-import { TurmaView } from "@/components/dashboard/TurmaView";
+
 import { motion } from "motion/react";
 import { AnimatedList } from "@/components/ui/animated-list";
 import { AnimatedCounter } from "@/components/ui/animated-counter";
@@ -45,12 +45,12 @@ export default function Home() {
     ...analiseData.neon_estrutura.ranking.map(([nome, score]) => ({
       nome,
       score,
-      grupo: "Estrutura",
+      grupo: "Neon",
     })),
     ...analiseData.neon_escala.ranking.map(([nome, score]) => ({
       nome,
       score,
-      grupo: "Escala",
+      grupo: "Neon",
     })),
   ]
     .sort((a, b) => b.score - a.score)
@@ -80,13 +80,13 @@ export default function Home() {
       name: nome.split(" ")[0],
       score,
       faturamento: analiseData.neon_estrutura.analise[nome].dados.faturamento,
-      grupo: "Estrutura",
+      grupo: "Neon",
     })),
     ...analiseData.neon_escala.ranking.map(([nome, score]) => ({
       name: nome.split(" ")[0],
       score,
       faturamento: analiseData.neon_escala.analise[nome].dados.faturamento,
-      grupo: "Escala",
+      grupo: "Neon",
     })),
   ]
     .sort((a, b) => b.faturamento - a.faturamento)
@@ -134,16 +134,6 @@ export default function Home() {
                 value: "conquistas",
                 label: "Conquistas",
                 icon: Medal,
-              },
-              {
-                value: "estrutura",
-                label: "Neurônios Estrutura",
-                icon: Users,
-              },
-              {
-                value: "escala",
-                label: "Neurônios Escala",
-                icon: TrendingUp,
               },
             ]}
           />
@@ -211,14 +201,9 @@ export default function Home() {
                       <div className="text-3xl font-bold text-foreground">
                         <AnimatedCounter to={totalMentorados} duration={1} />
                       </div>
-                      <div className="flex gap-2 mt-1 text-xs">
-                        <span className="bg-neon-gold/20 text-neon-blue-dark px-2 py-0.5 rounded-full font-medium">
-                          5 Estrutura
-                        </span>
-                        <span className="bg-neon-blue/10 text-neon-blue px-2 py-0.5 rounded-full font-medium">
-                          9 Escala
-                        </span>
-                      </div>
+                      <span className="bg-neon-gold/20 text-neon-blue-dark px-2 py-0.5 rounded-full font-medium">
+                        14 Mentorados
+                      </span>
                     </CardContent>
                   </Card>
                 </motion.div>
@@ -288,12 +273,7 @@ export default function Home() {
                         />
                         <Bar dataKey="faturamento" radius={[4, 4, 0, 0]}>
                           {chartData.map((entry, index) => (
-                            <Cell
-                              key={`cell-${index}`}
-                              fill={
-                                entry.grupo === "Escala" ? "#20445B" : "#AC9469"
-                              }
-                            />
+                            <Cell key={`cell-${index}`} fill="#AC9469" />
                           ))}
                         </Bar>
                       </BarChart>
@@ -360,16 +340,6 @@ export default function Home() {
           {/* ACHIEVEMENTS TAB */}
           <FloatingDockTabsContent value="conquistas" className="mt-0">
             <AchievementsView />
-          </FloatingDockTabsContent>
-
-          {/* ESTRUTURA TAB */}
-          <FloatingDockTabsContent value="estrutura" className="mt-0">
-            <TurmaView type="estrutura" />
-          </FloatingDockTabsContent>
-
-          {/* ESCALA TAB */}
-          <FloatingDockTabsContent value="escala" className="mt-0">
-            <TurmaView type="escala" />
           </FloatingDockTabsContent>
         </FloatingDockTabs>
       </motion.div>

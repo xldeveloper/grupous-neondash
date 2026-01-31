@@ -59,7 +59,7 @@ export const mentoradosRouter = router({
       z.object({
         userId: z.number(),
         nomeCompleto: z.string(),
-        turma: z.enum(["neon_estrutura", "neon_escala"]),
+        turma: z.literal("neon").default("neon"),
         metaFaturamento: z.number().default(16000),
       })
     )
@@ -167,7 +167,7 @@ export const mentoradosRouter = router({
         nomeCompleto: z.string().optional(),
         email: z.string().email().optional().nullable(),
         fotoUrl: z.string().optional().nullable(),
-        turma: z.enum(["neon_estrutura", "neon_escala"]).optional(),
+        turma: z.literal("neon").optional(),
         metaFaturamento: z.number().optional(),
         metaLeads: z.number().optional(),
         metaProcedimentos: z.number().optional(),
@@ -215,7 +215,7 @@ export const mentoradosRouter = router({
         nomeCompleto: z.string(),
         email: z.string().email().optional(),
         fotoUrl: z.string().optional(),
-        turma: z.enum(["neon_estrutura", "neon_escala"]),
+        turma: z.literal("neon").default("neon"),
         metaFaturamento: z.number().default(16000),
         metaLeads: z.number().default(50),
         metaProcedimentos: z.number().default(10),

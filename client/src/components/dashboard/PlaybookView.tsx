@@ -24,7 +24,7 @@ import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface PlaybookViewProps {
-  turma?: "neon_estrutura" | "neon_escala";
+  turma?: "neon";
 }
 
 export function PlaybookView({ turma }: PlaybookViewProps) {

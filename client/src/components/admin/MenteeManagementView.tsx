@@ -37,7 +37,7 @@ import { Link } from "wouter";
 import { toast } from "sonner";
 import { ProfileCard } from "@/components/profile-card";
 
-type Turma = "neon_estrutura" | "neon_escala";
+type Turma = "neon";
 
 interface MentoradoForm {
   nomeCompleto: string;
@@ -55,7 +55,7 @@ const defaultForm: MentoradoForm = {
   nomeCompleto: "",
   email: "",
   fotoUrl: "",
-  turma: "neon_estrutura",
+  turma: "neon",
   metaFaturamento: 16000,
   metaLeads: 50,
   metaProcedimentos: 10,
@@ -72,7 +72,6 @@ export function MenteeManagementView() {
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [selectedMentorado, setSelectedMentorado] = useState<any>(null);
   const [form, setForm] = useState<MentoradoForm>(defaultForm);
-  const [filterTurma, setFilterTurma] = useState<string>("all");
 
   const createMutation = trpc.mentorados.createNew.useMutation({
     onSuccess: () => {
@@ -166,17 +165,10 @@ export function MenteeManagementView() {
     setIsDeleteOpen(true);
   };
 
-  const filteredMentorados = mentorados?.filter((m: any) => {
-    if (filterTurma === "all") return true;
-    return m.turma === filterTurma;
-  });
+  const filteredMentorados = mentorados;
 
   const stats = {
     total: mentorados?.length || 0,
-    estrutura:
-      mentorados?.filter((m: any) => m.turma === "neon_estrutura").length || 0,
-    escala:
-      mentorados?.filter((m: any) => m.turma === "neon_escala").length || 0,
     comEmail: mentorados?.filter((m: any) => m.email).length || 0,
   };
 
@@ -235,23 +227,7 @@ export function MenteeManagementView() {
                   placeholder="https://..."
                 />
               </div>
-              <div className="space-y-2">
-                <Label>Turma *</Label>
-                <Select
-                  value={form.turma}
-                  onValueChange={(v: Turma) => setForm({ ...form, turma: v })}
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="neon_estrutura">
-                      Neon Estrutura
-                    </SelectItem>
-                    <SelectItem value="neon_escala">Neon Escala</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
+
               <div className="border-t pt-4">
                 <h4 className="font-medium text-sm text-slate-700 mb-3 flex items-center gap-2">
                   <Target className="w-4 h-4" />
@@ -340,7 +316,7 @@ export function MenteeManagementView() {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-2 gap-4">
         <Card className="border-none shadow-sm">
           <CardContent className="pt-4">
             <div className="flex items-center gap-3">
@@ -356,36 +332,7 @@ export function MenteeManagementView() {
             </div>
           </CardContent>
         </Card>
-        <Card className="border-none shadow-sm">
-          <CardContent className="pt-4">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-amber-100 rounded-lg">
-                <UserCheck className="w-5 h-5 text-amber-600" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-slate-900">
-                  {stats.estrutura}
-                </p>
-                <p className="text-xs text-slate-500">Estrutura</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        <Card className="border-none shadow-sm">
-          <CardContent className="pt-4">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-purple-100 rounded-lg">
-                <UserX className="w-5 h-5 text-purple-600" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-slate-900">
-                  {stats.escala}
-                </p>
-                <p className="text-xs text-slate-500">Escala</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+
         <Card className="border-none shadow-sm">
           <CardContent className="pt-4">
             <div className="flex items-center gap-3">
@@ -401,21 +348,6 @@ export function MenteeManagementView() {
             </div>
           </CardContent>
         </Card>
-      </div>
-
-      {/* Filter */}
-      <div className="flex items-center gap-4">
-        <Label className="text-sm text-slate-600">Filtrar por turma:</Label>
-        <Select value={filterTurma} onValueChange={setFilterTurma}>
-          <SelectTrigger className="w-48">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">Todas as Turmas</SelectItem>
-            <SelectItem value="neon_estrutura">Neon Estrutura</SelectItem>
-            <SelectItem value="neon_escala">Neon Escala</SelectItem>
-          </SelectContent>
-        </Select>
       </div>
 
       {/* Mentorados List */}
@@ -520,21 +452,7 @@ export function MenteeManagementView() {
                 onChange={e => setForm({ ...form, fotoUrl: e.target.value })}
               />
             </div>
-            <div className="space-y-2">
-              <Label>Turma *</Label>
-              <Select
-                value={form.turma}
-                onValueChange={(v: Turma) => setForm({ ...form, turma: v })}
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="neon_estrutura">Neon Estrutura</SelectItem>
-                  <SelectItem value="neon_escala">Neon Escala</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+
             <div className="border-t pt-4">
               <h4 className="font-medium text-sm text-slate-700 mb-3 flex items-center gap-2">
                 <Target className="w-4 h-4" />

@@ -20,7 +20,7 @@ const seedData = async () => {
         title: "Fase 1: Onboarding e Diagnóstico",
         description: "Primeiros passos na metodologia Neon Estrutura.",
         order: 1,
-        turma: "neon_estrutura",
+        turma: "neon",
       })
       .returning();
 
@@ -59,7 +59,7 @@ const seedData = async () => {
         title: "Fase 2: Gestão Financeira",
         description: "Organizando a casa para crescer.",
         order: 2,
-        turma: "neon_estrutura",
+        turma: "neon",
       })
       .returning();
 
@@ -91,7 +91,7 @@ const seedData = async () => {
         title: "Fase 1: Auditoria de Processos",
         description: "Onde estão os gargalos do seu crescimento?",
         order: 1,
-        turma: "neon_escala",
+        turma: "neon",
       })
       .returning();
 

@@ -2,12 +2,12 @@
 
 ## Metadata
 
-| Campo | Valor |
-|-------|-------|
-| **Complexity** | L6 — Arquitetura, migração de dados, multi-file |
-| **Estimated Time** | 4-6 horas |
-| **Parallel Safe** | Parcialmente (AT-001 deve ser executado primeiro) |
-| **Risk Level** | Médio (requer migração de dados em produção) |
+| Campo              | Valor                                             |
+| ------------------ | ------------------------------------------------- |
+| **Complexity**     | L6 — Arquitetura, migração de dados, multi-file   |
+| **Estimated Time** | 4-6 horas                                         |
+| **Parallel Safe**  | Parcialmente (AT-001 deve ser executado primeiro) |
+| **Risk Level**     | Médio (requer migração de dados em produção)      |
 
 ---
 
@@ -23,29 +23,29 @@ A mudança impacta múltiplas camadas da aplicação, desde o schema do banco de
 
 ### 2.1 Arquivos Afetados
 
-| Camada | Arquivo | Tipo de Mudança |
-|--------|---------|-----------------|
-| **Database** | `drizzle/schema.ts` | Modificar `turmaEnum` para valor único |
-| **Database** | `drizzle/0000_nifty_betty_ross.sql` | Referência (não modificar) |
-| **Database** | Nova migração | Criar migração para atualizar dados existentes |
-| **Backend** | `server/gamificacao.ts` | Remover loop por turmas no cálculo de ranking |
-| **Backend** | `server/gamificacaoRouter.ts` | Remover filtro de turma do endpoint |
-| **Backend** | `server/mentoradosRouter.ts` | Remover validação de turma nos inputs |
-| **Backend** | `server/emailService.ts` | Remover referência a turma no email |
-| **Backend** | `server/services/userService.ts` | Remover default de turma |
-| **Backend** | `server/seed-playbook.ts` | Unificar módulos do playbook |
-| **Backend** | `server/routers/playbook.ts` | Remover filtro de turma |
-| **Backend** | `server/_core/context.ts` | Remover default de turma |
-| **Frontend** | `client/src/pages/Home.tsx` | Remover abas de turma, unificar dados |
-| **Frontend** | `client/src/pages/Admin.tsx` | Remover contadores separados |
-| **Frontend** | `client/src/pages/MyDashboard.tsx` | Remover badge de turma |
-| **Frontend** | `client/src/pages/VincularEmails.tsx` | Remover display de turma |
-| **Frontend** | `client/src/pages/MoltbotPage.tsx` | Remover referência a turma |
-| **Frontend** | `client/src/components/dashboard/RankingView.tsx` | Remover filtro de turma |
-| **Frontend** | `client/src/components/dashboard/TurmaView.tsx` | Remover ou refatorar completamente |
-| **Frontend** | `client/src/components/profile-card.tsx` | Remover prop turma |
-| **Frontend** | `client/src/components/admin/*.tsx` | Remover referências a turma |
-| **Frontend** | `client/src/lib/data.ts` | Unificar estrutura de dados |
+| Camada       | Arquivo                                           | Tipo de Mudança                                |
+| ------------ | ------------------------------------------------- | ---------------------------------------------- |
+| **Database** | `drizzle/schema.ts`                               | Modificar `turmaEnum` para valor único         |
+| **Database** | `drizzle/0000_nifty_betty_ross.sql`               | Referência (não modificar)                     |
+| **Database** | Nova migração                                     | Criar migração para atualizar dados existentes |
+| **Backend**  | `server/gamificacao.ts`                           | Remover loop por turmas no cálculo de ranking  |
+| **Backend**  | `server/gamificacaoRouter.ts`                     | Remover filtro de turma do endpoint            |
+| **Backend**  | `server/mentoradosRouter.ts`                      | Remover validação de turma nos inputs          |
+| **Backend**  | `server/emailService.ts`                          | Remover referência a turma no email            |
+| **Backend**  | `server/services/userService.ts`                  | Remover default de turma                       |
+| **Backend**  | `server/seed-playbook.ts`                         | Unificar módulos do playbook                   |
+| **Backend**  | `server/routers/playbook.ts`                      | Remover filtro de turma                        |
+| **Backend**  | `server/_core/context.ts`                         | Remover default de turma                       |
+| **Frontend** | `client/src/pages/Home.tsx`                       | Remover abas de turma, unificar dados          |
+| **Frontend** | `client/src/pages/Admin.tsx`                      | Remover contadores separados                   |
+| **Frontend** | `client/src/pages/MyDashboard.tsx`                | Remover badge de turma                         |
+| **Frontend** | `client/src/pages/VincularEmails.tsx`             | Remover display de turma                       |
+| **Frontend** | `client/src/pages/MoltbotPage.tsx`                | Remover referência a turma                     |
+| **Frontend** | `client/src/components/dashboard/RankingView.tsx` | Remover filtro de turma                        |
+| **Frontend** | `client/src/components/dashboard/TurmaView.tsx`   | Remover ou refatorar completamente             |
+| **Frontend** | `client/src/components/profile-card.tsx`          | Remover prop turma                             |
+| **Frontend** | `client/src/components/admin/*.tsx`               | Remover referências a turma                    |
+| **Frontend** | `client/src/lib/data.ts`                          | Unificar estrutura de dados                    |
 
 ---
 
@@ -62,6 +62,7 @@ A mudança impacta múltiplas camadas da aplicação, desde o schema do banco de
 **Descrição:** Esta tarefa cria uma migração SQL que atualiza todos os registros existentes para usar um valor único de turma e modifica o enum no schema do Drizzle.
 
 **Arquivos a Modificar:**
+
 1. `drizzle/schema.ts` — Linha 18
 2. Criar novo arquivo de migração
 
@@ -104,11 +105,13 @@ VALIDAÇÃO:
 ```
 
 **Validação:**
+
 - `grep -n "turmaEnum" drizzle/schema.ts` deve mostrar apenas `["neon"]`
 - Arquivo de migração existe em `drizzle/migrations/`
 - `bun run db:migrate` executa sem erros
 
 **Rollback:**
+
 ```bash
 # Reverter schema
 git checkout drizzle/schema.ts
@@ -130,6 +133,7 @@ rm drizzle/migrations/*unify_turma.sql
 **Descrição:** O arquivo `server/gamificacao.ts` atualmente itera sobre as duas turmas para calcular rankings separados. Esta lógica deve ser simplificada para processar todos os mentorados em um único ranking.
 
 **Arquivos a Modificar:**
+
 1. `server/gamificacao.ts` — Linhas 305-420
 
 **Prompt para Implementação:**
@@ -213,6 +217,7 @@ VALIDAÇÃO:
 ```
 
 **Validação:**
+
 - `grep -n "neon_estrutura\|neon_escala" server/gamificacao.ts` não retorna resultados
 - `bun run typecheck` passa sem erros
 - `bun run test` passa (pode precisar atualizar testes)
@@ -228,6 +233,7 @@ VALIDAÇÃO:
 **Descrição:** Os routers tRPC expõem endpoints que aceitam turma como parâmetro. Estes devem ser atualizados para não aceitar mais este filtro.
 
 **Arquivos a Modificar:**
+
 1. `server/gamificacaoRouter.ts` — Linha 70
 2. `server/mentoradosRouter.ts` — Linhas 62, 170, 218
 3. `server/routers/playbook.ts` — Linha 15
@@ -280,6 +286,7 @@ VALIDAÇÃO:
 ```
 
 **Validação:**
+
 - `grep -rn "neon_estrutura\|neon_escala" server/*.ts server/routers/*.ts` não retorna resultados
 - `bun run typecheck` passa
 
@@ -294,6 +301,7 @@ VALIDAÇÃO:
 **Descrição:** Serviços auxiliares como email e contexto de usuário também referenciam turmas e devem ser atualizados.
 
 **Arquivos a Modificar:**
+
 1. `server/emailService.ts` — Linha 51
 2. `server/services/userService.ts` — Linhas 95-96
 3. `server/_core/context.ts` — Linha 134
@@ -336,6 +344,7 @@ VALIDAÇÃO:
 ```
 
 **Validação:**
+
 - `grep -n "neon_estrutura\|neon_escala" server/emailService.ts server/services/userService.ts server/_core/context.ts` não retorna resultados
 
 ---
@@ -351,6 +360,7 @@ VALIDAÇÃO:
 **Descrição:** A página Home atualmente exibe abas separadas para "Neurônios Estrutura" e "Neurônios Escala". Estas devem ser removidas e substituídas por uma visão unificada.
 
 **Arquivos a Modificar:**
+
 1. `client/src/pages/Home.tsx`
 
 **Prompt para Implementação:**
@@ -406,6 +416,7 @@ VALIDAÇÃO:
 ```
 
 **Validação:**
+
 - Visualmente, a página Home não exibe mais abas de turma
 - `grep -n "estrutura\|escala" client/src/pages/Home.tsx` retorna apenas referências a "infraestrutura" ou similares (não relacionadas a turmas)
 
@@ -420,6 +431,7 @@ VALIDAÇÃO:
 **Descrição:** O componente RankingView possui um dropdown para filtrar por turma que deve ser removido.
 
 **Arquivos a Modificar:**
+
 1. `client/src/components/dashboard/RankingView.tsx`
 
 **Prompt para Implementação:**
@@ -484,6 +496,7 @@ VALIDAÇÃO:
 ```
 
 **Validação:**
+
 - `grep -n "neon_estrutura\|neon_escala" client/src/components/dashboard/RankingView.tsx` não retorna resultados
 
 ---
@@ -497,6 +510,7 @@ VALIDAÇÃO:
 **Descrição:** Os componentes administrativos exibem contadores e badges de turma que devem ser removidos.
 
 **Arquivos a Modificar:**
+
 1. `client/src/pages/Admin.tsx`
 2. `client/src/pages/VincularEmails.tsx`
 3. `client/src/components/admin/AdminOverview.tsx`
@@ -548,6 +562,7 @@ VALIDAÇÃO:
 ```
 
 **Validação:**
+
 - `grep -rn "neon_estrutura\|neon_escala" client/src/pages/Admin.tsx client/src/pages/VincularEmails.tsx client/src/components/admin/` não retorna resultados
 
 ---
@@ -561,6 +576,7 @@ VALIDAÇÃO:
 **Descrição:** Componentes adicionais como profile-card, MyDashboard e MoltbotPage também referenciam turmas.
 
 **Arquivos a Modificar:**
+
 1. `client/src/components/profile-card.tsx`
 2. `client/src/pages/MyDashboard.tsx`
 3. `client/src/pages/MoltbotPage.tsx`
@@ -599,6 +615,7 @@ VALIDAÇÃO:
 ```
 
 **Validação:**
+
 - `grep -rn "neon_estrutura\|neon_escala" client/src/components/profile-card.tsx client/src/pages/MyDashboard.tsx client/src/pages/MoltbotPage.tsx` não retorna resultados
 
 ---
@@ -614,6 +631,7 @@ VALIDAÇÃO:
 **Descrição:** O arquivo `client/src/lib/data.ts` contém dados mockados separados por turma que devem ser unificados.
 
 **Arquivos a Modificar:**
+
 1. `client/src/lib/data.ts`
 
 **Prompt para Implementação:**
@@ -667,6 +685,7 @@ VALIDAÇÃO:
 ```
 
 **Validação:**
+
 - `grep -n "neon_estrutura\|neon_escala" client/src/lib/data.ts` não retorna resultados
 - `bun run typecheck` passa
 
@@ -681,6 +700,7 @@ VALIDAÇÃO:
 **Descrição:** O script de seeding cria módulos separados por turma que devem ser unificados.
 
 **Arquivos a Modificar:**
+
 1. `server/seed-playbook.ts`
 
 **Prompt para Implementação:**
@@ -712,6 +732,7 @@ VALIDAÇÃO:
 ```
 
 **Validação:**
+
 - `grep -n "neon_estrutura\|neon_escala" server/seed-playbook.ts` não retorna resultados
 
 ---
@@ -727,6 +748,7 @@ VALIDAÇÃO:
 **Descrição:** O componente TurmaView foi projetado para exibir dados de uma turma específica. Com a unificação, ele deve ser refatorado para uma visão geral ou removido.
 
 **Arquivos a Modificar:**
+
 1. `client/src/components/dashboard/TurmaView.tsx`
 
 **Prompt para Implementação:**
@@ -765,6 +787,7 @@ VALIDAÇÃO:
 ```
 
 **Validação:**
+
 - Aplicação carrega sem erros
 - Dados de mentorados são exibidos em uma visão unificada
 
@@ -813,6 +836,7 @@ VALIDAÇÃO:
 ```
 
 **Validação:**
+
 - `bun run typecheck` — 0 erros
 - `bun run lint` — 0 warnings
 - `bun run test` — Todos os testes passam
@@ -866,10 +890,10 @@ ALTER TYPE turma RENAME TO turma_new;
 CREATE TYPE turma AS ENUM ('neon_estrutura', 'neon_escala');
 
 -- Atribuir turma baseado em critério (ex: metaFaturamento)
-UPDATE mentorados 
-SET turma = CASE 
-  WHEN meta_faturamento <= 20000 THEN 'neon_estrutura'::turma 
-  ELSE 'neon_escala'::turma 
+UPDATE mentorados
+SET turma = CASE
+  WHEN meta_faturamento <= 20000 THEN 'neon_estrutura'::turma
+  ELSE 'neon_escala'::turma
 END;
 
 -- Atualizar ranking_mensal de forma similar
@@ -883,17 +907,17 @@ DROP TYPE turma_new;
 
 ## 6. Checklist de Validação Final
 
-| Item | Comando/Ação | Status |
-|------|--------------|--------|
-| TypeScript compila | `bun run typecheck` | ⬜ |
-| Lint passa | `bun run lint` | ⬜ |
-| Testes passam | `bun run test` | ⬜ |
-| Build completa | `bun run build` | ⬜ |
-| Busca global limpa | `grep -rn "neon_estrutura\|neon_escala"` | ⬜ |
-| Migração testada em dev | Manual | ⬜ |
-| UI funciona corretamente | Manual | ⬜ |
-| Ranking unificado funciona | Manual | ⬜ |
-| Área admin funciona | Manual | ⬜ |
+| Item                       | Comando/Ação                             | Status |
+| -------------------------- | ---------------------------------------- | ------ |
+| TypeScript compila         | `bun run typecheck`                      | ⬜     |
+| Lint passa                 | `bun run lint`                           | ⬜     |
+| Testes passam              | `bun run test`                           | ⬜     |
+| Build completa             | `bun run build`                          | ⬜     |
+| Busca global limpa         | `grep -rn "neon_estrutura\|neon_escala"` | ⬜     |
+| Migração testada em dev    | Manual                                   | ⬜     |
+| UI funciona corretamente   | Manual                                   | ⬜     |
+| Ranking unificado funciona | Manual                                   | ⬜     |
+| Área admin funciona        | Manual                                   | ⬜     |
 
 ---
 

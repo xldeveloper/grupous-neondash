@@ -11,7 +11,7 @@
         "ide-assistant",
         "--project-from-cwd"
       ],
-      "alwaysAllow": []
+      "alwaysAllow": ["search_for_pattern"]
     },
     "sequentialthinking": {
       "command": "bunx",

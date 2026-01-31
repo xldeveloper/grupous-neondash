@@ -85,8 +85,7 @@ export function LinkEmailsView() {
                   <SelectContent>
                     {mentorados?.map(m => (
                       <SelectItem key={m.id} value={m.id.toString()}>
-                        {m.nomeCompleto} -{" "}
-                        {m.turma === "neon_estrutura" ? "Estrutura" : "Escala"}
+                        {m.nomeCompleto} - Neon
                         {m.email && ` (${m.email})`}
                       </SelectItem>
                     ))}
@@ -146,9 +145,7 @@ export function LinkEmailsView() {
                       {m.nomeCompleto}
                     </div>
                     <div className="text-xs text-muted-foreground mt-1">
-                      {m.turma === "neon_estrutura"
-                        ? "Neon Estrutura"
-                        : "Neon Escala"}
+                      Neon
                     </div>
                     {m.email && (
                       <div className="text-xs text-neon-blue mt-1 flex items-center gap-1">

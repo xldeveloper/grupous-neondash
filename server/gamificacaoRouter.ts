@@ -67,11 +67,10 @@ export const gamificacaoRouter = router({
       z.object({
         ano: z.number(),
         mes: z.number().min(1).max(12),
-        turma: z.enum(["neon_estrutura", "neon_escala"]).optional(),
       })
     )
     .query(async ({ input }) => {
-      return await getRanking(input.ano, input.mes, input.turma);
+      return await getRanking(input.ano, input.mes);
     }),
 
   // Get current user's notifications

@@ -306,173 +306,163 @@ export async function calculateMonthlyRanking(ano: number, mes: number) {
   const db = await getDb();
   if (!db) return;
 
-  const turmas = ["neon_estrutura", "neon_escala"] as const;
+  // Get all active mentorados
+  const mentoradosAtivos = await db
+    .select()
+    .from(mentorados)
+    .where(eq(mentorados.ativo, "sim"));
 
-  for (const turma of turmas) {
-    // Get all mentorados from this turma with their metrics
-    const mentoradosTurma = await db
+  const rankings: {
+    mentoradoId: number;
+    pontuacao: number;
+    bonus: number;
+  }[] = [];
+
+  for (const m of mentoradosAtivos) {
+    const [metricas] = await db
       .select()
-      .from(mentorados)
-      .where(and(eq(mentorados.turma, turma), eq(mentorados.ativo, "sim")));
-
-    const rankings: {
-      mentoradoId: number;
-      pontuacao: number;
-      bonus: number;
-    }[] = [];
-
-    for (const m of mentoradosTurma) {
-      const [metricas] = await db
-        .select()
-        .from(metricasMensais)
-        .where(
-          and(
-            eq(metricasMensais.mentoradoId, m.id),
-            eq(metricasMensais.ano, ano),
-            eq(metricasMensais.mes, mes)
-          )
-        );
-
-      if (!metricas) continue;
-
-      // Calculate score
-      let pontuacao = 0;
-      let bonus = 0;
-
-      // Faturamento score (max 40 points)
-      const faturamentoPercent = Math.min(
-        (metricas.faturamento / m.metaFaturamento) * 100,
-        150
-      );
-      pontuacao += Math.round(faturamentoPercent * 0.4);
-
-      // Content score (max 20 points)
-      const postsPercent = Math.min(
-        (metricas.postsFeed / (m.metaPosts || 12)) * 100,
-        150
-      );
-      const storiesPercent = Math.min(
-        (metricas.stories / (m.metaStories || 60)) * 100,
-        150
-      );
-      pontuacao += Math.round(((postsPercent + storiesPercent) / 2) * 0.2);
-
-      // Operational score (max 20 points)
-      const leadsPercent = Math.min(
-        (metricas.leads / (m.metaLeads || 50)) * 100,
-        150
-      );
-      const procPercent = Math.min(
-        (metricas.procedimentos / (m.metaProcedimentos || 10)) * 100,
-        150
-      );
-      pontuacao += Math.round(((leadsPercent + procPercent) / 2) * 0.2);
-
-      // Badges bonus (max 20 points)
-      const badgesEarned = await db
-        .select()
-        .from(mentoradoBadges)
-        .where(
-          and(
-            eq(mentoradoBadges.mentoradoId, m.id),
-            eq(mentoradoBadges.ano, ano),
-            eq(mentoradoBadges.mes, mes)
-          )
-        );
-
-      for (const b of badgesEarned) {
-        const [badge] = await db
-          .select()
-          .from(badges)
-          .where(eq(badges.id, b.badgeId));
-        if (badge) bonus += badge.pontos;
-      }
-      bonus = Math.min(bonus, 20);
-      pontuacao += bonus;
-
-      rankings.push({ mentoradoId: m.id, pontuacao, bonus });
-    }
-
-    // Sort by score
-    rankings.sort((a, b) => b.pontuacao - a.pontuacao);
-
-    // Delete existing rankings for this month/turma
-    await db
-      .delete(rankingMensal)
+      .from(metricasMensais)
       .where(
         and(
-          eq(rankingMensal.ano, ano),
-          eq(rankingMensal.mes, mes),
-          eq(rankingMensal.turma, turma)
+          eq(metricasMensais.mentoradoId, m.id),
+          eq(metricasMensais.ano, ano),
+          eq(metricasMensais.mes, mes)
         )
       );
 
-    // Insert new rankings
-    for (let i = 0; i < rankings.length; i++) {
-      const r = rankings[i];
-      await db.insert(rankingMensal).values({
-        mentoradoId: r.mentoradoId,
-        ano,
-        mes,
-        turma,
-        posicao: i + 1,
-        pontuacaoTotal: r.pontuacao,
-        pontosBonus: r.bonus,
-      });
+    if (!metricas) continue;
 
-      // Award ranking badges
-      if (i < 3) {
-        const [topBadge] = await db
+    // Calculate score
+    let pontuacao = 0;
+    let bonus = 0;
+
+    // Faturamento score (max 40 points)
+    const faturamentoPercent = Math.min(
+      (metricas.faturamento / m.metaFaturamento) * 100,
+      150
+    );
+    pontuacao += Math.round(faturamentoPercent * 0.4);
+
+    // Content score (max 20 points)
+    const postsPercent = Math.min(
+      (metricas.postsFeed / (m.metaPosts || 12)) * 100,
+      150
+    );
+    const storiesPercent = Math.min(
+      (metricas.stories / (m.metaStories || 60)) * 100,
+      150
+    );
+    pontuacao += Math.round(((postsPercent + storiesPercent) / 2) * 0.2);
+
+    // Operational score (max 20 points)
+    const leadsPercent = Math.min(
+      (metricas.leads / (m.metaLeads || 50)) * 100,
+      150
+    );
+    const procPercent = Math.min(
+      (metricas.procedimentos / (m.metaProcedimentos || 10)) * 100,
+      150
+    );
+    pontuacao += Math.round(((leadsPercent + procPercent) / 2) * 0.2);
+
+    // Badges bonus (max 20 points)
+    const badgesEarned = await db
+      .select()
+      .from(mentoradoBadges)
+      .where(
+        and(
+          eq(mentoradoBadges.mentoradoId, m.id),
+          eq(mentoradoBadges.ano, ano),
+          eq(mentoradoBadges.mes, mes)
+        )
+      );
+
+    for (const b of badgesEarned) {
+      const [badge] = await db
+        .select()
+        .from(badges)
+        .where(eq(badges.id, b.badgeId));
+      if (badge) bonus += badge.pontos;
+    }
+    bonus = Math.min(bonus, 20);
+    pontuacao += bonus;
+
+    rankings.push({ mentoradoId: m.id, pontuacao, bonus });
+  }
+
+  // Sort by score
+  rankings.sort((a, b) => b.pontuacao - a.pontuacao);
+
+  // Delete existing rankings for this month
+  await db
+    .delete(rankingMensal)
+    .where(and(eq(rankingMensal.ano, ano), eq(rankingMensal.mes, mes)));
+
+  // Insert new rankings
+  for (let i = 0; i < rankings.length; i++) {
+    const r = rankings[i];
+    await db.insert(rankingMensal).values({
+      mentoradoId: r.mentoradoId,
+      ano,
+      mes,
+      turma: "neon",
+      posicao: i + 1,
+      pontuacaoTotal: r.pontuacao,
+      pontosBonus: r.bonus,
+    });
+
+    // Award ranking badges
+    if (i < 3) {
+      const [topBadge] = await db
+        .select()
+        .from(badges)
+        .where(eq(badges.codigo, "top_3"));
+      if (topBadge) {
+        const existing = await db
           .select()
-          .from(badges)
-          .where(eq(badges.codigo, "top_3"));
-        if (topBadge) {
-          const existing = await db
-            .select()
-            .from(mentoradoBadges)
-            .where(
-              and(
-                eq(mentoradoBadges.mentoradoId, r.mentoradoId),
-                eq(mentoradoBadges.badgeId, topBadge.id),
-                eq(mentoradoBadges.ano, ano),
-                eq(mentoradoBadges.mes, mes)
-              )
-            );
-          if (existing.length === 0) {
-            await db.insert(mentoradoBadges).values({
-              mentoradoId: r.mentoradoId,
-              badgeId: topBadge.id,
-              ano,
-              mes,
-            });
-          }
+          .from(mentoradoBadges)
+          .where(
+            and(
+              eq(mentoradoBadges.mentoradoId, r.mentoradoId),
+              eq(mentoradoBadges.badgeId, topBadge.id),
+              eq(mentoradoBadges.ano, ano),
+              eq(mentoradoBadges.mes, mes)
+            )
+          );
+        if (existing.length === 0) {
+          await db.insert(mentoradoBadges).values({
+            mentoradoId: r.mentoradoId,
+            badgeId: topBadge.id,
+            ano,
+            mes,
+          });
         }
       }
-      if (i === 0) {
-        const [champBadge] = await db
+    }
+    if (i === 0) {
+      const [champBadge] = await db
+        .select()
+        .from(badges)
+        .where(eq(badges.codigo, "primeiro_lugar"));
+      if (champBadge) {
+        const existing = await db
           .select()
-          .from(badges)
-          .where(eq(badges.codigo, "primeiro_lugar"));
-        if (champBadge) {
-          const existing = await db
-            .select()
-            .from(mentoradoBadges)
-            .where(
-              and(
-                eq(mentoradoBadges.mentoradoId, r.mentoradoId),
-                eq(mentoradoBadges.badgeId, champBadge.id),
-                eq(mentoradoBadges.ano, ano),
-                eq(mentoradoBadges.mes, mes)
-              )
-            );
-          if (existing.length === 0) {
-            await db.insert(mentoradoBadges).values({
-              mentoradoId: r.mentoradoId,
-              badgeId: champBadge.id,
-              ano,
-              mes,
-            });
-          }
+          .from(mentoradoBadges)
+          .where(
+            and(
+              eq(mentoradoBadges.mentoradoId, r.mentoradoId),
+              eq(mentoradoBadges.badgeId, champBadge.id),
+              eq(mentoradoBadges.ano, ano),
+              eq(mentoradoBadges.mes, mes)
+            )
+          );
+        if (existing.length === 0) {
+          await db.insert(mentoradoBadges).values({
+            mentoradoId: r.mentoradoId,
+            badgeId: champBadge.id,
+            ano,
+            mes,
+          });
         }
       }
     }
@@ -706,18 +696,11 @@ export async function getMentoradoBadges(mentoradoId: number) {
 }
 
 // Get ranking for a specific month
-export async function getRanking(
-  ano: number,
-  mes: number,
-  turma?: "neon_estrutura" | "neon_escala"
-) {
+export async function getRanking(ano: number, mes: number) {
   const db = await getDb();
   if (!db) return [];
 
   const conditions = [eq(rankingMensal.ano, ano), eq(rankingMensal.mes, mes)];
-  if (turma) {
-    conditions.push(eq(rankingMensal.turma, turma));
-  }
 
   const result = await db
     .select({

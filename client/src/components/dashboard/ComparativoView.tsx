@@ -226,8 +226,7 @@ export function ComparativoView() {
             Dashboard Comparativo
           </h2>
           <p className="text-sm text-slate-500">
-            Compare sua performance com a média da turma{" "}
-            {mentorado.turma === "neon_estrutura" ? "Estrutura" : "Escala"}
+            Compare sua performance com a média da turma Neon
           </p>
         </div>
         <div className="flex items-center gap-2">

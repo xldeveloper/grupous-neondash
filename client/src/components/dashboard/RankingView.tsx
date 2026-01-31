@@ -1,15 +1,8 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BentoCard, BentoCardContent } from "@/components/ui/bento-grid";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+
 import { Badge } from "@/components/ui/badge";
 import { trpc } from "@/lib/trpc";
-import { useState } from "react";
 import { Loader2, Trophy, Medal, Award, Crown, TrendingUp } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/_core/hooks/useAuth";
@@ -21,14 +14,9 @@ interface RankingViewProps {
 
 export function RankingView({ selectedMonth, selectedYear }: RankingViewProps) {
   const { user } = useAuth();
-  const [turma, setTurma] = useState<
-    "neon_estrutura" | "neon_escala" | "todas"
-  >("todas");
-
   const { data: ranking, isLoading } = trpc.gamificacao.ranking.useQuery({
     ano: selectedYear,
     mes: selectedMonth,
-    turma: turma === "todas" ? undefined : turma,
   });
 
   const { data: mentorado } = trpc.mentorados.me.useQuery();
@@ -71,22 +59,6 @@ export function RankingView({ selectedMonth, selectedYear }: RankingViewProps) {
           <p className="text-slate-500 mt-1">
             Classificação de performance dos mentorados
           </p>
-        </div>
-
-        <div className="flex gap-3">
-          <Select
-            value={turma}
-            onValueChange={v => setTurma(v as typeof turma)}
-          >
-            <SelectTrigger className="w-[160px]">
-              <SelectValue placeholder="Turma" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="todas">Todas as Turmas</SelectItem>
-              <SelectItem value="neon_estrutura">Neon Estrutura</SelectItem>
-              <SelectItem value="neon_escala">Neon Escala</SelectItem>
-            </SelectContent>
-          </Select>
         </div>
       </div>
 
@@ -156,9 +128,7 @@ export function RankingView({ selectedMonth, selectedYear }: RankingViewProps) {
                       variant="outline"
                       className="text-xs mb-2 bg-white/50 backdrop-blur-sm"
                     >
-                      {item.mentorado.turma === "neon_estrutura"
-                        ? "Estrutura"
-                        : "Escala"}
+                      {item.mentorado.turma === "neon" ? "Neon" : "Neon"}
                     </Badge>
                     <div className="text-2xl font-bold text-neon-green">
                       {item.ranking.pontuacaoTotal}
@@ -222,9 +192,7 @@ export function RankingView({ selectedMonth, selectedYear }: RankingViewProps) {
                           )}
                         </h4>
                         <p className="text-sm text-slate-500">
-                          {item.mentorado.turma === "neon_estrutura"
-                            ? "Neon Estrutura"
-                            : "Neon Escala"}
+                          {item.mentorado.turma === "neon" ? "Neon" : "Neon"}
                         </p>
                       </div>
 

@@ -5,7 +5,24 @@ import { AlertCircle, CheckCircle2 } from "lucide-react";
 
 export function AdminDiagnosticoView({ mentoradoId }: { mentoradoId: number }) {
   const { data: diagnostico, isLoading } =
-    trpc.diagnostico.getByMentoradoId.useQuery({ mentoradoId });
+    trpc.diagnostico.getByMentoradoId.useQuery(
+      { mentoradoId },
+      { enabled: !!mentoradoId }
+    );
+
+  if (!mentoradoId) {
+    return (
+      <div className="flex flex-col items-center justify-center p-12 text-center bg-white/5 rounded-xl border border-white/10">
+        <AlertCircle className="w-12 h-12 text-gray-500 mb-4" />
+        <h3 className="text-xl font-bold text-gray-300">
+          Selecione um mentorado
+        </h3>
+        <p className="text-gray-500 mt-2">
+          Selecione um mentorado acima para visualizar seu diagnóstico.
+        </p>
+      </div>
+    );
+  }
 
   if (isLoading) {
     return <Skeleton className="h-[400px] w-full" />;

@@ -64,9 +64,9 @@ export default function MoltbotPage() {
                       {contextQuery.data.mentorado.nomeCompleto}
                     </p>
                     <Badge variant="secondary" className="mt-1 text-xs">
-                      {contextQuery.data.mentorado.turma === "neon_estrutura"
-                        ? "NEON Estrutura"
-                        : "NEON Escala"}
+                      {contextQuery.data.mentorado.turma === "neon"
+                        ? "NEON"
+                        : "NEON"}
                     </Badge>
                   </div>
                   <div className="grid grid-cols-2 gap-2 text-sm">
@@ -82,9 +82,9 @@ export default function MoltbotPage() {
                     <div className="rounded-lg bg-muted/50 p-2">
                       <p className="text-muted-foreground">Turma</p>
                       <p className="font-semibold capitalize">
-                        {contextQuery.data.mentorado.turma === "neon_estrutura"
-                          ? "Estrutura"
-                          : "Escala"}
+                        {contextQuery.data.mentorado.turma === "neon"
+                          ? "Neon"
+                          : "Neon"}
                       </p>
                     </div>
                   </div>

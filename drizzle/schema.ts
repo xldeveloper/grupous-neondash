@@ -15,7 +15,7 @@ import {
 // ═══════════════════════════════════════════════════════════════════════════
 
 export const roleEnum = pgEnum("role", ["user", "admin"]);
-export const turmaEnum = pgEnum("turma", ["neon_estrutura", "neon_escala"]);
+export const turmaEnum = pgEnum("turma", ["neon"]);
 export const ativoEnum = pgEnum("ativo", ["sim", "nao"]);
 export const categoriaEnum = pgEnum("categoria", [
   "faturamento",

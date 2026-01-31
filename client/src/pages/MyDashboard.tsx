@@ -3,7 +3,6 @@ import { trpc } from "@/lib/trpc";
 import { NeonCRM } from "@/components/dashboard/NeonCRM";
 import { TaskBoard } from "@/components/dashboard/TaskBoard";
 import { ClassList } from "@/components/dashboard/ClassList";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { AlertCircle, TrendingUp } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -11,7 +10,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { NeonCard } from "@/components/ui/neon-card";
 // import { SidebarTrigger } from "@/components/ui/sidebar";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { FloatingDock } from "@/components/ui/floating-dock";
+import { AnimatedTooltipSelector } from "@/components/ui/animated-tooltip";
 import { useState } from "react";
 import { NotificationsView } from "@/components/dashboard/NotificationsView";
 import { SubmitMetricsForm } from "@/components/dashboard/SubmitMetricsForm";
@@ -133,29 +132,20 @@ export default function MyDashboard() {
           <div className="flex items-center gap-4">
             {isAdmin && (
               <div className="relative">
-                <FloatingDock
+                <AnimatedTooltipSelector
                   items={
                     allMentorados?.map(m => ({
                       id: m.id.toString(),
-                      title: `${m.nomeCompleto} (${m.turma})`,
-                      icon: m.fotoUrl ? (
-                        <Avatar className="h-10 w-10">
-                          <AvatarImage src={m.fotoUrl} />
-                          <AvatarFallback className="bg-gradient-to-br from-[#0f4c75] to-[#3282b8] text-white">
-                            {m.nomeCompleto[0]}
-                          </AvatarFallback>
-                        </Avatar>
-                      ) : (
-                        <div className="h-10 w-10 rounded-full bg-gradient-to-br from-[#0f4c75] to-[#3282b8] flex items-center justify-center text-white font-bold">
-                          {m.nomeCompleto[0]}
-                        </div>
-                      ),
+                      name: m.nomeCompleto,
+                      designation: m.turma,
+                      image:
+                        m.fotoUrl ||
+                        `https://ui-avatars.com/api/?name=${encodeURIComponent(m.nomeCompleto)}&background=0f4c75&color=fff`,
                       onClick: () => setSelectedMentoradoId(m.id.toString()),
                       isActive: selectedMentoradoId === m.id.toString(),
                     })) || []
                   }
-                  activeValue={selectedMentoradoId}
-                  className="bg-black/40 border-white/10"
+                  selectedId={selectedMentoradoId}
                 />
               </div>
             )}
@@ -249,9 +239,7 @@ export default function MyDashboard() {
                                 {currentMentorado?.nomeCompleto?.split(" ")[0]}
                               </h2>
                               <span className="px-2 py-0.5 rounded-full bg-purple-500/10 border border-purple-500/20 text-xs text-purple-400 font-medium uppercase tracking-wider">
-                                {currentMentorado?.turma === "neon_estrutura"
-                                  ? "Estrutura"
-                                  : "Escala"}
+                                NEON
                               </span>
                             </div>
                             <p className="text-neon-petroleo-light dark:text-neon-blue-light max-w-md">
@@ -351,7 +339,7 @@ export default function MyDashboard() {
           >
             <div className="grid grid-cols-1 max-w-4xl mx-auto w-full">
               {isAdmin ? (
-                <AdminDiagnosticoView mentoradoId={targetMentoradoId!} />
+                <AdminDiagnosticoView mentoradoId={targetMentoradoId || 0} />
               ) : (
                 <DiagnosticoForm />
               )}
