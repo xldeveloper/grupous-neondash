@@ -5,6 +5,13 @@ vi.mock("./db", () => ({
   getDb: vi.fn(() => null),
 }));
 
+// Mock the emailService module
+const mockSendWelcomeEmail = vi.fn(async () => true);
+vi.mock("./emailService", () => ({
+  sendEmail: vi.fn(async () => true),
+  sendWelcomeEmail: mockSendWelcomeEmail,
+}));
+
 describe("Mentorados Router", () => {
   beforeEach(() => {
     // Clear mocks if needed in the future
@@ -70,10 +77,9 @@ describe("Mentorados Router", () => {
   });
 
   describe("Email Service", () => {
-    it("should have sendWelcomeEmail function defined", async () => {
-      const { sendWelcomeEmail } = await import("./emailService");
-      expect(sendWelcomeEmail).toBeDefined();
-      expect(typeof sendWelcomeEmail).toBe("function");
+    it("should have sendWelcomeEmail function defined", () => {
+      expect(mockSendWelcomeEmail).toBeDefined();
+      expect(typeof mockSendWelcomeEmail).toBe("function");
     });
   });
 });

@@ -4,12 +4,12 @@
  */
 
 import type { calendar_v3 } from "googleapis";
+import { ENV } from "../_core/env";
 
 // Environment variables for Google OAuth
-const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
-const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
-const GOOGLE_REDIRECT_URI =
-  process.env.GOOGLE_REDIRECT_URI || "http://localhost:3000/api/calendar/callback";
+const GOOGLE_CLIENT_ID = ENV.googleClientId;
+const GOOGLE_CLIENT_SECRET = ENV.googleClientSecret;
+const GOOGLE_REDIRECT_URI = ENV.googleRedirectUri;
 
 // Google Calendar API scopes
 const SCOPES = ["https://www.googleapis.com/auth/calendar.readonly"];
