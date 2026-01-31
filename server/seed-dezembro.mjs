@@ -228,7 +228,7 @@ async function seed() {
       const [mentoradoResult] = await db.insert(mentorados).values({
         userId: 1, // Placeholder - ajustar com IDs reais
         nomeCompleto: nome,
-        turma: "neon_estrutura",
+        turma: "neon",
         metaFaturamento: 16000,
       });
 
@@ -265,7 +265,7 @@ async function seed() {
       const [mentoradoResult] = await db.insert(mentorados).values({
         userId: 1, // Placeholder
         nomeCompleto: nome,
-        turma: "neon_escala",
+        turma: "neon",
         metaFaturamento: 50000,
       });
 

@@ -47,10 +47,7 @@ export async function sendWelcomeEmail(
   nomeCompleto: string,
   turma: string
 ): Promise<boolean> {
-  const turmaFormatada =
-    turma === "neon_estrutura" ? "Neon Estrutura" : "Neon Escala";
-
-  const subject = `🎉 Bem-vindo ao Dashboard Neon - ${turmaFormatada}`;
+  const subject = `🎉 Bem-vindo ao Dashboard Neon`;
 
   const body = `
 Olá ${nomeCompleto}!
@@ -67,7 +64,7 @@ Agora você pode acessar:
 
 Para acessar, basta fazer login com este email (${email}) no sistema.
 
-Turma: ${turmaFormatada}
+Turma: Neon
 
 Qualquer dúvida, entre em contato com o administrador.
 

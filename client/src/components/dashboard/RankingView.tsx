@@ -128,7 +128,7 @@ export function RankingView({ selectedMonth, selectedYear }: RankingViewProps) {
                       variant="outline"
                       className="text-xs mb-2 bg-white/50 backdrop-blur-sm"
                     >
-                      {item.mentorado.turma === "neon" ? "Neon" : "Neon"}
+                      Neon
                     </Badge>
                     <div className="text-2xl font-bold text-neon-green">
                       {item.ranking.pontuacaoTotal}
@@ -192,7 +192,7 @@ export function RankingView({ selectedMonth, selectedYear }: RankingViewProps) {
                           )}
                         </h4>
                         <p className="text-sm text-slate-500">
-                          {item.mentorado.turma === "neon" ? "Neon" : "Neon"}
+                          Neon
                         </p>
                       </div>
 

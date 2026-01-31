@@ -109,10 +109,7 @@ describe("Gamificação Service", () => {
       expect(result).toEqual([]);
     });
 
-    it("should accept optional turma parameter", async () => {
-      const result = await Gamificacao.getRanking(2025, 12, "neon_estrutura");
-      expect(result).toEqual([]);
-    });
+
   });
 
   describe("getNotificacoes", () => {
