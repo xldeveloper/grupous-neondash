@@ -4,6 +4,11 @@ import { cn } from "@/lib/utils";
 import { ChevronLeft, ChevronRight, Users } from "lucide-react";
 import { Button } from "./button";
 import { Popover, PopoverContent, PopoverTrigger } from "./popover";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "./tooltip";
 
 interface FloatingDockItem {
   id: string;
@@ -53,20 +58,8 @@ function DockItem({
 
   return (
     <div className="relative">
-      {/* Tooltip */}
-      {isHovered && (
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 10 }}
-          className="absolute -top-12 left-1/2 -translate-x-1/2 whitespace-nowrap z-50"
-        >
-          <div className="bg-black/80 backdrop-blur-md text-white text-xs px-3 py-1.5 rounded-lg border border-white/10 shadow-xl">
-            {item.title}
-          </div>
-          <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-black/80" />
-        </motion.div>
-      )}
+      <Tooltip>
+        <TooltipTrigger asChild>
 
       <motion.button
         ref={ref}
@@ -105,6 +98,11 @@ function DockItem({
           />
         )}
       </motion.button>
+        </TooltipTrigger>
+        <TooltipContent className="bg-black/80 backdrop-blur-md text-white border-white/10">
+          <p>{item.title}</p>
+        </TooltipContent>
+      </Tooltip>
     </div>
   );
 }

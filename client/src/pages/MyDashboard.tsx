@@ -139,7 +139,7 @@ export default function MyDashboard() {
                       id: m.id.toString(),
                       title: m.nomeCompleto,
                       icon: (
-                        <div className="h-full w-full rounded-full overflow-hidden border-2 border-white/10 bg-slate-800 flex items-center justify-center">
+                        <div className="h-full w-full rounded-full overflow-hidden bg-slate-800 flex items-center justify-center">
                            {m.fotoUrl ? (
                              <img
                                 src={m.fotoUrl}
