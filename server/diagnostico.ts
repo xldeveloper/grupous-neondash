@@ -19,10 +19,12 @@ export const diagnosticoRouter = router({
             message: "Apenas administradores podem visualizar outros diagnósticos.",
           });
         }
-        const diagnostico = await db.query.diagnosticos.findFirst({
-          where: eq(diagnosticos.mentoradoId, input.mentoradoId),
-        });
-        return diagnostico || null;
+        const result = await db
+          .select()
+          .from(diagnosticos)
+          .where(eq(diagnosticos.mentoradoId, input.mentoradoId))
+          .limit(1);
+        return result[0] || null;
       }
 
       // Case 2: User requesting their own diagnostic (Optimized with JOIN)
