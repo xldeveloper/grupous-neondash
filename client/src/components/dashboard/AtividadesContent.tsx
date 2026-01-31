@@ -1,43 +1,27 @@
+import { Bookmark, ListTodo, Loader2, Play, Plus, StickyNote } from "lucide-react";
 import { useState } from "react";
-import {
-  Bookmark,
-  CheckCircle2,
-  ChevronDown,
-  Circle,
-  Play,
-  Loader2,
-  StickyNote,
-  Plus,
-  ListTodo,
-} from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import { Card, CardContent } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Drawer,
+  DrawerClose,
   DrawerContent,
+  DrawerFooter,
   DrawerHeader,
   DrawerTitle,
-  DrawerFooter,
-  DrawerClose,
 } from "@/components/ui/drawer";
+import { Input } from "@/components/ui/input";
+import { Progress } from "@/components/ui/progress";
+import { Textarea } from "@/components/ui/textarea";
+import { calcularProgresso, getAtividadesByEtapa } from "@/data/atividades-data";
 import { trpc } from "@/lib/trpc";
-import {
-  ATIVIDADES,
-  getAtividadesByEtapa,
-  calcularProgresso,
-  type Atividade,
-  type AtividadeStep,
-} from "@/data/atividades-data";
 
 interface AtividadesContentProps {
   mentoradoId?: number; // For admin viewing specific mentorado
@@ -95,7 +79,7 @@ export function AtividadesContent({ mentoradoId }: AtividadesContentProps) {
   const updateNoteMutation = trpc.atividades.updateNote.useMutation({
     onSuccess: () => {
       progressQuery.refetch();
-      setNoteDialog(prev => ({ ...prev, open: false }));
+      setNoteDialog((prev) => ({ ...prev, open: false }));
     },
   });
 
@@ -104,18 +88,14 @@ export function AtividadesContent({ mentoradoId }: AtividadesContentProps) {
   const createTaskMutation = trpc.tasks.create.useMutation({
     onSuccess: () => {
       utils.tasks.list.invalidate();
-      setTaskDialog(prev => ({ ...prev, open: false, taskTitle: "" }));
+      setTaskDialog((prev) => ({ ...prev, open: false, taskTitle: "" }));
     },
-    onError: error => {
-      console.error("Erro ao criar tarefa:", error);
-    },
+    onError: (_error) => {},
   });
 
   const progressMap = progressQuery.data ?? {};
   const { total, completed, percentage } = calcularProgresso(
-    Object.fromEntries(
-      Object.entries(progressMap).map(([k, v]) => [k, v.completed])
-    )
+    Object.fromEntries(Object.entries(progressMap).map(([k, v]) => [k, v.completed]))
   );
   const atividadesByEtapa = getAtividadesByEtapa();
 
@@ -132,11 +112,7 @@ export function AtividadesContent({ mentoradoId }: AtividadesContentProps) {
     });
   };
 
-  const openNoteDialog = (
-    atividadeCodigo: string,
-    stepCodigo: string,
-    stepLabel: string
-  ) => {
+  const openNoteDialog = (atividadeCodigo: string, stepCodigo: string, stepLabel: string) => {
     const key = `${atividadeCodigo}:${stepCodigo}`;
     const currentNote = progressMap[key]?.notes ?? "";
     setNoteDialog({
@@ -194,9 +170,7 @@ export function AtividadesContent({ mentoradoId }: AtividadesContentProps) {
         </div>
         <div>
           <h2 className="text-2xl font-bold text-white">PLAY NEON</h2>
-          <p className="text-zinc-400 text-sm">
-            Sua jornada de crescimento começa aqui
-          </p>
+          <p className="text-zinc-400 text-sm">Sua jornada de crescimento começa aqui</p>
         </div>
       </div>
 
@@ -209,8 +183,8 @@ export function AtividadesContent({ mentoradoId }: AtividadesContentProps) {
               Aqui nossa jornada DE FATO começará a acontecer.
             </p>
             <p className="text-zinc-300 mt-1">
-              Nessa página você encontrará todas as ferramentas e etapas para
-              implementar na sua jornada.
+              Nessa página você encontrará todas as ferramentas e etapas para implementar na sua
+              jornada.
             </p>
           </div>
         </CardContent>
@@ -220,9 +194,7 @@ export function AtividadesContent({ mentoradoId }: AtividadesContentProps) {
       <Card className="bg-zinc-900/70 border-zinc-700">
         <CardContent className="p-4">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-sm font-medium text-zinc-300">
-              Progresso Geral
-            </span>
+            <span className="text-sm font-medium text-zinc-300">Progresso Geral</span>
             <span className="text-sm font-bold text-yellow-400">
               {completed}/{total} passos ({percentage}%)
             </span>
@@ -241,16 +213,14 @@ export function AtividadesContent({ mentoradoId }: AtividadesContentProps) {
             </h3>
 
             <Accordion type="multiple" className="space-y-2">
-              {atividades.map(atividade => {
-                const atividadeCompleted = atividade.steps.filter(step => {
+              {atividades.map((atividade) => {
+                const atividadeCompleted = atividade.steps.filter((step) => {
                   const key = `${atividade.codigo}:${step.codigo}`;
                   return progressMap[key]?.completed;
                 }).length;
                 const atividadeTotal = atividade.steps.length;
                 const atividadePercentage =
-                  atividadeTotal > 0
-                    ? Math.round((atividadeCompleted / atividadeTotal) * 100)
-                    : 0;
+                  atividadeTotal > 0 ? Math.round((atividadeCompleted / atividadeTotal) * 100) : 0;
 
                 return (
                   <AccordionItem
@@ -262,9 +232,7 @@ export function AtividadesContent({ mentoradoId }: AtividadesContentProps) {
                       <div className="flex items-center gap-3 flex-1 text-left">
                         <span className="text-xl">{atividade.icone}</span>
                         <div className="flex-1 min-w-0">
-                          <p className="font-medium text-white truncate">
-                            {atividade.titulo}
-                          </p>
+                          <p className="font-medium text-white truncate">{atividade.titulo}</p>
                           <div className="flex items-center gap-2 mt-1">
                             <Progress
                               value={atividadePercentage}
@@ -279,9 +247,7 @@ export function AtividadesContent({ mentoradoId }: AtividadesContentProps) {
                     </AccordionTrigger>
                     <AccordionContent className="px-4 pb-4">
                       {atividade.descricao && (
-                        <p className="text-sm text-zinc-400 mb-3">
-                          {atividade.descricao}
-                        </p>
+                        <p className="text-sm text-zinc-400 mb-3">{atividade.descricao}</p>
                       )}
 
                       {/* Botão para criar tarefa */}
@@ -290,9 +256,7 @@ export function AtividadesContent({ mentoradoId }: AtividadesContentProps) {
                           variant="outline"
                           size="sm"
                           className="mb-3 border-zinc-600 text-zinc-300 hover:bg-zinc-800"
-                          onClick={() =>
-                            openTaskDialog(atividade.codigo, atividade.titulo)
-                          }
+                          onClick={() => openTaskDialog(atividade.codigo, atividade.titulo)}
                         >
                           <Plus className="w-4 h-4 mr-1" />
                           Criar Tarefa
@@ -300,7 +264,7 @@ export function AtividadesContent({ mentoradoId }: AtividadesContentProps) {
                       )}
 
                       <div className="space-y-2">
-                        {atividade.steps.map(step => {
+                        {atividade.steps.map((step) => {
                           const key = `${atividade.codigo}:${step.codigo}`;
                           const stepData = progressMap[key] ?? {
                             completed: false,
@@ -310,31 +274,22 @@ export function AtividadesContent({ mentoradoId }: AtividadesContentProps) {
                           const hasNote = !!stepData.notes;
                           const isPending =
                             toggleMutation.isPending &&
-                            toggleMutation.variables?.atividadeCodigo ===
-                              atividade.codigo &&
-                            toggleMutation.variables?.stepCodigo ===
-                              step.codigo;
+                            toggleMutation.variables?.atividadeCodigo === atividade.codigo &&
+                            toggleMutation.variables?.stepCodigo === step.codigo;
 
                           return (
-                            <div
-                              key={step.codigo}
-                              className="flex items-center gap-3 py-1 group"
-                            >
+                            <div key={step.codigo} className="flex items-center gap-3 py-1 group">
                               <Checkbox
                                 id={key}
                                 checked={isCompleted}
                                 disabled={isReadOnly || isPending}
-                                onCheckedChange={() =>
-                                  handleToggle(atividade.codigo, step.codigo)
-                                }
+                                onCheckedChange={() => handleToggle(atividade.codigo, step.codigo)}
                                 className="border-zinc-600 data-[state=checked]:bg-green-600 data-[state=checked]:border-green-600"
                               />
                               <label
                                 htmlFor={key}
                                 className={`text-sm cursor-pointer select-none flex-1 ${
-                                  isCompleted
-                                    ? "text-zinc-500 line-through"
-                                    : "text-zinc-200"
+                                  isCompleted ? "text-zinc-500 line-through" : "text-zinc-200"
                                 }`}
                               >
                                 {step.label}
@@ -345,20 +300,14 @@ export function AtividadesContent({ mentoradoId }: AtividadesContentProps) {
                                 <button
                                   type="button"
                                   onClick={() =>
-                                    openNoteDialog(
-                                      atividade.codigo,
-                                      step.codigo,
-                                      step.label
-                                    )
+                                    openNoteDialog(atividade.codigo, step.codigo, step.label)
                                   }
                                   className={`p-1 rounded hover:bg-zinc-700 transition-opacity ${
                                     hasNote
                                       ? "text-yellow-400"
                                       : "text-zinc-500 opacity-0 group-hover:opacity-100"
                                   }`}
-                                  title={
-                                    hasNote ? "Editar nota" : "Adicionar nota"
-                                  }
+                                  title={hasNote ? "Editar nota" : "Adicionar nota"}
                                 >
                                   <StickyNote className="w-4 h-4" />
                                 </button>
@@ -366,10 +315,7 @@ export function AtividadesContent({ mentoradoId }: AtividadesContentProps) {
 
                               {/* Indicador de nota (readonly) */}
                               {isReadOnly && hasNote && (
-                                <span
-                                  className="text-yellow-400"
-                                  title={stepData.notes ?? ""}
-                                >
+                                <span className="text-yellow-400" title={stepData.notes ?? ""}>
                                   <StickyNote className="w-4 h-4" />
                                 </span>
                               )}
@@ -400,7 +346,7 @@ export function AtividadesContent({ mentoradoId }: AtividadesContentProps) {
       {/* Drawer para Notas */}
       <Drawer
         open={noteDialog.open}
-        onOpenChange={open => setNoteDialog(prev => ({ ...prev, open }))}
+        onOpenChange={(open) => setNoteDialog((prev) => ({ ...prev, open }))}
       >
         <DrawerContent className="bg-zinc-900 border-zinc-700">
           <DrawerHeader>
@@ -413,8 +359,8 @@ export function AtividadesContent({ mentoradoId }: AtividadesContentProps) {
             <p className="text-sm text-zinc-400">{noteDialog.stepLabel}</p>
             <Textarea
               value={noteDialog.currentNote}
-              onChange={e =>
-                setNoteDialog(prev => ({
+              onChange={(e) =>
+                setNoteDialog((prev) => ({
                   ...prev,
                   currentNote: e.target.value,
                 }))
@@ -425,10 +371,7 @@ export function AtividadesContent({ mentoradoId }: AtividadesContentProps) {
           </div>
           <DrawerFooter className="flex-row gap-2">
             <DrawerClose asChild>
-              <Button
-                variant="outline"
-                className="flex-1 border-zinc-600 text-zinc-300"
-              >
+              <Button variant="outline" className="flex-1 border-zinc-600 text-zinc-300">
                 Cancelar
               </Button>
             </DrawerClose>
@@ -450,7 +393,7 @@ export function AtividadesContent({ mentoradoId }: AtividadesContentProps) {
       {/* Drawer para Criar Tarefa */}
       <Drawer
         open={taskDialog.open}
-        onOpenChange={open => setTaskDialog(prev => ({ ...prev, open }))}
+        onOpenChange={(open) => setTaskDialog((prev) => ({ ...prev, open }))}
       >
         <DrawerContent className="bg-zinc-900 border-zinc-700">
           <DrawerHeader>
@@ -461,15 +404,12 @@ export function AtividadesContent({ mentoradoId }: AtividadesContentProps) {
           </DrawerHeader>
           <div className="px-4 pb-2 space-y-3">
             <p className="text-sm text-zinc-400">
-              Vinculada à:{" "}
-              <span className="text-zinc-300">
-                {taskDialog.atividadeTitulo}
-              </span>
+              Vinculada à: <span className="text-zinc-300">{taskDialog.atividadeTitulo}</span>
             </p>
             <Input
               value={taskDialog.taskTitle}
-              onChange={e =>
-                setTaskDialog(prev => ({
+              onChange={(e) =>
+                setTaskDialog((prev) => ({
                   ...prev,
                   taskTitle: e.target.value,
                 }))
@@ -480,18 +420,13 @@ export function AtividadesContent({ mentoradoId }: AtividadesContentProps) {
           </div>
           <DrawerFooter className="flex-row gap-2">
             <DrawerClose asChild>
-              <Button
-                variant="outline"
-                className="flex-1 border-zinc-600 text-zinc-300"
-              >
+              <Button variant="outline" className="flex-1 border-zinc-600 text-zinc-300">
                 Cancelar
               </Button>
             </DrawerClose>
             <Button
               onClick={createTask}
-              disabled={
-                createTaskMutation.isPending || !taskDialog.taskTitle.trim()
-              }
+              disabled={createTaskMutation.isPending || !taskDialog.taskTitle.trim()}
               className="flex-1 bg-yellow-500 hover:bg-yellow-600 text-black"
             >
               {createTaskMutation.isPending ? (

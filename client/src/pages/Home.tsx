@@ -1,40 +1,31 @@
+import { Award, DollarSign, LayoutDashboard, Medal, TrendingUp, Trophy, Users } from "lucide-react";
+import { motion } from "motion/react";
+import { useState } from "react";
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Cell,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
 import DashboardLayout from "@/components/DashboardLayout";
-import { analiseData } from "@/lib/data";
+import { AchievementsView } from "@/components/dashboard/AchievementsView";
+import { RankingView } from "@/components/dashboard/RankingView";
+import MonthYearFilter from "@/components/MonthYearFilter";
+import { AnimatedCounter } from "@/components/ui/animated-counter";
+import { AnimatedList } from "@/components/ui/animated-list";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   FloatingDockTabs,
-  FloatingDockTabsList,
   FloatingDockTabsContent,
+  FloatingDockTabsList,
 } from "@/components/ui/floating-dock-tabs";
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  Cell,
-} from "recharts";
-import {
-  LayoutDashboard,
-  Trophy,
-  Medal,
-  Users,
-  TrendingUp,
-  DollarSign,
-  Award,
-} from "lucide-react";
+import { fadeIn, slideUp, staggerContainer } from "@/lib/animation-variants";
+import { analiseData } from "@/lib/data";
 import { cn } from "@/lib/utils";
-import MonthYearFilter from "@/components/MonthYearFilter";
-import { useState } from "react";
-import { RankingView } from "@/components/dashboard/RankingView";
-import { AchievementsView } from "@/components/dashboard/AchievementsView";
-
-import { motion } from "motion/react";
-import { AnimatedList } from "@/components/ui/animated-list";
-import { AnimatedCounter } from "@/components/ui/animated-counter";
-import { slideUp, staggerContainer, fadeIn } from "@/lib/animation-variants";
 
 export default function Home() {
   // Admin dashboard - no auth check needed for now
@@ -71,8 +62,7 @@ export default function Home() {
     Object.keys(analiseData.neon_escala.analise).length;
 
   const mediaScore = (
-    topPerformers.reduce((acc, curr) => acc + curr.score, 0) /
-    topPerformers.length
+    topPerformers.reduce((acc, curr) => acc + curr.score, 0) / topPerformers.length
   ).toFixed(1);
 
   const chartData = [
@@ -105,9 +95,7 @@ export default function Home() {
             <h1 className="text-3xl font-bold text-foreground tracking-tight">
               Painel Administrativo
             </h1>
-            <p className="text-muted-foreground mt-2">
-              Visão consolidada e gestão de turmas
-            </p>
+            <p className="text-muted-foreground mt-2">Visão consolidada e gestão de turmas</p>
           </div>
           <MonthYearFilter
             selectedYear={selectedYear}
@@ -139,17 +127,8 @@ export default function Home() {
           />
 
           {/* OVERVIEW TAB */}
-          <FloatingDockTabsContent
-            value="overview"
-            className="space-y-8 mt-0"
-            asChild
-          >
-            <motion.div
-              variants={fadeIn}
-              initial="initial"
-              animate="animate"
-              exit="exit"
-            >
+          <FloatingDockTabsContent value="overview" className="space-y-8 mt-0" asChild>
+            <motion.div variants={fadeIn} initial="initial" animate="animate" exit="exit">
               {/* KPI Cards */}
               <motion.div
                 className="grid grid-cols-1 md:grid-cols-3 gap-6"
@@ -170,7 +149,7 @@ export default function Home() {
                         <AnimatedCounter
                           to={faturamentoTotal}
                           duration={1.5}
-                          formatFn={v =>
+                          formatFn={(v) =>
                             new Intl.NumberFormat("pt-BR", {
                               style: "currency",
                               currency: "BRL",
@@ -180,8 +159,7 @@ export default function Home() {
                         />
                       </div>
                       <p className="text-xs text-neon-gold mt-1 font-medium flex items-center gap-1">
-                        <TrendingUp className="w-3 h-3 text-neon-gold" />{" "}
-                        Dezembro 2025
+                        <TrendingUp className="w-3 h-3 text-neon-gold" /> Dezembro 2025
                       </p>
                     </CardContent>
                   </Card>
@@ -223,7 +201,7 @@ export default function Home() {
                         <AnimatedCounter
                           to={parseFloat(mediaScore)}
                           duration={1.2}
-                          formatFn={v => v.toFixed(1)}
+                          formatFn={(v) => v.toFixed(1)}
                         />
                       </div>
                       <p className="text-xs text-muted-foreground mt-1">
@@ -246,11 +224,7 @@ export default function Home() {
                         data={chartData}
                         margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
                       >
-                        <CartesianGrid
-                          strokeDasharray="3 3"
-                          vertical={false}
-                          stroke="#f1f5f9"
-                        />
+                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
                         <XAxis
                           dataKey="name"
                           axisLine={false}
@@ -261,7 +235,7 @@ export default function Home() {
                           axisLine={false}
                           tickLine={false}
                           tick={{ fill: "#64748b", fontSize: 12 }}
-                          tickFormatter={value => `R$${value / 1000}k`}
+                          tickFormatter={(value) => `R$${value / 1000}k`}
                         />
                         <Tooltip
                           cursor={{ fill: "#f8fafc" }}
@@ -272,7 +246,7 @@ export default function Home() {
                           }}
                         />
                         <Bar dataKey="faturamento" radius={[4, 4, 0, 0]}>
-                          {chartData.map((entry, index) => (
+                          {chartData.map((_entry, index) => (
                             <Cell key={`cell-${index}`} fill="#AC9469" />
                           ))}
                         </Bar>
@@ -308,20 +282,14 @@ export default function Home() {
                               {index + 1}
                             </div>
                             <div>
-                              <div className="font-medium text-foreground">
-                                {performer.nome}
-                              </div>
-                              <div className="text-xs text-muted-foreground">
-                                {performer.grupo}
-                              </div>
+                              <div className="font-medium text-foreground">{performer.nome}</div>
+                              <div className="text-xs text-muted-foreground">{performer.grupo}</div>
                             </div>
                           </div>
-                          <div className="font-bold text-neon-blue">
-                            {performer.score}
-                          </div>
+                          <div className="font-bold text-neon-blue">{performer.score}</div>
                         </div>
                       )}
-                      keyExtractor={item => item.nome}
+                      keyExtractor={(item) => item.nome}
                     />
                   </CardContent>
                 </Card>
@@ -331,10 +299,7 @@ export default function Home() {
 
           {/* RANKING TAB */}
           <FloatingDockTabsContent value="ranking" className="mt-0">
-            <RankingView
-              selectedMonth={selectedMonth}
-              selectedYear={selectedYear}
-            />
+            <RankingView selectedMonth={selectedMonth} selectedYear={selectedYear} />
           </FloatingDockTabsContent>
 
           {/* ACHIEVEMENTS TAB */}

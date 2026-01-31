@@ -1,23 +1,19 @@
-import { eq, and, desc, asc } from "drizzle-orm";
-import { getDb } from "./db";
+import { and, asc, desc, eq } from "drizzle-orm";
 import {
-  mentorados,
-  metricasMensais,
   feedbacks,
+  type InsertFeedback,
   type InsertMentorado,
   type InsertMetricaMensal,
-  type InsertFeedback,
+  mentorados,
+  metricasMensais,
 } from "../drizzle/schema";
+import { getDb } from "./db";
 
 export async function getMentoradoByUserId(userId: number) {
   const db = await getDb();
   if (!db) return undefined;
 
-  const result = await db
-    .select()
-    .from(mentorados)
-    .where(eq(mentorados.userId, userId))
-    .limit(1);
+  const result = await db.select().from(mentorados).where(eq(mentorados.userId, userId)).limit(1);
   return result.length > 0 ? result[0] : undefined;
 }
 
@@ -25,11 +21,7 @@ export async function getMentoradoByEmail(email: string) {
   const db = await getDb();
   if (!db) return undefined;
 
-  const result = await db
-    .select()
-    .from(mentorados)
-    .where(eq(mentorados.email, email))
-    .limit(1);
+  const result = await db.select().from(mentorados).where(eq(mentorados.email, email)).limit(1);
   return result.length > 0 ? result[0] : undefined;
 }
 
@@ -45,10 +37,7 @@ export async function createMentorado(data: InsertMentorado) {
   if (!db) throw new Error("Database not available");
 
   // Postgres requires .returning() to get the ID
-  const result = await db
-    .insert(mentorados)
-    .values(data)
-    .returning({ id: mentorados.id });
+  const result = await db.insert(mentorados).values(data).returning({ id: mentorados.id });
   return result[0].id;
 }
 
@@ -74,11 +63,7 @@ export async function getMetricasEvolution(mentoradoId: number) {
     .orderBy(asc(metricasMensais.ano), asc(metricasMensais.mes));
 }
 
-export async function getMetricaMensal(
-  mentoradoId: number,
-  ano: number,
-  mes: number
-) {
+export async function getMetricaMensal(mentoradoId: number, ano: number, mes: number) {
   const db = await getDb();
   if (!db) return undefined;
 
@@ -104,10 +89,7 @@ export async function upsertMetricaMensal(data: InsertMetricaMensal) {
   const existing = await getMetricaMensal(data.mentoradoId, data.ano, data.mes);
 
   if (existing) {
-    await db
-      .update(metricasMensais)
-      .set(data)
-      .where(eq(metricasMensais.id, existing.id));
+    await db.update(metricasMensais).set(data).where(eq(metricasMensais.id, existing.id));
     return existing.id;
   } else {
     const result = await db
@@ -118,11 +100,7 @@ export async function upsertMetricaMensal(data: InsertMetricaMensal) {
   }
 }
 
-export async function getFeedback(
-  mentoradoId: number,
-  ano: number,
-  mes: number
-) {
+export async function getFeedback(mentoradoId: number, ano: number, mes: number) {
   const db = await getDb();
   if (!db) return null;
 
@@ -130,11 +108,7 @@ export async function getFeedback(
     .select()
     .from(feedbacks)
     .where(
-      and(
-        eq(feedbacks.mentoradoId, mentoradoId),
-        eq(feedbacks.ano, ano),
-        eq(feedbacks.mes, mes)
-      )
+      and(eq(feedbacks.mentoradoId, mentoradoId), eq(feedbacks.ano, ano), eq(feedbacks.mes, mes))
     )
     .limit(1);
 
@@ -151,10 +125,7 @@ export async function upsertFeedback(data: InsertFeedback) {
     await db.update(feedbacks).set(data).where(eq(feedbacks.id, existing.id));
     return existing.id;
   } else {
-    const result = await db
-      .insert(feedbacks)
-      .values(data)
-      .returning({ id: feedbacks.id });
+    const result = await db.insert(feedbacks).values(data).returning({ id: feedbacks.id });
     return result[0].id;
   }
 }

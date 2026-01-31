@@ -1,13 +1,13 @@
-import { describe, it, expect, mock, beforeEach } from "bun:test";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 // Mock the database
-mock.module("./db", () => ({
-  getDb: mock(() => Promise.resolve(null)),
+vi.mock("./db", () => ({
+  getDb: vi.fn(() => Promise.resolve(null)),
 }));
 
 // Mock email service
-mock.module("./emailService", () => ({
-  sendEmail: mock(() => Promise.resolve(true)),
+vi.mock("./emailService", () => ({
+  sendEmail: vi.fn(() => Promise.resolve(true)),
 }));
 
 describe("Gamificação Service", () => {
@@ -20,9 +20,7 @@ describe("Gamificação Service", () => {
 
   describe("BADGES_CONFIG", () => {
     it("should have all required badge categories", () => {
-      const categories = new Set(
-        Gamificacao.BADGES_CONFIG.map(b => b.categoria)
-      );
+      const categories = new Set(Gamificacao.BADGES_CONFIG.map((b) => b.categoria));
       expect(categories.has("faturamento")).toBe(true);
       expect(categories.has("conteudo")).toBe(true);
       expect(categories.has("operacional")).toBe(true);
@@ -31,19 +29,19 @@ describe("Gamificação Service", () => {
     });
 
     it("should have unique badge codes", () => {
-      const codes = Gamificacao.BADGES_CONFIG.map(b => b.codigo);
+      const codes = Gamificacao.BADGES_CONFIG.map((b) => b.codigo);
       const uniqueCodes = new Set(codes);
       expect(codes.length).toBe(uniqueCodes.size);
     });
 
     it("should have valid criteria JSON for all badges", () => {
-      Gamificacao.BADGES_CONFIG.forEach(badge => {
+      Gamificacao.BADGES_CONFIG.forEach((badge) => {
         expect(() => JSON.parse(badge.criterio)).not.toThrow();
       });
     });
 
     it("should have positive points for all badges", () => {
-      Gamificacao.BADGES_CONFIG.forEach(badge => {
+      Gamificacao.BADGES_CONFIG.forEach((badge) => {
         expect(badge.pontos).toBeGreaterThan(0);
       });
     });
@@ -68,17 +66,13 @@ describe("Gamificação Service", () => {
 
   describe("calculateMonthlyRanking", () => {
     it.skip("should return without error when database is not available", async () => {
-      await expect(
-        Gamificacao.calculateMonthlyRanking(2025, 12)
-      ).resolves.not.toThrow();
+      await expect(Gamificacao.calculateMonthlyRanking(2025, 12)).resolves.not.toThrow();
     });
   });
 
   describe("updateProgressiveGoals", () => {
     it.skip("should return without error when database is not available", async () => {
-      await expect(
-        Gamificacao.updateProgressiveGoals(1, 2025, 12)
-      ).resolves.not.toThrow();
+      await expect(Gamificacao.updateProgressiveGoals(1, 2025, 12)).resolves.not.toThrow();
     });
   });
 
@@ -90,9 +84,7 @@ describe("Gamificação Service", () => {
 
   describe("checkUnmetGoalsAlerts", () => {
     it.skip("should return without error when database is not available", async () => {
-      await expect(
-        Gamificacao.checkUnmetGoalsAlerts(2025, 12)
-      ).resolves.not.toThrow();
+      await expect(Gamificacao.checkUnmetGoalsAlerts(2025, 12)).resolves.not.toThrow();
     });
   });
 

@@ -1,19 +1,13 @@
 import {
+  closestCorners,
   DndContext,
   DragOverlay,
   PointerSensor,
   useSensor,
   useSensors,
-  closestCorners,
 } from "@dnd-kit/core";
-import { SortableContext, arrayMove } from "@dnd-kit/sortable";
+import { CheckSquare, ListFilter, Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
-import { KanbanColumn } from "./KanbanColumn";
-import { LeadCard } from "./LeadCard";
-import { LeadDetailModal } from "./LeadDetailModal";
-import { Button } from "../ui/button";
-import { trpc } from "@/lib/trpc";
-import { Plus, ListFilter, CheckSquare, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import {
   Select,
@@ -22,6 +16,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { trpc } from "@/lib/trpc";
+import { Button } from "../ui/button";
+import { KanbanColumn } from "./KanbanColumn";
+import { LeadCard } from "./LeadCard";
+import { LeadDetailModal } from "./LeadDetailModal";
 
 // Definindo as colunas do Kanban com IDs alinhados ao banco (enum status_lead)
 const COLUMNS = [
@@ -68,10 +67,7 @@ export interface PipelineKanbanProps {
   isReadOnly?: boolean;
 }
 
-export function PipelineKanban({
-  mentoradoId,
-  isReadOnly = false,
-}: PipelineKanbanProps) {
+export function PipelineKanban({ mentoradoId, isReadOnly = false }: PipelineKanbanProps) {
   const [activeId, setActiveId] = useState<string | null>(null);
   const [selectedLeadId, setSelectedLeadId] = useState<number | null>(null);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
@@ -130,9 +126,9 @@ export function PipelineKanban({
     const activeId = active.id;
     const overId = over.id;
 
-    const leadId = parseInt(activeId.toString().replace("lead-", ""));
+    const leadId = parseInt(activeId.toString().replace("lead-", ""), 10);
     // Se soltou sobre uma coluna
-    const newStatus = COLUMNS.find(col => col.id === overId)?.id;
+    const newStatus = COLUMNS.find((col) => col.id === overId)?.id;
 
     if (newStatus) {
       updateStatusMutation.mutate({
@@ -154,9 +150,7 @@ export function PipelineKanban({
   };
 
   const toggleSelectLead = (id: number) => {
-    setSelectedLeads(prev =>
-      prev.includes(id) ? prev.filter(l => l !== id) : [...prev, id]
-    );
+    setSelectedLeads((prev) => (prev.includes(id) ? prev.filter((l) => l !== id) : [...prev, id]));
   };
 
   const handleBulkStatusChange = (status: string) => {
@@ -169,11 +163,7 @@ export function PipelineKanban({
 
   const handleBulkDelete = () => {
     if (selectedLeads.length === 0) return;
-    if (
-      window.confirm(
-        `Tem certeza que deseja excluir ${selectedLeads.length} leads?`
-      )
-    ) {
+    if (window.confirm(`Tem certeza que deseja excluir ${selectedLeads.length} leads?`)) {
       bulkDeleteMutation.mutate({ ids: selectedLeads });
     }
   };
@@ -194,9 +184,7 @@ export function PipelineKanban({
   return (
     <div className="flex flex-col h-full gap-6">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-background/40 p-4 rounded-xl border border-border backdrop-blur-xl">
-        <h1 className="text-2xl font-bold tracking-tight text-foreground">
-          Pipeline de Vendas
-        </h1>
+        <h1 className="text-2xl font-bold tracking-tight text-foreground">Pipeline de Vendas</h1>
 
         <div className="flex items-center gap-2">
           {!isReadOnly && (
@@ -233,15 +221,12 @@ export function PipelineKanban({
       >
         <div className="flex-1 overflow-x-auto pb-4">
           <div className="flex gap-4 min-w-[1200px] h-full">
-            {COLUMNS.map(column => (
+            {COLUMNS.map((column) => (
               <KanbanColumn
                 key={column.id}
                 id={column.id}
                 title={column.title}
-                leads={
-                  leadsData?.leads?.filter(lead => lead.status === column.id) ||
-                  []
-                }
+                leads={leadsData?.leads?.filter((lead) => lead.status === column.id) || []}
                 activeId={activeId}
                 onLeadClick={handleLeadClick}
                 accentColor={column.color}
@@ -257,7 +242,7 @@ export function PipelineKanban({
           {activeId && !isReadOnly ? (
             <div className="rotate-2 scale-105 cursor-grabbing opacity-90 shadow-2xl">
               <LeadCard
-                lead={leadsData?.leads?.find(l => `lead-${l.id}` === activeId)!}
+                lead={leadsData?.leads?.find((l) => `lead-${l.id}` === activeId)!}
                 onClick={() => {}}
               />
             </div>
@@ -278,7 +263,7 @@ export function PipelineKanban({
                 <SelectValue placeholder="Mover para..." />
               </SelectTrigger>
               <SelectContent>
-                {COLUMNS.map(col => (
+                {COLUMNS.map((col) => (
                   <SelectItem key={col.id} value={col.id}>
                     {col.title}
                   </SelectItem>

@@ -23,9 +23,7 @@ function getMapsConfig(): MapsConfig {
   const apiKey = ENV.llmApiKey;
 
   if (!baseUrl || !apiKey) {
-    throw new Error(
-      "Google Maps proxy credentials missing: set LLM_API_URL and LLM_API_KEY"
-    );
+    throw new Error("Google Maps proxy credentials missing: set LLM_API_URL and LLM_API_KEY");
   }
 
   return {

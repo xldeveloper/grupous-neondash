@@ -121,8 +121,7 @@ export const ATIVIDADES: Atividade[] = [
       },
       {
         codigo: "doc-4",
-        label:
-          "Cópia do Contrato Social da Empresa (Quando abre CNPJ - Contador)",
+        label: "Cópia do Contrato Social da Empresa (Quando abre CNPJ - Contador)",
       },
       {
         codigo: "doc-5",
@@ -141,8 +140,7 @@ export const ATIVIDADES: Atividade[] = [
       { codigo: "doc-9", label: "Croqui de localização" },
       {
         codigo: "doc-10",
-        label:
-          "Relação dos procedimentos técnicos a serem executados no estabelecimento",
+        label: "Relação dos procedimentos técnicos a serem executados no estabelecimento",
       },
       { codigo: "doc-11", label: "PGRS" },
       {
@@ -152,8 +150,7 @@ export const ATIVIDADES: Atividade[] = [
       { codigo: "doc-13", label: "Alvará de Funcionamento da Prefeitura" },
       {
         codigo: "doc-14",
-        label:
-          "Cadastro no CNES (registro obrigatório para estabelecimentos de saúde)",
+        label: "Cadastro no CNES (registro obrigatório para estabelecimentos de saúde)",
       },
     ],
   },
@@ -162,8 +159,7 @@ export const ATIVIDADES: Atividade[] = [
     titulo: "ATIVIDADE PRIMORDIAL: Organização - Agendas e Tarefas",
     etapa: "Módulo 2",
     icone: "📅",
-    descricao:
-      "Organize sua agenda e sistema de tarefas para máxima produtividade.",
+    descricao: "Organize sua agenda e sistema de tarefas para máxima produtividade.",
     steps: [
       {
         codigo: "org-1",

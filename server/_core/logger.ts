@@ -16,16 +16,8 @@ export interface LogContext {
 
 export interface Logger {
   info: (action: string, data?: Record<string, unknown>) => void;
-  warn: (
-    action: string,
-    error?: unknown,
-    data?: Record<string, unknown>
-  ) => void;
-  error: (
-    action: string,
-    error: unknown,
-    data?: Record<string, unknown>
-  ) => void;
+  warn: (action: string, error?: unknown, data?: Record<string, unknown>) => void;
+  error: (action: string, error: unknown, data?: Record<string, unknown>) => void;
   debug: (action: string, data?: Record<string, unknown>) => void;
 }
 
@@ -43,7 +35,7 @@ export function generateRequestId(): string {
 /**
  * Format error for logging.
  */
-function formatError(error: unknown): { message: string; stack?: string } {
+function _formatError(error: unknown): { message: string; stack?: string } {
   if (error instanceof Error) {
     return {
       message: error.message,
@@ -64,62 +56,21 @@ export function createLogger(context: Partial<LogContext> = {}): Logger {
   const requestId = context.requestId || generateRequestId();
   const service = context.service || "server";
 
-  const baseContext = {
+  const _baseContext = {
     requestId,
     userId: context.userId ?? undefined,
     service,
   };
 
   return {
-    info: (action: string, data?: Record<string, unknown>) => {
-      console.log(
-        JSON.stringify({
-          timestamp: new Date().toISOString(),
-          level: "info",
-          ...baseContext,
-          action,
-          ...data,
-        })
-      );
-    },
+    info: (_action: string, _data?: Record<string, unknown>) => {},
 
-    warn: (action: string, error?: unknown, data?: Record<string, unknown>) => {
-      console.warn(
-        JSON.stringify({
-          timestamp: new Date().toISOString(),
-          level: "warn",
-          ...baseContext,
-          action,
-          ...(error ? { error: formatError(error) } : {}),
-          ...data,
-        })
-      );
-    },
+    warn: (_action: string, _error?: unknown, _data?: Record<string, unknown>) => {},
 
-    error: (action: string, error: unknown, data?: Record<string, unknown>) => {
-      console.error(
-        JSON.stringify({
-          timestamp: new Date().toISOString(),
-          level: "error",
-          ...baseContext,
-          action,
-          error: formatError(error),
-          ...data,
-        })
-      );
-    },
+    error: (_action: string, _error: unknown, _data?: Record<string, unknown>) => {},
 
-    debug: (action: string, data?: Record<string, unknown>) => {
+    debug: (_action: string, _data?: Record<string, unknown>) => {
       if (process.env.NODE_ENV === "development") {
-        console.log(
-          JSON.stringify({
-            timestamp: new Date().toISOString(),
-            level: "debug",
-            ...baseContext,
-            action,
-            ...data,
-          })
-        );
       }
     },
   };

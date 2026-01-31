@@ -1,5 +1,5 @@
-import { useAnimatedCounter } from "@/hooks/use-animated-counter";
 import { motion, useTransform } from "motion/react";
+import { useAnimatedCounter } from "@/hooks/use-animated-counter";
 
 interface AnimatedCounterProps {
   from?: number;
@@ -25,7 +25,7 @@ export function AnimatedCounter({
   const count = useAnimatedCounter(from, to, duration, delay);
 
   // Transform the motion value to a formatted string
-  const displayValue = useTransform(count, latest =>
+  const displayValue = useTransform(count, (latest) =>
     formatFn ? formatFn(latest) : String(latest)
   );
 

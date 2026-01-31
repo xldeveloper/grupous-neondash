@@ -1,14 +1,12 @@
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
+import { formatDistanceToNow } from "date-fns";
+import { ptBR } from "date-fns/locale";
+import { MoreHorizontal, RefreshCw, Trash2, X } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,21 +15,16 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  MoreHorizontal,
-  Phone,
-  Mail,
-  MessageSquare,
-  Calendar,
-} from "lucide-react";
-import { trpc } from "@/lib/trpc";
 import { Skeleton } from "@/components/ui/skeleton";
-import { formatDistanceToNow } from "date-fns";
-import { ptBR } from "date-fns/locale";
-import { Checkbox } from "@/components/ui/checkbox";
-import { toast } from "sonner";
-import { useState } from "react";
-import { Trash2, Tag, RefreshCw, X } from "lucide-react";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { trpc } from "@/lib/trpc";
 
 interface LeadsTableProps {
   filters: any;
@@ -61,26 +54,26 @@ export function LeadsTable({
   const utils = trpc.useUtils();
 
   const bulkUpdateStatus = trpc.leads.bulkUpdateStatus.useMutation({
-    onSuccess: data => {
+    onSuccess: (data) => {
       toast.success(`${data.count} leads atualizados com sucesso`);
       utils.leads.list.invalidate();
       setSelectedIds([]);
     },
-    onError: err => toast.error(`Erro ao atualizar: ${err.message}`),
+    onError: (err) => toast.error(`Erro ao atualizar: ${err.message}`),
   });
 
   const bulkDelete = trpc.leads.bulkDelete.useMutation({
-    onSuccess: data => {
+    onSuccess: (data) => {
       toast.success(`${data.count} leads removidos com sucesso`);
       utils.leads.list.invalidate();
       setSelectedIds([]);
     },
-    onError: err => toast.error(`Erro ao deletar: ${err.message}`),
+    onError: (err) => toast.error(`Erro ao deletar: ${err.message}`),
   });
 
   const handleSelectAll = (checked: boolean) => {
     if (checked && data?.leads) {
-      setSelectedIds(data.leads.map(l => l.id));
+      setSelectedIds(data.leads.map((l) => l.id));
     } else {
       setSelectedIds([]);
     }
@@ -88,9 +81,9 @@ export function LeadsTable({
 
   const handleSelectOne = (checked: boolean, id: number) => {
     if (checked) {
-      setSelectedIds(prev => [...prev, id]);
+      setSelectedIds((prev) => [...prev, id]);
     } else {
-      setSelectedIds(prev => prev.filter(i => i !== id));
+      setSelectedIds((prev) => prev.filter((i) => i !== id));
     }
   };
 
@@ -99,9 +92,7 @@ export function LeadsTable({
   };
 
   const executeBulkDelete = () => {
-    if (
-      confirm(`Tem certeza que deseja deletar ${selectedIds.length} leads?`)
-    ) {
+    if (confirm(`Tem certeza que deseja deletar ${selectedIds.length} leads?`)) {
       bulkDelete.mutate({ ids: selectedIds });
     }
   };
@@ -155,8 +146,7 @@ export function LeadsTable({
         </div>
         <h3 className="text-lg font-medium">Nenhum lead encontrado</h3>
         <p className="text-sm text-muted-foreground mt-1 max-w-sm">
-          Tente ajustar os filtros ou crie um novo lead para começar a
-          acompanhar seu pipeline.
+          Tente ajustar os filtros ou crie um novo lead para começar a acompanhar seu pipeline.
         </p>
       </div>
     );
@@ -171,11 +161,8 @@ export function LeadsTable({
               {!isReadOnly && (
                 <TableHead className="w-[50px]">
                   <Checkbox
-                    checked={
-                      data?.leads.length > 0 &&
-                      selectedIds.length === data?.leads.length
-                    }
-                    onCheckedChange={checked => handleSelectAll(!!checked)}
+                    checked={data?.leads.length > 0 && selectedIds.length === data?.leads.length}
+                    onCheckedChange={(checked) => handleSelectAll(!!checked)}
                   />
                 </TableHead>
               )}
@@ -190,43 +177,34 @@ export function LeadsTable({
             </TableRow>
           </TableHeader>
           <TableBody>
-            {data.leads.map(lead => (
+            {data.leads.map((lead) => (
               <TableRow
                 key={lead.id}
                 className="cursor-pointer hover:bg-muted/50"
                 onClick={() => onLeadClick(lead.id)}
               >
                 {!isReadOnly && (
-                  <TableCell onClick={e => e.stopPropagation()}>
+                  <TableCell onClick={(e) => e.stopPropagation()}>
                     <Checkbox
                       checked={selectedIds.includes(lead.id)}
-                      onCheckedChange={checked =>
-                        handleSelectOne(!!checked, lead.id)
-                      }
+                      onCheckedChange={(checked) => handleSelectOne(!!checked, lead.id)}
                     />
                   </TableCell>
                 )}
                 <TableCell className="font-medium">
                   <div className="flex items-center gap-3">
                     <Avatar className="h-8 w-8">
-                      <AvatarFallback>
-                        {lead.nome.substring(0, 2).toUpperCase()}
-                      </AvatarFallback>
+                      <AvatarFallback>{lead.nome.substring(0, 2).toUpperCase()}</AvatarFallback>
                     </Avatar>
                     <div>
                       <div className="font-semibold">{lead.nome}</div>
                       {lead.empresa && (
-                        <div className="text-xs text-muted-foreground">
-                          {lead.empresa}
-                        </div>
+                        <div className="text-xs text-muted-foreground">{lead.empresa}</div>
                       )}
                     </div>
                   </div>
                 </TableCell>
-                <TableCell
-                  className="max-w-[200px] truncate"
-                  title={lead.email}
-                >
+                <TableCell className="max-w-[200px] truncate" title={lead.email}>
                   {lead.email}
                 </TableCell>
                 <TableCell>{lead.telefone || "-"}</TableCell>
@@ -236,9 +214,7 @@ export function LeadsTable({
                   </Badge>
                 </TableCell>
                 <TableCell>
-                  <Badge
-                    className={`${getStatusColor(lead.status)} text-white border-0`}
-                  >
+                  <Badge className={`${getStatusColor(lead.status)} text-white border-0`}>
                     {statusLabels[lead.status] || lead.status}
                   </Badge>
                 </TableCell>
@@ -257,7 +233,7 @@ export function LeadsTable({
                   })}
                 </TableCell>
                 {!isReadOnly && (
-                  <TableCell onClick={e => e.stopPropagation()}>
+                  <TableCell onClick={(e) => e.stopPropagation()}>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <Button variant="ghost" className="h-8 w-8 p-0">
@@ -270,17 +246,11 @@ export function LeadsTable({
                         <DropdownMenuItem onClick={() => onLeadClick(lead.id)}>
                           Ver detalhes
                         </DropdownMenuItem>
-                        <DropdownMenuItem
-                          onClick={() =>
-                            navigator.clipboard.writeText(lead.email)
-                          }
-                        >
+                        <DropdownMenuItem onClick={() => navigator.clipboard.writeText(lead.email)}>
                           Copiar email
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem className="text-red-600">
-                          Deletar lead
-                        </DropdownMenuItem>
+                        <DropdownMenuItem className="text-red-600">Deletar lead</DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </TableCell>
@@ -330,32 +300,19 @@ export function LeadsTable({
               <DropdownMenuLabel>Mudar Status para...</DropdownMenuLabel>
               <DropdownMenuSeparator />
               {Object.entries(statusLabels).map(([key, label]) => (
-                <DropdownMenuItem
-                  key={key}
-                  onClick={() => executeBulkStatus(key)}
-                >
+                <DropdownMenuItem key={key} onClick={() => executeBulkStatus(key)}>
                   {label}
                 </DropdownMenuItem>
               ))}
             </DropdownMenuContent>
           </DropdownMenu>
 
-          <Button
-            variant="destructive"
-            size="sm"
-            className="gap-2"
-            onClick={executeBulkDelete}
-          >
+          <Button variant="destructive" size="sm" className="gap-2" onClick={executeBulkDelete}>
             <Trash2 className="h-4 w-4" />
             Deletar
           </Button>
 
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => setSelectedIds([])}
-            className="ml-2"
-          >
+          <Button variant="ghost" size="icon" onClick={() => setSelectedIds([])} className="ml-2">
             <X className="h-4 w-4" />
           </Button>
         </div>

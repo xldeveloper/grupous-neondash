@@ -1,16 +1,16 @@
-import { router, publicProcedure } from "./_core/trpc";
 import { systemRouter } from "./_core/systemRouter";
-import { mentoradosRouter } from "./mentoradosRouter";
+import { router } from "./_core/trpc";
+import { atividadesRouter } from "./atividadesRouter";
+import { diagnosticoRouter } from "./diagnostico";
 import { gamificacaoRouter } from "./gamificacaoRouter";
-import { moltbotRouter } from "./moltbotRouter";
+import { interactionTemplatesRouter } from "./interactionTemplatesRouter";
 import { leadsRouter } from "./leadsRouter";
-import { tasksRouter } from "./routers/tasks";
+import { mentoradosRouter } from "./mentoradosRouter";
+import { moltbotRouter } from "./moltbotRouter";
+import { authRouter } from "./routers/auth";
 import { classesRouter } from "./routers/classes";
 import { playbookRouter } from "./routers/playbook";
-import { authRouter } from "./routers/auth";
-import { atividadesRouter } from "./atividadesRouter";
-import { interactionTemplatesRouter } from "./interactionTemplatesRouter";
-import { diagnosticoRouter } from "./diagnostico";
+import { tasksRouter } from "./routers/tasks";
 
 export const appRouter = router({
   system: systemRouter,

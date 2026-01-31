@@ -1,7 +1,7 @@
-import { router, publicProcedure, protectedProcedure } from "../_core/trpc";
+import { and, eq, isNull } from "drizzle-orm";
+import { mentorados } from "../../drizzle/schema";
+import { protectedProcedure, publicProcedure, router } from "../_core/trpc";
 import { getDb } from "../db";
-import { mentorados, users } from "../../drizzle/schema";
-import { eq, isNull, and } from "drizzle-orm";
 
 export const authRouter = router({
   me: publicProcedure.query(({ ctx }) => {
@@ -24,19 +24,13 @@ export const authRouter = router({
     // Check for mentorado by email (unlinked)
     const mentoradoByEmail = user.email
       ? await db.query.mentorados.findFirst({
-          where: and(
-            eq(mentorados.email, user.email),
-            isNull(mentorados.userId)
-          ),
+          where: and(eq(mentorados.email, user.email), isNull(mentorados.userId)),
         })
       : null;
 
     // Count total mentorados with same email (linked and unlinked)
     const allMentoradosWithEmail = user.email
-      ? await db
-          .select()
-          .from(mentorados)
-          .where(eq(mentorados.email, user.email))
+      ? await db.select().from(mentorados).where(eq(mentorados.email, user.email))
       : [];
 
     // Build status
@@ -121,11 +115,6 @@ export const authRouter = router({
       };
     }
 
-    // Attempt manual link if context missed it (e.g. race condition or email mismatch handled elsewhere)
-    console.log(
-      `[Auth] Manual sync requested for user ${user.id} (${user.email})`
-    );
-
     let linked = false;
     let mentoradoId = null;
 
@@ -151,9 +140,7 @@ export const authRouter = router({
       linked,
       user,
       mentoradoId,
-      message: linked
-        ? "Linked successfully"
-        : "No matching unlinked mentorado found",
+      message: linked ? "Linked successfully" : "No matching unlinked mentorado found",
     };
   }),
 });

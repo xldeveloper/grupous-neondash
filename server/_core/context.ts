@@ -1,15 +1,10 @@
+import { createClerkClient, getAuth } from "@clerk/express";
 import type { CreateExpressContextOptions } from "@trpc/server/adapters/express";
 import { eq } from "drizzle-orm";
-import {
-  type Mentorado,
-  type User,
-  mentorados,
-  users,
-} from "../../drizzle/schema";
-import { createClerkClient, getAuth } from "@clerk/express";
+import { type Mentorado, mentorados, type User, users } from "../../drizzle/schema";
 import { getDb, upsertUserFromClerk } from "../db";
-import { getCachedSession, setCachedSession } from "./sessionCache";
 import { createLogger, generateRequestId } from "./logger";
+import { getCachedSession, setCachedSession } from "./sessionCache";
 
 // Initialize Clerk client for backend API calls
 const clerkClient = createClerkClient({
@@ -23,9 +18,7 @@ export type TrpcContext = {
   mentorado: Mentorado | null;
 };
 
-export async function createContext(
-  opts: CreateExpressContextOptions
-): Promise<TrpcContext> {
+export async function createContext(opts: CreateExpressContextOptions): Promise<TrpcContext> {
   const auth = getAuth(opts.req);
   const requestId = generateRequestId();
   const logger = createLogger({
@@ -66,9 +59,7 @@ export async function createContext(
     }
   } else {
     // Cache miss: fetch from Clerk and sync
-    let clerkUser: Awaited<
-      ReturnType<typeof clerkClient.users.getUser>
-    > | null = null;
+    let clerkUser: Awaited<ReturnType<typeof clerkClient.users.getUser>> | null = null;
     try {
       clerkUser = await clerkClient.users.getUser(auth.userId);
     } catch (error) {

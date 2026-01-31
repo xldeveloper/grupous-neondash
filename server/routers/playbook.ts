@@ -1,12 +1,8 @@
-import { z } from "zod";
-import { router, protectedProcedure, publicProcedure } from "../_core/trpc";
-import {
-  playbookModules,
-  playbookItems,
-  playbookProgress,
-} from "../../drizzle/schema";
-import { eq, and, asc, desc, inArray } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
+import { and, asc, eq } from "drizzle-orm";
+import { z } from "zod";
+import { playbookItems, playbookModules, playbookProgress } from "../../drizzle/schema";
+import { protectedProcedure, router } from "../_core/trpc";
 import { getDb } from "../db";
 
 export const playbookRouter = router({
@@ -16,16 +12,10 @@ export const playbookRouter = router({
       const db = getDb();
       // Fetch modules, optionally filtered by turma or global (null)
       // For now, let's fetch all modules and sort by order
-      const modules = await db
-        .select()
-        .from(playbookModules)
-        .orderBy(asc(playbookModules.order));
+      const modules = await db.select().from(playbookModules).orderBy(asc(playbookModules.order));
 
       // Fetch all items for these modules
-      const items = await db
-        .select()
-        .from(playbookItems)
-        .orderBy(asc(playbookItems.order));
+      const items = await db.select().from(playbookItems).orderBy(asc(playbookItems.order));
 
       // Fetch progress for current user
       let progress: any[] = [];
@@ -39,10 +29,10 @@ export const playbookRouter = router({
       }
 
       // Structure the response
-      return modules.map(module => {
-        const moduleItems = items.filter(i => i.moduleId === module.id);
-        const moduleItemsWithProgress = moduleItems.map(item => {
-          const prog = progress.find(p => p.itemId === item.id);
+      return modules.map((module) => {
+        const moduleItems = items.filter((i) => i.moduleId === module.id);
+        const moduleItemsWithProgress = moduleItems.map((item) => {
+          const prog = progress.find((p) => p.itemId === item.id);
           return {
             ...item,
             isCompleted: !!prog,
@@ -107,8 +97,7 @@ export const playbookRouter = router({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      if (ctx.user?.role !== "admin")
-        throw new TRPCError({ code: "FORBIDDEN" });
+      if (ctx.user?.role !== "admin") throw new TRPCError({ code: "FORBIDDEN" });
       const db = getDb();
       return await db.insert(playbookModules).values(input).returning();
     }),
@@ -125,8 +114,7 @@ export const playbookRouter = router({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      if (ctx.user?.role !== "admin")
-        throw new TRPCError({ code: "FORBIDDEN" });
+      if (ctx.user?.role !== "admin") throw new TRPCError({ code: "FORBIDDEN" });
       const db = getDb();
       return await db.insert(playbookItems).values(input).returning();
     }),

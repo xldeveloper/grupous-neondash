@@ -1,10 +1,10 @@
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { cn } from "@/lib/utils";
-import { Calendar, MoreHorizontal, Phone, MessageCircle } from "lucide-react";
+import { MessageCircle, Phone } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { cn } from "@/lib/utils";
 
 interface Lead {
   id: number;
@@ -32,14 +32,7 @@ export function LeadCard({
   onToggleSelect,
   isSelectMode,
 }: LeadCardProps) {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: `lead-${lead.id}`,
     data: lead,
     disabled: isSelectMode, // Disable drag when in selection mode
@@ -60,7 +53,7 @@ export function LeadCard({
   // Initials for avatar
   const initials = lead.nome
     .split(" ")
-    .map(n => n[0])
+    .map((n) => n[0])
     .slice(0, 2)
     .join("")
     .toUpperCase();
@@ -71,7 +64,7 @@ export function LeadCard({
       style={style}
       {...attributes}
       {...listeners}
-      onClick={e => {
+      onClick={(e) => {
         // Prevent click when checking checkbox
         if ((e.target as HTMLElement).closest('[role="checkbox"]')) return;
         onClick();
@@ -103,9 +96,7 @@ export function LeadCard({
       {/* Header: Avatar, Name, Company */}
       <div className="flex items-start gap-3">
         <Avatar className="h-10 w-10 border border-border/50">
-          <AvatarImage
-            src={`https://ui-avatars.com/api/?name=${lead.nome}&background=random`}
-          />
+          <AvatarImage src={`https://ui-avatars.com/api/?name=${lead.nome}&background=random`} />
           <AvatarFallback className="text-xs bg-muted text-muted-foreground">
             {initials}
           </AvatarFallback>
@@ -116,9 +107,7 @@ export function LeadCard({
           </h4>
           <div className="flex items-center gap-1.5 text-xs text-muted-foreground truncate">
             {lead.cargo && <span className="font-medium">{lead.cargo}</span>}
-            {lead.cargo && lead.empresa && (
-              <span className="text-border">•</span>
-            )}
+            {lead.cargo && lead.empresa && <span className="text-border">•</span>}
             {lead.empresa && <span>{lead.empresa}</span>}
           </div>
         </div>
@@ -127,7 +116,7 @@ export function LeadCard({
       {/* Tags Row */}
       {lead.tags && lead.tags.length > 0 && (
         <div className="flex flex-wrap gap-1">
-          {lead.tags.slice(0, 3).map(tag => (
+          {lead.tags.slice(0, 3).map((tag) => (
             <span
               key={tag}
               className="text-[10px] px-1.5 py-0.5 rounded-md bg-secondary text-secondary-foreground font-medium border border-secondary-foreground/10"

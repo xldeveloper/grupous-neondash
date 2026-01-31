@@ -31,9 +31,7 @@ export type GenerateImageResponse = {
   url?: string;
 };
 
-export async function generateImage(
-  options: GenerateImageOptions
-): Promise<GenerateImageResponse> {
+export async function generateImage(options: GenerateImageOptions): Promise<GenerateImageResponse> {
   if (!ENV.llmApiUrl) {
     throw new Error("LLM_API_URL is not configured");
   }
@@ -42,13 +40,8 @@ export async function generateImage(
   }
 
   // Build the full URL by appending the service path to the base URL
-  const baseUrl = ENV.llmApiUrl.endsWith("/")
-    ? ENV.llmApiUrl
-    : `${ENV.llmApiUrl}/`;
-  const fullUrl = new URL(
-    "images.v1.ImageService/GenerateImage",
-    baseUrl
-  ).toString();
+  const baseUrl = ENV.llmApiUrl.endsWith("/") ? ENV.llmApiUrl : `${ENV.llmApiUrl}/`;
+  const fullUrl = new URL("images.v1.ImageService/GenerateImage", baseUrl).toString();
 
   const response = await fetch(fullUrl, {
     method: "POST",
@@ -81,11 +74,7 @@ export async function generateImage(
   const buffer = Buffer.from(base64Data, "base64");
 
   // Save to S3
-  const { url } = await storagePut(
-    `generated/${Date.now()}.png`,
-    buffer,
-    result.image.mimeType
-  );
+  const { url } = await storagePut(`generated/${Date.now()}.png`, buffer, result.image.mimeType);
   return {
     url,
   };

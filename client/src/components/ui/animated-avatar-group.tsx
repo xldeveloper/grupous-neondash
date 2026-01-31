@@ -1,4 +1,3 @@
-import * as React from "react";
 import { motion } from "motion/react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
@@ -13,11 +12,7 @@ interface AnimatedAvatarGroupProps {
   className?: string;
 }
 
-export function AnimatedAvatarGroup({
-  avatars,
-  max = 4,
-  className,
-}: AnimatedAvatarGroupProps) {
+export function AnimatedAvatarGroup({ avatars, max = 4, className }: AnimatedAvatarGroupProps) {
   const visibleAvatars = avatars.slice(0, max);
   const remaining = avatars.length - max;
 

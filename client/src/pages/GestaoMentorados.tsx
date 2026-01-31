@@ -1,10 +1,10 @@
+import { motion } from "motion/react";
+import { AdminOverview } from "@/components/admin/AdminOverview";
+import { LinkEmailsView } from "@/components/admin/LinkEmailsView";
+import { MenteeManagementView } from "@/components/admin/MenteeManagementView";
 import DashboardLayout from "@/components/DashboardLayout";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { AdminOverview } from "@/components/admin/AdminOverview";
-import { MenteeManagementView } from "@/components/admin/MenteeManagementView";
-import { LinkEmailsView } from "@/components/admin/LinkEmailsView";
-import { motion } from "motion/react";
-import { slideUp, staggerContainer, fadeIn } from "@/lib/animation-variants";
+import { fadeIn, slideUp, staggerContainer } from "@/lib/animation-variants";
 
 export default function GestaoMentorados() {
   return (
@@ -25,8 +25,7 @@ export default function GestaoMentorados() {
               Área Administrativa
             </h1>
             <p className="text-slate-500 mt-1">
-              Gerenciamento completo de mentorados, acessos e métricas do
-              sistema
+              Gerenciamento completo de mentorados, acessos e métricas do sistema
             </p>
           </div>
         </motion.div>

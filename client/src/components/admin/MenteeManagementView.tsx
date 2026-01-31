@@ -1,41 +1,22 @@
+import { LayoutDashboard, Mail, Pencil, Plus, Target, Trash2, Users } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
+import { Link } from "wouter";
+import { ProfileCard } from "@/components/profile-card";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-  DialogFooter,
-  DialogClose,
 } from "@/components/ui/dialog";
-import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { trpc } from "@/lib/trpc";
-import { useState } from "react";
-import {
-  Plus,
-  Pencil,
-  Trash2,
-  Mail,
-  Target,
-  Users,
-  UserCheck,
-  UserX,
-  LayoutDashboard,
-} from "lucide-react";
-import { Link } from "wouter";
-import { toast } from "sonner";
-import { ProfileCard } from "@/components/profile-card";
 
 type Turma = "neon";
 
@@ -80,7 +61,7 @@ export function MenteeManagementView() {
       setIsCreateOpen(false);
       setForm(defaultForm);
     },
-    onError: error => {
+    onError: (error) => {
       toast.error(`Erro ao criar: ${error.message}`);
     },
   });
@@ -92,7 +73,7 @@ export function MenteeManagementView() {
       setIsEditOpen(false);
       setSelectedMentorado(null);
     },
-    onError: error => {
+    onError: (error) => {
       toast.error(`Erro ao atualizar: ${error.message}`);
     },
   });
@@ -104,7 +85,7 @@ export function MenteeManagementView() {
       setIsDeleteOpen(false);
       setSelectedMentorado(null);
     },
-    onError: error => {
+    onError: (error) => {
       toast.error(`Erro ao remover: ${error.message}`);
     },
   });
@@ -172,10 +153,10 @@ export function MenteeManagementView() {
     comEmail: mentorados?.filter((m: any) => m.email).length || 0,
   };
 
-  const getInitials = (name: string) => {
+  const _getInitials = (name: string) => {
     return name
       .split(" ")
-      .map(n => n[0])
+      .map((n) => n[0])
       .join("")
       .toUpperCase()
       .slice(0, 2);
@@ -204,9 +185,7 @@ export function MenteeManagementView() {
                 <Label>Nome Completo *</Label>
                 <Input
                   value={form.nomeCompleto}
-                  onChange={e =>
-                    setForm({ ...form, nomeCompleto: e.target.value })
-                  }
+                  onChange={(e) => setForm({ ...form, nomeCompleto: e.target.value })}
                   placeholder="Nome do mentorado"
                 />
               </div>
@@ -215,7 +194,7 @@ export function MenteeManagementView() {
                 <Input
                   type="email"
                   value={form.email}
-                  onChange={e => setForm({ ...form, email: e.target.value })}
+                  onChange={(e) => setForm({ ...form, email: e.target.value })}
                   placeholder="email@exemplo.com"
                 />
               </div>
@@ -223,7 +202,7 @@ export function MenteeManagementView() {
                 <Label>URL da Foto</Label>
                 <Input
                   value={form.fotoUrl}
-                  onChange={e => setForm({ ...form, fotoUrl: e.target.value })}
+                  onChange={(e) => setForm({ ...form, fotoUrl: e.target.value })}
                   placeholder="https://..."
                 />
               </div>
@@ -239,7 +218,7 @@ export function MenteeManagementView() {
                     <Input
                       type="number"
                       value={form.metaFaturamento}
-                      onChange={e =>
+                      onChange={(e) =>
                         setForm({
                           ...form,
                           metaFaturamento: Number(e.target.value),
@@ -252,7 +231,7 @@ export function MenteeManagementView() {
                     <Input
                       type="number"
                       value={form.metaLeads}
-                      onChange={e =>
+                      onChange={(e) =>
                         setForm({
                           ...form,
                           metaLeads: Number(e.target.value),
@@ -265,7 +244,7 @@ export function MenteeManagementView() {
                     <Input
                       type="number"
                       value={form.metaProcedimentos}
-                      onChange={e =>
+                      onChange={(e) =>
                         setForm({
                           ...form,
                           metaProcedimentos: Number(e.target.value),
@@ -278,9 +257,7 @@ export function MenteeManagementView() {
                     <Input
                       type="number"
                       value={form.metaPosts}
-                      onChange={e =>
-                        setForm({ ...form, metaPosts: Number(e.target.value) })
-                      }
+                      onChange={(e) => setForm({ ...form, metaPosts: Number(e.target.value) })}
                     />
                   </div>
                   <div className="space-y-1">
@@ -288,7 +265,7 @@ export function MenteeManagementView() {
                     <Input
                       type="number"
                       value={form.metaStories}
-                      onChange={e =>
+                      onChange={(e) =>
                         setForm({
                           ...form,
                           metaStories: Number(e.target.value),
@@ -324,9 +301,7 @@ export function MenteeManagementView() {
                 <Users className="w-5 h-5 text-neon-blue" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-slate-900">
-                  {stats.total}
-                </p>
+                <p className="text-2xl font-bold text-slate-900">{stats.total}</p>
                 <p className="text-xs text-slate-500">Total</p>
               </div>
             </div>
@@ -340,9 +315,7 @@ export function MenteeManagementView() {
                 <Mail className="w-5 h-5 text-green-600" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-slate-900">
-                  {stats.comEmail}
-                </p>
+                <p className="text-2xl font-bold text-slate-900">{stats.comEmail}</p>
                 <p className="text-xs text-slate-500">Com Email</p>
               </div>
             </div>
@@ -352,9 +325,7 @@ export function MenteeManagementView() {
 
       {/* Mentorados List */}
       <div className="space-y-4">
-        <h2 className="text-xl font-bold text-slate-900 tracking-tight">
-          Lista de Mentorados
-        </h2>
+        <h2 className="text-xl font-bold text-slate-900 tracking-tight">Lista de Mentorados</h2>
 
         {isLoading ? (
           <div className="text-center py-12 text-slate-500 bg-slate-50 rounded-lg">
@@ -370,9 +341,9 @@ export function MenteeManagementView() {
               <ProfileCard
                 key={mentorado.id}
                 name={mentorado.nomeCompleto}
-                role="Mentorado"
                 email={mentorado.email || undefined}
                 imageUrl={mentorado.fotoUrl || undefined}
+                role="Mentorado"
                 turma={mentorado.turma}
                 badges={[]} // Could add active/inactive here if needed
                 stats={[
@@ -393,15 +364,8 @@ export function MenteeManagementView() {
                     >
                       <Pencil className="w-3 h-3 mr-1.5" /> Editar
                     </Button>
-                    <Link
-                      href={`/leads?mentoradoId=${mentorado.id}`}
-                      className="flex-1"
-                    >
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="w-full text-xs h-8"
-                      >
+                    <Link href={`/leads?mentoradoId=${mentorado.id}`} className="flex-1">
+                      <Button variant="outline" size="sm" className="w-full text-xs h-8">
                         <LayoutDashboard className="w-3 h-3 mr-1.5" /> CRM
                       </Button>
                     </Link>
@@ -432,9 +396,7 @@ export function MenteeManagementView() {
               <Label>Nome Completo *</Label>
               <Input
                 value={form.nomeCompleto}
-                onChange={e =>
-                  setForm({ ...form, nomeCompleto: e.target.value })
-                }
+                onChange={(e) => setForm({ ...form, nomeCompleto: e.target.value })}
               />
             </div>
             <div className="space-y-2">
@@ -442,14 +404,14 @@ export function MenteeManagementView() {
               <Input
                 type="email"
                 value={form.email}
-                onChange={e => setForm({ ...form, email: e.target.value })}
+                onChange={(e) => setForm({ ...form, email: e.target.value })}
               />
             </div>
             <div className="space-y-2">
               <Label>URL da Foto</Label>
               <Input
                 value={form.fotoUrl}
-                onChange={e => setForm({ ...form, fotoUrl: e.target.value })}
+                onChange={(e) => setForm({ ...form, fotoUrl: e.target.value })}
               />
             </div>
 
@@ -464,7 +426,7 @@ export function MenteeManagementView() {
                   <Input
                     type="number"
                     value={form.metaFaturamento}
-                    onChange={e =>
+                    onChange={(e) =>
                       setForm({
                         ...form,
                         metaFaturamento: Number(e.target.value),
@@ -477,9 +439,7 @@ export function MenteeManagementView() {
                   <Input
                     type="number"
                     value={form.metaLeads}
-                    onChange={e =>
-                      setForm({ ...form, metaLeads: Number(e.target.value) })
-                    }
+                    onChange={(e) => setForm({ ...form, metaLeads: Number(e.target.value) })}
                   />
                 </div>
                 <div className="space-y-1">
@@ -487,7 +447,7 @@ export function MenteeManagementView() {
                   <Input
                     type="number"
                     value={form.metaProcedimentos}
-                    onChange={e =>
+                    onChange={(e) =>
                       setForm({
                         ...form,
                         metaProcedimentos: Number(e.target.value),
@@ -500,9 +460,7 @@ export function MenteeManagementView() {
                   <Input
                     type="number"
                     value={form.metaPosts}
-                    onChange={e =>
-                      setForm({ ...form, metaPosts: Number(e.target.value) })
-                    }
+                    onChange={(e) => setForm({ ...form, metaPosts: Number(e.target.value) })}
                   />
                 </div>
                 <div className="space-y-1">
@@ -510,7 +468,7 @@ export function MenteeManagementView() {
                   <Input
                     type="number"
                     value={form.metaStories}
-                    onChange={e =>
+                    onChange={(e) =>
                       setForm({
                         ...form,
                         metaStories: Number(e.target.value),
@@ -543,9 +501,8 @@ export function MenteeManagementView() {
             <DialogTitle>Confirmar Exclusão</DialogTitle>
           </DialogHeader>
           <p className="text-slate-600">
-            Tem certeza que deseja remover{" "}
-            <strong>{selectedMentorado?.nomeCompleto}</strong>? Esta ação não
-            pode ser desfeita.
+            Tem certeza que deseja remover <strong>{selectedMentorado?.nomeCompleto}</strong>? Esta
+            ação não pode ser desfeita.
           </p>
           <DialogFooter>
             <DialogClose asChild>

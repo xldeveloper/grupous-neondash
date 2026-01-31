@@ -1,14 +1,14 @@
-import { getDb } from "./db";
+import { and, desc, eq } from "drizzle-orm";
 import {
   badges,
   mentoradoBadges,
-  rankingMensal,
-  metasProgressivas,
-  notificacoes,
   mentorados,
+  metasProgressivas,
   metricasMensais,
+  notificacoes,
+  rankingMensal,
 } from "../drizzle/schema";
-import { eq, and, desc } from "drizzle-orm";
+import { getDb } from "./db";
 import { sendEmail } from "./emailService";
 
 // Badge definitions with criteria
@@ -170,11 +170,7 @@ export async function initializeBadges() {
   if (!db) return;
 
   for (const badge of BADGES_CONFIG) {
-    const existing = await db
-      .select()
-      .from(badges)
-      .where(eq(badges.codigo, badge.codigo))
-      .limit(1);
+    const existing = await db.select().from(badges).where(eq(badges.codigo, badge.codigo)).limit(1);
     if (existing.length === 0) {
       await db.insert(badges).values(badge);
     }
@@ -182,18 +178,11 @@ export async function initializeBadges() {
 }
 
 // Check and award badges for a mentorado
-export async function checkAndAwardBadges(
-  mentoradoId: number,
-  ano: number,
-  mes: number
-) {
+export async function checkAndAwardBadges(mentoradoId: number, ano: number, mes: number) {
   const db = await getDb();
   if (!db) return [];
 
-  const [mentorado] = await db
-    .select()
-    .from(mentorados)
-    .where(eq(mentorados.id, mentoradoId));
+  const [mentorado] = await db.select().from(mentorados).where(eq(mentorados.id, mentoradoId));
   if (!mentorado) return [];
 
   const [metricas] = await db
@@ -235,9 +224,7 @@ export async function checkAndAwardBadges(
       )
     );
 
-  const earnedBadgeIds = new Set(
-    earnedBadges.map((b: { badgeId: number }) => b.badgeId)
-  );
+  const earnedBadgeIds = new Set(earnedBadges.map((b: { badgeId: number }) => b.badgeId));
   const newBadges: typeof allBadges = [];
 
   for (const badge of allBadges) {
@@ -253,8 +240,7 @@ export async function checkAndAwardBadges(
       case "crescimento":
         if (metricasAnterior && metricasAnterior.faturamento > 0) {
           const crescimento =
-            ((metricas.faturamento - metricasAnterior.faturamento) /
-              metricasAnterior.faturamento) *
+            ((metricas.faturamento - metricasAnterior.faturamento) / metricasAnterior.faturamento) *
             100;
           earned = crescimento >= criterio.valor;
         }
@@ -307,10 +293,7 @@ export async function calculateMonthlyRanking(ano: number, mes: number) {
   if (!db) return;
 
   // Get all active mentorados
-  const mentoradosAtivos = await db
-    .select()
-    .from(mentorados)
-    .where(eq(mentorados.ativo, "sim"));
+  const mentoradosAtivos = await db.select().from(mentorados).where(eq(mentorados.ativo, "sim"));
 
   const rankings: {
     mentoradoId: number;
@@ -337,32 +320,17 @@ export async function calculateMonthlyRanking(ano: number, mes: number) {
     let bonus = 0;
 
     // Faturamento score (max 40 points)
-    const faturamentoPercent = Math.min(
-      (metricas.faturamento / m.metaFaturamento) * 100,
-      150
-    );
+    const faturamentoPercent = Math.min((metricas.faturamento / m.metaFaturamento) * 100, 150);
     pontuacao += Math.round(faturamentoPercent * 0.4);
 
     // Content score (max 20 points)
-    const postsPercent = Math.min(
-      (metricas.postsFeed / (m.metaPosts || 12)) * 100,
-      150
-    );
-    const storiesPercent = Math.min(
-      (metricas.stories / (m.metaStories || 60)) * 100,
-      150
-    );
+    const postsPercent = Math.min((metricas.postsFeed / (m.metaPosts || 12)) * 100, 150);
+    const storiesPercent = Math.min((metricas.stories / (m.metaStories || 60)) * 100, 150);
     pontuacao += Math.round(((postsPercent + storiesPercent) / 2) * 0.2);
 
     // Operational score (max 20 points)
-    const leadsPercent = Math.min(
-      (metricas.leads / (m.metaLeads || 50)) * 100,
-      150
-    );
-    const procPercent = Math.min(
-      (metricas.procedimentos / (m.metaProcedimentos || 10)) * 100,
-      150
-    );
+    const leadsPercent = Math.min((metricas.leads / (m.metaLeads || 50)) * 100, 150);
+    const procPercent = Math.min((metricas.procedimentos / (m.metaProcedimentos || 10)) * 100, 150);
     pontuacao += Math.round(((leadsPercent + procPercent) / 2) * 0.2);
 
     // Badges bonus (max 20 points)
@@ -378,10 +346,7 @@ export async function calculateMonthlyRanking(ano: number, mes: number) {
       );
 
     for (const b of badgesEarned) {
-      const [badge] = await db
-        .select()
-        .from(badges)
-        .where(eq(badges.id, b.badgeId));
+      const [badge] = await db.select().from(badges).where(eq(badges.id, b.badgeId));
       if (badge) bonus += badge.pontos;
     }
     bonus = Math.min(bonus, 20);
@@ -394,9 +359,7 @@ export async function calculateMonthlyRanking(ano: number, mes: number) {
   rankings.sort((a, b) => b.pontuacao - a.pontuacao);
 
   // Delete existing rankings for this month
-  await db
-    .delete(rankingMensal)
-    .where(and(eq(rankingMensal.ano, ano), eq(rankingMensal.mes, mes)));
+  await db.delete(rankingMensal).where(and(eq(rankingMensal.ano, ano), eq(rankingMensal.mes, mes)));
 
   // Insert new rankings
   for (let i = 0; i < rankings.length; i++) {
@@ -413,10 +376,7 @@ export async function calculateMonthlyRanking(ano: number, mes: number) {
 
     // Award ranking badges
     if (i < 3) {
-      const [topBadge] = await db
-        .select()
-        .from(badges)
-        .where(eq(badges.codigo, "top_3"));
+      const [topBadge] = await db.select().from(badges).where(eq(badges.codigo, "top_3"));
       if (topBadge) {
         const existing = await db
           .select()
@@ -470,18 +430,11 @@ export async function calculateMonthlyRanking(ano: number, mes: number) {
 }
 
 // Update progressive goals when meta is achieved
-export async function updateProgressiveGoals(
-  mentoradoId: number,
-  ano: number,
-  mes: number
-) {
+export async function updateProgressiveGoals(mentoradoId: number, ano: number, mes: number) {
   const db = await getDb();
   if (!db) return;
 
-  const [mentorado] = await db
-    .select()
-    .from(mentorados)
-    .where(eq(mentorados.id, mentoradoId));
+  const [mentorado] = await db.select().from(mentorados).where(eq(mentorados.id, mentoradoId));
   if (!mentorado) return;
 
   const [metricas] = await db
@@ -532,10 +485,7 @@ export async function updateProgressiveGoals(
         .select()
         .from(metasProgressivas)
         .where(
-          and(
-            eq(metasProgressivas.mentoradoId, mentoradoId),
-            eq(metasProgressivas.tipo, t.tipo)
-          )
+          and(eq(metasProgressivas.mentoradoId, mentoradoId), eq(metasProgressivas.tipo, t.tipo))
         );
 
       if (!metaProgressiva) {
@@ -551,9 +501,7 @@ export async function updateProgressiveGoals(
       } else {
         // Update existing progressive goal
         const novaVezes = metaProgressiva.vezesAtingida + 1;
-        const novaMeta = Math.round(
-          metaProgressiva.metaInicial * Math.pow(1.1, novaVezes)
-        ); // 10% compound increase
+        const novaMeta = Math.round(metaProgressiva.metaInicial * 1.1 ** novaVezes); // 10% compound increase
 
         await db
           .update(metasProgressivas)
@@ -580,13 +528,9 @@ export async function sendMetricsReminders() {
   if (![1, 5, 10].includes(diaDoMes)) return;
 
   const mesAnterior = hoje.getMonth() === 0 ? 12 : hoje.getMonth();
-  const anoAnterior =
-    hoje.getMonth() === 0 ? hoje.getFullYear() - 1 : hoje.getFullYear();
+  const anoAnterior = hoje.getMonth() === 0 ? hoje.getFullYear() - 1 : hoje.getFullYear();
 
-  const mentoradosAtivos = await db
-    .select()
-    .from(mentorados)
-    .where(eq(mentorados.ativo, "sim"));
+  const mentoradosAtivos = await db.select().from(mentorados).where(eq(mentorados.ativo, "sim"));
 
   for (const m of mentoradosAtivos) {
     // Check if metrics were already submitted
@@ -627,10 +571,7 @@ export async function checkUnmetGoalsAlerts(ano: number, mes: number) {
   const db = await getDb();
   if (!db) return;
 
-  const mentoradosAtivos = await db
-    .select()
-    .from(mentorados)
-    .where(eq(mentorados.ativo, "sim"));
+  const mentoradosAtivos = await db.select().from(mentorados).where(eq(mentorados.ativo, "sim"));
 
   for (const m of mentoradosAtivos) {
     const [metricas] = await db
@@ -654,9 +595,7 @@ export async function checkUnmetGoalsAlerts(ano: number, mes: number) {
       );
     }
     if (metricas.leads < (m.metaLeads || 50) * 0.8) {
-      alertas.push(
-        `Leads (${((metricas.leads / (m.metaLeads || 50)) * 100).toFixed(0)}% da meta)`
-      );
+      alertas.push(`Leads (${((metricas.leads / (m.metaLeads || 50)) * 100).toFixed(0)}% da meta)`);
     }
     if (metricas.postsFeed < (m.metaPosts || 12) * 0.8) {
       alertas.push(
@@ -716,10 +655,7 @@ export async function getRanking(ano: number, mes: number) {
 }
 
 // Get notifications for a mentorado
-export async function getNotificacoes(
-  mentoradoId: number,
-  apenasNaoLidas = false
-) {
+export async function getNotificacoes(mentoradoId: number, apenasNaoLidas = false) {
   const db = await getDb();
   if (!db) return [];
 
@@ -740,10 +676,7 @@ export async function markNotificationRead(notificacaoId: number) {
   const db = await getDb();
   if (!db) return;
 
-  await db
-    .update(notificacoes)
-    .set({ lida: "sim" })
-    .where(eq(notificacoes.id, notificacaoId));
+  await db.update(notificacoes).set({ lida: "sim" }).where(eq(notificacoes.id, notificacaoId));
 }
 
 // Get all badges
@@ -759,8 +692,5 @@ export async function getProgressiveGoals(mentoradoId: number) {
   const db = await getDb();
   if (!db) return [];
 
-  return db
-    .select()
-    .from(metasProgressivas)
-    .where(eq(metasProgressivas.mentoradoId, mentoradoId));
+  return db.select().from(metasProgressivas).where(eq(metasProgressivas.mentoradoId, mentoradoId));
 }

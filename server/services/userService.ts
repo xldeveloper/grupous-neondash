@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
+import { mentorados, users } from "../../drizzle/schema";
 import { getDb } from "../db";
-import { users, mentorados } from "../../drizzle/schema";
 import { createMentorado, getMentoradoByEmail } from "../mentorados";
 
 interface ClerkUserPayload {
@@ -19,94 +19,68 @@ interface ClerkUserPayload {
 export async function syncClerkUser(user: ClerkUserPayload) {
   const db = await getDb();
   if (!db) {
-    console.error("[UserService] Database connection failed");
     return;
   }
 
   const primaryEmail = user.email_addresses[0]?.email_address;
   if (!primaryEmail) {
-    console.warn(`[UserService] User ${user.id} has no email address`);
     return;
   }
 
   const fullName = [user.first_name, user.last_name].filter(Boolean).join(" ");
-
-  console.log(`[UserService] Syncing user ${user.id} (${primaryEmail})`);
-
-  try {
-    // 1. Upsert User
-    await db
-      .insert(users)
-      .values({
-        clerkId: user.id,
+  // 1. Upsert User
+  await db
+    .insert(users)
+    .values({
+      clerkId: user.id,
+      email: primaryEmail,
+      name: fullName || "User",
+      imageUrl: user.image_url,
+      role: "user", // Default role
+    })
+    .onConflictDoUpdate({
+      target: users.clerkId,
+      set: {
         email: primaryEmail,
         name: fullName || "User",
         imageUrl: user.image_url,
-        role: "user", // Default role
-      })
-      .onConflictDoUpdate({
-        target: users.clerkId,
-        set: {
-          email: primaryEmail,
-          name: fullName || "User",
-          imageUrl: user.image_url,
-          updatedAt: new Date(),
-        },
-      });
-
-    // 2. Get the new/updated User ID
-    const userRecord = await db.query.users.findFirst({
-      where: eq(users.clerkId, user.id),
-      columns: { id: true },
+        updatedAt: new Date(),
+      },
     });
 
-    if (!userRecord) {
-      console.error(
-        `[UserService] Failed to retrieve user after insert: ${user.id}`
-      );
-      return;
-    }
+  // 2. Get the new/updated User ID
+  const userRecord = await db.query.users.findFirst({
+    where: eq(users.clerkId, user.id),
+    columns: { id: true },
+  });
 
-    // 3. Link or Create Mentorado
-    const existingMentorado = await getMentoradoByEmail(primaryEmail);
+  if (!userRecord) {
+    return;
+  }
 
-    if (existingMentorado) {
-      // Link existing mentorado
-      if (!existingMentorado.userId) {
-        console.log(
-          `[UserService] Linking existing mentorado ${existingMentorado.id} to user ${userRecord.id}`
-        );
-        await db
-          .update(mentorados)
-          .set({ userId: userRecord.id })
-          .where(eq(mentorados.id, existingMentorado.id));
-      } else {
-        console.log(
-          `[UserService] Mentorado ${existingMentorado.id} already linked to user ${existingMentorado.userId}`
-        );
-      }
+  // 3. Link or Create Mentorado
+  const existingMentorado = await getMentoradoByEmail(primaryEmail);
+
+  if (existingMentorado) {
+    // Link existing mentorado
+    if (!existingMentorado.userId) {
+      await db
+        .update(mentorados)
+        .set({ userId: userRecord.id })
+        .where(eq(mentorados.id, existingMentorado.id));
     } else {
-      // Create new mentorado
-      console.log(
-        `[UserService] Creating new mentorado for user ${userRecord.id}`
-      );
-
-      const turma = "neon";
-
-      await createMentorado({
-        userId: userRecord.id,
-        nomeCompleto: fullName || primaryEmail.split("@")[0],
-        email: primaryEmail,
-        turma: turma,
-        metaFaturamento: 16000,
-        fotoUrl: user.image_url,
-        ativo: "sim",
-      });
     }
+  } else {
+    const turma = "neon";
 
-    console.log(`[UserService] Successfully synced user ${user.id}`);
-  } catch (error) {
-    console.error("[UserService] Error syncing user:", error);
-    throw error;
+    await createMentorado({
+      userId: userRecord.id,
+      nomeCompleto: fullName || primaryEmail.split("@")[0],
+      email: primaryEmail,
+      turma: turma,
+      metaFaturamento: 16000,
+      fotoUrl: user.image_url,
+      ativo: "sim",
+    });
   }
 }

@@ -1,8 +1,8 @@
-import { describe, it, expect, mock, beforeEach } from "bun:test";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 // Mock the database module
-mock.module("./db", () => ({
-  getDb: mock(() => null),
+vi.mock("./db", () => ({
+  getDb: vi.fn(() => null),
 }));
 
 describe("Mentorados Router", () => {
@@ -30,9 +30,7 @@ describe("Mentorados Router", () => {
 
     it("should have comparativeStats procedure defined", async () => {
       const { mentoradosRouter } = await import("./mentoradosRouter");
-      expect(mentoradosRouter._def.procedures).toHaveProperty(
-        "comparativeStats"
-      );
+      expect(mentoradosRouter._def.procedures).toHaveProperty("comparativeStats");
     });
 
     it("should have linkEmail procedure defined", async () => {

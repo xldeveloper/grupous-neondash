@@ -1,9 +1,9 @@
+import type { Request, Response } from "express";
 import { Webhook } from "svix";
-import { Request, Response } from "express";
-import { syncClerkUser } from "../services/userService";
-import { queueWebhookTask, setTaskProcessor } from "../_core/webhookQueue";
-import { invalidateSession } from "../_core/sessionCache";
 import { createLogger } from "../_core/logger";
+import { invalidateSession } from "../_core/sessionCache";
+import { queueWebhookTask, setTaskProcessor } from "../_core/webhookQueue";
+import { syncClerkUser } from "../services/userService";
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES
@@ -29,10 +29,7 @@ interface ClerkUserPayload {
 /**
  * Process webhook tasks from the queue.
  */
-async function processClerkWebhookTask(task: {
-  type: string;
-  data: unknown;
-}): Promise<void> {
+async function processClerkWebhookTask(task: { type: string; data: unknown }): Promise<void> {
   const logger = createLogger({ service: "clerk-webhook" });
 
   if (task.type === "user.created" || task.type === "user.updated") {
@@ -83,9 +80,7 @@ export async function handleClerkWebhook(req: Request, res: Response) {
 
   try {
     // Attempt to use rawBody if available (best practice), otherwise fallback to stringified body
-    const payload =
-      (req as Request & { rawBody?: Buffer }).rawBody ||
-      JSON.stringify(req.body);
+    const payload = (req as Request & { rawBody?: Buffer }).rawBody || JSON.stringify(req.body);
 
     evt = wh.verify(payload, {
       "svix-id": svix_id,
@@ -111,9 +106,7 @@ export async function handleClerkWebhook(req: Request, res: Response) {
     });
 
     // Return 202 Accepted immediately (async processing)
-    return res
-      .status(202)
-      .json({ success: true, message: "Queued for processing" });
+    return res.status(202).json({ success: true, message: "Queued for processing" });
   } catch (error) {
     // Fallback to sync processing if queue fails
     logger.warn("queue_failed_fallback_sync", error);
@@ -123,9 +116,7 @@ export async function handleClerkWebhook(req: Request, res: Response) {
       return res.status(200).json({ success: true });
     } catch (e) {
       logger.error("sync_processing_failed", e);
-      return res
-        .status(500)
-        .json({ success: false, message: "Processing failed" });
+      return res.status(500).json({ success: false, message: "Processing failed" });
     }
   }
 }

@@ -35,11 +35,7 @@ export default defineConfig({
         manualChunks: {
           // Vendor chunks - separate third-party libraries
           "vendor-react": ["react", "react-dom"],
-          "vendor-trpc": [
-            "@trpc/client",
-            "@trpc/react-query",
-            "@tanstack/react-query",
-          ],
+          "vendor-trpc": ["@trpc/client", "@trpc/react-query", "@tanstack/react-query"],
           "vendor-radix": [
             "@radix-ui/react-dialog",
             "@radix-ui/react-dropdown-menu",

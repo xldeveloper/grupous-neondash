@@ -1,27 +1,19 @@
-import { MentoradoAnalise } from "@/lib/data";
+import { AnimatePresence, motion } from "framer-motion";
 import {
-  BentoCard,
-  BentoCardHeader,
-  BentoCardContent,
-  BentoCardFooter,
-} from "./ui/bento-grid";
-import { Badge } from "./ui/badge";
-import { Progress } from "./ui/progress";
-import { cn } from "@/lib/utils";
-import {
-  TrendingUp,
-  TrendingDown,
-  Award,
+  Activity,
+  ArrowRight,
   DollarSign,
   Instagram,
-  Users,
-  Activity,
   Lightbulb,
   Target,
-  ArrowRight,
+  Users,
 } from "lucide-react";
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import type { MentoradoAnalise } from "@/lib/data";
+import { cn } from "@/lib/utils";
+import { Badge } from "./ui/badge";
+import { BentoCard, BentoCardContent, BentoCardFooter, BentoCardHeader } from "./ui/bento-grid";
+import { Progress } from "./ui/progress";
 
 interface MentoradoCardProps {
   nome: string;
@@ -29,11 +21,7 @@ interface MentoradoCardProps {
   rank: number;
 }
 
-export default function MentoradoCard({
-  nome,
-  data,
-  rank,
-}: MentoradoCardProps) {
+export default function MentoradoCard({ nome, data, rank }: MentoradoCardProps) {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const getScoreColor = (score: number) => {
@@ -54,9 +42,7 @@ export default function MentoradoCard({
     <BentoCard
       className={cn(
         "h-full relative overflow-hidden",
-        isExpanded
-          ? "ring-2 ring-neon-purple/20 md:col-span-2 md:row-span-2"
-          : ""
+        isExpanded ? "ring-2 ring-neon-purple/20 md:col-span-2 md:row-span-2" : ""
       )}
       onClick={() => setIsExpanded(!isExpanded)}
     >
@@ -84,11 +70,7 @@ export default function MentoradoCard({
         icon={<div className="font-bold text-sm">{rank}º</div>}
         action={
           <div className="text-right">
-            <div
-              className={cn("text-2xl font-bold", getScoreColor(data.score))}
-            >
-              {data.score}
-            </div>
+            <div className={cn("text-2xl font-bold", getScoreColor(data.score))}>{data.score}</div>
             <div className="text-[10px] text-slate-400 uppercase tracking-wider font-medium">
               Score
             </div>
@@ -127,9 +109,7 @@ export default function MentoradoCard({
             </div>
             <div className="font-bold text-slate-900 dark:text-slate-100">
               {data.dados.procedimentos}{" "}
-              <span className="text-xs font-normal text-slate-400">
-                realizados
-              </span>
+              <span className="text-xs font-normal text-slate-400">realizados</span>
             </div>
             <div className="mt-2 h-1.5 w-full bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
               <div
@@ -161,8 +141,7 @@ export default function MentoradoCard({
                         <Instagram className="w-3 h-3" /> Posts Feed
                       </span>
                       <span className="font-medium">
-                        {data.dados.posts_feed} /{" "}
-                        {data.detalhes.posts_feed.esperado}
+                        {data.dados.posts_feed} / {data.detalhes.posts_feed.esperado}
                       </span>
                     </div>
                     <Progress

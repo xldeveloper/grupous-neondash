@@ -1,31 +1,12 @@
-import { useState } from "react";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetDescription,
-} from "@/components/ui/sheet";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Label } from "@/components/ui/label";
-import {
-  Phone,
-  Mail,
-  MessageSquare,
-  Calendar,
-  FileText,
-  Clock,
-  Edit2,
-  Trash2,
-  CheckCircle2,
-} from "lucide-react";
-import { trpc } from "@/lib/trpc";
 import { format } from "date-fns";
-import { AddInteractionDialog } from "./AddInteractionDialog";
+import { Calendar, Clock, Edit2, FileText, Mail, MessageSquare, Phone, Trash2 } from "lucide-react";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Select,
   SelectContent,
@@ -33,8 +14,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { toast } from "sonner";
-import { useEffect } from "react";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { trpc } from "@/lib/trpc";
+import { AddInteractionDialog } from "./AddInteractionDialog";
 
 interface LeadDetailModalProps {
   leadId: number | null;
@@ -83,8 +72,8 @@ export function LeadDetailModal({
       utils.leads.getById.invalidate({ id: leadId! });
       utils.leads.list.invalidate();
     },
-    onError: error => {
-      toast.error("Erro ao atualizar lead: " + error.message);
+    onError: (error) => {
+      toast.error(`Erro ao atualizar lead: ${error.message}`);
     },
   });
 
@@ -145,7 +134,7 @@ export function LeadDetailModal({
 
   return (
     <>
-      <Sheet open={isOpen} onOpenChange={open => !open && onClose()}>
+      <Sheet open={isOpen} onOpenChange={(open) => !open && onClose()}>
         <SheetContent
           side="right"
           className="w-[100%] sm:w-[540px] md:w-[600px] p-0 gap-0 sm:max-w-[600px] bg-card border-l border-border/40 shadow-2xl"
@@ -165,9 +154,7 @@ export function LeadDetailModal({
                         {isEditing ? (
                           <Input
                             value={editData.nome}
-                            onChange={e =>
-                              setEditData({ ...editData, nome: e.target.value })
-                            }
+                            onChange={(e) => setEditData({ ...editData, nome: e.target.value })}
                             className="text-2xl font-bold tracking-tight h-auto py-1 px-2 -ml-2 bg-transparent border-primary/20 focus:border-primary"
                           />
                         ) : (
@@ -177,34 +164,22 @@ export function LeadDetailModal({
                         )}
                         <Badge
                           variant="outline"
-                          className={getStatusColor(
-                            isEditing ? editData.status : data.lead.status
-                          )}
+                          className={getStatusColor(isEditing ? editData.status : data.lead.status)}
                         >
                           {isEditing ? (
                             <Select
                               value={editData.status}
-                              onValueChange={val =>
-                                setEditData({ ...editData, status: val })
-                              }
+                              onValueChange={(val) => setEditData({ ...editData, status: val })}
                             >
                               <SelectTrigger className="h-6 border-none p-0 bg-transparent focus:ring-0">
                                 <SelectValue />
                               </SelectTrigger>
                               <SelectContent>
                                 <SelectItem value="novo">Novo</SelectItem>
-                                <SelectItem value="primeiro_contato">
-                                  Contato
-                                </SelectItem>
-                                <SelectItem value="qualificado">
-                                  Qualificado
-                                </SelectItem>
-                                <SelectItem value="proposta">
-                                  Proposta
-                                </SelectItem>
-                                <SelectItem value="negociacao">
-                                  Negociação
-                                </SelectItem>
+                                <SelectItem value="primeiro_contato">Contato</SelectItem>
+                                <SelectItem value="qualificado">Qualificado</SelectItem>
+                                <SelectItem value="proposta">Proposta</SelectItem>
+                                <SelectItem value="negociacao">Negociação</SelectItem>
                                 <SelectItem value="fechado">Fechado</SelectItem>
                                 <SelectItem value="perdido">Perdido</SelectItem>
                               </SelectContent>
@@ -221,7 +196,7 @@ export function LeadDetailModal({
                           <>
                             <Input
                               value={editData.empresa}
-                              onChange={e =>
+                              onChange={(e) =>
                                 setEditData({
                                   ...editData,
                                   empresa: e.target.value,
@@ -232,7 +207,7 @@ export function LeadDetailModal({
                             />
                             <Input
                               value={editData.email}
-                              onChange={e =>
+                              onChange={(e) =>
                                 setEditData({
                                   ...editData,
                                   email: e.target.value,
@@ -249,9 +224,7 @@ export function LeadDetailModal({
                                 {data.lead.empresa}
                               </span>
                             )}
-                            {data.lead.empresa && (
-                              <span className="text-muted-foreground">•</span>
-                            )}
+                            {data.lead.empresa && <span className="text-muted-foreground">•</span>}
                             <span>{data.lead.email}</span>
                           </>
                         )}
@@ -262,11 +235,7 @@ export function LeadDetailModal({
                       <div className="flex gap-2">
                         {isEditing ? (
                           <>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => setIsEditing(false)}
-                            >
+                            <Button variant="ghost" size="sm" onClick={() => setIsEditing(false)}>
                               Cancelar
                             </Button>
                             <Button
@@ -274,18 +243,12 @@ export function LeadDetailModal({
                               onClick={handleSave}
                               disabled={updateMutation.isPending}
                             >
-                              {updateMutation.isPending
-                                ? "Salvando..."
-                                : "Salvar"}
+                              {updateMutation.isPending ? "Salvando..." : "Salvar"}
                             </Button>
                           </>
                         ) : (
                           <>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              onClick={() => setIsEditing(true)}
-                            >
+                            <Button variant="ghost" size="icon" onClick={() => setIsEditing(true)}>
                               <Edit2 className="h-4 w-4" />
                             </Button>
                             <Button
@@ -374,7 +337,7 @@ export function LeadDetailModal({
                             <Input
                               type="number"
                               value={editData.valorEstimado}
-                              onChange={e =>
+                              onChange={(e) =>
                                 setEditData({
                                   ...editData,
                                   valorEstimado: parseFloat(e.target.value),
@@ -404,32 +367,22 @@ export function LeadDetailModal({
                           {isEditing ? (
                             <Select
                               value={editData.origem}
-                              onValueChange={val =>
-                                setEditData({ ...editData, origem: val })
-                              }
+                              onValueChange={(val) => setEditData({ ...editData, origem: val })}
                             >
                               <SelectTrigger className="bg-transparent border-muted-foreground/20">
                                 <SelectValue />
                               </SelectTrigger>
                               <SelectContent>
-                                <SelectItem value="whatsapp">
-                                  WhatsApp
-                                </SelectItem>
-                                <SelectItem value="instagram">
-                                  Instagram
-                                </SelectItem>
+                                <SelectItem value="whatsapp">WhatsApp</SelectItem>
+                                <SelectItem value="instagram">Instagram</SelectItem>
                                 <SelectItem value="google">Google</SelectItem>
-                                <SelectItem value="indicacao">
-                                  Indicação
-                                </SelectItem>
+                                <SelectItem value="indicacao">Indicação</SelectItem>
                                 <SelectItem value="site">Site</SelectItem>
                                 <SelectItem value="outro">Outro</SelectItem>
                               </SelectContent>
                             </Select>
                           ) : (
-                            <div className="capitalize font-medium">
-                              {data.lead.origem || "-"}
-                            </div>
+                            <div className="capitalize font-medium">{data.lead.origem || "-"}</div>
                           )}
                         </div>
                         <div className="space-y-1 col-span-2">
@@ -439,7 +392,7 @@ export function LeadDetailModal({
                           {isEditing ? (
                             <Input
                               value={editData.telefone}
-                              onChange={e =>
+                              onChange={(e) =>
                                 setEditData({
                                   ...editData,
                                   telefone: e.target.value,
@@ -468,12 +421,12 @@ export function LeadDetailModal({
                           {isEditing ? (
                             <Input
                               value={editData.tags.join(", ")}
-                              onChange={e =>
+                              onChange={(e) =>
                                 setEditData({
                                   ...editData,
                                   tags: e.target.value
                                     .split(",")
-                                    .map(s => s.trim())
+                                    .map((s) => s.trim())
                                     .filter(Boolean),
                                 })
                               }
@@ -483,7 +436,7 @@ export function LeadDetailModal({
                           ) : (
                             <div className="flex flex-wrap gap-2">
                               {data.lead.tags?.length ? (
-                                data.lead.tags.map(tag => (
+                                data.lead.tags.map((tag) => (
                                   <Badge
                                     key={tag}
                                     variant="secondary"
@@ -512,14 +465,9 @@ export function LeadDetailModal({
                         <div className="relative pl-6">
                           <div className="absolute -left-[5px] top-1 h-2.5 w-2.5 rounded-full bg-primary ring-4 ring-background" />
                           <div className="space-y-1">
-                            <p className="text-sm font-medium leading-none">
-                              Lead criado
-                            </p>
+                            <p className="text-sm font-medium leading-none">Lead criado</p>
                             <span className="text-xs text-muted-foreground">
-                              {format(
-                                new Date(data.lead.createdAt),
-                                "dd/MM/yyyy 'às' HH:mm"
-                              )}
+                              {format(new Date(data.lead.createdAt), "dd/MM/yyyy 'às' HH:mm")}
                             </span>
                           </div>
                         </div>
@@ -533,7 +481,7 @@ export function LeadDetailModal({
                             notas?: string | null;
                             duracao?: number | null;
                           }>
-                        ).map(interaction => (
+                        ).map((interaction) => (
                           <div key={interaction.id} className="relative pl-6">
                             <div className="absolute -left-[9px] top-0 bg-background p-1 rounded-full border border-border/50 text-muted-foreground">
                               {getInteractionIcon(interaction.tipo)}
@@ -556,8 +504,7 @@ export function LeadDetailModal({
                                 </div>
                                 {interaction.duracao && (
                                   <span className="text-[10px] text-muted-foreground flex items-center gap-1 bg-muted/30 px-1.5 py-0.5 rounded">
-                                    <Clock className="h-3 w-3" />{" "}
-                                    {interaction.duracao}m
+                                    <Clock className="h-3 w-3" /> {interaction.duracao}m
                                   </span>
                                 )}
                               </div>

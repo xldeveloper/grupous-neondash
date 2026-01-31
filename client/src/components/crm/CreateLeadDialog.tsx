@@ -1,14 +1,15 @@
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import * as z from "zod";
-import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogFooter,
 } from "@/components/ui/dialog";
 import {
   Form,
@@ -18,6 +19,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -25,9 +27,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
-import { toast } from "sonner";
-import { useEffect } from "react";
+import { trpc } from "@/lib/trpc";
 
 // Form schema - keeps valorEstimado as string for input
 const createLeadFormSchema = z.object({
@@ -35,14 +35,7 @@ const createLeadFormSchema = z.object({
   email: z.string().email("Email inválido"),
   telefone: z.string().optional(),
   empresa: z.string().optional(),
-  origem: z.enum([
-    "instagram",
-    "whatsapp",
-    "google",
-    "indicacao",
-    "site",
-    "outro",
-  ]),
+  origem: z.enum(["instagram", "whatsapp", "google", "indicacao", "site", "outro"]),
   valorEstimado: z.string().optional(),
 });
 
@@ -54,11 +47,7 @@ interface CreateLeadDialogProps {
   onSuccess?: () => void;
 }
 
-export function CreateLeadDialog({
-  isOpen,
-  onClose,
-  onSuccess,
-}: CreateLeadDialogProps) {
+export function CreateLeadDialog({ isOpen, onClose, onSuccess }: CreateLeadDialogProps) {
   const trpcUtils = trpc.useUtils();
   const form = useForm<CreateLeadFormValues>({
     resolver: zodResolver(createLeadFormSchema),
@@ -84,7 +73,7 @@ export function CreateLeadDialog({
       if (onSuccess) onSuccess();
       onClose();
     },
-    onError: err => {
+    onError: (err) => {
       toast.error(`Erro ao criar lead: ${err.message}`);
     },
   });
@@ -93,12 +82,8 @@ export function CreateLeadDialog({
     // Convert valorEstimado from string to cents (number)
     const valorEstimadoCents = values.valorEstimado
       ? Math.round(
-          parseFloat(
-            values.valorEstimado
-              .replace("R$", "")
-              .replace(".", "")
-              .replace(",", ".")
-          ) * 100
+          parseFloat(values.valorEstimado.replace("R$", "").replace(".", "").replace(",", ".")) *
+            100
         )
       : undefined;
 
@@ -184,10 +169,7 @@ export function CreateLeadDialog({
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Origem</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder="Selecione" />
@@ -213,12 +195,7 @@ export function CreateLeadDialog({
                   <FormItem>
                     <FormLabel>Valor (R$)</FormLabel>
                     <FormControl>
-                      <Input
-                        type="number"
-                        placeholder="1000.00"
-                        {...field}
-                        step="0.01"
-                      />
+                      <Input type="number" placeholder="1000.00" {...field} step="0.01" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

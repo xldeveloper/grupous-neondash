@@ -1,6 +1,6 @@
-import { useState } from "react";
 import { Check, ChevronsUpDown, User } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { useState } from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -9,13 +9,9 @@ import {
   CommandInput,
   CommandItem,
 } from "@/components/ui/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { trpc } from "@/lib/trpc";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { cn } from "@/lib/utils";
 
 interface AdminMentoradoSelectorProps {
   selectedMentoradoId?: number;
@@ -29,7 +25,7 @@ export function AdminMentoradoSelector({
   const [open, setOpen] = useState(false);
   const { data: mentorados, isLoading } = trpc.mentorados.list.useQuery();
 
-  const selectedMentorado = mentorados?.find(m => m.id === selectedMentoradoId);
+  const selectedMentorado = mentorados?.find((m) => m.id === selectedMentoradoId);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -72,34 +68,25 @@ export function AdminMentoradoSelector({
               }}
             >
               <Check
-                className={cn(
-                  "mr-2 h-4 w-4",
-                  !selectedMentoradoId ? "opacity-100" : "opacity-0"
-                )}
+                className={cn("mr-2 h-4 w-4", !selectedMentoradoId ? "opacity-100" : "opacity-0")}
               />
               <span className="font-medium text-muted-foreground">
                 Remover Filtro (Ver Leads Próprios)
               </span>
             </CommandItem>
-            {mentorados?.map(mentorado => (
+            {mentorados?.map((mentorado) => (
               <CommandItem
                 key={mentorado.id}
                 value={mentorado.nomeCompleto}
                 onSelect={() => {
-                  onSelect(
-                    mentorado.id === selectedMentoradoId
-                      ? undefined
-                      : mentorado.id
-                  );
+                  onSelect(mentorado.id === selectedMentoradoId ? undefined : mentorado.id);
                   setOpen(false);
                 }}
               >
                 <Check
                   className={cn(
                     "mr-2 h-4 w-4",
-                    selectedMentoradoId === mentorado.id
-                      ? "opacity-100"
-                      : "opacity-0"
+                    selectedMentoradoId === mentorado.id ? "opacity-100" : "opacity-0"
                   )}
                 />
                 <Avatar className="h-5 w-5 mr-2">

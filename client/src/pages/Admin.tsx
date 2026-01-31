@@ -1,6 +1,8 @@
+import { Calendar, TrendingUp, Users } from "lucide-react";
 import DashboardLayout from "@/components/DashboardLayout";
-import { trpc } from "@/lib/trpc";
+import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Table,
   TableBody,
@@ -9,9 +11,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
-import { Users, TrendingUp, DollarSign, Calendar } from "lucide-react";
-import { Skeleton } from "@/components/ui/skeleton";
+import { trpc } from "@/lib/trpc";
 
 export default function Admin() {
   const { data: mentorados, isLoading } = trpc.mentorados.list.useQuery();
@@ -22,7 +22,7 @@ export default function Admin() {
         <div className="space-y-6">
           <Skeleton className="h-12 w-64" />
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {[1, 2, 3].map(i => (
+            {[1, 2, 3].map((i) => (
               <Skeleton key={i} className="h-32" />
             ))}
           </div>
@@ -33,21 +33,15 @@ export default function Admin() {
   }
 
   const totalMentorados = mentorados?.length || 0;
-  const estruturaCount =
-    mentorados?.filter((m: any) => m.turma === "neon_estrutura").length || 0;
-  const escalaCount =
-    mentorados?.filter((m: any) => m.turma === "neon_escala").length || 0;
+  const estruturaCount = mentorados?.filter((m: any) => m.turma === "neon_estrutura").length || 0;
+  const escalaCount = mentorados?.filter((m: any) => m.turma === "neon_escala").length || 0;
 
   return (
     <DashboardLayout>
       <div className="space-y-8">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900 tracking-tight">
-            Área Administrativa
-          </h1>
-          <p className="text-slate-500 mt-2">
-            Gerenciamento completo de mentorados e métricas
-          </p>
+          <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Área Administrativa</h1>
+          <p className="text-slate-500 mt-2">Gerenciamento completo de mentorados e métricas</p>
         </div>
 
         {/* KPI Cards */}
@@ -62,9 +56,7 @@ export default function Admin() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-slate-900">
-                {totalMentorados}
-              </div>
+              <div className="text-3xl font-bold text-slate-900">{totalMentorados}</div>
               <div className="flex gap-2 mt-1 text-xs">
                 <span className="bg-neon-purple/10 text-neon-purple px-2 py-0.5 rounded-full font-medium">
                   {estruturaCount} Estrutura
@@ -87,9 +79,7 @@ export default function Admin() {
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-slate-900">Dez/2025</div>
-              <p className="text-xs text-slate-400 mt-1">
-                Dados migrados com sucesso
-              </p>
+              <p className="text-xs text-slate-400 mt-1">Dados migrados com sucesso</p>
             </CardContent>
           </Card>
 
@@ -108,13 +98,9 @@ export default function Admin() {
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-neon-green opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-3 w-3 bg-neon-green"></span>
                 </span>
-                <span className="text-sm font-semibold text-slate-700">
-                  Operacional
-                </span>
+                <span className="text-sm font-semibold text-slate-700">Operacional</span>
               </div>
-              <p className="text-xs text-slate-400 mt-1">
-                Todos os serviços ativos
-              </p>
+              <p className="text-xs text-slate-400 mt-1">Todos os serviços ativos</p>
             </CardContent>
           </Card>
         </div>
@@ -137,9 +123,7 @@ export default function Admin() {
               <TableBody>
                 {mentorados?.map((mentorado: any) => (
                   <TableRow key={mentorado.id}>
-                    <TableCell className="font-medium">
-                      {mentorado.nomeCompleto}
-                    </TableCell>
+                    <TableCell className="font-medium">{mentorado.nomeCompleto}</TableCell>
                     <TableCell>
                       <Badge
                         variant="outline"
@@ -149,9 +133,7 @@ export default function Admin() {
                             : "bg-blue-50 text-blue-600 border-blue-200"
                         }
                       >
-                        {mentorado.turma === "neon_estrutura"
-                          ? "Neon Estrutura"
-                          : "Neon Escala"}
+                        {mentorado.turma === "neon_estrutura" ? "Neon Estrutura" : "Neon Escala"}
                       </Badge>
                     </TableCell>
                     <TableCell>

@@ -1,13 +1,13 @@
 import {
-  serial,
+  index,
+  integer,
   pgEnum,
   pgTable,
+  serial,
   text,
   timestamp,
-  varchar,
-  integer,
-  index,
   uniqueIndex,
+  varchar,
 } from "drizzle-orm/pg-core";
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -38,12 +38,7 @@ export const tipoNotificacaoEnum = pgEnum("tipo_notificacao", [
   "ranking",
 ]);
 export const simNaoEnum = pgEnum("sim_nao", ["sim", "nao"]);
-export const channelTypeEnum = pgEnum("channel_type", [
-  "webchat",
-  "whatsapp",
-  "telegram",
-  "slack",
-]);
+export const channelTypeEnum = pgEnum("channel_type", ["webchat", "whatsapp", "telegram", "slack"]);
 
 export const origemLeadEnum = pgEnum("origem_lead", [
   "instagram",
@@ -93,7 +88,7 @@ export const users = pgTable(
     updatedAt: timestamp("updated_at").defaultNow().notNull(),
     lastSignedIn: timestamp("last_signed_in").defaultNow().notNull(),
   },
-  table => [
+  (table) => [
     uniqueIndex("users_clerk_id_idx").on(table.clerkId),
     index("users_email_idx").on(table.email),
   ]
@@ -122,10 +117,11 @@ export const mentorados = pgTable(
     metaPosts: integer("meta_posts").default(12),
     metaStories: integer("meta_stories").default(60),
     ativo: ativoEnum("ativo").default("sim").notNull(),
+    onboardingCompleted: simNaoEnum("onboarding_completed").default("nao").notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().notNull(),
   },
-  table => [
+  (table) => [
     index("mentorados_user_id_idx").on(table.userId),
     index("mentorados_email_idx").on(table.email),
     index("mentorados_turma_idx").on(table.turma),
@@ -158,13 +154,9 @@ export const metricasMensais = pgTable(
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().notNull(),
   },
-  table => [
+  (table) => [
     index("metricas_mentorado_idx").on(table.mentoradoId),
-    uniqueIndex("metricas_mentorado_periodo_idx").on(
-      table.mentoradoId,
-      table.ano,
-      table.mes
-    ),
+    uniqueIndex("metricas_mentorado_periodo_idx").on(table.mentoradoId, table.ano, table.mes),
     index("metricas_periodo_idx").on(table.ano, table.mes),
   ]
 );
@@ -190,12 +182,8 @@ export const feedbacks = pgTable(
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().notNull(),
   },
-  table => [
-    uniqueIndex("feedbacks_mentorado_periodo_idx").on(
-      table.mentoradoId,
-      table.ano,
-      table.mes
-    ),
+  (table) => [
+    uniqueIndex("feedbacks_mentorado_periodo_idx").on(table.mentoradoId, table.ano, table.mes),
   ]
 );
 
@@ -219,7 +207,7 @@ export const badges = pgTable(
     pontos: integer("pontos").notNull().default(10),
     createdAt: timestamp("created_at").defaultNow().notNull(),
   },
-  table => [
+  (table) => [
     uniqueIndex("badges_codigo_idx").on(table.codigo),
     index("badges_categoria_idx").on(table.categoria),
   ]
@@ -245,7 +233,7 @@ export const mentoradoBadges = pgTable(
     ano: integer("ano").notNull(),
     mes: integer("mes").notNull(),
   },
-  table => [
+  (table) => [
     index("mentorado_badges_mentorado_idx").on(table.mentoradoId),
     index("mentorado_badges_badge_idx").on(table.badgeId),
     uniqueIndex("mentorado_badges_unique_idx").on(
@@ -278,19 +266,10 @@ export const rankingMensal = pgTable(
     pontosBonus: integer("pontos_bonus").notNull().default(0),
     createdAt: timestamp("created_at").defaultNow().notNull(),
   },
-  table => [
-    uniqueIndex("ranking_mentorado_periodo_idx").on(
-      table.mentoradoId,
-      table.ano,
-      table.mes
-    ),
+  (table) => [
+    uniqueIndex("ranking_mentorado_periodo_idx").on(table.mentoradoId, table.ano, table.mes),
     index("ranking_turma_periodo_idx").on(table.turma, table.ano, table.mes),
-    index("ranking_posicao_idx").on(
-      table.turma,
-      table.ano,
-      table.mes,
-      table.posicao
-    ),
+    index("ranking_posicao_idx").on(table.turma, table.ano, table.mes, table.posicao),
   ]
 );
 
@@ -315,9 +294,7 @@ export const metasProgressivas = pgTable(
     ultimaAtualizacao: timestamp("ultima_atualizacao").defaultNow().notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
   },
-  table => [
-    uniqueIndex("metas_mentorado_tipo_idx").on(table.mentoradoId, table.tipo),
-  ]
+  (table) => [uniqueIndex("metas_mentorado_tipo_idx").on(table.mentoradoId, table.tipo)]
 );
 
 export type MetaProgressiva = typeof metasProgressivas.$inferSelect;
@@ -340,7 +317,7 @@ export const notificacoes = pgTable(
     enviadaPorEmail: simNaoEnum("enviada_por_email").default("nao").notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
   },
-  table => [
+  (table) => [
     index("notificacoes_mentorado_idx").on(table.mentoradoId),
     index("notificacoes_mentorado_lida_idx").on(table.mentoradoId, table.lida),
     index("notificacoes_created_idx").on(table.createdAt),
@@ -368,13 +345,10 @@ export const moltbotSessions = pgTable(
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().notNull(),
   },
-  table => [
+  (table) => [
     index("moltbot_sessions_user_idx").on(table.userId),
     index("moltbot_sessions_active_idx").on(table.isActive),
-    uniqueIndex("moltbot_sessions_user_channel_idx").on(
-      table.userId,
-      table.channelType
-    ),
+    uniqueIndex("moltbot_sessions_user_channel_idx").on(table.userId, table.channelType),
   ]
 );
 
@@ -396,7 +370,7 @@ export const moltbotMessages = pgTable(
     metadata: text("metadata"), // JSON stringified metadata
     createdAt: timestamp("created_at").defaultNow().notNull(),
   },
-  table => [
+  (table) => [
     index("moltbot_messages_session_idx").on(table.sessionId),
     index("moltbot_messages_created_idx").on(table.createdAt),
   ]
@@ -426,7 +400,7 @@ export const leads = pgTable(
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().notNull(),
   },
-  table => [
+  (table) => [
     index("leads_mentorado_idx").on(table.mentoradoId),
     index("leads_status_idx").on(table.status),
     index("leads_origem_idx").on(table.origem),
@@ -456,7 +430,7 @@ export const interacoes = pgTable(
     duracao: integer("duracao"), // minutos, para ligações
     createdAt: timestamp("created_at").defaultNow().notNull(),
   },
-  table => [
+  (table) => [
     index("interacoes_lead_idx").on(table.leadId),
     index("interacoes_mentorado_idx").on(table.mentoradoId),
     index("interacoes_created_idx").on(table.createdAt),
@@ -485,7 +459,7 @@ export const tasks = pgTable(
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().notNull(),
   },
-  table => [
+  (table) => [
     index("tasks_mentorado_idx").on(table.mentoradoId),
     index("tasks_status_idx").on(table.status),
   ]
@@ -527,11 +501,8 @@ export const classProgress = pgTable(
     completedAt: timestamp("completed_at"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
   },
-  table => [
-    uniqueIndex("class_progress_unique_idx").on(
-      table.mentoradoId,
-      table.classId
-    ),
+  (table) => [
+    uniqueIndex("class_progress_unique_idx").on(table.mentoradoId, table.classId),
     index("class_progress_mentorado_idx").on(table.mentoradoId),
   ]
 );
@@ -552,7 +523,7 @@ export const playbookModules = pgTable(
     turma: turmaEnum("turma"), // Optional: specific to a track
     createdAt: timestamp("created_at").defaultNow().notNull(),
   },
-  table => [
+  (table) => [
     index("playbook_modules_order_idx").on(table.order),
     index("playbook_modules_turma_idx").on(table.turma),
   ]
@@ -579,7 +550,7 @@ export const playbookItems = pgTable(
     order: integer("order").notNull().default(0),
     createdAt: timestamp("created_at").defaultNow().notNull(),
   },
-  table => [
+  (table) => [
     index("playbook_items_module_idx").on(table.moduleId),
     index("playbook_items_order_idx").on(table.order),
   ]
@@ -605,11 +576,8 @@ export const playbookProgress = pgTable(
     completedAt: timestamp("completed_at").defaultNow().notNull(),
     notes: text("notes"),
   },
-  table => [
-    uniqueIndex("playbook_progress_unique_idx").on(
-      table.mentoradoId,
-      table.itemId
-    ),
+  (table) => [
+    uniqueIndex("playbook_progress_unique_idx").on(table.mentoradoId, table.itemId),
     index("playbook_progress_mentorado_idx").on(table.mentoradoId),
   ]
 );
@@ -634,17 +602,14 @@ export const atividadeProgress = pgTable(
     notes: text("notes"), // Notas do mentorado para este passo
     createdAt: timestamp("created_at").defaultNow().notNull(),
   },
-  table => [
+  (table) => [
     uniqueIndex("atividade_progress_unique_idx").on(
       table.mentoradoId,
       table.atividadeCodigo,
       table.stepCodigo
     ),
     index("atividade_progress_mentorado_idx").on(table.mentoradoId),
-    index("atividade_progress_atividade_idx").on(
-      table.mentoradoId,
-      table.atividadeCodigo
-    ),
+    index("atividade_progress_atividade_idx").on(table.mentoradoId, table.atividadeCodigo),
   ]
 );
 
@@ -667,13 +632,12 @@ export const interactionTemplates = pgTable(
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().notNull(),
   },
-  table => [index("interaction_templates_user_idx").on(table.userId)]
+  (table) => [index("interaction_templates_user_idx").on(table.userId)]
 );
 
 export type InteractionTemplate = typeof interactionTemplates.$inferSelect;
 
-export type InsertInteractionTemplate =
-  typeof interactionTemplates.$inferInsert;
+export type InsertInteractionTemplate = typeof interactionTemplates.$inferInsert;
 
 /**
  * Diagnosticos - Onboarding diagnostic data
@@ -709,7 +673,7 @@ export const diagnosticos = pgTable(
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().notNull(),
   },
-  table => [uniqueIndex("diagnosticos_mentorado_idx").on(table.mentoradoId)]
+  (table) => [uniqueIndex("diagnosticos_mentorado_idx").on(table.mentoradoId)]
 );
 
 export type Diagnostico = typeof diagnosticos.$inferSelect;

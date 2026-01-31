@@ -5,12 +5,12 @@
  * Includes chat interface and optional sidebar with context.
  */
 
+import { Bot, Calendar, Target, TrendingUp } from "lucide-react";
 import { ChatInterface } from "@/components/moltbot/ChatInterface";
-import { trpc } from "@/lib/trpc";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Target, TrendingUp, Calendar, Bot } from "lucide-react";
+import { trpc } from "@/lib/trpc";
 
 export default function MoltbotPage() {
   const contextQuery = trpc.moltbot.getMoltbotContext.useQuery();
@@ -60,13 +60,9 @@ export default function MoltbotPage() {
               ) : contextQuery.data?.mentorado ? (
                 <>
                   <div>
-                    <p className="font-medium">
-                      {contextQuery.data.mentorado.nomeCompleto}
-                    </p>
+                    <p className="font-medium">{contextQuery.data.mentorado.nomeCompleto}</p>
                     <Badge variant="secondary" className="mt-1 text-xs">
-                      {contextQuery.data.mentorado.turma === "neon"
-                        ? "NEON"
-                        : "NEON"}
+                      {contextQuery.data.mentorado.turma === "neon" ? "NEON" : "NEON"}
                     </Badge>
                   </div>
                   <div className="grid grid-cols-2 gap-2 text-sm">
@@ -74,25 +70,19 @@ export default function MoltbotPage() {
                       <p className="text-muted-foreground">Meta</p>
                       <p className="font-semibold">
                         R${" "}
-                        {contextQuery.data.goals?.metaFaturamento?.toLocaleString(
-                          "pt-BR"
-                        ) ?? "-"}
+                        {contextQuery.data.goals?.metaFaturamento?.toLocaleString("pt-BR") ?? "-"}
                       </p>
                     </div>
                     <div className="rounded-lg bg-muted/50 p-2">
                       <p className="text-muted-foreground">Turma</p>
                       <p className="font-semibold capitalize">
-                        {contextQuery.data.mentorado.turma === "neon"
-                          ? "Neon"
-                          : "Neon"}
+                        {contextQuery.data.mentorado.turma === "neon" ? "Neon" : "Neon"}
                       </p>
                     </div>
                   </div>
                 </>
               ) : (
-                <p className="text-sm text-muted-foreground">
-                  Perfil de mentorado não encontrado
-                </p>
+                <p className="text-sm text-muted-foreground">Perfil de mentorado não encontrado</p>
               )}
             </CardContent>
           </Card>
@@ -116,9 +106,7 @@ export default function MoltbotPage() {
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Faturamento</span>
                     <span className="font-medium">
-                      R${" "}
-                      {latestMetrics.faturamento?.toLocaleString("pt-BR") ??
-                        "-"}
+                      R$ {latestMetrics.faturamento?.toLocaleString("pt-BR") ?? "-"}
                     </span>
                   </div>
                   <div className="flex justify-between">
@@ -129,21 +117,15 @@ export default function MoltbotPage() {
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Procedimentos</span>
-                    <span className="font-medium">
-                      {latestMetrics.procedimentos ?? "-"}
-                    </span>
+                    <span className="font-medium">{latestMetrics.procedimentos ?? "-"}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Leads</span>
-                    <span className="font-medium">
-                      {latestMetrics.leads ?? "-"}
-                    </span>
+                    <span className="font-medium">{latestMetrics.leads ?? "-"}</span>
                   </div>
                 </div>
               ) : (
-                <p className="text-sm text-muted-foreground">
-                  Sem métricas disponíveis
-                </p>
+                <p className="text-sm text-muted-foreground">Sem métricas disponíveis</p>
               )}
             </CardContent>
           </Card>
@@ -179,9 +161,7 @@ export default function MoltbotPage() {
                   )}
                 </div>
               ) : (
-                <p className="text-sm text-muted-foreground">
-                  Sem feedback disponível
-                </p>
+                <p className="text-sm text-muted-foreground">Sem feedback disponível</p>
               )}
             </CardContent>
           </Card>

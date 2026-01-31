@@ -8,19 +8,13 @@
  * - Mentorado context for AI
  */
 
-import { z } from "zod";
-import { mentoradoProcedure, router, protectedProcedure } from "./_core/trpc";
-import { eq, and, desc } from "drizzle-orm";
-import { getDb } from "./db";
-import {
-  moltbotSessions,
-  moltbotMessages,
-  mentorados,
-  metricasMensais,
-  feedbacks,
-} from "../drizzle/schema";
-import { moltbotService } from "./services/moltbotService";
 import { TRPCError } from "@trpc/server";
+import { and, desc, eq } from "drizzle-orm";
+import { z } from "zod";
+import { feedbacks, metricasMensais, moltbotMessages, moltbotSessions } from "../drizzle/schema";
+import { protectedProcedure, router } from "./_core/trpc";
+import { getDb } from "./db";
+import { moltbotService } from "./services/moltbotService";
 
 // ═══════════════════════════════════════════════════════════════════════════
 // MIDDLEWARE
@@ -72,30 +66,12 @@ export const moltbotRouter = router({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const sessionId = await moltbotService.createSession(
-        ctx.user.id,
-        "webchat"
-      );
+      const sessionId = await moltbotService.createSession(ctx.user.id, "webchat");
 
       // If initial message provided, send it
       if (input.initialMessage) {
-        await moltbotService.sendMessage(
-          sessionId,
-          input.initialMessage,
-          ctx.user.id
-        );
+        await moltbotService.sendMessage(sessionId, input.initialMessage, ctx.user.id);
       }
-
-      console.log(
-        JSON.stringify({
-          timestamp: new Date().toISOString(),
-          level: "info",
-          service: "moltbot",
-          action: "createWebchatSession",
-          userId: ctx.user.id,
-          sessionId,
-        })
-      );
 
       return { sessionId, status: "active" };
     }),
@@ -114,12 +90,7 @@ export const moltbotRouter = router({
     const sessions = await db
       .select()
       .from(moltbotSessions)
-      .where(
-        and(
-          eq(moltbotSessions.userId, ctx.user.id),
-          eq(moltbotSessions.isActive, "sim")
-        )
-      )
+      .where(and(eq(moltbotSessions.userId, ctx.user.id), eq(moltbotSessions.isActive, "sim")))
       .orderBy(desc(moltbotSessions.lastActivityAt));
 
     return sessions;
@@ -139,17 +110,6 @@ export const moltbotRouter = router({
       await validateSessionOwnership(input.sessionId, ctx.user.id);
 
       const success = await moltbotService.terminateSession(input.sessionId);
-
-      console.log(
-        JSON.stringify({
-          timestamp: new Date().toISOString(),
-          level: "info",
-          service: "moltbot",
-          action: "terminateSession",
-          userId: ctx.user.id,
-          sessionId: input.sessionId,
-        })
-      );
 
       return { success };
     }),
@@ -174,18 +134,6 @@ export const moltbotRouter = router({
         ctx.user.id
       );
 
-      console.log(
-        JSON.stringify({
-          timestamp: new Date().toISOString(),
-          level: "info",
-          service: "moltbot",
-          action: "sendMessage",
-          userId: ctx.user.id,
-          sessionId: input.sessionId,
-          messageId,
-        })
-      );
-
       return { messageId };
     }),
 
@@ -202,10 +150,7 @@ export const moltbotRouter = router({
     )
     .query(async ({ ctx, input }) => {
       // Validate ownership
-      const session = await validateSessionOwnership(
-        input.sessionId,
-        ctx.user.id
-      );
+      const session = await validateSessionOwnership(input.sessionId, ctx.user.id);
 
       const db = await getDb();
       if (!db)
@@ -309,16 +254,6 @@ export const moltbotRouter = router({
   requestWhatsAppQR: protectedProcedure.mutation(async ({ ctx }) => {
     const result = await moltbotService.requestQRCode(ctx.user.id);
 
-    console.log(
-      JSON.stringify({
-        timestamp: new Date().toISOString(),
-        level: "info",
-        service: "moltbot",
-        action: "requestWhatsAppQR",
-        userId: ctx.user.id,
-      })
-    );
-
     return result;
   }),
 
@@ -327,17 +262,6 @@ export const moltbotRouter = router({
    */
   disconnectWhatsApp: protectedProcedure.mutation(async ({ ctx }) => {
     const success = await moltbotService.disconnectWhatsApp(ctx.user.id);
-
-    console.log(
-      JSON.stringify({
-        timestamp: new Date().toISOString(),
-        level: "info",
-        service: "moltbot",
-        action: "disconnectWhatsApp",
-        userId: ctx.user.id,
-        success,
-      })
-    );
 
     return { success };
   }),
@@ -357,21 +281,16 @@ export const moltbotRouter = router({
     const sessions = await db
       .select()
       .from(moltbotSessions)
-      .where(
-        and(
-          eq(moltbotSessions.userId, ctx.user.id),
-          eq(moltbotSessions.isActive, "sim")
-        )
-      );
+      .where(and(eq(moltbotSessions.userId, ctx.user.id), eq(moltbotSessions.isActive, "sim")));
 
     // Check for WhatsApp session
-    const whatsappSession = sessions.find(s => s.channelType === "whatsapp");
+    const whatsappSession = sessions.find((s) => s.channelType === "whatsapp");
 
     return {
       isGatewayConnected: moltbotService.isConnected(),
       activeSessionCount: sessions.length,
       whatsappConnected: !!whatsappSession,
-      webchatActive: sessions.some(s => s.channelType === "webchat"),
+      webchatActive: sessions.some((s) => s.channelType === "webchat"),
     };
   }),
 });

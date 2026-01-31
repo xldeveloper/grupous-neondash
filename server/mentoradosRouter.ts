@@ -1,24 +1,19 @@
-import { z } from "zod";
-import {
-  protectedProcedure,
-  router,
-  mentoradoProcedure,
-  adminProcedure,
-} from "./_core/trpc";
 import { TRPCError } from "@trpc/server"; // Added import
-import { eq, and } from "drizzle-orm";
-import { getDb } from "./db";
+import { and, eq } from "drizzle-orm";
+import { z } from "zod";
 import { mentorados, metricasMensais } from "../drizzle/schema";
+import { adminProcedure, mentoradoProcedure, protectedProcedure, router } from "./_core/trpc";
+import { getDb } from "./db";
 import { sendWelcomeEmail } from "./emailService";
 import {
-  getAllMentorados,
   createMentorado,
-  getMetricasMensaisByMentorado,
-  getMetricaMensal,
-  upsertMetricaMensal,
+  getAllMentorados,
   getFeedback,
-  upsertFeedback,
+  getMetricaMensal,
   getMetricasEvolution,
+  getMetricasMensaisByMentorado,
+  upsertFeedback,
+  upsertMetricaMensal,
 } from "./mentorados";
 
 export const mentoradosRouter = router({
@@ -29,24 +24,21 @@ export const mentoradosRouter = router({
 
   // Get specific mentorado by ID (admin only or self?)
   // Actually usually used by admin to "view as"
-  getById: protectedProcedure
-    .input(z.object({ id: z.number() }))
-    .query(async ({ ctx, input }) => {
-      const db = getDb();
-      if (ctx.user?.role !== "admin") {
-        // If not admin, can only see self
-        if (ctx.mentorado?.id !== input.id)
-          throw new TRPCError({ code: "FORBIDDEN" });
-      }
+  getById: protectedProcedure.input(z.object({ id: z.number() })).query(async ({ ctx, input }) => {
+    const db = getDb();
+    if (ctx.user?.role !== "admin") {
+      // If not admin, can only see self
+      if (ctx.mentorado?.id !== input.id) throw new TRPCError({ code: "FORBIDDEN" });
+    }
 
-      const [mentorado] = await db
-        .select()
-        .from(mentorados)
-        .where(eq(mentorados.id, input.id))
-        .limit(1);
-      if (!mentorado) throw new TRPCError({ code: "NOT_FOUND" });
-      return mentorado;
-    }),
+    const [mentorado] = await db
+      .select()
+      .from(mentorados)
+      .where(eq(mentorados.id, input.id))
+      .limit(1);
+    if (!mentorado) throw new TRPCError({ code: "NOT_FOUND" });
+    return mentorado;
+  }),
 
   // Get all mentorados (admin only)
   list: adminProcedure.query(async () => {
@@ -84,8 +76,7 @@ export const mentoradosRouter = router({
         if (ctx.user?.role !== "admin") {
           throw new TRPCError({
             code: "FORBIDDEN",
-            message:
-              "Apenas administradores podem acessar dados de outros mentorados",
+            message: "Apenas administradores podem acessar dados de outros mentorados",
           });
         }
         targetId = input.mentoradoId;
@@ -197,16 +188,14 @@ export const mentoradosRouter = router({
     }),
 
   // Delete mentorado (admin only)
-  delete: adminProcedure
-    .input(z.object({ id: z.number() }))
-    .mutation(async ({ input }) => {
-      const db = await getDb();
-      if (!db) throw new Error("Database not available");
+  delete: adminProcedure.input(z.object({ id: z.number() })).mutation(async ({ input }) => {
+    const db = await getDb();
+    if (!db) throw new Error("Database not available");
 
-      await db.delete(mentorados).where(eq(mentorados.id, input.id));
+    await db.delete(mentorados).where(eq(mentorados.id, input.id));
 
-      return { success: true };
-    }),
+    return { success: true };
+  }),
 
   // Create new mentorado (admin only) - enhanced version
   createNew: adminProcedure
@@ -285,7 +274,7 @@ export const mentoradosRouter = router({
       const totalMentorados = turmaMetrics.length;
 
       // Filter out mentorados without metrics (null from leftJoin)
-      const validMetrics = turmaMetrics.filter(m => m.faturamento !== null);
+      const validMetrics = turmaMetrics.filter((m) => m.faturamento !== null);
       const mentoradosComDados = validMetrics.length;
 
       if (mentoradosComDados === 0) {
@@ -301,29 +290,18 @@ export const mentoradosRouter = router({
       // Calculate turma averages
       const turmaAverage = {
         faturamento:
-          validMetrics.reduce((acc, m) => acc + (m.faturamento || 0), 0) /
-          mentoradosComDados,
-        lucro:
-          validMetrics.reduce((acc, m) => acc + (m.lucro || 0), 0) /
-          mentoradosComDados,
-        leads:
-          validMetrics.reduce((acc, m) => acc + (m.leads || 0), 0) /
-          mentoradosComDados,
+          validMetrics.reduce((acc, m) => acc + (m.faturamento || 0), 0) / mentoradosComDados,
+        lucro: validMetrics.reduce((acc, m) => acc + (m.lucro || 0), 0) / mentoradosComDados,
+        leads: validMetrics.reduce((acc, m) => acc + (m.leads || 0), 0) / mentoradosComDados,
         procedimentos:
-          validMetrics.reduce((acc, m) => acc + (m.procedimentos || 0), 0) /
-          mentoradosComDados,
+          validMetrics.reduce((acc, m) => acc + (m.procedimentos || 0), 0) / mentoradosComDados,
         postsFeed:
-          validMetrics.reduce((acc, m) => acc + (m.postsFeed || 0), 0) /
-          mentoradosComDados,
-        stories:
-          validMetrics.reduce((acc, m) => acc + (m.stories || 0), 0) /
-          mentoradosComDados,
+          validMetrics.reduce((acc, m) => acc + (m.postsFeed || 0), 0) / mentoradosComDados,
+        stories: validMetrics.reduce((acc, m) => acc + (m.stories || 0), 0) / mentoradosComDados,
       };
 
       // Get user's metrics from the same query results
-      const userMetricData = validMetrics.find(
-        m => m.mentoradoId === userMentorado.id
-      );
+      const userMetricData = validMetrics.find((m) => m.mentoradoId === userMentorado.id);
       const userMetrics = userMetricData
         ? {
             faturamento: userMetricData.faturamento || 0,
@@ -338,7 +316,7 @@ export const mentoradosRouter = router({
       // Calculate percentiles for user
       const calculatePercentile = (value: number, allValues: number[]) => {
         const sorted = [...allValues].sort((a, b) => a - b);
-        const index = sorted.findIndex(v => v >= value);
+        const index = sorted.findIndex((v) => v >= value);
         return Math.round(((index + 1) / sorted.length) * 100);
       };
 
@@ -347,19 +325,19 @@ export const mentoradosRouter = router({
         percentiles = {
           faturamento: calculatePercentile(
             userMetrics.faturamento,
-            validMetrics.map(m => m.faturamento || 0)
+            validMetrics.map((m) => m.faturamento || 0)
           ),
           lucro: calculatePercentile(
             userMetrics.lucro,
-            validMetrics.map(m => m.lucro || 0)
+            validMetrics.map((m) => m.lucro || 0)
           ),
           leads: calculatePercentile(
             userMetrics.leads,
-            validMetrics.map(m => m.leads || 0)
+            validMetrics.map((m) => m.leads || 0)
           ),
           procedimentos: calculatePercentile(
             userMetrics.procedimentos,
-            validMetrics.map(m => m.procedimentos || 0)
+            validMetrics.map((m) => m.procedimentos || 0)
           ),
         };
       }
@@ -405,17 +383,34 @@ export const mentoradosRouter = router({
 
       // Send welcome email notification
       try {
-        await sendWelcomeEmail(
-          input.email,
-          mentorado.nomeCompleto,
-          mentorado.turma
-        );
-        console.log(`[LinkEmail] Welcome email sent to ${input.email}`);
-      } catch (error) {
-        console.warn(`[LinkEmail] Failed to send welcome email:`, error);
+        await sendWelcomeEmail(input.email, mentorado.nomeCompleto, mentorado.turma);
+      } catch (_error) {
         // Don't fail the mutation if email fails
       }
 
       return { success: true, emailSent: true };
     }),
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // ONBOARDING
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  /**
+   * Check if current mentorado has completed onboarding
+   */
+  isOnboardingComplete: mentoradoProcedure.query(async ({ ctx }) => {
+    return ctx.mentorado.onboardingCompleted === "sim";
+  }),
+
+  /**
+   * Mark current mentorado's onboarding as complete
+   */
+  completeOnboarding: mentoradoProcedure.mutation(async ({ ctx }) => {
+    const db = getDb();
+    await db
+      .update(mentorados)
+      .set({ onboardingCompleted: "sim", updatedAt: new Date() })
+      .where(eq(mentorados.id, ctx.mentorado.id));
+    return { success: true };
+  }),
 });

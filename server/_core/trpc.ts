@@ -10,7 +10,7 @@ const t = initTRPC.context<TrpcContext>().create({
 export const router = t.router;
 export const publicProcedure = t.procedure;
 
-const requireUser = t.middleware(async opts => {
+const requireUser = t.middleware(async (opts) => {
   const { ctx, next } = opts;
 
   if (!ctx.user) {
@@ -27,7 +27,7 @@ const requireUser = t.middleware(async opts => {
 
 export const protectedProcedure = t.procedure.use(requireUser);
 
-const requireMentorado = t.middleware(async opts => {
+const requireMentorado = t.middleware(async (opts) => {
   const { ctx, next } = opts;
 
   if (!ctx.user) {
@@ -53,7 +53,7 @@ const requireMentorado = t.middleware(async opts => {
 export const mentoradoProcedure = t.procedure.use(requireMentorado);
 
 export const adminProcedure = t.procedure.use(
-  t.middleware(async opts => {
+  t.middleware(async (opts) => {
     const { ctx, next } = opts;
 
     if (!ctx.user || ctx.user.role !== "admin") {

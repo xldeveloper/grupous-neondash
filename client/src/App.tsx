@@ -1,16 +1,15 @@
 import { lazy, Suspense } from "react";
+import { Route, Switch } from "wouter";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/NotFound";
-import { Route, Switch } from "wouter";
+import { AuthSync } from "./components/auth/AuthSync";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
-
 // Eagerly loaded (landing + lightweight pages)
 // Eagerly loaded (landing + lightweight pages)
 import LandingPage from "./pages/LandingPage";
 import PrimeiroAcesso from "./pages/PrimeiroAcesso";
-import { AuthSync } from "./components/auth/AuthSync";
 
 // Lazy loaded (heavy pages with charts/complex UI)
 const Home = lazy(() => import("./pages/Home"));
@@ -19,7 +18,7 @@ const MyDashboard = lazy(() => import("./pages/MyDashboard"));
 const GestaoMentorados = lazy(() => import("./pages/GestaoMentorados"));
 const MoltbotPage = lazy(() => import("./pages/MoltbotPage"));
 const LeadsPage = lazy(() =>
-  import("./pages/crm/LeadsPage").then(module => ({
+  import("./pages/crm/LeadsPage").then((module) => ({
     default: module.LeadsPage,
   }))
 );
@@ -58,14 +57,6 @@ function Router() {
     </Switch>
   );
 }
-
-import {
-  SignedIn,
-  SignedOut,
-  SignInButton,
-  SignUpButton,
-  UserButton,
-} from "@clerk/clerk-react";
 
 function App() {
   return (

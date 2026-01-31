@@ -1,9 +1,9 @@
-import { z } from "zod";
-import { router, protectedProcedure } from "./_core/trpc";
-import { diagnosticos, mentorados } from "../drizzle/schema";
-import { eq } from "drizzle-orm";
-import { getDb } from "./db";
 import { TRPCError } from "@trpc/server";
+import { eq } from "drizzle-orm";
+import { z } from "zod";
+import { diagnosticos, mentorados } from "../drizzle/schema";
+import { protectedProcedure, router } from "./_core/trpc";
+import { getDb } from "./db";
 
 export const diagnosticoRouter = router({
   get: protectedProcedure
@@ -16,8 +16,7 @@ export const diagnosticoRouter = router({
         if (ctx.user.role !== "admin") {
           throw new TRPCError({
             code: "FORBIDDEN",
-            message:
-              "Apenas administradores podem visualizar outros diagnósticos.",
+            message: "Apenas administradores podem visualizar outros diagnósticos.",
           });
         }
         const result = await db

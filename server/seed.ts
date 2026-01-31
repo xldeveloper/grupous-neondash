@@ -1,5 +1,5 @@
-import { getDb } from "./db";
 import { badges } from "../drizzle/schema";
+import { getDb } from "./db";
 
 /**
  * Seed default badges into database
@@ -111,36 +111,21 @@ async function seedBadges() {
     },
   ];
 
-  console.log("[Seed] Inserting default badges...");
-
   for (const badge of defaultBadges) {
     try {
-      await db
-        .insert(badges)
-        .values(badge)
-        .onConflictDoNothing({ target: badges.codigo });
-      console.log(`[Seed] Badge "${badge.codigo}" inserted/skipped`);
-    } catch (error) {
-      console.error(`[Seed] Failed to insert badge "${badge.codigo}":`, error);
-    }
+      await db.insert(badges).values(badge).onConflictDoNothing({ target: badges.codigo });
+    } catch (_error) {}
   }
-
-  console.log("[Seed] Badges seeding complete!");
 }
 
 /**
  * Main seed function
  */
 async function main() {
-  console.log("[Seed] Starting database seeding...");
-
   await seedBadges();
-
-  console.log("[Seed] All seeding complete!");
   process.exit(0);
 }
 
-main().catch(error => {
-  console.error("[Seed] Fatal error:", error);
+main().catch((_error) => {
   process.exit(1);
 });

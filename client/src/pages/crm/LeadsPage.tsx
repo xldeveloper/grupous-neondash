@@ -1,27 +1,20 @@
+import { useUser } from "@clerk/clerk-react";
+import { Filter as FilterIcon, LayoutGrid, List, Plus, ShieldAlert } from "lucide-react";
+import { motion } from "motion/react";
 import { useState } from "react";
-import DashboardLayout from "@/components/DashboardLayout";
+import { useSearch } from "wouter";
+import { CreateLeadDialog } from "@/components/crm/CreateLeadDialog";
 import { FiltersPanel } from "@/components/crm/FiltersPanel";
+import { LeadDetailModal } from "@/components/crm/LeadDetailModal";
 import { LeadsTable } from "@/components/crm/LeadsTable";
 import { PipelineKanban } from "@/components/crm/PipelineKanban";
-import { LeadDetailModal } from "@/components/crm/LeadDetailModal";
-import { CreateLeadDialog } from "@/components/crm/CreateLeadDialog";
-import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  Plus,
-  LayoutGrid,
-  List,
-  Filter as FilterIcon,
-  ShieldAlert,
-} from "lucide-react";
-import { trpc } from "@/lib/trpc";
-import { useUser } from "@clerk/clerk-react";
-import { AnimatedTooltipSelector } from "@/components/ui/animated-tooltip";
-import { Card, CardContent } from "@/components/ui/card";
+import DashboardLayout from "@/components/DashboardLayout";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { useSearch } from "wouter";
-import { motion } from "motion/react";
-import { staggerContainer, fadeIn } from "@/lib/animation-variants";
+import { AnimatedTooltipSelector } from "@/components/ui/animated-tooltip";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { staggerContainer } from "@/lib/animation-variants";
+import { trpc } from "@/lib/trpc";
 
 export function LeadsPage() {
   const { user } = useUser();
@@ -37,12 +30,12 @@ export function LeadsPage() {
   });
 
   // 2. Local state or URL param logic
-  const [adminSelectedMentoradoId, setAdminSelectedMentoradoId] = useState<
-    string | undefined
-  >(mentoradoIdParam || undefined);
+  const [adminSelectedMentoradoId, setAdminSelectedMentoradoId] = useState<string | undefined>(
+    mentoradoIdParam || undefined
+  );
 
   const viewMentoradoId = adminSelectedMentoradoId
-    ? parseInt(adminSelectedMentoradoId)
+    ? parseInt(adminSelectedMentoradoId, 10)
     : undefined;
 
   const handleAdminSelect = (id: string) => {
@@ -68,10 +61,7 @@ export function LeadsPage() {
   const [page, setPage] = useState(1);
   const { data: stats } = trpc.leads.stats.useQuery(
     {
-      periodo:
-        filters.periodo === "all"
-          ? undefined
-          : (filters.periodo as "7d" | "30d" | "90d"),
+      periodo: filters.periodo === "all" ? undefined : (filters.periodo as "7d" | "30d" | "90d"),
       mentoradoId: viewMentoradoId,
     },
     { staleTime: 30000 }
@@ -109,7 +99,7 @@ export function LeadsPage() {
                   </p>
                   <AnimatedTooltipSelector
                     items={
-                      allMentorados?.map(m => ({
+                      allMentorados?.map((m) => ({
                         id: m.id.toString(),
                         name: m.nomeCompleto,
                         designation: m.turma,
@@ -168,8 +158,8 @@ export function LeadsPage() {
                 Modo de Visualização Administrativa
               </AlertTitle>
               <AlertDescription className="text-amber-700">
-                Você está visualizando o CRM de um mentorado (ID:{" "}
-                {viewMentoradoId}). Ações de edição estão desabilitadas.
+                Você está visualizando o CRM de um mentorado (ID: {viewMentoradoId}). Ações de
+                edição estão desabilitadas.
               </AlertDescription>
             </Alert>
           )}
@@ -178,19 +168,13 @@ export function LeadsPage() {
           <div className="grid gap-4 md:grid-cols-4 mb-6">
             <Card>
               <CardContent className="p-4 flex flex-col gap-1">
-                <span className="text-sm font-medium text-muted-foreground">
-                  Total Ativos
-                </span>
-                <span className="text-2xl font-bold">
-                  {stats?.totalAtivos || 0}
-                </span>
+                <span className="text-sm font-medium text-muted-foreground">Total Ativos</span>
+                <span className="text-2xl font-bold">{stats?.totalAtivos || 0}</span>
               </CardContent>
             </Card>
             <Card>
               <CardContent className="p-4 flex flex-col gap-1">
-                <span className="text-sm font-medium text-muted-foreground">
-                  Valor no Pipeline
-                </span>
+                <span className="text-sm font-medium text-muted-foreground">Valor no Pipeline</span>
                 <span className="text-2xl font-bold">
                   {new Intl.NumberFormat("pt-BR", {
                     style: "currency",
@@ -202,9 +186,7 @@ export function LeadsPage() {
             </Card>
             <Card>
               <CardContent className="p-4 flex flex-col gap-1">
-                <span className="text-sm font-medium text-muted-foreground">
-                  Conversão
-                </span>
+                <span className="text-sm font-medium text-muted-foreground">Conversão</span>
                 <span className="text-2xl font-bold">
                   {(stats?.taxaConversao || 0).toFixed(1)}%
                 </span>
@@ -215,9 +197,7 @@ export function LeadsPage() {
                 <span className="text-sm font-medium text-muted-foreground">
                   Tempo Médio (Dias)
                 </span>
-                <span className="text-2xl font-bold">
-                  {stats?.tempoMedioFechamento || 0}
-                </span>
+                <span className="text-2xl font-bold">{stats?.tempoMedioFechamento || 0}</span>
               </CardContent>
             </Card>
           </div>
@@ -236,10 +216,7 @@ export function LeadsPage() {
               </div>
             ) : (
               <div className="p-4 flex-1 overflow-auto bg-muted/10">
-                <PipelineKanban
-                  mentoradoId={viewMentoradoId}
-                  isReadOnly={isReadOnly}
-                />
+                <PipelineKanban mentoradoId={viewMentoradoId} isReadOnly={isReadOnly} />
               </div>
             )}
           </div>
@@ -252,10 +229,7 @@ export function LeadsPage() {
           onClose={() => setFiltersOpen(false)}
         />
 
-        <CreateLeadDialog
-          isOpen={createDialogOpen}
-          onClose={() => setCreateDialogOpen(false)}
-        />
+        <CreateLeadDialog isOpen={createDialogOpen} onClose={() => setCreateDialogOpen(false)} />
 
         <LeadDetailModal
           leadId={selectedLeadId}

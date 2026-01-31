@@ -1,6 +1,6 @@
-import { describe, expect, it } from "bun:test";
-import { appRouter } from "./routers";
+import { describe, expect, it } from "vitest";
 import type { TrpcContext } from "./_core/context";
+import { appRouter } from "./routers";
 
 type AuthenticatedUser = NonNullable<TrpcContext["user"]>;
 
@@ -10,6 +10,7 @@ function createAuthContext(): { ctx: TrpcContext } {
     clerkId: "clerk_sample_user",
     email: "sample@example.com",
     name: "Sample User",
+    imageUrl: "https://example.com/avatar.png",
     loginMethod: "email",
     role: "user",
     createdAt: new Date(),
@@ -19,6 +20,7 @@ function createAuthContext(): { ctx: TrpcContext } {
 
   const ctx: TrpcContext = {
     user,
+    mentorado: null,
     req: {
       protocol: "https",
       headers: {},

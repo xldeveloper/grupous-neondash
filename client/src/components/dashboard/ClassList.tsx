@@ -1,8 +1,8 @@
-import { trpc } from "@/lib/trpc";
-import { NeonCard } from "@/components/ui/neon-card";
+import { CheckCircle, Clock, PlayCircle, Video } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { PlayCircle, CheckCircle, Clock, Video } from "lucide-react";
+import { NeonCard } from "@/components/ui/neon-card";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { trpc } from "@/lib/trpc";
 import { cn } from "@/lib/utils";
 
 export function ClassList({ mentoradoId }: { mentoradoId?: number }) {
@@ -21,11 +21,8 @@ export function ClassList({ mentoradoId }: { mentoradoId?: number }) {
   }
 
   const sortedClasses = classes || [];
-  const completedCount = sortedClasses.filter(c => c.watched).length;
-  const progress =
-    sortedClasses.length > 0
-      ? (completedCount / sortedClasses.length) * 100
-      : 0;
+  const completedCount = sortedClasses.filter((c) => c.watched).length;
+  const progress = sortedClasses.length > 0 ? (completedCount / sortedClasses.length) * 100 : 0;
 
   return (
     <div className="h-full flex flex-col space-y-4">
@@ -50,7 +47,7 @@ export function ClassList({ mentoradoId }: { mentoradoId?: number }) {
 
         <ScrollArea className="flex-1 pr-4">
           <div className="space-y-3">
-            {sortedClasses.map(item => (
+            {sortedClasses.map((item) => (
               <div
                 key={item.id}
                 className={cn(
@@ -80,12 +77,8 @@ export function ClassList({ mentoradoId }: { mentoradoId?: number }) {
                         : "Data a definir"}
                     </span>
                   </div>
-                  <h3 className="text-sm font-bold text-foreground mb-1">
-                    {item.title}
-                  </h3>
-                  <p className="text-xs text-muted-foreground line-clamp-2">
-                    {item.description}
-                  </p>
+                  <h3 className="text-sm font-bold text-foreground mb-1">{item.title}</h3>
+                  <p className="text-xs text-muted-foreground line-clamp-2">{item.description}</p>
 
                   {item.url && !item.watched && (
                     <a
@@ -104,9 +97,7 @@ export function ClassList({ mentoradoId }: { mentoradoId?: number }) {
                   variant="ghost"
                   size="sm"
                   disabled={item.watched || markWatched.isPending}
-                  onClick={() =>
-                    markWatched.mutate({ classId: item.id, mentoradoId })
-                  } // Pass mentoradoId
+                  onClick={() => markWatched.mutate({ classId: item.id, mentoradoId })} // Pass mentoradoId
                   className={cn(
                     "flex-shrink-0 h-8 self-center",
                     item.watched

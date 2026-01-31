@@ -1242,13 +1242,7 @@
     "public.categoria": {
       "name": "categoria",
       "schema": "public",
-      "values": [
-        "faturamento",
-        "conteudo",
-        "operacional",
-        "consistencia",
-        "especial"
-      ]
+      "values": ["faturamento", "conteudo", "operacional", "consistencia", "especial"]
     },
     "public.role": {
       "name": "role",

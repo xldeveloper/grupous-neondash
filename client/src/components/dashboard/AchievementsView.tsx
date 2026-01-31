@@ -1,37 +1,36 @@
 import {
-  BentoGrid,
-  BentoCard,
-  BentoCardContent,
-  BentoCardFooter,
-  BentoCardHeader,
-} from "@/components/ui/bento-grid";
-import { Badge } from "@/components/ui/badge";
+  Award,
+  Camera,
+  Crown,
+  Flame,
+  Gem,
+  Loader2,
+  Lock,
+  Medal,
+  Play,
+  Rocket,
+  Target,
+  TrendingUp,
+  Trophy,
+  Users,
+  Zap,
+} from "lucide-react";
 import {
   AnimatedTabs,
   AnimatedTabsContent,
   AnimatedTabsList,
   AnimatedTabsTrigger,
 } from "@/components/ui/animated-tabs";
-import { trpc } from "@/lib/trpc";
+import { Badge } from "@/components/ui/badge";
 import {
-  Loader2,
-  Target,
-  TrendingUp,
-  Rocket,
-  Crown,
-  Gem,
-  Camera,
-  Flame,
-  Play,
-  Users,
-  Zap,
-  Award,
-  Trophy,
-  Medal,
-  Lock,
-} from "lucide-react";
-import { cn } from "@/lib/utils";
+  BentoCard,
+  BentoCardContent,
+  BentoCardHeader,
+  BentoGrid,
+} from "@/components/ui/bento-grid";
 import { calcularProgresso } from "@/data/atividades-data";
+import { trpc } from "@/lib/trpc";
+import { cn } from "@/lib/utils";
 
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   Target,
@@ -74,9 +73,7 @@ function ActivityProgressContent() {
   const { data: progressMap } = trpc.atividades.getProgress.useQuery();
 
   const { total, completed, percentage } = calcularProgresso(
-    Object.fromEntries(
-      Object.entries(progressMap || {}).map(([k, v]) => [k, v.completed])
-    )
+    Object.fromEntries(Object.entries(progressMap || {}).map(([k, v]) => [k, v.completed]))
   );
 
   return (
@@ -99,36 +96,23 @@ function ActivityProgressContent() {
 }
 
 export function AchievementsView() {
-  const { data: allBadges, isLoading: loadingAll } =
-    trpc.gamificacao.allBadges.useQuery();
-  const { data: myBadges, isLoading: loadingMy } =
-    trpc.gamificacao.myBadges.useQuery();
+  const { data: allBadges, isLoading: loadingAll } = trpc.gamificacao.allBadges.useQuery();
+  const { data: myBadges, isLoading: loadingMy } = trpc.gamificacao.myBadges.useQuery();
 
   const isLoading = loadingAll || loadingMy;
 
-  const earnedBadgeIds = new Set(myBadges?.map(b => b.badge.id) || []);
+  const earnedBadgeIds = new Set(myBadges?.map((b) => b.badge.id) || []);
 
-  const categorias = [
-    "faturamento",
-    "conteudo",
-    "operacional",
-    "consistencia",
-    "especial",
-  ];
+  const categorias = ["faturamento", "conteudo", "operacional", "consistencia", "especial"];
 
-  const totalPontos =
-    myBadges?.reduce((acc, b) => acc + b.badge.pontos, 0) || 0;
+  const totalPontos = myBadges?.reduce((acc, b) => acc + b.badge.pontos, 0) || 0;
   const totalBadges = myBadges?.length || 0;
 
   return (
     <div className="space-y-8">
       <div>
-        <h2 className="text-2xl font-bold text-slate-900 tracking-tight">
-          Conquistas
-        </h2>
-        <p className="text-slate-500 mt-1">
-          Suas medalhas e badges conquistados na mentoria
-        </p>
+        <h2 className="text-2xl font-bold text-slate-900 tracking-tight">Conquistas</h2>
+        <p className="text-slate-500 mt-1">Suas medalhas e badges conquistados na mentoria</p>
       </div>
 
       {isLoading ? (
@@ -188,12 +172,8 @@ export function AchievementsView() {
               <AnimatedTabsTrigger value="all" className="rounded-xl">
                 Todos
               </AnimatedTabsTrigger>
-              {categorias.map(cat => (
-                <AnimatedTabsTrigger
-                  key={cat}
-                  value={cat}
-                  className="rounded-xl"
-                >
+              {categorias.map((cat) => (
+                <AnimatedTabsTrigger key={cat} value={cat} className="rounded-xl">
                   {categoriaLabels[cat]}
                 </AnimatedTabsTrigger>
               ))}
@@ -204,9 +184,7 @@ export function AchievementsView() {
                 {allBadges?.map((badge, idx) => {
                   const earned = earnedBadgeIds.has(badge.id);
                   const Icon = iconMap[badge.icone] || Award;
-                  const earnedData = myBadges?.find(
-                    b => b.badge.id === badge.id
-                  );
+                  const earnedData = myBadges?.find((b) => b.badge.id === badge.id);
 
                   return (
                     <BentoCard
@@ -257,10 +235,7 @@ export function AchievementsView() {
                           </p>
                         </div>
                         <div className="mt-2">
-                          <Badge
-                            variant={earned ? "default" : "outline"}
-                            className="text-xs"
-                          >
+                          <Badge variant={earned ? "default" : "outline"} className="text-xs">
                             {badge.pontos} pts
                           </Badge>
                           {earned && earnedData && (
@@ -276,17 +251,15 @@ export function AchievementsView() {
               </BentoGrid>
             </AnimatedTabsContent>
 
-            {categorias.map(cat => (
+            {categorias.map((cat) => (
               <AnimatedTabsContent key={cat} value={cat}>
                 <BentoGrid className="grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                   {allBadges
-                    ?.filter(b => b.categoria === cat)
+                    ?.filter((b) => b.categoria === cat)
                     .map((badge, idx) => {
                       const earned = earnedBadgeIds.has(badge.id);
                       const Icon = iconMap[badge.icone] || Award;
-                      const earnedData = myBadges?.find(
-                        b => b.badge.id === badge.id
-                      );
+                      const earnedData = myBadges?.find((b) => b.badge.id === badge.id);
 
                       return (
                         <BentoCard
@@ -337,16 +310,12 @@ export function AchievementsView() {
                               </p>
                             </div>
                             <div className="mt-2">
-                              <Badge
-                                variant={earned ? "default" : "outline"}
-                                className="text-xs"
-                              >
+                              <Badge variant={earned ? "default" : "outline"} className="text-xs">
                                 {badge.pontos} pts
                               </Badge>
                               {earned && earnedData && (
                                 <p className="text-xs text-neon-green mt-2">
-                                  Conquistado em {earnedData.mes}/
-                                  {earnedData.ano}
+                                  Conquistado em {earnedData.mes}/{earnedData.ano}
                                 </p>
                               )}
                             </div>

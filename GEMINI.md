@@ -134,8 +134,9 @@ bun start                   # Run production server (Bun runtime)
 
 # Quality
 bun run check               # TypeScript type check
-bun run format              # Prettier format
-bun test                    # Run Bun test
+bun run lint                # Biome lint + format
+bun run format              # Biome format only
+bun test                    # Vitest tests
 
 # Database
 bun run db:push             # Generate migrations + apply (drizzle-kit)
@@ -229,7 +230,7 @@ CORE_STANDARDS:
 **Code Style:**
 
 - TypeScript strict mode enabled
-- Prettier for formatting (see `.prettierrc`)
+- Biome for linting and formatting
 - No `any` types (use `unknown` or proper generics)
 - Functional components only (no classes)
 - React 19 patterns (`ref` as prop, no `forwardRef`)
@@ -243,9 +244,9 @@ CORE_STANDARDS:
 
 **PR Requirements:**
 
-- All tests passing (`bun test`)
+- All tests passing (`bun test` → Vitest)
 - Type checking passes (`bun run check`)
-- Code formatted (`bun run format`)
+- Code formatted (`bun run lint`)
 
 ---
 
@@ -253,9 +254,9 @@ CORE_STANDARDS:
 
 Before creating a PR:
 
-- [ ] All tests pass (`bun test`)
+- [ ] All tests pass (`bun test` → Vitest)
 - [ ] Type checking passes (`bun run check`)
-- [ ] Code formatted (`bun run format`)
+- [ ] Code linted (`bun run lint`)
 - [ ] No console errors in browser
 - [ ] Responsive design tested (mobile + desktop)
 
@@ -368,7 +369,7 @@ Build features with stack-wide consistency.
 - Create/extend components in `client/src/components/`
 - Use shadcn/ui primitives from `client/src/components/ui/`
 - Add route pages in `client/src/pages/`
-- Write tests with Bun test
+- Write tests with Vitest
 
 ### 3. Stack-Wide Delivery
 
@@ -379,7 +380,7 @@ Complete feature delivery with all layers.
 - Database migrations ready (`bun run db:push`)
 - API documented (tRPC types auto-generate)
 - Frontend build optimized
-- Tests passing (`bun test`)
+- Tests passing (`bun test` → Vitest)
 - Type checking clean (`bun run check`)
 
 ---
@@ -513,7 +514,7 @@ type CreateFeatureInput = z.infer<typeof createFeatureSchema>;
 
 | Test Type     | Tool       | Command         |
 | ------------- | ---------- | --------------- |
-| Unit tests    | Bun test   | `bun test`      |
+| Unit tests    | Vitest     | `bun test`      |
 | Type checking | TypeScript | `bun run check` |
 
 **Test location:** `server/*.test.ts`, `client/src/**/*.test.ts`

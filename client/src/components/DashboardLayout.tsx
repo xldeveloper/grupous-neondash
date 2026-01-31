@@ -1,45 +1,47 @@
 "use client";
-import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Sidebar, SidebarBody, SidebarLink } from "@/components/ui/sidebar";
-import {
-  LayoutDashboard,
-  Users,
-  TrendingUp,
-  Shield,
-  Link2,
-  UserCog,
-  BarChart3,
-  Trophy,
-  Medal,
-  Bell,
-  Bot,
-  Briefcase,
-  LogOut,
-  Building2,
-  Rocket,
-  Moon,
-  Sun,
-} from "lucide-react";
+import { UserButton } from "@clerk/clerk-react";
 import { motion } from "framer-motion";
-import { cn } from "@/lib/utils";
+import { Bot, Briefcase, LayoutDashboard, Moon, Sun, UserCog, Users } from "lucide-react";
+import type React from "react";
+import { useState } from "react";
+import { Link, Redirect, useLocation } from "wouter";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { useTheme } from "@/_core/hooks/useTheme";
-import { Link, useLocation, Redirect } from "wouter";
-import { UserButton } from "@clerk/clerk-react";
+import { Button } from "@/components/ui/button";
+import { Sidebar, SidebarBody, SidebarLink } from "@/components/ui/sidebar";
+import { trpc } from "@/lib/trpc";
+import { cn } from "@/lib/utils";
 
-export default function DashboardLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  const { user, logout } = useAuth();
+export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+  const { user } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const [location] = useLocation();
   const [open, setOpen] = useState(false);
 
+  // ═══════════════════════════════════════════════════════════════════════════
+  // ONBOARDING GUARD
+  // ═══════════════════════════════════════════════════════════════════════════
+  // Skip onboarding check for admins and certain routes
+  const isOnboardingExemptRoute =
+    location.startsWith("/primeiro-acesso") || location.startsWith("/diagnostico");
+
+  // Determine if we should check onboarding (user must exist, not admin, not exempt route)
+  const shouldCheckOnboarding = !!user && user.role !== "admin" && !isOnboardingExemptRoute;
+
+  // Always call hook (unconditionally) but enable based on conditions
+  const { data: isOnboardingComplete, isLoading: isCheckingOnboarding } =
+    trpc.mentorados.isOnboardingComplete.useQuery(undefined, {
+      enabled: shouldCheckOnboarding,
+    });
+
+  // Early return if no user
   if (!user) {
     return <Redirect to="/" />;
+  }
+
+  // Redirect to onboarding if not complete (only for non-admin, non-exempt routes)
+  if (shouldCheckOnboarding && !isCheckingOnboarding && isOnboardingComplete === false) {
+    return <Redirect to="/primeiro-acesso" />;
   }
 
   const navItems = [
@@ -65,9 +67,7 @@ export default function DashboardLayout({
     // { href: "/escala", label: "Neon Escala", icon: Rocket }, // Incorporated into Home
   ];
 
-  const filteredNavItems = navItems.filter(
-    item => !item.adminOnly || user.role === "admin"
-  );
+  const filteredNavItems = navItems.filter((item) => !item.adminOnly || user.role === "admin");
 
   return (
     <div
@@ -81,9 +81,9 @@ export default function DashboardLayout({
           <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
             {open ? <Logo /> : <LogoIcon />}
             <div className="mt-8 flex flex-col gap-2">
-              {filteredNavItems.map((item, idx) => (
+              {filteredNavItems.map((item) => (
                 <SidebarLink
-                  key={idx}
+                  key={item.href}
                   link={{
                     label: item.label,
                     href: item.href,
@@ -96,9 +96,7 @@ export default function DashboardLayout({
                       />
                     ),
                   }}
-                  className={cn(
-                    location === item.href && "bg-secondary rounded-md"
-                  )}
+                  className={cn(location === item.href && "bg-secondary rounded-md")}
                 />
               ))}
             </div>
@@ -110,9 +108,7 @@ export default function DashboardLayout({
                 size="icon-sm"
                 onClick={toggleTheme}
                 className="h-7 w-7 flex-shrink-0"
-                aria-label={
-                  theme === "light" ? "Ativar modo escuro" : "Ativar modo claro"
-                }
+                aria-label={theme === "light" ? "Ativar modo escuro" : "Ativar modo claro"}
               >
                 {theme === "light" ? (
                   <Moon className="h-4 w-4 text-muted-foreground" />
@@ -161,11 +157,7 @@ export const Logo = () => {
       href="/dashboard"
       className="font-normal flex space-x-2 items-center text-sm text-black py-1 relative z-20"
     >
-      <img
-        src="/brand/neon-symbol-official.png"
-        alt="Neon"
-        className="h-6 w-6 flex-shrink-0"
-      />
+      <img src="/brand/neon-symbol-official.png" alt="Neon" className="h-6 w-6 flex-shrink-0" />
       <motion.span
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -183,11 +175,7 @@ export const LogoIcon = () => {
       href="/dashboard"
       className="font-normal flex space-x-2 items-center text-sm text-black py-1 relative z-20"
     >
-      <img
-        src="/brand/neon-symbol-official.png"
-        alt="Neon"
-        className="h-6 w-6 flex-shrink-0"
-      />
+      <img src="/brand/neon-symbol-official.png" alt="Neon" className="h-6 w-6 flex-shrink-0" />
     </Link>
   );
 };

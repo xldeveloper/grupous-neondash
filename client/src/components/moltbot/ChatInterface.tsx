@@ -9,25 +9,16 @@
  * - Session management
  */
 
-import { useState, useRef, useEffect } from "react";
-import { useMoltbot } from "@/hooks/useMoltbot";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { AnimatePresence, motion } from "framer-motion";
+import { Bot, Loader2, MessageSquarePlus, Send, User, Wifi, WifiOff, X } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import {
-  Send,
-  Bot,
-  User,
-  Loader2,
-  MessageSquarePlus,
-  X,
-  Wifi,
-  WifiOff,
-} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { useMoltbot } from "@/hooks/useMoltbot";
 import { cn } from "@/lib/utils";
-import { motion, AnimatePresence } from "framer-motion";
 
 export function ChatInterface() {
   const {
@@ -50,14 +41,12 @@ export function ChatInterface() {
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
     if (scrollAreaRef.current) {
-      const scrollArea = scrollAreaRef.current.querySelector(
-        "[data-radix-scroll-area-viewport]"
-      );
+      const scrollArea = scrollAreaRef.current.querySelector("[data-radix-scroll-area-viewport]");
       if (scrollArea) {
         scrollArea.scrollTop = scrollArea.scrollHeight;
       }
     }
-  }, [messages]);
+  }, []);
 
   // Focus input when session starts
   useEffect(() => {
@@ -139,19 +128,13 @@ export function ChatInterface() {
               <Bot className="h-12 w-12 text-primary" />
             </div>
             <div>
-              <h3 className="text-lg font-semibold">
-                Olá! Eu sou o Assistente NEON
-              </h3>
+              <h3 className="text-lg font-semibold">Olá! Eu sou o Assistente NEON</h3>
               <p className="mt-1 text-sm text-muted-foreground">
-                Seu assistente de mentoria com IA. Posso ajudar com análises,
-                sugestões e acompanhamento do seu progresso.
+                Seu assistente de mentoria com IA. Posso ajudar com análises, sugestões e
+                acompanhamento do seu progresso.
               </p>
             </div>
-            <Button
-              onClick={createSession}
-              disabled={isLoading}
-              className="gap-2"
-            >
+            <Button onClick={createSession} disabled={isLoading} className="gap-2">
               {isLoading ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
               ) : (
@@ -166,17 +149,14 @@ export function ChatInterface() {
             <ScrollArea ref={scrollAreaRef} className="flex-1 pr-4">
               <div className="flex flex-col gap-4">
                 <AnimatePresence initial={false}>
-                  {messages.map(message => (
+                  {messages.map((message) => (
                     <motion.div
                       key={message.id}
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0 }}
                       transition={{ duration: 0.2 }}
-                      className={cn(
-                        "flex gap-3",
-                        message.role === "user" && "flex-row-reverse"
-                      )}
+                      className={cn("flex gap-3", message.role === "user" && "flex-row-reverse")}
                     >
                       <Avatar className="h-8 w-8 flex-shrink-0">
                         <AvatarFallback
@@ -253,24 +233,17 @@ export function ChatInterface() {
             )}
 
             {/* Input area */}
-            <form
-              onSubmit={handleSubmit}
-              className="flex gap-2 border-t border-border/50 pt-4"
-            >
+            <form onSubmit={handleSubmit} className="flex gap-2 border-t border-border/50 pt-4">
               <Input
                 ref={inputRef}
                 value={input}
-                onChange={e => setInput(e.target.value)}
+                onChange={(e) => setInput(e.target.value)}
                 onKeyDown={handleKeyDown}
                 placeholder="Digite sua mensagem..."
                 disabled={isSending}
                 className="flex-1"
               />
-              <Button
-                type="submit"
-                size="icon"
-                disabled={!input.trim() || isSending}
-              >
+              <Button type="submit" size="icon" disabled={!input.trim() || isSending}>
                 {isSending ? (
                   <Loader2 className="h-4 w-4 animate-spin" />
                 ) : (

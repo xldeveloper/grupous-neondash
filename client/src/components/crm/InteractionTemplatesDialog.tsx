@@ -1,16 +1,17 @@
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Pencil, Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "sonner";
 import * as z from "zod";
-import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogFooter,
-  DialogDescription,
 } from "@/components/ui/dialog";
 import {
   Form,
@@ -20,6 +21,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -27,12 +29,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
+import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
-import { toast } from "sonner";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card, CardContent } from "@/components/ui/card";
-import { Pencil, Trash2, Plus } from "lucide-react";
+import { trpc } from "@/lib/trpc";
 
 // Schema for template
 const templateSchema = z.object({
@@ -54,16 +53,13 @@ export function InteractionTemplatesDialog({
   onClose,
   onSelectTemplate,
 }: InteractionTemplatesDialogProps) {
-  const [activeTab, setActiveTab] = useState<"list" | "create" | "edit">(
-    "list"
-  );
+  const [activeTab, setActiveTab] = useState<"list" | "create" | "edit">("list");
   const [editingId, setEditingId] = useState<number | null>(null);
 
   const trpcUtils = trpc.useUtils();
-  const { data: templatesData, isLoading } =
-    trpc.interactionTemplates.list.useQuery(undefined, {
-      enabled: isOpen,
-    });
+  const { data: templatesData, isLoading } = trpc.interactionTemplates.list.useQuery(undefined, {
+    enabled: isOpen,
+  });
 
   const form = useForm<TemplateFormValues>({
     resolver: zodResolver(templateSchema),
@@ -81,7 +77,7 @@ export function InteractionTemplatesDialog({
       setActiveTab("list");
       form.reset();
     },
-    onError: err => toast.error(`Erro ao criar: ${err.message}`),
+    onError: (err) => toast.error(`Erro ao criar: ${err.message}`),
   });
 
   const updateMutation = trpc.interactionTemplates.update.useMutation({
@@ -92,7 +88,7 @@ export function InteractionTemplatesDialog({
       setEditingId(null);
       form.reset();
     },
-    onError: err => toast.error(`Erro ao atualizar: ${err.message}`),
+    onError: (err) => toast.error(`Erro ao atualizar: ${err.message}`),
   });
 
   const deleteMutation = trpc.interactionTemplates.delete.useMutation({
@@ -100,7 +96,7 @@ export function InteractionTemplatesDialog({
       toast.success("Template excluído!");
       trpcUtils.interactionTemplates.list.invalidate();
     },
-    onError: err => toast.error(`Erro ao excluir: ${err.message}`),
+    onError: (err) => toast.error(`Erro ao excluir: ${err.message}`),
   });
 
   const onSubmit = (values: TemplateFormValues) => {
@@ -133,7 +129,7 @@ export function InteractionTemplatesDialog({
   return (
     <Dialog
       open={isOpen}
-      onOpenChange={open => {
+      onOpenChange={(open) => {
         if (!open) {
           setActiveTab("list");
           setEditingId(null);
@@ -151,7 +147,7 @@ export function InteractionTemplatesDialog({
 
         <Tabs
           value={activeTab}
-          onValueChange={v => setActiveTab(v as any)}
+          onValueChange={(v) => setActiveTab(v as any)}
           className="flex-1 flex flex-col min-h-0"
         >
           {activeTab === "list" && (
@@ -164,9 +160,7 @@ export function InteractionTemplatesDialog({
 
           <TabsContent value="list" className="flex-1 overflow-y-auto mt-0">
             {isLoading ? (
-              <div className="text-center py-8 text-muted-foreground">
-                Carregando...
-              </div>
+              <div className="text-center py-8 text-muted-foreground">Carregando...</div>
             ) : templatesData?.templates.length === 0 ? (
               <div className="text-center py-8 text-muted-foreground">
                 Nenhum template encontrado.
@@ -180,10 +174,7 @@ export function InteractionTemplatesDialog({
                   >
                     <CardContent className="p-3">
                       <div className="flex justify-between items-start">
-                        <div
-                          className="flex-1"
-                          onClick={() => onSelectTemplate?.(template)}
-                        >
+                        <div className="flex-1" onClick={() => onSelectTemplate?.(template)}>
                           <h4 className="font-medium text-sm flex items-center gap-2">
                             {template.title}
                             <span className="text-[10px] bg-muted px-1.5 py-0.5 rounded uppercase">

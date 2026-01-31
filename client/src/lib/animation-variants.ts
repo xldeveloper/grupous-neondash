@@ -1,9 +1,8 @@
-import { Variants } from "motion/react";
+import type { Variants } from "motion/react";
 
 // Prefers-reduced-motion detection
 const prefersReducedMotion =
-  typeof window !== "undefined" &&
-  window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+  typeof window !== "undefined" && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
 
 // No-op variants for reduced motion
 const noOpVariants: Variants = {

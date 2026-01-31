@@ -4,8 +4,8 @@
  * Protects API from abuse and respects Clerk API limits.
  */
 
-import rateLimit from "express-rate-limit";
 import type { Request, Response } from "express";
+import rateLimit from "express-rate-limit";
 
 // ═══════════════════════════════════════════════════════════════════════════
 // CONFIGURATION
@@ -22,7 +22,7 @@ const MAX_REQUESTS_AUTH = 5; // 5 auth attempts per 15 min
 /**
  * Extract user ID from request (Clerk auth).
  */
-function getUserIdFromRequest(req: Request): string {
+function _getUserIdFromRequest(req: Request): string {
   // @ts-expect-error - Clerk adds auth to request
   const auth = req.auth;
   return auth?.userId || req.ip || "anonymous";
@@ -65,26 +65,13 @@ export const userRateLimiter = rateLimit({
   skip: isAdmin,
   message: {
     error: "Too many requests",
-    message:
-      "Você excedeu o limite de requisições. Tente novamente em alguns minutos.",
+    message: "Você excedeu o limite de requisições. Tente novamente em alguns minutos.",
     retryAfterMs: WINDOW_MS,
   },
-  handler: (req: Request, res: Response) => {
-    console.log(
-      JSON.stringify({
-        timestamp: new Date().toISOString(),
-        level: "warn",
-        service: "rate-limiter",
-        action: "user_rate_limit_exceeded",
-        userId: getUserIdFromRequest(req),
-        ip: getClientIp(req),
-      })
-    );
-
+  handler: (_req: Request, res: Response) => {
     res.status(429).json({
       error: "Too many requests",
-      message:
-        "Você excedeu o limite de requisições. Tente novamente em alguns minutos.",
+      message: "Você excedeu o limite de requisições. Tente novamente em alguns minutos.",
     });
   },
 });
@@ -105,17 +92,7 @@ export const authRateLimiter = rateLimit({
     message: "Muitas tentativas de autenticação. Aguarde alguns minutos.",
     retryAfterMs: WINDOW_MS,
   },
-  handler: (req: Request, res: Response) => {
-    console.log(
-      JSON.stringify({
-        timestamp: new Date().toISOString(),
-        level: "warn",
-        service: "rate-limiter",
-        action: "auth_rate_limit_exceeded",
-        ip: getClientIp(req),
-      })
-    );
-
+  handler: (_req: Request, res: Response) => {
     res.status(429).json({
       error: "Too many authentication attempts",
       message: "Muitas tentativas de autenticação. Aguarde alguns minutos.",

@@ -1,9 +1,9 @@
-import { trpc } from "@/lib/trpc";
+import { ClerkProvider } from "@clerk/clerk-react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { httpBatchLink } from "@trpc/client";
 import { createRoot } from "react-dom/client";
 import superjson from "superjson";
-import { ClerkProvider } from "@clerk/clerk-react";
+import { trpc } from "@/lib/trpc";
 import App from "./App.tsx";
 import "./index.css";
 

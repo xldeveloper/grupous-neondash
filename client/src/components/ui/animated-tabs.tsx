@@ -1,8 +1,8 @@
 "use client";
 
-import * as React from "react";
 import * as TabsPrimitive from "@radix-ui/react-tabs";
 import { motion } from "framer-motion";
+import * as React from "react";
 import { cn } from "@/lib/utils";
 
 const TabsContext = React.createContext<{
@@ -33,9 +33,7 @@ const AnimatedTabs = React.forwardRef<
   };
 
   return (
-    <TabsContext.Provider
-      value={{ activeTab, setActiveTab: handleValueChange }}
-    >
+    <TabsContext.Provider value={{ activeTab, setActiveTab: handleValueChange }}>
       <TabsPrimitive.Root
         ref={ref}
         value={value !== undefined ? value : activeTab}
@@ -123,9 +121,4 @@ const AnimatedTabsContent = React.forwardRef<
 ));
 AnimatedTabsContent.displayName = "AnimatedTabsContent";
 
-export {
-  AnimatedTabs,
-  AnimatedTabsList,
-  AnimatedTabsTrigger,
-  AnimatedTabsContent,
-};
+export { AnimatedTabs, AnimatedTabsList, AnimatedTabsTrigger, AnimatedTabsContent };

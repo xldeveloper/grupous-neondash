@@ -15,10 +15,7 @@ const isNonEmptyString = (value: unknown): value is string =>
 
 const buildEndpointUrl = (baseUrl: string): string => {
   const normalizedBase = baseUrl.endsWith("/") ? baseUrl : `${baseUrl}/`;
-  return new URL(
-    "webdevtoken.v1.WebDevService/SendNotification",
-    normalizedBase
-  ).toString();
+  return new URL("webdevtoken.v1.WebDevService/SendNotification", normalizedBase).toString();
 };
 
 const validatePayload = (input: NotificationPayload): NotificationPayload => {
@@ -61,24 +58,20 @@ const validatePayload = (input: NotificationPayload): NotificationPayload => {
  * cannot be reached (callers can fall back to email/slack). Validation errors
  * bubble up as TRPC errors so callers can fix the payload.
  */
-export async function notifyOwner(
-  payload: NotificationPayload
-): Promise<boolean> {
+export async function notifyOwner(payload: NotificationPayload): Promise<boolean> {
   const { title, content } = validatePayload(payload);
 
   if (!ENV.llmApiUrl) {
     throw new TRPCError({
       code: "INTERNAL_SERVER_ERROR",
-      message:
-        "LLM_API_URL is not configured. Notification service unavailable.",
+      message: "LLM_API_URL is not configured. Notification service unavailable.",
     });
   }
 
   if (!ENV.llmApiKey) {
     throw new TRPCError({
       code: "INTERNAL_SERVER_ERROR",
-      message:
-        "LLM_API_KEY is not configured. Notification service unavailable.",
+      message: "LLM_API_KEY is not configured. Notification service unavailable.",
     });
   }
 
@@ -97,18 +90,12 @@ export async function notifyOwner(
     });
 
     if (!response.ok) {
-      const detail = await response.text().catch(() => "");
-      console.warn(
-        `[Notification] Failed to notify owner (${response.status} ${response.statusText})${
-          detail ? `: ${detail}` : ""
-        }`
-      );
+      const _detail = await response.text().catch(() => "");
       return false;
     }
 
     return true;
-  } catch (error) {
-    console.warn("[Notification] Error calling notification service:", error);
+  } catch (_error) {
     return false;
   }
 }

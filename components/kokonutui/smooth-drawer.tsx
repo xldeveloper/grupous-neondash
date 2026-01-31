@@ -39,17 +39,13 @@ function PriceTag({ price, discountedPrice }: PriceTagProps) {
         <span className="bg-gradient-to-br from-zinc-900 to-zinc-700 bg-clip-text font-bold text-4xl text-transparent dark:from-white dark:to-zinc-300">
           ${discountedPrice}
         </span>
-        <span className="text-lg text-zinc-400 line-through dark:text-zinc-500">
-          ${price}
-        </span>
+        <span className="text-lg text-zinc-400 line-through dark:text-zinc-500">${price}</span>
       </div>
       <div className="flex flex-col items-center gap-0.5">
         <span className="font-medium text-sm text-zinc-900 dark:text-zinc-100">
           Lifetime access
         </span>
-        <span className="text-xs text-zinc-700 dark:text-zinc-300">
-          One-time payment
-        </span>
+        <span className="text-xs text-zinc-700 dark:text-zinc-300">One-time payment</span>
       </div>
     </div>
   );
@@ -147,9 +143,7 @@ export default function SmoothDrawer({
                     <Image alt="Logo" height={32} src="/logo.svg" width={32} />
                   </div>
                 </motion.div>
-                <motion.span variants={itemVariants as any}>
-                  {title}
-                </motion.span>
+                <motion.span variants={itemVariants as any}>{title}</motion.span>
               </DrawerTitle>
               <motion.div variants={itemVariants as any}>
                 <DrawerDescription className="text-sm text-zinc-600 leading-relaxed tracking-tighter dark:text-zinc-400">

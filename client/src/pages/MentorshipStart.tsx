@@ -1,6 +1,6 @@
+import { Link } from "wouter";
 import { MentorshipContent } from "@/components/landing/MentorshipContent";
 import { Button } from "@/components/ui/button";
-import { Link } from "wouter";
 
 export default function MentorshipStart() {
   return (

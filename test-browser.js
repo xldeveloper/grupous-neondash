@@ -13,8 +13,7 @@ async function test() {
     } catch (e) {
       console.log("Default launch failed, trying system Chrome fallback...");
       browser = await chromium.launch({
-        executablePath:
-          "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+        executablePath: "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
         headless: true,
       });
     }

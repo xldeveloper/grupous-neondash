@@ -1,18 +1,9 @@
-import { z } from "zod";
-import { router, mentoradoProcedure, protectedProcedure } from "./_core/trpc";
-import {
-  eq,
-  and,
-  desc,
-  sql,
-  gte,
-  lte,
-  arrayContains,
-  inArray,
-} from "drizzle-orm";
-import { getDb } from "./db";
-import { leads, interacoes } from "../drizzle/schema";
 import { TRPCError } from "@trpc/server";
+import { and, arrayContains, desc, eq, gte, inArray, lte, sql } from "drizzle-orm";
+import { z } from "zod";
+import { interacoes, leads } from "../drizzle/schema";
+import { mentoradoProcedure, protectedProcedure, router } from "./_core/trpc";
+import { getDb } from "./db";
 
 export const leadsRouter = router({
   list: protectedProcedure
@@ -110,37 +101,35 @@ export const leadsRouter = router({
       };
     }),
 
-  getById: protectedProcedure
-    .input(z.object({ id: z.number() }))
-    .query(async ({ ctx, input }) => {
-      const db = getDb();
+  getById: protectedProcedure.input(z.object({ id: z.number() })).query(async ({ ctx, input }) => {
+    const db = getDb();
 
-      const lead = await db.query.leads.findFirst({
-        where: eq(leads.id, input.id),
-        with: {
-          interacoes: {
-            orderBy: [desc(interacoes.createdAt)],
-          },
+    const lead = await db.query.leads.findFirst({
+      where: eq(leads.id, input.id),
+      with: {
+        interacoes: {
+          orderBy: [desc(interacoes.createdAt)],
         },
+      },
+    });
+
+    if (!lead) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Lead não encontrado",
       });
+    }
 
-      if (!lead) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "Lead não encontrado",
-        });
-      }
+    // Check strict ownership
+    const isOwner = ctx.mentorado?.id === lead.mentoradoId;
+    const isAdmin = ctx.user.role === "admin";
 
-      // Check strict ownership
-      const isOwner = ctx.mentorado?.id === lead.mentoradoId;
-      const isAdmin = ctx.user.role === "admin";
+    if (!isOwner && !isAdmin) {
+      throw new TRPCError({ code: "FORBIDDEN", message: "Acesso negado" });
+    }
 
-      if (!isOwner && !isAdmin) {
-        throw new TRPCError({ code: "FORBIDDEN", message: "Acesso negado" });
-      }
-
-      return { lead, interacoes: lead.interacoes };
-    }),
+    return { lead, interacoes: lead.interacoes };
+  }),
 
   create: mentoradoProcedure
     .input(
@@ -149,14 +138,7 @@ export const leadsRouter = router({
         email: z.string().email("Email inválido"),
         telefone: z.string().optional(),
         empresa: z.string().optional(),
-        origem: z.enum([
-          "instagram",
-          "whatsapp",
-          "google",
-          "indicacao",
-          "site",
-          "outro",
-        ]),
+        origem: z.enum(["instagram", "whatsapp", "google", "indicacao", "site", "outro"]),
         valorEstimado: z.number().optional(),
       })
     )
@@ -196,11 +178,7 @@ export const leadsRouter = router({
       const db = getDb();
 
       // 1. Fetch to check ownership
-      const [lead] = await db
-        .select()
-        .from(leads)
-        .where(eq(leads.id, input.id))
-        .limit(1);
+      const [lead] = await db.select().from(leads).where(eq(leads.id, input.id)).limit(1);
 
       if (!lead) {
         throw new TRPCError({
@@ -250,11 +228,7 @@ export const leadsRouter = router({
       const db = getDb();
 
       // 1. Fetch to check ownership
-      const [lead] = await db
-        .select()
-        .from(leads)
-        .where(eq(leads.id, input.id))
-        .limit(1);
+      const [lead] = await db.select().from(leads).where(eq(leads.id, input.id)).limit(1);
 
       if (!lead) {
         throw new TRPCError({
@@ -294,11 +268,7 @@ export const leadsRouter = router({
       const db = getDb();
 
       // 1. Fetch to check ownership
-      const [lead] = await db
-        .select()
-        .from(leads)
-        .where(eq(leads.id, input.id))
-        .limit(1);
+      const [lead] = await db.select().from(leads).where(eq(leads.id, input.id)).limit(1);
 
       if (!lead) {
         throw new TRPCError({
@@ -331,11 +301,7 @@ export const leadsRouter = router({
       const db = getDb();
 
       // 1. Fetch lead
-      const [lead] = await db
-        .select()
-        .from(leads)
-        .where(eq(leads.id, input.leadId))
-        .limit(1);
+      const [lead] = await db.select().from(leads).where(eq(leads.id, input.leadId)).limit(1);
 
       if (!lead) {
         throw new TRPCError({
@@ -361,10 +327,7 @@ export const leadsRouter = router({
         .returning({ id: interacoes.id });
 
       // Update lead timestamp
-      await db
-        .update(leads)
-        .set({ updatedAt: new Date() })
-        .where(eq(leads.id, input.leadId));
+      await db.update(leads).set({ updatedAt: new Date() }).where(eq(leads.id, input.leadId));
 
       return newInteraction;
     }),
@@ -381,8 +344,7 @@ export const leadsRouter = router({
 
       let targetMentoradoId = ctx.mentorado?.id;
       if (input.mentoradoId) {
-        if (ctx.user?.role !== "admin")
-          throw new TRPCError({ code: "FORBIDDEN" });
+        if (ctx.user?.role !== "admin") throw new TRPCError({ code: "FORBIDDEN" });
         targetMentoradoId = input.mentoradoId;
       }
       if (!targetMentoradoId) throw new TRPCError({ code: "UNAUTHORIZED" });
@@ -406,30 +368,27 @@ export const leadsRouter = router({
 
       // Build query with optional date filter
       const whereClause = dateFilter
-        ? and(
-            eq(leads.mentoradoId, targetMentoradoId),
-            gte(leads.createdAt, dateFilter)
-          )
+        ? and(eq(leads.mentoradoId, targetMentoradoId), gte(leads.createdAt, dateFilter))
         : eq(leads.mentoradoId, targetMentoradoId);
 
       const allLeads = await db.select().from(leads).where(whereClause);
 
       const ativos = allLeads.filter(
-        l => l.status !== "fechado" && l.status !== "perdido"
+        (l) => l.status !== "fechado" && l.status !== "perdido"
       ).length;
 
-      const ganhos = allLeads.filter(l => l.status === "fechado").length;
+      const ganhos = allLeads.filter((l) => l.status === "fechado").length;
       const total = allLeads.length;
       const taxaConversao = total > 0 ? (ganhos / total) * 100 : 0;
 
       // valorPipeline stored in cents, divide by 100 for display
       const valorPipelineCents = allLeads
-        .filter(l => l.status !== "perdido" && l.status !== "fechado")
+        .filter((l) => l.status !== "perdido" && l.status !== "fechado")
         .reduce((sum, l) => sum + (l.valorEstimado || 0), 0);
 
       // Calculate average time to close for 'fechado' leads
       const closedLeads = allLeads.filter(
-        l => l.status === "fechado" && l.createdAt && l.updatedAt
+        (l) => l.status === "fechado" && l.createdAt && l.updatedAt
       );
       let tempoMedioFechamento = 0;
       if (closedLeads.length > 0) {
@@ -481,9 +440,7 @@ export const leadsRouter = router({
         .from(leads)
         .where(inArray(leads.id, input.ids));
 
-      const validIds = targets
-        .filter(l => l.mentoradoId === ctx.mentorado.id)
-        .map(l => l.id);
+      const validIds = targets.filter((l) => l.mentoradoId === ctx.mentorado.id).map((l) => l.id);
 
       if (validIds.length === 0) return { count: 0 };
 
@@ -504,9 +461,7 @@ export const leadsRouter = router({
         .from(leads)
         .where(inArray(leads.id, input.ids));
 
-      const validIds = targets
-        .filter(l => l.mentoradoId === ctx.mentorado.id)
-        .map(l => l.id);
+      const validIds = targets.filter((l) => l.mentoradoId === ctx.mentorado.id).map((l) => l.id);
 
       if (validIds.length === 0) return { count: 0 };
 
@@ -524,9 +479,7 @@ export const leadsRouter = router({
         .from(leads)
         .where(inArray(leads.id, input.ids));
 
-      const validIds = targets
-        .filter(l => l.mentoradoId === ctx.mentorado.id)
-        .map(l => l.id);
+      const validIds = targets.filter((l) => l.mentoradoId === ctx.mentorado.id).map((l) => l.id);
 
       if (validIds.length === 0) return { count: 0 };
 

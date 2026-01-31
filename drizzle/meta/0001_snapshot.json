@@ -2732,13 +2732,7 @@
     "public.categoria": {
       "name": "categoria",
       "schema": "public",
-      "values": [
-        "faturamento",
-        "conteudo",
-        "operacional",
-        "consistencia",
-        "especial"
-      ]
+      "values": ["faturamento", "conteudo", "operacional", "consistencia", "especial"]
     },
     "public.channel_type": {
       "name": "channel_type",
@@ -2748,14 +2742,7 @@
     "public.origem_lead": {
       "name": "origem_lead",
       "schema": "public",
-      "values": [
-        "instagram",
-        "whatsapp",
-        "google",
-        "indicacao",
-        "site",
-        "outro"
-      ]
+      "values": ["instagram", "whatsapp", "google", "indicacao", "site", "outro"]
     },
     "public.role": {
       "name": "role",

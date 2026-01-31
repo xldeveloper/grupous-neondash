@@ -150,9 +150,7 @@ export async function transcribeAudio(
     formData.append("prompt", prompt);
 
     // Step 4: Call the transcription service
-    const baseUrl = ENV.llmApiUrl.endsWith("/")
-      ? ENV.llmApiUrl
-      : `${ENV.llmApiUrl}/`;
+    const baseUrl = ENV.llmApiUrl.endsWith("/") ? ENV.llmApiUrl : `${ENV.llmApiUrl}/`;
 
     const fullUrl = new URL("v1/audio/transcriptions", baseUrl).toString();
 
@@ -192,8 +190,7 @@ export async function transcribeAudio(
     return {
       error: "Voice transcription failed",
       code: "SERVICE_ERROR",
-      details:
-        error instanceof Error ? error.message : "An unexpected error occurred",
+      details: error instanceof Error ? error.message : "An unexpected error occurred",
     };
   }
 }

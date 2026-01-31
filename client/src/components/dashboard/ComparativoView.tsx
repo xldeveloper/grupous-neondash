@@ -1,3 +1,20 @@
+import { Award, BarChart3, Minus, Target, TrendingDown, TrendingUp, Users } from "lucide-react";
+import { useState } from "react";
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Legend,
+  PolarAngleAxis,
+  PolarGrid,
+  PolarRadiusAxis,
+  Radar,
+  RadarChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Select,
@@ -6,34 +23,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Progress } from "@/components/ui/progress";
-import { Badge } from "@/components/ui/badge";
 import { trpc } from "@/lib/trpc";
-import { useState } from "react";
-import {
-  TrendingUp,
-  TrendingDown,
-  Minus,
-  Users,
-  Target,
-  Award,
-  BarChart3,
-} from "lucide-react";
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  RadarChart,
-  PolarGrid,
-  PolarAngleAxis,
-  PolarRadiusAxis,
-  Radar,
-  Legend,
-} from "recharts";
 
 const MESES = [
   "Janeiro",
@@ -52,9 +42,7 @@ const MESES = [
 
 export function ComparativoView() {
   const currentDate = new Date();
-  const [selectedMonth, setSelectedMonth] = useState(
-    currentDate.getMonth() + 1
-  );
+  const [selectedMonth, setSelectedMonth] = useState(currentDate.getMonth() + 1);
   const [selectedYear, setSelectedYear] = useState(currentDate.getFullYear());
 
   const { data: mentorado } = trpc.mentorados.me.useQuery();
@@ -77,7 +65,7 @@ export function ComparativoView() {
     return "text-red-600";
   };
 
-  const getPercentileBadge = (percentile: number) => {
+  const _getPercentileBadge = (percentile: number) => {
     if (percentile >= 90)
       return {
         label: "Top 10%",
@@ -143,37 +131,25 @@ export function ComparativoView() {
           {
             subject: "Faturamento",
             voce: Math.min(
-              (stats.userMetrics.faturamento /
-                (stats.turmaAverage.faturamento * 1.5)) *
-                100,
+              (stats.userMetrics.faturamento / (stats.turmaAverage.faturamento * 1.5)) * 100,
               100
             ),
             turma: 66.67,
           },
           {
             subject: "Lucro",
-            voce: Math.min(
-              (stats.userMetrics.lucro / (stats.turmaAverage.lucro * 1.5)) *
-                100,
-              100
-            ),
+            voce: Math.min((stats.userMetrics.lucro / (stats.turmaAverage.lucro * 1.5)) * 100, 100),
             turma: 66.67,
           },
           {
             subject: "Leads",
-            voce: Math.min(
-              (stats.userMetrics.leads / (stats.turmaAverage.leads * 1.5)) *
-                100,
-              100
-            ),
+            voce: Math.min((stats.userMetrics.leads / (stats.turmaAverage.leads * 1.5)) * 100, 100),
             turma: 66.67,
           },
           {
             subject: "Procedimentos",
             voce: Math.min(
-              (stats.userMetrics.procedimentos /
-                (stats.turmaAverage.procedimentos * 1.5)) *
-                100,
+              (stats.userMetrics.procedimentos / (stats.turmaAverage.procedimentos * 1.5)) * 100,
               100
             ),
             turma: 66.67,
@@ -181,9 +157,7 @@ export function ComparativoView() {
           {
             subject: "Posts",
             voce: Math.min(
-              (stats.userMetrics.postsFeed /
-                (stats.turmaAverage.postsFeed * 1.5)) *
-                100,
+              (stats.userMetrics.postsFeed / (stats.turmaAverage.postsFeed * 1.5)) * 100,
               100
             ),
             turma: 66.67,
@@ -191,8 +165,7 @@ export function ComparativoView() {
           {
             subject: "Stories",
             voce: Math.min(
-              (stats.userMetrics.stories / (stats.turmaAverage.stories * 1.5)) *
-                100,
+              (stats.userMetrics.stories / (stats.turmaAverage.stories * 1.5)) * 100,
               100
             ),
             turma: 66.67,
@@ -205,12 +178,9 @@ export function ComparativoView() {
       <div className="flex items-center justify-center p-8 bg-slate-50 rounded-lg">
         <div className="text-center">
           <BarChart3 className="w-12 h-12 text-slate-300 mx-auto mb-2" />
-          <h2 className="text-lg font-semibold text-slate-700">
-            Perfil não encontrado
-          </h2>
+          <h2 className="text-lg font-semibold text-slate-700">Perfil não encontrado</h2>
           <p className="text-slate-500">
-            Você precisa ter um perfil de mentorado vinculado para acessar o
-            dashboard comparativo.
+            Você precisa ter um perfil de mentorado vinculado para acessar o dashboard comparativo.
           </p>
         </div>
       </div>
@@ -222,18 +192,13 @@ export function ComparativoView() {
       {/* Header & Filters */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
-          <h2 className="text-xl font-bold text-slate-900">
-            Dashboard Comparativo
-          </h2>
+          <h2 className="text-xl font-bold text-slate-900">Dashboard Comparativo</h2>
           <p className="text-sm text-slate-500">
             Compare sua performance com a média da turma Neon
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <Select
-            value={String(selectedMonth)}
-            onValueChange={v => setSelectedMonth(Number(v))}
-          >
+          <Select value={String(selectedMonth)} onValueChange={(v) => setSelectedMonth(Number(v))}>
             <SelectTrigger className="w-32 h-9 text-sm">
               <SelectValue />
             </SelectTrigger>
@@ -245,10 +210,7 @@ export function ComparativoView() {
               ))}
             </SelectContent>
           </Select>
-          <Select
-            value={String(selectedYear)}
-            onValueChange={v => setSelectedYear(Number(v))}
-          >
+          <Select value={String(selectedYear)} onValueChange={(v) => setSelectedYear(Number(v))}>
             <SelectTrigger className="w-24 h-9 text-sm">
               <SelectValue />
             </SelectTrigger>
@@ -262,19 +224,14 @@ export function ComparativoView() {
       </div>
 
       {isLoading ? (
-        <div className="text-center py-12 text-slate-500">
-          Carregando dados comparativos...
-        </div>
+        <div className="text-center py-12 text-slate-500">Carregando dados comparativos...</div>
       ) : !stats?.userMetrics ? (
         <Card className="border-none shadow-sm bg-slate-50">
           <CardContent className="py-8 text-center">
             <Target className="w-10 h-10 text-slate-300 mx-auto mb-3" />
-            <h3 className="text-base font-medium text-slate-700">
-              Sem dados para este período
-            </h3>
+            <h3 className="text-base font-medium text-slate-700">Sem dados para este período</h3>
             <p className="text-sm text-slate-500 mt-1">
-              Envie suas métricas de {MESES[selectedMonth - 1]} para ver o
-              comparativo.
+              Envie suas métricas de {MESES[selectedMonth - 1]} para ver o comparativo.
             </p>
           </CardContent>
         </Card>
@@ -285,9 +242,7 @@ export function ComparativoView() {
             <Card className="border-none shadow-sm">
               <CardContent className="pt-4 p-4">
                 <div className="flex items-center justify-between mb-1">
-                  <span className="text-xs text-slate-500 uppercase tracking-wider">
-                    Ranking
-                  </span>
+                  <span className="text-xs text-slate-500 uppercase tracking-wider">Ranking</span>
                   <Award className="w-4 h-4 text-neon-gold/50" />
                 </div>
                 {stats.percentiles && (
@@ -297,9 +252,7 @@ export function ComparativoView() {
                     >
                       Top {100 - stats.percentiles.faturamento}%
                     </div>
-                    <div className="text-xs text-slate-400 mt-1">
-                      em faturamento
-                    </div>
+                    <div className="text-xs text-slate-400 mt-1">em faturamento</div>
                   </>
                 )}
               </CardContent>
@@ -317,11 +270,8 @@ export function ComparativoView() {
                   {formatCurrency(stats.userMetrics.faturamento)}
                 </div>
                 <div className="text-xs text-slate-400 mt-1 flex items-center gap-1">
-                  {getTrendIcon(
-                    stats.userMetrics.faturamento,
-                    stats.turmaAverage!.faturamento
-                  )}
-                  vs média {formatCurrency(stats.turmaAverage!.faturamento)}
+                  {getTrendIcon(stats.userMetrics.faturamento, stats.turmaAverage?.faturamento)}
+                  vs média {formatCurrency(stats.turmaAverage?.faturamento)}
                 </div>
               </CardContent>
             </Card>
@@ -329,20 +279,13 @@ export function ComparativoView() {
             <Card className="border-none shadow-sm">
               <CardContent className="pt-4 p-4">
                 <div className="flex items-center justify-between mb-1">
-                  <span className="text-xs text-slate-500 uppercase tracking-wider">
-                    Leads
-                  </span>
+                  <span className="text-xs text-slate-500 uppercase tracking-wider">Leads</span>
                   <Users className="w-4 h-4 text-neon-blue/50" />
                 </div>
-                <div className="text-xl font-bold text-slate-900">
-                  {stats.userMetrics.leads}
-                </div>
+                <div className="text-xl font-bold text-slate-900">{stats.userMetrics.leads}</div>
                 <div className="text-xs text-slate-400 mt-1 flex items-center gap-1">
-                  {getTrendIcon(
-                    stats.userMetrics.leads,
-                    stats.turmaAverage!.leads
-                  )}
-                  vs média {Math.round(stats.turmaAverage!.leads)}
+                  {getTrendIcon(stats.userMetrics.leads, stats.turmaAverage?.leads)}
+                  vs média {Math.round(stats.turmaAverage?.leads)}
                 </div>
               </CardContent>
             </Card>
@@ -361,9 +304,7 @@ export function ComparativoView() {
                     / {stats.totalMentorados}
                   </span>
                 </div>
-                <div className="text-xs text-slate-400 mt-1">
-                  dados contabilizados
-                </div>
+                <div className="text-xs text-slate-400 mt-1">dados contabilizados</div>
               </CardContent>
             </Card>
           </div>
@@ -376,11 +317,7 @@ export function ComparativoView() {
               </CardHeader>
               <CardContent>
                 <ResponsiveContainer width="100%" height={250}>
-                  <BarChart
-                    data={comparisonData}
-                    layout="vertical"
-                    margin={{ left: 20 }}
-                  >
+                  <BarChart data={comparisonData} layout="vertical" margin={{ left: 20 }}>
                     <CartesianGrid
                       strokeDasharray="3 3"
                       stroke="hsl(var(--border))"
@@ -444,12 +381,7 @@ export function ComparativoView() {
                         fill: "hsl(var(--muted-foreground))",
                       }}
                     />
-                    <PolarRadiusAxis
-                      angle={30}
-                      domain={[0, 100]}
-                      tick={false}
-                      axisLine={false}
-                    />
+                    <PolarRadiusAxis angle={30} domain={[0, 100]} tick={false} axisLine={false} />
                     <Radar
                       name="Você"
                       dataKey="voce"

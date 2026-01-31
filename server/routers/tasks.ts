@@ -1,8 +1,8 @@
-import { z } from "zod";
-import { router, protectedProcedure, publicProcedure } from "../_core/trpc";
-import { tasks } from "../../drizzle/schema";
-import { eq, and, desc } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
+import { desc, eq } from "drizzle-orm";
+import { z } from "zod";
+import { tasks } from "../../drizzle/schema";
+import { protectedProcedure, router } from "../_core/trpc";
 import { getDb } from "../db";
 
 export const tasksRouter = router({
@@ -41,9 +41,7 @@ export const tasksRouter = router({
     .input(
       z.object({
         title: z.string().min(1),
-        category: z
-          .enum(["geral", "aula", "crm", "financeiro", "atividade"])
-          .default("geral"),
+        category: z.enum(["geral", "aula", "crm", "financeiro", "atividade"]).default("geral"),
         source: z.enum(["manual", "atividade"]).default("manual"),
         atividadeCodigo: z.string().optional(),
         mentoradoId: z.number().optional(), // Admin override
@@ -95,11 +93,7 @@ export const tasksRouter = router({
     .mutation(async ({ ctx, input }) => {
       const db = getDb();
 
-      const [task] = await db
-        .select()
-        .from(tasks)
-        .where(eq(tasks.id, input.id))
-        .limit(1);
+      const [task] = await db.select().from(tasks).where(eq(tasks.id, input.id)).limit(1);
 
       if (!task) throw new TRPCError({ code: "NOT_FOUND" });
 
@@ -126,11 +120,7 @@ export const tasksRouter = router({
     .mutation(async ({ ctx, input }) => {
       const db = getDb();
 
-      const [task] = await db
-        .select()
-        .from(tasks)
-        .where(eq(tasks.id, input.id))
-        .limit(1);
+      const [task] = await db.select().from(tasks).where(eq(tasks.id, input.id)).limit(1);
       if (!task) throw new TRPCError({ code: "NOT_FOUND" });
 
       const isOwner = ctx.mentorado?.id === task.mentoradoId;

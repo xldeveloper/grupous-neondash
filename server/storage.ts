@@ -10,9 +10,7 @@ function getStorageConfig(): StorageConfig {
   const apiKey = ENV.llmApiKey;
 
   if (!baseUrl || !apiKey) {
-    throw new Error(
-      "Storage proxy credentials missing: set LLM_API_URL and LLM_API_KEY"
-    );
+    throw new Error("Storage proxy credentials missing: set LLM_API_URL and LLM_API_KEY");
   }
 
   return { baseUrl: baseUrl.replace(/\/+$/, ""), apiKey };
@@ -24,15 +22,8 @@ function buildUploadUrl(baseUrl: string, relKey: string): URL {
   return url;
 }
 
-async function buildDownloadUrl(
-  baseUrl: string,
-  relKey: string,
-  apiKey: string
-): Promise<string> {
-  const downloadApiUrl = new URL(
-    "v1/storage/downloadUrl",
-    ensureTrailingSlash(baseUrl)
-  );
+async function buildDownloadUrl(baseUrl: string, relKey: string, apiKey: string): Promise<string> {
+  const downloadApiUrl = new URL("v1/storage/downloadUrl", ensureTrailingSlash(baseUrl));
   downloadApiUrl.searchParams.set("path", normalizeKey(relKey));
   const response = await fetch(downloadApiUrl, {
     method: "GET",
@@ -92,9 +83,7 @@ export async function storagePut(
   return { key, url };
 }
 
-export async function storageGet(
-  relKey: string
-): Promise<{ key: string; url: string }> {
+export async function storageGet(relKey: string): Promise<{ key: string; url: string }> {
   const { baseUrl, apiKey } = getStorageConfig();
   const key = normalizeKey(relKey);
   return {

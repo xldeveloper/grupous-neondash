@@ -1,12 +1,8 @@
-import { useAnimation, Variants } from "motion/react";
+import { useAnimation, type Variants } from "motion/react";
 import { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
 
-export function useStaggerAnimation(
-  delay = 0.05,
-  triggerOnce = true,
-  threshold = 0.1
-) {
+export function useStaggerAnimation(delay = 0.05, triggerOnce = true, threshold = 0.1) {
   const controls = useAnimation();
   const [ref, inView] = useInView({ triggerOnce, threshold });
 

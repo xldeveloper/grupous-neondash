@@ -1,5 +1,8 @@
+import { ChevronDown, ChevronUp, Search, X } from "lucide-react";
 import { useState } from "react";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -8,23 +11,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Slider } from "@/components/ui/slider";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-  SheetFooter,
-  SheetClose,
-} from "@/components/ui/sheet";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
-import { Badge } from "@/components/ui/badge";
-import { Search, Filter, ChevronDown, ChevronUp, X } from "lucide-react";
 
 interface FiltersState {
   busca: string;
@@ -79,7 +67,7 @@ export function FiltersPanel({
             placeholder="Nome, email ou telefone..."
             className="pl-8"
             value={filters.busca}
-            onChange={e => handleChange("busca", e.target.value)}
+            onChange={(e) => handleChange("busca", e.target.value)}
           />
         </div>
       </div>
@@ -91,10 +79,7 @@ export function FiltersPanel({
 
         <div className="space-y-2">
           <label className="text-sm font-medium">Status</label>
-          <Select
-            value={filters.status}
-            onValueChange={val => handleChange("status", val)}
-          >
+          <Select value={filters.status} onValueChange={(val) => handleChange("status", val)}>
             <SelectTrigger>
               <SelectValue placeholder="Todos os status" />
             </SelectTrigger>
@@ -113,10 +98,7 @@ export function FiltersPanel({
 
         <div className="space-y-2">
           <label className="text-sm font-medium">Origem</label>
-          <Select
-            value={filters.origem}
-            onValueChange={val => handleChange("origem", val)}
-          >
+          <Select value={filters.origem} onValueChange={(val) => handleChange("origem", val)}>
             <SelectTrigger>
               <SelectValue placeholder="Todas as origens" />
             </SelectTrigger>
@@ -134,10 +116,7 @@ export function FiltersPanel({
 
         <div className="space-y-2">
           <label className="text-sm font-medium">Período</label>
-          <Select
-            value={filters.periodo}
-            onValueChange={val => handleChange("periodo", val)}
-          >
+          <Select value={filters.periodo} onValueChange={(val) => handleChange("periodo", val)}>
             <SelectTrigger>
               <SelectValue placeholder="Selecione o período" />
             </SelectTrigger>
@@ -151,11 +130,7 @@ export function FiltersPanel({
         </div>
       </div>
 
-      <Collapsible
-        open={advancedOpen}
-        onOpenChange={setAdvancedOpen}
-        className="space-y-4"
-      >
+      <Collapsible open={advancedOpen} onOpenChange={setAdvancedOpen} className="space-y-4">
         <CollapsibleTrigger asChild>
           <Button
             variant="ghost"
@@ -178,8 +153,7 @@ export function FiltersPanel({
             <div className="flex justify-between">
               <label className="text-sm font-medium">Valor Estimado</label>
               <span className="text-xs text-muted-foreground">
-                R$ {filters.valorMin.toLocaleString()} -{" "}
-                {filters.valorMax.toLocaleString()}
+                R$ {filters.valorMin.toLocaleString()} - {filters.valorMax.toLocaleString()}
               </span>
             </div>
             <Slider
@@ -188,7 +162,7 @@ export function FiltersPanel({
               max={100000}
               step={1000}
               minStepsBetweenThumbs={1}
-              onValueChange={vals => {
+              onValueChange={(vals) => {
                 onFiltersChange({
                   ...filters,
                   valorMin: vals[0],
@@ -202,17 +176,17 @@ export function FiltersPanel({
             <label className="text-sm font-medium">Tags</label>
             <Input
               placeholder="Digite tags separadas por vírgula..."
-              onChange={e => {
+              onChange={(e) => {
                 const tags = e.target.value
                   .split(",")
-                  .map(t => t.trim())
+                  .map((t) => t.trim())
                   .filter(Boolean);
                 handleChange("tags", tags);
               }}
             />
             {filters.tags.length > 0 && (
               <div className="flex flex-wrap gap-2 mt-2">
-                {filters.tags.map(tag => (
+                {filters.tags.map((tag) => (
                   <Badge key={tag} variant="secondary" className="text-xs">
                     {tag}
                   </Badge>
@@ -237,10 +211,7 @@ export function FiltersPanel({
   if (isMobile) {
     return (
       <Sheet open={isOpen} onOpenChange={onClose}>
-        <SheetContent
-          side="right"
-          className="w-full sm:w-[400px] overflow-y-auto"
-        >
+        <SheetContent side="right" className="w-full sm:w-[400px] overflow-y-auto">
           <SheetHeader className="mb-6">
             <SheetTitle>Filtrar Leads</SheetTitle>
           </SheetHeader>

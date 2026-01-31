@@ -1,11 +1,11 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { BentoCard, BentoCardContent } from "@/components/ui/bento-grid";
+import { Award, Crown, Loader2, Medal, TrendingUp, Trophy } from "lucide-react";
+import { useAuth } from "@/_core/hooks/useAuth";
 
 import { Badge } from "@/components/ui/badge";
+import { BentoCard, BentoCardContent } from "@/components/ui/bento-grid";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { trpc } from "@/lib/trpc";
-import { Loader2, Trophy, Medal, Award, Crown, TrendingUp } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useAuth } from "@/_core/hooks/useAuth";
 
 interface RankingViewProps {
   selectedMonth: number;
@@ -30,11 +30,7 @@ export function RankingView({ selectedMonth, selectedYear }: RankingViewProps) {
       case 3:
         return <Award className="w-6 h-6 text-orange-500" />;
       default:
-        return (
-          <span className="text-lg font-bold text-muted-foreground">
-            {posicao}º
-          </span>
-        );
+        return <span className="text-lg font-bold text-muted-foreground">{posicao}º</span>;
     }
   };
 
@@ -55,12 +51,8 @@ export function RankingView({ selectedMonth, selectedYear }: RankingViewProps) {
     <div className="space-y-8">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-foreground tracking-tight">
-            Ranking Mensal
-          </h2>
-          <p className="text-muted-foreground mt-1">
-            Classificação de performance dos mentorados
-          </p>
+          <h2 className="text-2xl font-bold text-foreground tracking-tight">Ranking Mensal</h2>
+          <p className="text-muted-foreground mt-1">Classificação de performance dos mentorados</p>
         </div>
       </div>
 
@@ -72,19 +64,15 @@ export function RankingView({ selectedMonth, selectedYear }: RankingViewProps) {
         <Card className="border-none shadow-sm">
           <CardContent className="py-12 text-center">
             <Trophy className="w-12 h-12 mx-auto text-slate-300 mb-4" />
-            <h3 className="text-lg font-semibold text-foreground mb-2">
-              Ranking não disponível
-            </h3>
-            <p className="text-muted-foreground">
-              O ranking selecionado ainda não foi calculado.
-            </p>
+            <h3 className="text-lg font-semibold text-foreground mb-2">Ranking não disponível</h3>
+            <p className="text-muted-foreground">O ranking selecionado ainda não foi calculado.</p>
           </CardContent>
         </Card>
       ) : (
         <>
           {/* Top 3 Podium */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-            {[1, 0, 2].map((idx, i) => {
+            {[1, 0, 2].map((idx, _i) => {
               const item = ranking[idx];
               if (!item) return <div key={idx} className="hidden md:block" />;
               const isCurrentUser = mentorado?.id === item.mentorado.id;
@@ -126,17 +114,12 @@ export function RankingView({ selectedMonth, selectedYear }: RankingViewProps) {
                     <h3 className="font-bold text-foreground mb-1 truncate px-2 text-lg">
                       {item.mentorado.nomeCompleto.split(" ")[0]}
                     </h3>
-                    <Badge
-                      variant="outline"
-                      className="text-xs mb-2 bg-white/50 backdrop-blur-sm"
-                    >
+                    <Badge variant="outline" className="text-xs mb-2 bg-white/50 backdrop-blur-sm">
                       Neon
                     </Badge>
                     <div className="text-2xl font-bold text-neon-green">
                       {item.ranking.pontuacaoTotal}
-                      <span className="text-sm text-muted-foreground ml-1">
-                        pts
-                      </span>
+                      <span className="text-sm text-muted-foreground ml-1">pts</span>
                     </div>
                     {item.ranking.pontosBonus > 0 && (
                       <p className="text-xs text-purple-600 mt-1 font-medium bg-purple-50 inline-block px-2 py-0.5 rounded-full">
@@ -156,7 +139,7 @@ export function RankingView({ selectedMonth, selectedYear }: RankingViewProps) {
             </CardHeader>
             <CardContent>
               <div className="space-y-2">
-                {ranking.map(item => {
+                {ranking.map((item) => {
                   const isCurrentUser = mentorado?.id === item.mentorado.id;
 
                   return (
@@ -201,14 +184,11 @@ export function RankingView({ selectedMonth, selectedYear }: RankingViewProps) {
                       <div className="text-right">
                         <div className="text-xl font-bold text-foreground">
                           {item.ranking.pontuacaoTotal}
-                          <span className="text-sm text-muted-foreground ml-1">
-                            pts
-                          </span>
+                          <span className="text-sm text-muted-foreground ml-1">pts</span>
                         </div>
                         {item.ranking.pontosBonus > 0 && (
                           <div className="flex items-center justify-end gap-1 text-xs text-purple-600">
-                            <TrendingUp className="w-3 h-3" />+
-                            {item.ranking.pontosBonus} bônus
+                            <TrendingUp className="w-3 h-3" />+{item.ranking.pontosBonus} bônus
                           </div>
                         )}
                       </div>

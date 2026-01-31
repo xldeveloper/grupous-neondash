@@ -1,14 +1,13 @@
+import { CheckCircle2, Play, Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
-import { trpc } from "@/lib/trpc";
-import { NeonCard } from "@/components/ui/neon-card";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Plus, Trash2, CheckCircle2, Circle, Play } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
+import { NeonCard } from "@/components/ui/neon-card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { cn } from "@/lib/utils";
+import { trpc } from "@/lib/trpc";
 
 export function TaskBoard({ mentoradoId }: { mentoradoId?: number }) {
   const [newTask, setNewTask] = useState("");
@@ -41,8 +40,8 @@ export function TaskBoard({ mentoradoId }: { mentoradoId?: number }) {
     return <div className="animate-pulse h-64 bg-slate-800 rounded-xl" />;
   }
 
-  const todoTasks = tasks?.filter(t => t.status === "todo") || [];
-  const doneTasks = tasks?.filter(t => t.status === "done") || [];
+  const todoTasks = tasks?.filter((t) => t.status === "todo") || [];
+  const doneTasks = tasks?.filter((t) => t.status === "done") || [];
 
   return (
     <div className="h-full flex flex-col space-y-4">
@@ -73,7 +72,7 @@ export function TaskBoard({ mentoradoId }: { mentoradoId?: number }) {
           <form onSubmit={handleCreate} className="flex gap-2 mb-4">
             <Input
               value={newTask}
-              onChange={e => setNewTask(e.target.value)}
+              onChange={(e) => setNewTask(e.target.value)}
               placeholder="Nova tarefa..."
               className="bg-background border-input focus:border-neon-blue font-mono text-sm"
             />
@@ -90,7 +89,7 @@ export function TaskBoard({ mentoradoId }: { mentoradoId?: number }) {
           <TabsContent value="todo" className="flex-1 mt-0">
             <ScrollArea className="h-[300px] w-full pr-4">
               <div className="space-y-2">
-                {todoTasks.map(task => (
+                {todoTasks.map((task) => (
                   <div
                     key={task.id}
                     className="flex items-center justify-between p-3 rounded-lg bg-card border border-border group hover:border-primary/50 transition-colors"
@@ -98,14 +97,10 @@ export function TaskBoard({ mentoradoId }: { mentoradoId?: number }) {
                     <div className="flex items-center gap-3">
                       <Checkbox
                         checked={false}
-                        onCheckedChange={() =>
-                          toggleTask.mutate({ id: task.id })
-                        }
+                        onCheckedChange={() => toggleTask.mutate({ id: task.id })}
                         className="border-slate-600 data-[state=checked]:bg-neon-gold data-[state=checked]:text-black"
                       />
-                      <span className="text-sm text-slate-300 font-mono">
-                        {task.title}
-                      </span>
+                      <span className="text-sm text-slate-300 font-mono">{task.title}</span>
                       {task.source === "atividade" && (
                         <Badge
                           variant="outline"
@@ -138,7 +133,7 @@ export function TaskBoard({ mentoradoId }: { mentoradoId?: number }) {
           <TabsContent value="done" className="flex-1 mt-0">
             <ScrollArea className="h-[300px] w-full pr-4">
               <div className="space-y-2">
-                {doneTasks.map(task => (
+                {doneTasks.map((task) => (
                   <div
                     key={task.id}
                     className="flex items-center justify-between p-3 rounded-lg bg-muted/40 border border-border/50"
@@ -146,9 +141,7 @@ export function TaskBoard({ mentoradoId }: { mentoradoId?: number }) {
                     <div className="flex items-center gap-3 opacity-60">
                       <Checkbox
                         checked={true}
-                        onCheckedChange={() =>
-                          toggleTask.mutate({ id: task.id })
-                        }
+                        onCheckedChange={() => toggleTask.mutate({ id: task.id })}
                         className="border-slate-600"
                       />
                       <span className="text-sm text-slate-400 font-mono line-through">

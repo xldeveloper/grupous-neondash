@@ -1,10 +1,7 @@
 import { useDroppable } from "@dnd-kit/core";
-import {
-  SortableContext,
-  verticalListSortingStrategy,
-} from "@dnd-kit/sortable";
-import { LeadCard } from "./LeadCard";
+import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { cn } from "@/lib/utils";
+import { LeadCard } from "./LeadCard";
 
 interface Lead {
   id: number;
@@ -46,18 +43,13 @@ export function KanbanColumn({
 
   // Safe check for leads
   const safeLeads = leads || [];
-  const leadIds = safeLeads.map(l => `lead-${l.id}`);
-  const totalValue = safeLeads.reduce(
-    (acc, lead) => acc + (lead.valor || 0),
-    0
-  );
+  const leadIds = safeLeads.map((l) => `lead-${l.id}`);
+  const totalValue = safeLeads.reduce((acc, lead) => acc + (lead.valor || 0), 0);
 
   // Extract color class for border/bg accent
   // Typically: "bg-blue-500" -> we might want lighter versions or border
-  const borderColor = accentColor
-    .replace("bg-", "border-")
-    .replace("500", "500/30");
-  const badgeColor = accentColor.replace("bg-", "text-"); // rudimentary, better to pass separate props or map
+  const borderColor = accentColor.replace("bg-", "border-").replace("500", "500/30");
+  const _badgeColor = accentColor.replace("bg-", "text-"); // rudimentary, better to pass separate props or map
 
   return (
     <div className="flex flex-col h-full min-w-[320px] w-[320px]">
@@ -83,13 +75,11 @@ export function KanbanColumn({
         className={cn(
           "flex-1 rounded-xl p-2 transition-colors duration-200 gap-3 flex flex-col",
           "bg-muted/30 border border-transparent",
-          activeId &&
-            !activeId.includes(id) &&
-            "border-dashed border-border bg-muted/50"
+          activeId && !activeId.includes(id) && "border-dashed border-border bg-muted/50"
         )}
       >
         <SortableContext items={leadIds} strategy={verticalListSortingStrategy}>
-          {safeLeads.map(lead => (
+          {safeLeads.map((lead) => (
             <LeadCard
               key={lead.id}
               lead={lead}

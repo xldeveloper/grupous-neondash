@@ -1,4 +1,4 @@
-import { useAnimation, Variants } from "motion/react";
+import { useAnimation, type Variants } from "motion/react";
 import { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
 

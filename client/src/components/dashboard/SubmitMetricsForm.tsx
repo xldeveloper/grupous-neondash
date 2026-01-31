@@ -1,7 +1,9 @@
+import { CheckCircle2, Loader2 } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
@@ -9,20 +11,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 import { trpc } from "@/lib/trpc";
-import { useState } from "react";
-import { toast } from "sonner";
-import { Loader2, CheckCircle2 } from "lucide-react";
 
 interface SubmitMetricsFormProps {
   onSuccess?: () => void;
   className?: string;
 }
 
-export function SubmitMetricsForm({
-  onSuccess,
-  className,
-}: SubmitMetricsFormProps) {
+export function SubmitMetricsForm({ onSuccess, className }: SubmitMetricsFormProps) {
   const currentDate = new Date();
 
   const [ano, setAno] = useState(currentDate.getFullYear());
@@ -57,7 +54,7 @@ export function SubmitMetricsForm({
 
       if (onSuccess) onSuccess();
     },
-    onError: error => {
+    onError: (error) => {
       toast.error("Erro ao enviar métricas", {
         description: error.message,
       });
@@ -72,10 +69,10 @@ export function SubmitMetricsForm({
       mes,
       faturamento: parseFloat(faturamento) || 0,
       lucro: parseFloat(lucro) || 0,
-      postsFeed: parseInt(postsFeed) || 0,
-      stories: parseInt(stories) || 0,
-      leads: parseInt(leads) || 0,
-      procedimentos: parseInt(procedimentos) || 0,
+      postsFeed: parseInt(postsFeed, 10) || 0,
+      stories: parseInt(stories, 10) || 0,
+      leads: parseInt(leads, 10) || 0,
+      procedimentos: parseInt(procedimentos, 10) || 0,
       observacoes: observacoes || undefined,
     });
   };
@@ -104,10 +101,7 @@ export function SubmitMetricsForm({
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-2">
           <Label htmlFor="ano">Ano</Label>
-          <Select
-            value={ano.toString()}
-            onValueChange={v => setAno(parseInt(v))}
-          >
+          <Select value={ano.toString()} onValueChange={(v) => setAno(parseInt(v, 10))}>
             <SelectTrigger id="ano">
               <SelectValue />
             </SelectTrigger>
@@ -121,15 +115,12 @@ export function SubmitMetricsForm({
 
         <div className="space-y-2">
           <Label htmlFor="mes">Mês</Label>
-          <Select
-            value={mes.toString()}
-            onValueChange={v => setMes(parseInt(v))}
-          >
+          <Select value={mes.toString()} onValueChange={(v) => setMes(parseInt(v, 10))}>
             <SelectTrigger id="mes">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              {Array.from({ length: 12 }, (_, i) => i + 1).map(m => (
+              {Array.from({ length: 12 }, (_, i) => i + 1).map((m) => (
                 <SelectItem key={m} value={m.toString()}>
                   {getMesNome(m)}
                 </SelectItem>
@@ -141,9 +132,7 @@ export function SubmitMetricsForm({
 
       {/* Financeiro */}
       <div className="space-y-4">
-        <h4 className="font-medium text-sm text-muted-foreground border-b pb-1">
-          Financeiro
-        </h4>
+        <h4 className="font-medium text-sm text-muted-foreground border-b pb-1">Financeiro</h4>
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2">
             <Label htmlFor="faturamento">Faturamento (R$)</Label>
@@ -153,7 +142,7 @@ export function SubmitMetricsForm({
               step="0.01"
               placeholder="0.00"
               value={faturamento}
-              onChange={e => setFaturamento(e.target.value)}
+              onChange={(e) => setFaturamento(e.target.value)}
               required
             />
           </div>
@@ -166,7 +155,7 @@ export function SubmitMetricsForm({
               step="0.01"
               placeholder="0.00"
               value={lucro}
-              onChange={e => setLucro(e.target.value)}
+              onChange={(e) => setLucro(e.target.value)}
               required
             />
           </div>
@@ -175,9 +164,7 @@ export function SubmitMetricsForm({
 
       {/* Marketing */}
       <div className="space-y-4">
-        <h4 className="font-medium text-sm text-muted-foreground border-b pb-1">
-          Marketing
-        </h4>
+        <h4 className="font-medium text-sm text-muted-foreground border-b pb-1">Marketing</h4>
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2">
             <Label htmlFor="postsFeed">Posts Feed</Label>
@@ -186,7 +173,7 @@ export function SubmitMetricsForm({
               type="number"
               placeholder="0"
               value={postsFeed}
-              onChange={e => setPostsFeed(e.target.value)}
+              onChange={(e) => setPostsFeed(e.target.value)}
               required
             />
           </div>
@@ -198,7 +185,7 @@ export function SubmitMetricsForm({
               type="number"
               placeholder="0"
               value={stories}
-              onChange={e => setStories(e.target.value)}
+              onChange={(e) => setStories(e.target.value)}
               required
             />
           </div>
@@ -207,9 +194,7 @@ export function SubmitMetricsForm({
 
       {/* Operacional */}
       <div className="space-y-4">
-        <h4 className="font-medium text-sm text-muted-foreground border-b pb-1">
-          Operacional
-        </h4>
+        <h4 className="font-medium text-sm text-muted-foreground border-b pb-1">Operacional</h4>
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2">
             <Label htmlFor="leads">Leads</Label>
@@ -218,7 +203,7 @@ export function SubmitMetricsForm({
               type="number"
               placeholder="0"
               value={leads}
-              onChange={e => setLeads(e.target.value)}
+              onChange={(e) => setLeads(e.target.value)}
               required
             />
           </div>
@@ -230,7 +215,7 @@ export function SubmitMetricsForm({
               type="number"
               placeholder="0"
               value={procedimentos}
-              onChange={e => setProcedimentos(e.target.value)}
+              onChange={(e) => setProcedimentos(e.target.value)}
               required
             />
           </div>
@@ -244,7 +229,7 @@ export function SubmitMetricsForm({
           id="observacoes"
           placeholder="Notas sobre o mês..."
           value={observacoes}
-          onChange={e => setObservacoes(e.target.value)}
+          onChange={(e) => setObservacoes(e.target.value)}
           rows={3}
         />
       </div>

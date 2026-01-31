@@ -1,8 +1,8 @@
-import { describe, it, expect, mock } from "bun:test";
+import { describe, expect, it, vi } from "vitest";
 
 // Mock the database module
-mock.module("./db", () => ({
-  getDb: mock(() => null),
+vi.mock("./db", () => ({
+  getDb: vi.fn(() => null),
 }));
 
 describe("Leads Router", () => {

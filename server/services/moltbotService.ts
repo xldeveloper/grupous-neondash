@@ -10,11 +10,11 @@
  * - Automatic reconnection on failures
  */
 
-import { WebSocket, type RawData } from "ws";
+import { randomUUID } from "node:crypto";
+import { and, eq } from "drizzle-orm";
+import { type RawData, WebSocket } from "ws";
+import { moltbotMessages, moltbotSessions } from "../../drizzle/schema";
 import { getDb } from "../db";
-import { moltbotSessions, moltbotMessages } from "../../drizzle/schema";
-import { eq, and } from "drizzle-orm";
-import { randomUUID } from "crypto";
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES
@@ -91,27 +91,9 @@ class MoltbotGatewayService {
   async connect(): Promise<void> {
     return new Promise((resolve, reject) => {
       try {
-        console.log(
-          JSON.stringify({
-            timestamp: new Date().toISOString(),
-            level: "info",
-            service: "moltbot",
-            action: "connecting",
-            url: this.gatewayUrl,
-          })
-        );
-
         this.gatewayWs = new WebSocket(this.gatewayUrl);
 
         this.gatewayWs.on("open", () => {
-          console.log(
-            JSON.stringify({
-              timestamp: new Date().toISOString(),
-              level: "info",
-              service: "moltbot",
-              action: "connected",
-            })
-          );
           this.reconnectAttempts = 0;
           this.startHeartbeat();
           resolve();
@@ -122,28 +104,11 @@ class MoltbotGatewayService {
         });
 
         this.gatewayWs.on("close", () => {
-          console.log(
-            JSON.stringify({
-              timestamp: new Date().toISOString(),
-              level: "warn",
-              service: "moltbot",
-              action: "disconnected",
-            })
-          );
           this.stopHeartbeat();
           this.scheduleReconnect();
         });
 
         this.gatewayWs.on("error", (error: Error) => {
-          console.error(
-            JSON.stringify({
-              timestamp: new Date().toISOString(),
-              level: "error",
-              service: "moltbot",
-              action: "error",
-              error: error.message,
-            })
-          );
           if (this.reconnectAttempts === 0) {
             reject(error);
           }
@@ -175,32 +140,12 @@ class MoltbotGatewayService {
       this.gatewayWs.close();
       this.gatewayWs = null;
     }
-
-    console.log(
-      JSON.stringify({
-        timestamp: new Date().toISOString(),
-        level: "info",
-        service: "moltbot",
-        action: "shutdown",
-      })
-    );
   }
 
   private scheduleReconnect(): void {
     if (this.reconnectAttempts < this.maxReconnectAttempts) {
       this.reconnectAttempts++;
       const delay = this.reconnectDelay * this.reconnectAttempts;
-
-      console.log(
-        JSON.stringify({
-          timestamp: new Date().toISOString(),
-          level: "info",
-          service: "moltbot",
-          action: "reconnecting",
-          attempt: this.reconnectAttempts,
-          delay,
-        })
-      );
 
       setTimeout(() => {
         this.connect().catch(console.error);
@@ -227,15 +172,12 @@ class MoltbotGatewayService {
   // Session Management (Multi-Session Support)
   // ─────────────────────────────────────────────────────────────────────────
 
-  async createSession(
-    userId: number,
-    channelType: ChannelType
-  ): Promise<string> {
+  async createSession(userId: number, channelType: ChannelType): Promise<string> {
     const sessionId = randomUUID();
     const db = getDb();
 
     // Store in database
-    const [dbSession] = await db
+    const [_dbSession] = await db
       .insert(moltbotSessions)
       .values({
         userId,
@@ -258,7 +200,7 @@ class MoltbotGatewayService {
     if (!this.userSessions.has(userId)) {
       this.userSessions.set(userId, new Set());
     }
-    this.userSessions.get(userId)!.add(sessionId);
+    this.userSessions.get(userId)?.add(sessionId);
 
     // Notify gateway
     this.sendToGateway({
@@ -267,19 +209,6 @@ class MoltbotGatewayService {
       userId,
       channelType,
     });
-
-    console.log(
-      JSON.stringify({
-        timestamp: new Date().toISOString(),
-        level: "info",
-        service: "moltbot",
-        action: "sessionCreated",
-        userId,
-        sessionId,
-        channelType,
-        dbId: dbSession.id,
-      })
-    );
 
     return sessionId;
   }
@@ -314,16 +243,6 @@ class MoltbotGatewayService {
       sessionId,
     });
 
-    console.log(
-      JSON.stringify({
-        timestamp: new Date().toISOString(),
-        level: "info",
-        service: "moltbot",
-        action: "sessionTerminated",
-        sessionId,
-      })
-    );
-
     return true;
   }
 
@@ -349,11 +268,7 @@ class MoltbotGatewayService {
   // Messaging
   // ─────────────────────────────────────────────────────────────────────────
 
-  async sendMessage(
-    sessionId: string,
-    content: string,
-    userId: number
-  ): Promise<number> {
+  async sendMessage(sessionId: string, content: string, userId: number): Promise<number> {
     const db = getDb();
 
     // Get session from database
@@ -391,18 +306,6 @@ class MoltbotGatewayService {
       .set({ lastActivityAt: new Date(), updatedAt: new Date() })
       .where(eq(moltbotSessions.id, dbSession.id));
 
-    console.log(
-      JSON.stringify({
-        timestamp: new Date().toISOString(),
-        level: "info",
-        service: "moltbot",
-        action: "messageSent",
-        userId,
-        sessionId,
-        messageId: message.id,
-      })
-    );
-
     return message.id;
   }
 
@@ -422,37 +325,13 @@ class MoltbotGatewayService {
 
   registerClientConnection(userId: number, ws: WebSocket): void {
     this.clientConnections.set(userId, ws);
-
-    console.log(
-      JSON.stringify({
-        timestamp: new Date().toISOString(),
-        level: "info",
-        service: "moltbot",
-        action: "clientConnected",
-        userId,
-        activeSessions: this.userSessions.get(userId)?.size || 0,
-      })
-    );
   }
 
   unregisterClientConnection(userId: number): void {
     this.clientConnections.delete(userId);
-
-    console.log(
-      JSON.stringify({
-        timestamp: new Date().toISOString(),
-        level: "info",
-        service: "moltbot",
-        action: "clientDisconnected",
-        userId,
-      })
-    );
   }
 
-  async handleClientMessage(
-    userId: number,
-    message: ClientMessage
-  ): Promise<void> {
+  async handleClientMessage(userId: number, message: ClientMessage): Promise<void> {
     switch (message.type) {
       case "message":
         if (message.sessionId && message.content) {
@@ -517,17 +396,6 @@ class MoltbotGatewayService {
         userId,
         channelType,
       });
-
-      console.log(
-        JSON.stringify({
-          timestamp: new Date().toISOString(),
-          level: "info",
-          service: "moltbot",
-          action: "qrCodeRequested",
-          userId,
-          channelType,
-        })
-      );
     });
   }
 
@@ -560,15 +428,6 @@ class MoltbotGatewayService {
     if (this.gatewayWs && this.gatewayWs.readyState === WebSocket.OPEN) {
       this.gatewayWs.send(JSON.stringify(data));
     } else {
-      console.warn(
-        JSON.stringify({
-          timestamp: new Date().toISOString(),
-          level: "warn",
-          service: "moltbot",
-          action: "gatewayNotConnected",
-          data,
-        })
-      );
     }
   }
 
@@ -593,17 +452,7 @@ class MoltbotGatewayService {
           this.handleGatewayError(message);
           break;
       }
-    } catch (error) {
-      console.error(
-        JSON.stringify({
-          timestamp: new Date().toISOString(),
-          level: "error",
-          service: "moltbot",
-          action: "parseError",
-          error: String(error),
-        })
-      );
-    }
+    } catch (_error) {}
   }
 
   private async handleIncomingMessage(message: GatewayMessage): Promise<void> {
@@ -647,15 +496,6 @@ class MoltbotGatewayService {
     const { userId, channelType, qrCode, expiresAt } = message;
 
     if (!userId || !qrCode) {
-      console.warn(
-        JSON.stringify({
-          timestamp: new Date().toISOString(),
-          level: "warn",
-          service: "moltbot",
-          action: "invalidQRCodeResponse",
-          message,
-        })
-      );
       return;
     }
 
@@ -668,21 +508,8 @@ class MoltbotGatewayService {
 
       pending.resolve({
         qrCode,
-        expiresAt: expiresAt
-          ? new Date(expiresAt)
-          : new Date(Date.now() + 60000),
+        expiresAt: expiresAt ? new Date(expiresAt) : new Date(Date.now() + 60000),
       });
-
-      console.log(
-        JSON.stringify({
-          timestamp: new Date().toISOString(),
-          level: "info",
-          service: "moltbot",
-          action: "qrCodeReceived",
-          userId,
-          channelType,
-        })
-      );
 
       // Also forward to client WebSocket for real-time display
       const clientWs = this.clientConnections.get(userId as number);
@@ -699,17 +526,6 @@ class MoltbotGatewayService {
   }
 
   private handleGatewayError(message: GatewayMessage): void {
-    console.error(
-      JSON.stringify({
-        timestamp: new Date().toISOString(),
-        level: "error",
-        service: "moltbot",
-        action: "gatewayError",
-        error: message.error,
-        sessionId: message.sessionId,
-      })
-    );
-
     // If there's a pending QR request for this user, reject it
     if (message.userId && message.channelType) {
       const requestKey = `${message.userId}:${message.channelType}`;
@@ -747,16 +563,6 @@ class MoltbotGatewayService {
         );
       }
     }
-
-    console.log(
-      JSON.stringify({
-        timestamp: new Date().toISOString(),
-        level: "info",
-        service: "moltbot",
-        action: "pairingSuccess",
-        sessionId: message.sessionId,
-      })
-    );
   }
 
   // ─────────────────────────────────────────────────────────────────────────

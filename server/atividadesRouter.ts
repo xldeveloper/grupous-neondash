@@ -1,8 +1,8 @@
+import { and, eq } from "drizzle-orm";
 import { z } from "zod";
-import { router, mentoradoProcedure, adminProcedure } from "./_core/trpc";
-import { getDb } from "./db";
 import { atividadeProgress } from "../drizzle/schema";
-import { eq, and } from "drizzle-orm";
+import { adminProcedure, mentoradoProcedure, router } from "./_core/trpc";
+import { getDb } from "./db";
 
 // Progress map with optional notes
 interface ProgressData {

@@ -8,9 +8,9 @@
  * - Connection status
  */
 
-import { useState, useCallback, useEffect, useRef } from "react";
-import { trpc } from "@/lib/trpc";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useAuth } from "@/_core/hooks/useAuth";
+import { trpc } from "@/lib/trpc";
 
 interface ChatMessage {
   id: number;
@@ -55,12 +55,9 @@ export function useMoltbot(): UseMoltbotReturn {
   });
 
   // Get active sessions on mount
-  const activeSessionsQuery = trpc.moltbot.getActiveSessions.useQuery(
-    undefined,
-    {
-      enabled: isAuthenticated,
-    }
-  );
+  const activeSessionsQuery = trpc.moltbot.getActiveSessions.useQuery(undefined, {
+    enabled: isAuthenticated,
+  });
 
   // Get message history when session changes
   const historyQuery = trpc.moltbot.getMessageHistory.useQuery(
@@ -71,9 +68,7 @@ export function useMoltbot(): UseMoltbotReturn {
   // Restore active session on mount
   useEffect(() => {
     if (activeSessionsQuery.data?.length) {
-      const webchatSession = activeSessionsQuery.data.find(
-        s => s.channelType === "webchat"
-      );
+      const webchatSession = activeSessionsQuery.data.find((s) => s.channelType === "webchat");
       if (webchatSession) {
         setSessionId(webchatSession.sessionId);
       }
@@ -85,12 +80,7 @@ export function useMoltbot(): UseMoltbotReturn {
     if (historyQuery.data?.items) {
       setMessages(
         historyQuery.data.items.map(
-          (m: {
-            id: number;
-            role: string;
-            content: string;
-            createdAt: Date;
-          }) => ({
+          (m: { id: number; role: string; content: string; createdAt: Date }) => ({
             id: m.id,
             role: m.role as "user" | "assistant",
             content: m.content,
@@ -112,15 +102,14 @@ export function useMoltbot(): UseMoltbotReturn {
     wsRef.current = ws;
 
     ws.onopen = () => {
-      console.log("[Moltbot] WebSocket connected");
       ws.send(JSON.stringify({ type: "subscribe", sessionId }));
     };
 
-    ws.onmessage = event => {
+    ws.onmessage = (event) => {
       try {
         const data = JSON.parse(event.data);
         if (data.type === "message" && data.role === "assistant") {
-          setMessages(prev => [
+          setMessages((prev) => [
             ...prev,
             {
               id: Date.now(),
@@ -131,19 +120,14 @@ export function useMoltbot(): UseMoltbotReturn {
           ]);
           setIsSending(false);
         }
-      } catch (err) {
-        console.error("[Moltbot] WebSocket parse error:", err);
-      }
+      } catch (_err) {}
     };
 
-    ws.onerror = err => {
-      console.error("[Moltbot] WebSocket error:", err);
+    ws.onerror = (_err) => {
       setError("Connection error");
     };
 
-    ws.onclose = () => {
-      console.log("[Moltbot] WebSocket disconnected");
-    };
+    ws.onclose = () => {};
 
     return () => {
       ws.close();
@@ -191,7 +175,7 @@ export function useMoltbot(): UseMoltbotReturn {
 
       // Optimistic update - add user message immediately
       const tempId = Date.now();
-      setMessages(prev => [
+      setMessages((prev) => [
         ...prev,
         {
           id: tempId,
@@ -210,7 +194,7 @@ export function useMoltbot(): UseMoltbotReturn {
       } catch (err) {
         setError(err instanceof Error ? err.message : "Failed to send message");
         // Remove optimistic message on error
-        setMessages(prev => prev.filter(m => m.id !== tempId));
+        setMessages((prev) => prev.filter((m) => m.id !== tempId));
         setIsSending(false);
       }
     },

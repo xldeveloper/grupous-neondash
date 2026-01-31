@@ -38,10 +38,7 @@ const CACHE_KEY_PREFIX = "session:";
 // ═══════════════════════════════════════════════════════════════════════════
 
 let redis: Redis | null = null;
-const memoryCache = new Map<
-  string,
-  { data: CachedSession; expiresAt: number }
->();
+const memoryCache = new Map<string, { data: CachedSession; expiresAt: number }>();
 
 // Stats tracking
 let cacheHits = 0;
@@ -59,15 +56,6 @@ export async function initRedis(): Promise<void> {
   const redisUrl = process.env.REDIS_URL;
 
   if (!redisUrl) {
-    console.log(
-      JSON.stringify({
-        timestamp: new Date().toISOString(),
-        level: "info",
-        service: "session-cache",
-        action: "init",
-        message: "REDIS_URL not set, using in-memory cache",
-      })
-    );
     return;
   }
 
@@ -79,27 +67,7 @@ export async function initRedis(): Promise<void> {
     });
 
     await redis.connect();
-
-    console.log(
-      JSON.stringify({
-        timestamp: new Date().toISOString(),
-        level: "info",
-        service: "session-cache",
-        action: "init",
-        message: "Redis connected successfully",
-      })
-    );
-  } catch (error) {
-    console.warn(
-      JSON.stringify({
-        timestamp: new Date().toISOString(),
-        level: "warn",
-        service: "session-cache",
-        action: "init",
-        message: "Redis connection failed, using in-memory cache",
-        error: String(error),
-      })
-    );
+  } catch (_error) {
     redis = null;
   }
 }
@@ -112,9 +80,7 @@ export async function initRedis(): Promise<void> {
  * Get cached session by Clerk ID.
  * Checks Redis first, falls back to memory cache.
  */
-export async function getCachedSession(
-  clerkId: string
-): Promise<CachedSession | null> {
+export async function getCachedSession(clerkId: string): Promise<CachedSession | null> {
   const cacheKey = `${CACHE_KEY_PREFIX}${clerkId}`;
 
   // Try Redis first
@@ -125,18 +91,7 @@ export async function getCachedSession(
         cacheHits++;
         return JSON.parse(cached) as CachedSession;
       }
-    } catch (error) {
-      console.warn(
-        JSON.stringify({
-          timestamp: new Date().toISOString(),
-          level: "warn",
-          service: "session-cache",
-          action: "get",
-          clerkId,
-          error: String(error),
-        })
-      );
-    }
+    } catch (_error) {}
   }
 
   // Try memory cache
@@ -171,23 +126,8 @@ export async function setCachedSession(
   // Write to Redis
   if (redis) {
     try {
-      await redis.setex(
-        cacheKey,
-        SESSION_TTL_SECONDS,
-        JSON.stringify(cachedSession)
-      );
-    } catch (error) {
-      console.warn(
-        JSON.stringify({
-          timestamp: new Date().toISOString(),
-          level: "warn",
-          service: "session-cache",
-          action: "set",
-          clerkId,
-          error: String(error),
-        })
-      );
-    }
+      await redis.setex(cacheKey, SESSION_TTL_SECONDS, JSON.stringify(cachedSession));
+    } catch (_error) {}
   }
 
   // Write to memory cache
@@ -207,32 +147,11 @@ export async function invalidateSession(clerkId: string): Promise<void> {
   if (redis) {
     try {
       await redis.del(cacheKey);
-    } catch (error) {
-      console.warn(
-        JSON.stringify({
-          timestamp: new Date().toISOString(),
-          level: "warn",
-          service: "session-cache",
-          action: "invalidate",
-          clerkId,
-          error: String(error),
-        })
-      );
-    }
+    } catch (_error) {}
   }
 
   // Delete from memory cache
   memoryCache.delete(cacheKey);
-
-  console.log(
-    JSON.stringify({
-      timestamp: new Date().toISOString(),
-      level: "info",
-      service: "session-cache",
-      action: "invalidated",
-      clerkId,
-    })
-  );
 }
 
 // ═══════════════════════════════════════════════════════════════════════════

@@ -1,6 +1,6 @@
-import { motion, AnimatePresence, Variants } from "motion/react";
-import { cn } from "@/lib/utils";
+import { AnimatePresence, motion, type Variants } from "motion/react";
 import { animations } from "@/lib/animation-variants";
+import { cn } from "@/lib/utils";
 
 interface AnimatedListProps<T> {
   items: T[];
@@ -38,9 +38,7 @@ export function AnimatedList<T>({
   };
 
   const itemVariant =
-    typeof variant === "string"
-      ? animations[variant as keyof typeof animations]
-      : variant;
+    typeof variant === "string" ? animations[variant as keyof typeof animations] : variant;
 
   return (
     <motion.div

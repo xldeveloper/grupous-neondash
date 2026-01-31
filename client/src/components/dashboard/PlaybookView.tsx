@@ -1,42 +1,32 @@
-import { trpc } from "@/lib/trpc";
+import { motion } from "framer-motion";
+import { CheckCircle2, ExternalLink, PlayCircle } from "lucide-react";
+import { toast } from "sonner";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Checkbox } from "@/components/ui/checkbox";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from "@/components/ui/card";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ExternalLink, PlayCircle, FileText, CheckCircle2 } from "lucide-react";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Progress } from "@/components/ui/progress";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Skeleton } from "@/components/ui/skeleton";
+import { trpc } from "@/lib/trpc";
 import { cn } from "@/lib/utils";
-import { toast } from "sonner";
-import { motion, AnimatePresence } from "framer-motion";
 
 interface PlaybookViewProps {
   turma?: "neon";
 }
 
 export function PlaybookView({ turma }: PlaybookViewProps) {
-  const {
-    data: modules,
-    isLoading,
-    refetch,
-  } = trpc.playbook.getModules.useQuery({ turma });
+  const { data: modules, isLoading, refetch } = trpc.playbook.getModules.useQuery({ turma });
 
   const toggleMutation = trpc.playbook.toggleItem.useMutation({
     onSuccess: () => refetch(),
-    onError: err => {
+    onError: (err) => {
       toast.error("Erro ao atualizar progresso", { description: err.message });
     },
   });
@@ -53,12 +43,8 @@ export function PlaybookView({ turma }: PlaybookViewProps) {
   // Calculate overall progress
   const totalItems = modules?.reduce((acc, m) => acc + m.items.length, 0) || 0;
   const completedItems =
-    modules?.reduce(
-      (acc, m) => acc + m.items.filter(i => i.isCompleted).length,
-      0
-    ) || 0;
-  const progressPercentage =
-    totalItems > 0 ? (completedItems / totalItems) * 100 : 0;
+    modules?.reduce((acc, m) => acc + m.items.filter((i) => i.isCompleted).length, 0) || 0;
+  const progressPercentage = totalItems > 0 ? (completedItems / totalItems) * 100 : 0;
 
   return (
     <div className="space-y-6">
@@ -67,9 +53,7 @@ export function PlaybookView({ turma }: PlaybookViewProps) {
         <Card className="bg-black/40 border-white/10 md:col-span-2">
           <CardHeader className="pb-2">
             <CardTitle className="text-lg text-white">Seu Progresso</CardTitle>
-            <CardDescription>
-              Complete as etapas para avançar na jornada
-            </CardDescription>
+            <CardDescription>Complete as etapas para avançar na jornada</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-2">
@@ -96,11 +80,8 @@ export function PlaybookView({ turma }: PlaybookViewProps) {
         <Accordion type="multiple" className="space-y-4">
           {modules?.map((module, index) => {
             const moduleTotal = module.items.length;
-            const moduleCompleted = module.items.filter(
-              i => i.isCompleted
-            ).length;
-            const isModuleDone =
-              moduleTotal > 0 && moduleTotal === moduleCompleted;
+            const moduleCompleted = module.items.filter((i) => i.isCompleted).length;
+            const isModuleDone = moduleTotal > 0 && moduleTotal === moduleCompleted;
 
             return (
               <AccordionItem
@@ -118,11 +99,7 @@ export function PlaybookView({ turma }: PlaybookViewProps) {
                           : "bg-white/5 border-white/20 text-gray-400"
                       )}
                     >
-                      {isModuleDone ? (
-                        <CheckCircle2 className="w-5 h-5" />
-                      ) : (
-                        index + 1
-                      )}
+                      {isModuleDone ? <CheckCircle2 className="w-5 h-5" /> : index + 1}
                     </div>
 
                     <div className="flex flex-col items-start gap-1 flex-1">
@@ -142,10 +119,7 @@ export function PlaybookView({ turma }: PlaybookViewProps) {
                     </div>
 
                     <div className="mr-4">
-                      <Badge
-                        variant="outline"
-                        className="bg-card border-border text-xs"
-                      >
+                      <Badge variant="outline" className="bg-card border-border text-xs">
                         {moduleCompleted}/{moduleTotal}
                       </Badge>
                     </div>
@@ -154,7 +128,7 @@ export function PlaybookView({ turma }: PlaybookViewProps) {
 
                 <AccordionContent className="px-6 pb-6 pt-2">
                   <div className="space-y-3 pl-12 border-l border-white/5 ml-4">
-                    {module.items.map(item => (
+                    {module.items.map((item) => (
                       <motion.div
                         key={item.id}
                         initial={{ opacity: 0, x: -10 }}
@@ -167,7 +141,7 @@ export function PlaybookView({ turma }: PlaybookViewProps) {
                         <Checkbox
                           id={`item-${item.id}`}
                           checked={item.isCompleted}
-                          onCheckedChange={checked => {
+                          onCheckedChange={(checked) => {
                             toggleMutation.mutate({
                               itemId: item.id,
                               completed: !!checked,
@@ -190,9 +164,7 @@ export function PlaybookView({ turma }: PlaybookViewProps) {
                           </label>
 
                           {item.description && (
-                            <p className="text-xs text-gray-500">
-                              {item.description}
-                            </p>
+                            <p className="text-xs text-gray-500">{item.description}</p>
                           )}
 
                           {item.contentUrl && (
@@ -201,18 +173,14 @@ export function PlaybookView({ turma }: PlaybookViewProps) {
                                 variant="outline"
                                 size="sm"
                                 className="h-7 text-xs border-white/10 bg-white/5 hover:bg-white/10"
-                                onClick={() =>
-                                  window.open(item.contentUrl || "", "_blank")
-                                }
+                                onClick={() => window.open(item.contentUrl || "", "_blank")}
                               >
                                 {item.type === "video" ? (
                                   <PlayCircle className="w-3 h-3 mr-2" />
                                 ) : (
                                   <ExternalLink className="w-3 h-3 mr-2" />
                                 )}
-                                {item.type === "video"
-                                  ? "Assistir"
-                                  : "Acessar Conteúdo"}
+                                {item.type === "video" ? "Assistir" : "Acessar Conteúdo"}
                               </Button>
                             </div>
                           )}

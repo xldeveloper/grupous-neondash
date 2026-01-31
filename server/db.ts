@@ -1,8 +1,8 @@
-import { eq } from "drizzle-orm";
 import { neon, neonConfig } from "@neondatabase/serverless";
+import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/neon-http";
-import * as schema from "../drizzle/schema";
 import * as relations from "../drizzle/relations";
+import * as schema from "../drizzle/schema";
 
 // ═══════════════════════════════════════════════════════════════════════════
 // CONFIGURATION
@@ -26,7 +26,6 @@ export function getDb() {
     const connectionString = process.env.DATABASE_URL;
 
     if (!connectionString) {
-      console.error("[Database] DATABASE_URL is not configured!");
       throw new Error("DATABASE_URL is required");
     }
 
@@ -37,10 +36,7 @@ export function getDb() {
         schema: { ...schema, ...relations },
         logger: process.env.NODE_ENV === "development",
       });
-      console.log("[Database] Connected to Neon PostgreSQL");
-    } catch (error) {
-      console.error("[Database] Failed to connect:", error);
-    }
+    } catch (_error) {}
   }
 
   if (!_db) {
@@ -58,8 +54,7 @@ export async function checkDbHealth(): Promise<boolean> {
     const db = getDb();
     await db.execute("SELECT 1");
     return true;
-  } catch (error) {
-    console.error("[Database] Health check failed:", error);
+  } catch (_error) {
     return false;
   }
 }
@@ -75,11 +70,7 @@ const { users } = schema;
  */
 export async function getUserByClerkId(clerkId: string) {
   const db = getDb();
-  const result = await db
-    .select()
-    .from(users)
-    .where(eq(users.clerkId, clerkId))
-    .limit(1);
+  const result = await db.select().from(users).where(eq(users.clerkId, clerkId)).limit(1);
   return result[0] ?? null;
 }
 
@@ -88,11 +79,7 @@ export async function getUserByClerkId(clerkId: string) {
  */
 export async function getUserByEmail(email: string) {
   const db = getDb();
-  const result = await db
-    .select()
-    .from(users)
-    .where(eq(users.email, email))
-    .limit(1);
+  const result = await db.select().from(users).where(eq(users.email, email)).limit(1);
   return result[0] ?? null;
 }
 
@@ -118,9 +105,7 @@ export async function upsertUserFromClerk(
   const loginMethod = clerkUser?.externalAccounts?.[0]?.provider ?? "email";
 
   // Check if user should be admin
-  const adminEmails = (process.env.ADMIN_EMAILS ?? "msm.jur@gmail.com").split(
-    ","
-  );
+  const adminEmails = (process.env.ADMIN_EMAILS ?? "msm.jur@gmail.com").split(",");
   const isAdmin = email && adminEmails.includes(email.trim());
 
   const values: schema.InsertUser = {
@@ -132,29 +117,23 @@ export async function upsertUserFromClerk(
     role: isAdmin ? "admin" : "user",
     lastSignedIn: new Date(),
   };
+  await db
+    .insert(users)
+    .values(values)
+    .onConflictDoUpdate({
+      target: users.clerkId,
+      set: {
+        email: values.email,
+        name: values.name,
+        imageUrl: values.imageUrl,
+        loginMethod: values.loginMethod,
+        lastSignedIn: values.lastSignedIn,
+        // Force admin role if they are in the admin list, otherwise keep existing
+        ...(isAdmin ? { role: "admin" } : {}),
+      },
+    });
 
-  try {
-    await db
-      .insert(users)
-      .values(values)
-      .onConflictDoUpdate({
-        target: users.clerkId,
-        set: {
-          email: values.email,
-          name: values.name,
-          imageUrl: values.imageUrl,
-          loginMethod: values.loginMethod,
-          lastSignedIn: values.lastSignedIn,
-          // Force admin role if they are in the admin list, otherwise keep existing
-          ...(isAdmin ? { role: "admin" } : {}),
-        },
-      });
-
-    return await getUserByClerkId(clerkUserId);
-  } catch (error) {
-    console.error("[Database] Failed to upsert user:", error);
-    throw error;
-  }
+  return await getUserByClerkId(clerkUserId);
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -162,5 +141,5 @@ export async function upsertUserFromClerk(
 // ═══════════════════════════════════════════════════════════════════════════
 
 // Re-export schema types for convenience
-export type { User, InsertUser } from "../drizzle/schema";
+export type { InsertUser, User } from "../drizzle/schema";
 export { schema };

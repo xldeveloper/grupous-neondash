@@ -1,7 +1,7 @@
-import { useMotionValue, useSpring, useTransform, motion } from "framer-motion";
+import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { ChevronLeft, ChevronRight, Users } from "lucide-react";
 import { useRef, useState } from "react";
 import { cn } from "@/lib/utils";
-import { ChevronLeft, ChevronRight, Users } from "lucide-react";
 import { Button } from "./button";
 import { Popover, PopoverContent, PopoverTrigger } from "./popover";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./tooltip";
@@ -29,9 +29,9 @@ function DockItem({
   mouseX: ReturnType<typeof useMotionValue<number>>;
 }) {
   const ref = useRef<HTMLButtonElement>(null);
-  const [isHovered, setIsHovered] = useState(false);
+  const [_isHovered, setIsHovered] = useState(false);
 
-  const distance = useTransform(mouseX, val => {
+  const distance = useTransform(mouseX, (val) => {
     const bounds = ref.current?.getBoundingClientRect();
     if (!bounds) return 0;
     return val - bounds.x - bounds.width / 2;
@@ -102,12 +102,7 @@ function DockItem({
   );
 }
 
-export function FloatingDock({
-  items,
-  activeValue,
-  className,
-  maxVisible = 8,
-}: FloatingDockProps) {
+export function FloatingDock({ items, activeValue, className, maxVisible = 8 }: FloatingDockProps) {
   const mouseX = useMotionValue(Infinity);
   const scrollRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
@@ -143,7 +138,7 @@ export function FloatingDock({
         "border border-white/10",
         className
       )}
-      onMouseMove={e => mouseX.set(e.clientX)}
+      onMouseMove={(e) => mouseX.set(e.clientX)}
       onMouseLeave={() => mouseX.set(Infinity)}
     >
       {/* Left scroll button */}
@@ -168,7 +163,7 @@ export function FloatingDock({
           msOverflowStyle: "none",
         }}
       >
-        {visibleItems.map(item => (
+        {visibleItems.map((item) => (
           <DockItem key={item.id} item={item} mouseX={mouseX} />
         ))}
 
@@ -197,7 +192,7 @@ export function FloatingDock({
                   <Users className="h-3 w-3 inline mr-1" />
                   Todos os mentorados
                 </div>
-                {remainingItems.map(item => (
+                {remainingItems.map((item) => (
                   <button
                     key={item.id}
                     onClick={item.onClick}
@@ -209,9 +204,7 @@ export function FloatingDock({
                     )}
                   >
                     <div className="h-8 w-8 shrink-0">{item.icon}</div>
-                    <span className="text-sm truncate max-w-[200px]">
-                      {item.title}
-                    </span>
+                    <span className="text-sm truncate max-w-[200px]">{item.title}</span>
                     {item.isActive && (
                       <div className="ml-auto w-2 h-2 rounded-full bg-neon-purple" />
                     )}

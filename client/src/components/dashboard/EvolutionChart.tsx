@@ -1,26 +1,24 @@
 import {
-  LineChart,
+  CartesianGrid,
+  Legend,
   Line,
+  LineChart,
+  ResponsiveContainer,
+  Tooltip,
   XAxis,
   YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
 } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import { trpc } from "@/lib/trpc";
 import { formatCurrency } from "@/lib/utils";
-import { Skeleton } from "@/components/ui/skeleton";
 
 interface EvolutionChartProps {
   mentoradoId?: number;
 }
 
 export function EvolutionChart({ mentoradoId }: EvolutionChartProps) {
-  const { data: evolutionData, isLoading } = trpc.mentorados.evolution.useQuery(
-    { mentoradoId }
-  );
+  const { data: evolutionData, isLoading } = trpc.mentorados.evolution.useQuery({ mentoradoId });
 
   if (isLoading) {
     return (
@@ -51,7 +49,7 @@ export function EvolutionChart({ mentoradoId }: EvolutionChartProps) {
   }
 
   // Format data for chart
-  const validData = evolutionData.map(item => ({
+  const validData = evolutionData.map((item) => ({
     name: `${item.mes}/${item.ano}`,
     Faturamento: item.faturamento,
     Lucro: item.lucro,
@@ -79,7 +77,7 @@ export function EvolutionChart({ mentoradoId }: EvolutionChartProps) {
               fontSize={12}
               tickLine={false}
               axisLine={false}
-              tickFormatter={value => `R$ ${value}`}
+              tickFormatter={(value) => `R$ ${value}`}
             />
             <Tooltip
               contentStyle={{

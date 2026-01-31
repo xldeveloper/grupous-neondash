@@ -283,8 +283,7 @@ export const analiseData: AnaliseCompleta = {
         feedback: {
           analise_dezembro:
             "Faturamento (R$ 3.600) e ações (2 posts) abaixo do potencial. Precisa de um choque de gestão.",
-          foco_janeiro:
-            "Execução rigorosa do básico: constância mínima e prospecção ativa.",
+          foco_janeiro: "Execução rigorosa do básico: constância mínima e prospecção ativa.",
           sugestao:
             "Gabriela, janeiro é o mês da virada. Não se preocupe com perfeição, foque em execução. Sua meta é simples: 3 posts na semana e prospecção ativa diária. Use o Google Meu Negócio para atrair pacientes locais que já procuram pelo seu serviço. A meta é dobrar esse faturamento com ações simples e consistentes.",
         },
@@ -347,8 +346,7 @@ export const analiseData: AnaliseCompleta = {
         feedback: {
           analise_dezembro:
             "Performance estelar! Bateu meta de faturamento (R$ 30.725) e gerou incríveis 184 leads.",
-          foco_janeiro:
-            "Gestão de leads e qualificação para manter a taxa de conversão alta.",
+          foco_janeiro: "Gestão de leads e qualificação para manter a taxa de conversão alta.",
           sugestao:
             "Thais, você 'zerou' o jogo em dezembro! Com 184 leads, seu desafio em janeiro é qualificação e conversão. Não deixe esses contatos esfriarem. Use a campanha de avaliação estratégica para filtrar os curiosos dos compradores reais. Mantenha a constância e comece a pensar em delegar o agendamento se ainda não o fez.",
         },
@@ -580,8 +578,7 @@ export const analiseData: AnaliseCompleta = {
         feedback: {
           analise_dezembro:
             "Volume alto de posts (23) e stories (137), mas faturamento (R$ 11.425) não acompanhou o esforço.",
-          foco_janeiro:
-            "Ajuste de oferta e público. Muito esforço, pouco resultado financeiro.",
+          foco_janeiro: "Ajuste de oferta e público. Muito esforço, pouco resultado financeiro.",
           sugestao:
             "Iza, sua dedicação é inquestionável. O problema pode estar na oferta ou no público. Em janeiro, vamos focar em qualidade, não quantidade. Reduza os posts se precisar, mas melhore a copy e a oferta. Use a prospecção ativa para buscar pacientes com perfil de compra imediata e ticket mais alto.",
         },
@@ -715,8 +712,7 @@ export const analiseData: AnaliseCompleta = {
         feedback: {
           analise_dezembro:
             "Faturamento razoável (R$ 18.278) sustentado por posts (23), mas ZERO stories e leads.",
-          foco_janeiro:
-            "Aparecer nos stories! É impossível escalar sem conexão pessoal.",
+          foco_janeiro: "Aparecer nos stories! É impossível escalar sem conexão pessoal.",
           sugestao:
             "Tamara, seu feed garante o básico, mas a falta de stories (0) está deixando dinheiro na mesa. Em janeiro, a meta é simples: apareça nos stories todos os dias. Bastidores, café, dúvidas. As pessoas compram de pessoas. Comece devagar, mas comece. Isso vai destravar o próximo nível do seu faturamento.",
         },

@@ -1,7 +1,7 @@
+import { Calendar, TrendingUp, Users } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Users, TrendingUp, Calendar } from "lucide-react";
-import { trpc } from "@/lib/trpc";
 import { Skeleton } from "@/components/ui/skeleton";
+import { trpc } from "@/lib/trpc";
 
 export function AdminOverview() {
   const { data: mentorados, isLoading } = trpc.mentorados.list.useQuery();
@@ -9,7 +9,7 @@ export function AdminOverview() {
   if (isLoading) {
     return (
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {[1, 2, 3].map(i => (
+        {[1, 2, 3].map((i) => (
           <Skeleton key={i} className="h-32" />
         ))}
       </div>
@@ -17,10 +17,8 @@ export function AdminOverview() {
   }
 
   const totalMentorados = mentorados?.length || 0;
-  const estruturaCount =
-    mentorados?.filter((m: any) => m.turma === "neon_estrutura").length || 0;
-  const escalaCount =
-    mentorados?.filter((m: any) => m.turma === "neon_escala").length || 0;
+  const estruturaCount = mentorados?.filter((m: any) => m.turma === "neon_estrutura").length || 0;
+  const escalaCount = mentorados?.filter((m: any) => m.turma === "neon_escala").length || 0;
 
   return (
     <div className="space-y-6">
@@ -35,9 +33,7 @@ export function AdminOverview() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-slate-900">
-              {totalMentorados}
-            </div>
+            <div className="text-3xl font-bold text-slate-900">{totalMentorados}</div>
             <div className="flex gap-2 mt-1 text-xs">
               <span className="bg-neon-purple/10 text-neon-purple px-2 py-0.5 rounded-full font-medium">
                 {estruturaCount} Estrutura
@@ -60,9 +56,7 @@ export function AdminOverview() {
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-bold text-slate-900">Dez/2025</div>
-            <p className="text-xs text-slate-400 mt-1">
-              Dados migrados com sucesso
-            </p>
+            <p className="text-xs text-slate-400 mt-1">Dados migrados com sucesso</p>
           </CardContent>
         </Card>
 
@@ -81,13 +75,9 @@ export function AdminOverview() {
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-neon-green opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-3 w-3 bg-neon-green"></span>
               </span>
-              <span className="text-sm font-semibold text-slate-700">
-                Operacional
-              </span>
+              <span className="text-sm font-semibold text-slate-700">Operacional</span>
             </div>
-            <p className="text-xs text-slate-400 mt-1">
-              Todos os serviços ativos
-            </p>
+            <p className="text-xs text-slate-400 mt-1">Todos os serviços ativos</p>
           </CardContent>
         </Card>
       </div>

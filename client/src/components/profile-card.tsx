@@ -1,14 +1,10 @@
 import { motion } from "framer-motion";
-import { User, MapPin, Calendar, Mail } from "lucide-react";
+import { Mail, User } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import {
-  BentoCard,
-  BentoCardContent,
-  BentoCardFooter,
-} from "@/components/ui/bento-grid";
-import { cn } from "@/lib/utils";
+import { BentoCard, BentoCardContent, BentoCardFooter } from "@/components/ui/bento-grid";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 export interface ProfileCardProps {
   name: string;
@@ -53,20 +49,13 @@ export function ProfileCard({
 
   return (
     <BentoCard
-      className={cn(
-        "w-full max-w-sm mx-auto p-0 overflow-hidden group",
-        className
-      )}
+      className={cn("w-full max-w-sm mx-auto p-0 overflow-hidden group", className)}
       delay={0.1}
     >
       {/* Cover Image */}
       <div className={cn("h-32 w-full relative", gradientClass)}>
         {coverUrl && (
-          <img
-            src={coverUrl}
-            alt="Cover"
-            className="w-full h-full object-cover opacity-50"
-          />
+          <img src={coverUrl} alt="Cover" className="w-full h-full object-cover opacity-50" />
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
       </div>
@@ -113,11 +102,7 @@ export function ProfileCard({
           {badges.length > 0 && (
             <div className="flex flex-wrap gap-1 mt-3">
               {badges.map((badge, index) => (
-                <Badge
-                  key={index}
-                  variant="outline"
-                  className="text-xs rounded-full px-2"
-                >
+                <Badge key={index} variant="outline" className="text-xs rounded-full px-2">
                   {badge}
                 </Badge>
               ))}
@@ -130,16 +115,11 @@ export function ProfileCard({
         <BentoCardContent className="px-6 py-4">
           <div className="grid grid-cols-3 gap-4 border-t border-border/50 pt-4">
             {stats.map((stat, index) => (
-              <div
-                key={index}
-                className="text-center group/stat cursor-default"
-              >
+              <div key={index} className="text-center group/stat cursor-default">
                 <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1 group-hover/stat:text-primary transition-colors">
                   {stat.label}
                 </p>
-                <p className="font-bold text-lg text-foreground">
-                  {stat.value}
-                </p>
+                <p className="font-bold text-lg text-foreground">{stat.value}</p>
               </div>
             ))}
           </div>

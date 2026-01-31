@@ -1,16 +1,16 @@
 import { relations } from "drizzle-orm";
 import {
-  users,
-  mentorados,
-  metricasMensais,
-  feedbacks,
   badges,
-  mentoradoBadges,
-  rankingMensal,
-  metasProgressivas,
-  notificacoes,
-  leads,
+  feedbacks,
   interacoes,
+  leads,
+  mentoradoBadges,
+  mentorados,
+  metasProgressivas,
+  metricasMensais,
+  notificacoes,
+  rankingMensal,
+  users,
 } from "./schema";
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -47,15 +47,12 @@ export const mentoradosRelations = relations(mentorados, ({ one, many }) => ({
 // METRICAS MENSAIS RELATIONS
 // ═══════════════════════════════════════════════════════════════════════════
 
-export const metricasMensaisRelations = relations(
-  metricasMensais,
-  ({ one }) => ({
-    mentorado: one(mentorados, {
-      fields: [metricasMensais.mentoradoId],
-      references: [mentorados.id],
-    }),
-  })
-);
+export const metricasMensaisRelations = relations(metricasMensais, ({ one }) => ({
+  mentorado: one(mentorados, {
+    fields: [metricasMensais.mentoradoId],
+    references: [mentorados.id],
+  }),
+}));
 
 // ═══════════════════════════════════════════════════════════════════════════
 // FEEDBACKS RELATIONS
@@ -80,19 +77,16 @@ export const badgesRelations = relations(badges, ({ many }) => ({
 // MENTORADO BADGES RELATIONS (Junction Table)
 // ═══════════════════════════════════════════════════════════════════════════
 
-export const mentoradoBadgesRelations = relations(
-  mentoradoBadges,
-  ({ one }) => ({
-    mentorado: one(mentorados, {
-      fields: [mentoradoBadges.mentoradoId],
-      references: [mentorados.id],
-    }),
-    badge: one(badges, {
-      fields: [mentoradoBadges.badgeId],
-      references: [badges.id],
-    }),
-  })
-);
+export const mentoradoBadgesRelations = relations(mentoradoBadges, ({ one }) => ({
+  mentorado: one(mentorados, {
+    fields: [mentoradoBadges.mentoradoId],
+    references: [mentorados.id],
+  }),
+  badge: one(badges, {
+    fields: [mentoradoBadges.badgeId],
+    references: [badges.id],
+  }),
+}));
 
 // ═══════════════════════════════════════════════════════════════════════════
 // RANKING MENSAL RELATIONS
@@ -109,15 +103,12 @@ export const rankingMensalRelations = relations(rankingMensal, ({ one }) => ({
 // METAS PROGRESSIVAS RELATIONS
 // ═══════════════════════════════════════════════════════════════════════════
 
-export const metasProgressivasRelations = relations(
-  metasProgressivas,
-  ({ one }) => ({
-    mentorado: one(mentorados, {
-      fields: [metasProgressivas.mentoradoId],
-      references: [mentorados.id],
-    }),
-  })
-);
+export const metasProgressivasRelations = relations(metasProgressivas, ({ one }) => ({
+  mentorado: one(mentorados, {
+    fields: [metasProgressivas.mentoradoId],
+    references: [mentorados.id],
+  }),
+}));
 
 // ═══════════════════════════════════════════════════════════════════════════
 // NOTIFICACOES RELATIONS

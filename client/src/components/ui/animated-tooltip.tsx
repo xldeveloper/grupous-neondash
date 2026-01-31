@@ -1,11 +1,6 @@
-import React, { useState } from "react";
-import {
-  motion,
-  useTransform,
-  AnimatePresence,
-  useMotionValue,
-  useSpring,
-} from "motion/react";
+import { AnimatePresence, motion, useMotionValue, useSpring, useTransform } from "motion/react";
+import type React from "react";
+import { useState } from "react";
 import { cn } from "@/lib/utils";
 
 export const AnimatedTooltip = ({
@@ -23,14 +18,8 @@ export const AnimatedTooltip = ({
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const springConfig = { stiffness: 100, damping: 5 };
   const x = useMotionValue(0);
-  const rotate = useSpring(
-    useTransform(x, [-100, 100], [-45, 45]),
-    springConfig
-  );
-  const translateX = useSpring(
-    useTransform(x, [-100, 100], [-50, 50]),
-    springConfig
-  );
+  const rotate = useSpring(useTransform(x, [-100, 100], [-45, 45]), springConfig);
+  const translateX = useSpring(useTransform(x, [-100, 100], [-50, 50]), springConfig);
 
   const handleMouseMove = (event: React.MouseEvent<HTMLImageElement>) => {
     const halfWidth = event.currentTarget.offsetWidth / 2;
@@ -39,7 +28,7 @@ export const AnimatedTooltip = ({
 
   return (
     <div className={cn("flex items-center gap-2", className)}>
-      {items.map((item, idx) => (
+      {items.map((item, _idx) => (
         <div
           className="group relative -mr-4"
           key={item.name}
@@ -70,9 +59,7 @@ export const AnimatedTooltip = ({
               >
                 <div className="absolute inset-x-10 -bottom-px z-30 h-px w-[20%] bg-gradient-to-r from-transparent via-emerald-500 to-transparent" />
                 <div className="absolute -bottom-px z-30 h-px w-[40%] bg-gradient-to-r from-transparent via-sky-500 to-transparent" />
-                <div className="relative z-30 text-base font-bold text-white">
-                  {item.name}
-                </div>
+                <div className="relative z-30 text-base font-bold text-white">{item.name}</div>
                 <div className="text-xs text-white/70">{item.designation}</div>
               </motion.div>
             )}
@@ -115,14 +102,8 @@ export function AnimatedTooltipSelector({
   const [hoveredIndex, setHoveredIndex] = useState<string | null>(null);
   const springConfig = { stiffness: 100, damping: 5 };
   const x = useMotionValue(0);
-  const rotate = useSpring(
-    useTransform(x, [-100, 100], [-45, 45]),
-    springConfig
-  );
-  const translateX = useSpring(
-    useTransform(x, [-100, 100], [-50, 50]),
-    springConfig
-  );
+  const rotate = useSpring(useTransform(x, [-100, 100], [-45, 45]), springConfig);
+  const translateX = useSpring(useTransform(x, [-100, 100], [-50, 50]), springConfig);
 
   const handleMouseMove = (event: React.MouseEvent<HTMLDivElement>) => {
     const halfWidth = event.currentTarget.offsetWidth / 2;
@@ -142,7 +123,7 @@ export function AnimatedTooltipSelector({
         className
       )}
     >
-      {items.map(item => (
+      {items.map((item) => (
         <div
           className="group relative"
           key={item.id}
@@ -172,9 +153,7 @@ export function AnimatedTooltipSelector({
                 }}
                 className="absolute top-full left-1/2 z-50 flex -translate-x-1/2 flex-col items-center justify-center rounded-lg bg-slate-900 px-3 py-1.5 shadow-xl ring-1 ring-white/10 mt-2"
               >
-                <div className="text-sm font-semibold text-white">
-                  {item.name}
-                </div>
+                <div className="text-sm font-semibold text-white">{item.name}</div>
                 <div className="text-xs text-slate-400">{item.designation}</div>
                 <div className="absolute -top-1 left-1/2 h-2 w-2 -translate-x-1/2 rotate-45 bg-slate-900" />
               </motion.div>

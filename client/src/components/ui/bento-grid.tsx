@@ -1,6 +1,6 @@
+import { motion } from "framer-motion";
+import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
-import { motion, AnimatePresence } from "framer-motion";
-import { ReactNode } from "react";
 
 export const BentoGrid = ({
   className,
@@ -10,12 +10,7 @@ export const BentoGrid = ({
   children?: ReactNode;
 }) => {
   return (
-    <div
-      className={cn(
-        "grid grid-cols-1 md:grid-cols-3 gap-4 max-w-7xl mx-auto",
-        className
-      )}
-    >
+    <div className={cn("grid grid-cols-1 md:grid-cols-3 gap-4 max-w-7xl mx-auto", className)}>
       {children}
     </div>
   );
@@ -76,11 +71,7 @@ export const BentoCardHeader = ({
   children?: ReactNode;
 }) => {
   if (children) {
-    return (
-      <div className={cn("flex items-start justify-between", className)}>
-        {children}
-      </div>
-    );
+    return <div className={cn("flex items-start justify-between", className)}>{children}</div>;
   }
 
   return (
@@ -96,9 +87,7 @@ export const BentoCardHeader = ({
             {title}
           </div>
           {subtitle && (
-            <div className="font-normal text-slate-500 text-xs dark:text-slate-400">
-              {subtitle}
-            </div>
+            <div className="font-normal text-slate-500 text-xs dark:text-slate-400">{subtitle}</div>
           )}
         </div>
       </div>
@@ -125,12 +114,7 @@ export const BentoCardFooter = ({
   className?: string;
 }) => {
   return (
-    <div
-      className={cn(
-        "mt-auto pt-4 border-t border-slate-100 dark:border-slate-800",
-        className
-      )}
-    >
+    <div className={cn("mt-auto pt-4 border-t border-slate-100 dark:border-slate-800", className)}>
       {children}
     </div>
   );

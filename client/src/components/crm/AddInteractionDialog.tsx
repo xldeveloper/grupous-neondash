@@ -1,15 +1,16 @@
-import { useState, useEffect } from "react";
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { BookTemplate } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import * as z from "zod";
-import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogFooter,
 } from "@/components/ui/dialog";
 import {
   Form,
@@ -19,6 +20,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -26,11 +28,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { toast } from "sonner";
+import { trpc } from "@/lib/trpc";
 import { InteractionTemplatesDialog } from "./InteractionTemplatesDialog";
-import { BookTemplate, Plus } from "lucide-react";
 
 // Input schema for form - keeps duracao as string
 const interactionFormSchema = z.object({
@@ -90,17 +90,16 @@ export function AddInteractionDialog({
   });
 
   const [templatesOpen, setTemplatesOpen] = useState(false);
-  const { data: templates } = trpc.interactionTemplates.list.useQuery(
-    undefined,
-    { enabled: isOpen }
-  );
+  const { data: templates } = trpc.interactionTemplates.list.useQuery(undefined, {
+    enabled: isOpen,
+  });
 
   const onSubmit = (values: InteractionFormValues) => {
     mutation.mutate({
       leadId,
       tipo: values.tipo,
       notas: values.notas,
-      duracao: values.duracao ? parseInt(values.duracao) : undefined,
+      duracao: values.duracao ? parseInt(values.duracao, 10) : undefined,
     });
   };
 
@@ -159,10 +158,7 @@ export function AddInteractionDialog({
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Tipo</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder="Selecione o tipo" />

@@ -1,27 +1,22 @@
-import { z } from "zod";
-import {
-  protectedProcedure,
-  router,
-  mentoradoProcedure,
-  adminProcedure,
-} from "./_core/trpc";
 import { TRPCError } from "@trpc/server";
 import { eq } from "drizzle-orm";
-import { getDb } from "./db";
+import { z } from "zod";
 import { notificacoes } from "../drizzle/schema";
+import { adminProcedure, mentoradoProcedure, protectedProcedure, router } from "./_core/trpc";
+import { getDb } from "./db";
 import {
-  initializeBadges,
-  checkAndAwardBadges,
   calculateMonthlyRanking,
-  updateProgressiveGoals,
-  sendMetricsReminders,
+  checkAndAwardBadges,
   checkUnmetGoalsAlerts,
-  getMentoradoBadges,
-  getRanking,
-  getNotificacoes,
-  markNotificationRead,
   getAllBadges,
+  getMentoradoBadges,
+  getNotificacoes,
   getProgressiveGoals,
+  getRanking,
+  initializeBadges,
+  markNotificationRead,
+  sendMetricsReminders,
+  updateProgressiveGoals,
 } from "./gamificacao";
 
 export const gamificacaoRouter = router({
@@ -130,11 +125,7 @@ export const gamificacaoRouter = router({
     .mutation(async ({ input }) => {
       // If mentoradoId provided, process only that mentorado
       if (input.mentoradoId) {
-        const newBadges = await checkAndAwardBadges(
-          input.mentoradoId,
-          input.ano,
-          input.mes
-        );
+        const newBadges = await checkAndAwardBadges(input.mentoradoId, input.ano, input.mes);
         await updateProgressiveGoals(input.mentoradoId, input.ano, input.mes);
         return { badgesAwarded: newBadges.length };
       }

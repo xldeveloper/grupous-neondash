@@ -1,6 +1,6 @@
-import * as React from "react";
 import * as SwitchPrimitive from "@radix-ui/react-switch";
 import { motion } from "motion/react";
+import * as React from "react";
 
 import { cn } from "@/lib/utils";
 

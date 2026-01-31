@@ -1,21 +1,21 @@
 import "dotenv/config";
-import express from "express";
-import { createServer } from "http";
-import net from "net";
-import { createExpressMiddleware } from "@trpc/server/adapters/express";
+import { createServer } from "node:http";
+import net from "node:net";
+import { URL } from "node:url";
 import { clerkMiddleware } from "@clerk/express";
-import { WebSocketServer, WebSocket } from "ws";
-import { URL } from "url";
+import { createExpressMiddleware } from "@trpc/server/adapters/express";
+import express from "express";
+import { type WebSocket, WebSocketServer } from "ws";
 import { appRouter } from "../routers";
-import { createContext } from "./context";
-import { serveStatic, setupVite } from "./vite";
 import { moltbotService } from "../services/moltbotService";
 import { handleClerkWebhook } from "../webhooks/clerk";
-import { initRedis } from "./sessionCache";
+import { createContext } from "./context";
 import { userRateLimiter } from "./rateLimiter";
+import { initRedis } from "./sessionCache";
+import { serveStatic, setupVite } from "./vite";
 
 function isPortAvailable(port: number): Promise<boolean> {
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     const server = net.createServer();
     server.listen(port, () => {
       server.close(() => resolve(true));
@@ -47,36 +47,15 @@ async function startServer() {
 
   // Handle WebSocket connections
   wss.on("connection", (ws: WebSocket, userId: number) => {
-    console.log(
-      JSON.stringify({
-        timestamp: new Date().toISOString(),
-        level: "info",
-        service: "moltbot-ws",
-        action: "clientConnected",
-        userId,
-      })
-    );
-
     // Register with moltbot service
     moltbotService.registerClientConnection(userId, ws);
 
     // Handle incoming messages
-    ws.on("message", async data => {
+    ws.on("message", async (data) => {
       try {
         const message = JSON.parse(data.toString());
         await moltbotService.handleClientMessage(userId, message);
-      } catch (error) {
-        console.error(
-          JSON.stringify({
-            timestamp: new Date().toISOString(),
-            level: "error",
-            service: "moltbot-ws",
-            action: "messageError",
-            userId,
-            error: String(error),
-          })
-        );
-      }
+      } catch (_error) {}
     });
 
     // Handle disconnection
@@ -108,13 +87,13 @@ async function startServer() {
     }
 
     const userId = parseInt(userIdParam, 10);
-    if (isNaN(userId)) {
+    if (Number.isNaN(userId)) {
       socket.write("HTTP/1.1 400 Bad Request\r\n\r\n");
       socket.destroy();
       return;
     }
 
-    wss.handleUpgrade(request, socket, head, ws => {
+    wss.handleUpgrade(request, socket, head, (ws) => {
       wss.emit("connection", ws, userId);
     });
   });
@@ -126,15 +105,11 @@ async function startServer() {
   // ─────────────────────────────────────────────────────────────────────────
   // Webhooks (Must be before global body parser)
   // ─────────────────────────────────────────────────────────────────────────
-  app.post(
-    "/api/webhooks/clerk",
-    express.raw({ type: "application/json" }),
-    async (req, res) => {
-      // Pass raw body buffer to the handler
-      (req as any).rawBody = req.body;
-      await handleClerkWebhook(req, res);
-    }
-  );
+  app.post("/api/webhooks/clerk", express.raw({ type: "application/json" }), async (req, res) => {
+    // Pass raw body buffer to the handler
+    (req as any).rawBody = req.body;
+    await handleClerkWebhook(req, res);
+  });
 
   // Configure body parser with larger size limit for file uploads
   app.use(express.json({ limit: "50mb" }));
@@ -167,50 +142,25 @@ async function startServer() {
 
   try {
     await moltbotService.connect();
-    console.log(
-      JSON.stringify({
-        timestamp: new Date().toISOString(),
-        level: "info",
-        service: "server",
-        action: "moltbotGatewayConnected",
-      })
-    );
-  } catch (error) {
-    console.warn(
-      JSON.stringify({
-        timestamp: new Date().toISOString(),
-        level: "warn",
-        service: "server",
-        action: "moltbotGatewayUnavailable",
-        message: "Moltbot gateway not available, will retry in background",
-        error: String(error),
-      })
-    );
-  }
+  } catch (_error) {}
 
   // ─────────────────────────────────────────────────────────────────────────
   // Start Server
   // ─────────────────────────────────────────────────────────────────────────
 
-  const preferredPort = parseInt(process.env.PORT || "3000");
+  const preferredPort = parseInt(process.env.PORT || "3000", 10);
   const port = await findAvailablePort(preferredPort);
 
   if (port !== preferredPort) {
-    console.log(`Port ${preferredPort} is busy, using port ${port} instead`);
   }
 
-  server.listen(port, () => {
-    console.log(`Server running on http://localhost:${port}/`);
-    console.log(`WebSocket endpoint: ws://localhost:${port}/ws/moltbot`);
-  });
+  server.listen(port, () => {});
 
   // ─────────────────────────────────────────────────────────────────────────
   // Graceful Shutdown
   // ─────────────────────────────────────────────────────────────────────────
 
   const shutdown = async () => {
-    console.log("\nShutting down gracefully...");
-
     // Disconnect moltbot service
     await moltbotService.disconnect();
 
@@ -219,7 +169,6 @@ async function startServer() {
 
     // Close HTTP server
     server.close(() => {
-      console.log("Server closed");
       process.exit(0);
     });
   };

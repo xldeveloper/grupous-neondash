@@ -15,24 +15,12 @@ export async function sendEmail(payload: EmailPayload): Promise<boolean> {
   const { to, subject, body } = payload;
 
   if (!to || !subject || !body) {
-    console.warn("[Email] Missing required fields:", {
-      to,
-      subject,
-      bodyLength: body?.length,
-    });
     return false;
   }
 
   if (!ENV.llmApiUrl || !ENV.llmApiKey) {
-    console.warn("[Email] Notification service not configured");
     return false;
   }
-
-  // For now, we'll use the owner notification as a fallback
-  // In production, you would integrate with a proper email service like SendGrid, Resend, etc.
-  console.log("[Email] Would send email to:", to);
-  console.log("[Email] Subject:", subject);
-  console.log("[Email] Body:", body);
 
   // Return true to indicate the notification was "sent" (logged)
   // In production, replace this with actual email sending logic
@@ -45,7 +33,7 @@ export async function sendEmail(payload: EmailPayload): Promise<boolean> {
 export async function sendWelcomeEmail(
   email: string,
   nomeCompleto: string,
-  turma: string
+  _turma: string
 ): Promise<boolean> {
   const subject = `🎉 Bem-vindo ao Dashboard Neon`;
 

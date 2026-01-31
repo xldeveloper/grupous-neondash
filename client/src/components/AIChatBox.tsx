@@ -1,10 +1,10 @@
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { cn } from "@/lib/utils";
-import { Loader2, Send, User, Sparkles } from "lucide-react";
-import { useState, useEffect, useRef } from "react";
+import { Loader2, Send, Sparkles, User } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { Streamdown } from "streamdown";
+import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Textarea } from "@/components/ui/textarea";
+import { cn } from "@/lib/utils";
 
 /**
  * Message type matching server-side LLM Message interface
@@ -127,7 +127,7 @@ export function AIChatBox({
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   // Filter out system messages
-  const displayMessages = messages.filter(msg => msg.role !== "system");
+  const displayMessages = messages.filter((msg) => msg.role !== "system");
 
   // Calculate min-height for last assistant message to push user message to top
   const [minHeightForLastMessage, setMinHeightForLastMessage] = useState(0);
@@ -143,8 +143,7 @@ export function AIChatBox({
       // - user message: 40px (item height) + 16px (margin-top from space-y-4) = 56px
       // Note: margin-bottom is not counted because it naturally pushes the assistant message down
       const userMessageReservedHeight = 56;
-      const calculatedHeight =
-        scrollAreaHeight - 32 - userMessageReservedHeight;
+      const calculatedHeight = scrollAreaHeight - 32 - userMessageReservedHeight;
 
       setMinHeightForLastMessage(Math.max(0, calculatedHeight));
     }
@@ -266,9 +265,7 @@ export function AIChatBox({
                           <Streamdown>{message.content}</Streamdown>
                         </div>
                       ) : (
-                        <p className="whitespace-pre-wrap text-sm">
-                          {message.content}
-                        </p>
+                        <p className="whitespace-pre-wrap text-sm">{message.content}</p>
                       )}
                     </div>
 
@@ -312,7 +309,7 @@ export function AIChatBox({
         <Textarea
           ref={textareaRef}
           value={input}
-          onChange={e => setInput(e.target.value)}
+          onChange={(e) => setInput(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder={placeholder}
           className="flex-1 max-h-32 resize-none min-h-9"
@@ -324,11 +321,7 @@ export function AIChatBox({
           disabled={!input.trim() || isLoading}
           className="shrink-0 h-[38px] w-[38px]"
         >
-          {isLoading ? (
-            <Loader2 className="size-4 animate-spin" />
-          ) : (
-            <Send className="size-4" />
-          )}
+          {isLoading ? <Loader2 className="size-4 animate-spin" /> : <Send className="size-4" />}
         </Button>
       </form>
     </div>

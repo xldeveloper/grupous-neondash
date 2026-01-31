@@ -1,7 +1,11 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { CheckCircle2, Loader2, Save } from "lucide-react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Form,
   FormControl,
@@ -12,11 +16,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Loader2, CheckCircle2, Save } from "lucide-react";
-import { useEffect } from "react";
 
 const formSchema = z.object({
   atuacaoSaude: z.string().optional(),
@@ -54,7 +54,7 @@ export function DiagnosticoForm({ mentoradoId }: { mentoradoId?: number }) {
       // Invalidate both potential queries to be safe
       utils.diagnostico.get.invalidate();
     },
-    onError: error => {
+    onError: (error) => {
       toast.error(`Erro: ${error.message}`);
     },
   });
@@ -130,10 +130,7 @@ export function DiagnosticoForm({ mentoradoId }: { mentoradoId?: number }) {
                   <FormItem>
                     <FormLabel>Qual sua área de atuação na saúde?</FormLabel>
                     <FormControl>
-                      <Input
-                        placeholder="Ex: Biomédica, Enfermeira..."
-                        {...field}
-                      />
+                      <Input placeholder="Ex: Biomédica, Enfermeira..." {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -144,14 +141,9 @@ export function DiagnosticoForm({ mentoradoId }: { mentoradoId?: number }) {
                 name="tempoLivre"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>
-                      Quanto tempo livre você tem por semana?
-                    </FormLabel>
+                    <FormLabel>Quanto tempo livre você tem por semana?</FormLabel>
                     <FormControl>
-                      <Input
-                        placeholder="Ex: 10 horas, Apenas finais de semana..."
-                        {...field}
-                      />
+                      <Input placeholder="Ex: 10 horas, Apenas finais de semana..." {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -177,10 +169,7 @@ export function DiagnosticoForm({ mentoradoId }: { mentoradoId?: number }) {
                   <FormItem>
                     <FormLabel>Possui clínica ou consultório?</FormLabel>
                     <FormControl>
-                      <Input
-                        placeholder="Sim, Próprio / Alugado / Atendo a domicílio"
-                        {...field}
-                      />
+                      <Input placeholder="Sim, Próprio / Alugado / Atendo a domicílio" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -192,9 +181,7 @@ export function DiagnosticoForm({ mentoradoId }: { mentoradoId?: number }) {
           {/* Card 2: Resultados Atuais */}
           <Card className="border-blue-500/20 bg-blue-500/5">
             <CardHeader>
-              <CardTitle className="text-blue-400">
-                Resultados Atuais (Financeiro)
-              </CardTitle>
+              <CardTitle className="text-blue-400">Resultados Atuais (Financeiro)</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <FormField
@@ -228,9 +215,7 @@ export function DiagnosticoForm({ mentoradoId }: { mentoradoId?: number }) {
                 name="contas"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>
-                      Valor contas mensais (fixo + variável)?
-                    </FormLabel>
+                    <FormLabel>Valor contas mensais (fixo + variável)?</FormLabel>
                     <FormControl>
                       <Input placeholder="R$ 0,00" {...field} />
                     </FormControl>
@@ -265,9 +250,7 @@ export function DiagnosticoForm({ mentoradoId }: { mentoradoId?: number }) {
                 name="incomodaRotina"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>
-                      O que mais te incomoda na sua rotina hoje?
-                    </FormLabel>
+                    <FormLabel>O que mais te incomoda na sua rotina hoje?</FormLabel>
                     <FormControl>
                       <Textarea
                         placeholder="Descreva suas frustrações..."
@@ -284,9 +267,7 @@ export function DiagnosticoForm({ mentoradoId }: { mentoradoId?: number }) {
                 name="dificuldadeCrescer"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>
-                      Qual sua maior dificuldade para crescer?
-                    </FormLabel>
+                    <FormLabel>Qual sua maior dificuldade para crescer?</FormLabel>
                     <FormControl>
                       <Textarea
                         placeholder="Ex: Falta de clientes, Gestão, Vendas..."
@@ -304,9 +285,7 @@ export function DiagnosticoForm({ mentoradoId }: { mentoradoId?: number }) {
           {/* Card 4: Objetivos e Sonhos */}
           <Card className="border-neon-gold/20 bg-neon-gold/5">
             <CardHeader>
-              <CardTitle className="text-neon-gold">
-                Objetivos e Sonhos
-              </CardTitle>
+              <CardTitle className="text-neon-gold">Objetivos e Sonhos</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <FormField
@@ -314,9 +293,7 @@ export function DiagnosticoForm({ mentoradoId }: { mentoradoId?: number }) {
                 name="objetivo6Meses"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>
-                      Qual seu principal objetivo para os próximos 6 meses?
-                    </FormLabel>
+                    <FormLabel>Qual seu principal objetivo para os próximos 6 meses?</FormLabel>
                     <FormControl>
                       <Textarea
                         placeholder="O que você quer conquistar?"
@@ -333,15 +310,9 @@ export function DiagnosticoForm({ mentoradoId }: { mentoradoId?: number }) {
                 name="resultadoTransformador"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>
-                      Qual resultado seria transformador para você agora?
-                    </FormLabel>
+                    <FormLabel>Qual resultado seria transformador para você agora?</FormLabel>
                     <FormControl>
-                      <Textarea
-                        placeholder="O que mudaria o jogo?"
-                        className="h-24"
-                        {...field}
-                      />
+                      <Textarea placeholder="O que mudaria o jogo?" className="h-24" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -353,9 +324,7 @@ export function DiagnosticoForm({ mentoradoId }: { mentoradoId?: number }) {
           {/* Card 5: Primeiros Passos */}
           <Card className="md:col-span-2 border-neon-pink/20 bg-neon-pink/5">
             <CardHeader>
-              <CardTitle className="text-neon-pink">
-                5. Primeiros Passos
-              </CardTitle>
+              <CardTitle className="text-neon-pink">5. Primeiros Passos</CardTitle>
             </CardHeader>
             <CardContent>
               <FormField

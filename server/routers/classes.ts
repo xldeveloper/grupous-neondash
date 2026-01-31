@@ -1,9 +1,9 @@
-import { z } from "zod";
-import { router, protectedProcedure } from "../_core/trpc";
-import { getDb } from "../db";
-import { classes, classProgress } from "../../drizzle/schema";
-import { eq, and, desc } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
+import { and, desc, eq } from "drizzle-orm";
+import { z } from "zod";
+import { classes, classProgress } from "../../drizzle/schema";
+import { protectedProcedure, router } from "../_core/trpc";
+import { getDb } from "../db";
 
 export const classesRouter = router({
   list: protectedProcedure
@@ -31,19 +31,16 @@ export const classesRouter = router({
       // Note: Drizzle's query builder for joins can be verbose, so we might fetch classes and progress separately
       // or use a raw query if needed. For now, let's fetch separately and merge in JS for simplicity unless performance is critical.
 
-      const allClasses = await db
-        .select()
-        .from(classes)
-        .orderBy(desc(classes.date));
+      const allClasses = await db.select().from(classes).orderBy(desc(classes.date));
 
       const progress = await db
         .select()
         .from(classProgress)
         .where(eq(classProgress.mentoradoId, targetMentoradoId));
 
-      const progressMap = new Map(progress.map(p => [p.classId, p]));
+      const progressMap = new Map(progress.map((p) => [p.classId, p]));
 
-      return allClasses.map(c => ({
+      return allClasses.map((c) => ({
         ...c,
         watched: progressMap.has(c.id),
         completedAt: progressMap.get(c.id)?.completedAt || null,
@@ -62,8 +59,7 @@ export const classesRouter = router({
 
       let targetMentoradoId = ctx.mentorado?.id;
       if (input.mentoradoId) {
-        if (ctx.user?.role !== "admin")
-          throw new TRPCError({ code: "FORBIDDEN" });
+        if (ctx.user?.role !== "admin") throw new TRPCError({ code: "FORBIDDEN" });
         targetMentoradoId = input.mentoradoId;
       }
       if (!targetMentoradoId) throw new TRPCError({ code: "UNAUTHORIZED" });

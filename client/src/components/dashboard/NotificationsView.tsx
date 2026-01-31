@@ -1,18 +1,10 @@
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { trpc } from "@/lib/trpc";
-import {
-  Loader2,
-  BellOff,
-  Trophy,
-  AlertTriangle,
-  Calendar,
-  Check,
-} from "lucide-react";
-import { cn } from "@/lib/utils";
 import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import { AlertTriangle, BellOff, Calendar, Check, Loader2, Trophy } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { trpc } from "@/lib/trpc";
+import { cn } from "@/lib/utils";
 
 const tipoConfig: Record<
   string,
@@ -46,8 +38,9 @@ const tipoConfig: Record<
 
 export function NotificationsView() {
   const utils = trpc.useUtils();
-  const { data: notificacoes, isLoading } =
-    trpc.gamificacao.myNotificacoes.useQuery({ apenasNaoLidas: false });
+  const { data: notificacoes, isLoading } = trpc.gamificacao.myNotificacoes.useQuery({
+    apenasNaoLidas: false,
+  });
 
   const markReadMutation = trpc.gamificacao.markRead.useMutation({
     onSuccess: () => {
@@ -55,7 +48,7 @@ export function NotificationsView() {
     },
   });
 
-  const naoLidas = notificacoes?.filter(n => n.lida === "nao").length || 0;
+  const naoLidas = notificacoes?.filter((n) => n.lida === "nao").length || 0;
 
   const handleMarkRead = (id: number) => {
     markReadMutation.mutate({ notificacaoId: id });
@@ -63,8 +56,8 @@ export function NotificationsView() {
 
   const handleMarkAllRead = () => {
     notificacoes
-      ?.filter(n => n.lida === "nao")
-      .forEach(n => {
+      ?.filter((n) => n.lida === "nao")
+      .forEach((n) => {
         markReadMutation.mutate({ notificacaoId: n.id });
       });
   };
@@ -101,16 +94,13 @@ export function NotificationsView() {
         <Card className="border-none shadow-sm bg-card">
           <CardContent className="py-8 text-center">
             <BellOff className="w-8 h-8 mx-auto text-muted-foreground/50 mb-2" />
-            <p className="text-sm text-muted-foreground">
-              Nenhuma notificação nova.
-            </p>
+            <p className="text-sm text-muted-foreground">Nenhuma notificação nova.</p>
           </CardContent>
         </Card>
       ) : (
         <div className="space-y-2 max-h-[400px] overflow-y-auto pr-1">
-          {notificacoes.map(notif => {
-            const config =
-              tipoConfig[notif.tipo] || tipoConfig.lembrete_metricas;
+          {notificacoes.map((notif) => {
+            const config = tipoConfig[notif.tipo] || tipoConfig.lembrete_metricas;
             const Icon = config.icon;
             const isUnread = notif.lida === "nao";
 
@@ -119,20 +109,13 @@ export function NotificationsView() {
                 key={notif.id}
                 className={cn(
                   "border-none shadow-sm transition-all cursor-pointer hover:shadow-md",
-                  isUnread
-                    ? "bg-card border-l-4 border-l-neon-green"
-                    : "bg-muted/30 opacity-75"
+                  isUnread ? "bg-card border-l-4 border-l-neon-green" : "bg-muted/30 opacity-75"
                 )}
                 onClick={() => isUnread && handleMarkRead(notif.id)}
               >
                 <CardContent className="p-3">
                   <div className="flex items-start gap-3">
-                    <div
-                      className={cn(
-                        "p-1.5 rounded-full flex-shrink-0 mt-0.5",
-                        config.color
-                      )}
-                    >
+                    <div className={cn("p-1.5 rounded-full flex-shrink-0 mt-0.5", config.color)}>
                       <Icon className="w-4 h-4" />
                     </div>
 
@@ -141,9 +124,7 @@ export function NotificationsView() {
                         <h4
                           className={cn(
                             "font-semibold text-sm",
-                            isUnread
-                              ? "text-foreground"
-                              : "text-muted-foreground"
+                            isUnread ? "text-foreground" : "text-muted-foreground"
                           )}
                         >
                           {notif.titulo}
@@ -158,9 +139,7 @@ export function NotificationsView() {
                       <p
                         className={cn(
                           "text-xs leading-relaxed",
-                          isUnread
-                            ? "text-foreground/90"
-                            : "text-muted-foreground"
+                          isUnread ? "text-foreground/90" : "text-muted-foreground"
                         )}
                       >
                         {notif.mensagem}

@@ -1,7 +1,7 @@
+import { desc, eq } from "drizzle-orm";
 import { z } from "zod";
-import { router, protectedProcedure } from "./_core/trpc";
 import { interactionTemplates } from "../drizzle/schema";
-import { eq, desc } from "drizzle-orm";
+import { protectedProcedure, router } from "./_core/trpc";
 import { getDb } from "./db";
 
 export const interactionTemplatesRouter = router({
@@ -47,9 +47,7 @@ export const interactionTemplatesRouter = router({
         id: z.number(),
         title: z.string().min(1).optional(),
         content: z.string().min(1).optional(),
-        type: z
-          .enum(["whatsapp", "email", "ligacao", "reuniao", "nota"])
-          .optional(),
+        type: z.enum(["whatsapp", "email", "ligacao", "reuniao", "nota"]).optional(),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -90,9 +88,7 @@ export const interactionTemplatesRouter = router({
         throw new Error("Template não encontrado ou não autorizado");
       }
 
-      await db
-        .delete(interactionTemplates)
-        .where(eq(interactionTemplates.id, input.id));
+      await db.delete(interactionTemplates).where(eq(interactionTemplates.id, input.id));
 
       return { success: true };
     }),

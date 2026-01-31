@@ -68,34 +68,10 @@ async function processWebhookTask(task: WebhookTask): Promise<void> {
 
   try {
     await taskProcessor(task);
-
-    console.log(
-      JSON.stringify({
-        timestamp: new Date().toISOString(),
-        level: "info",
-        service: "webhook-queue",
-        action: "task_processed",
-        type: task.type,
-        retries: task.retries || 0,
-      })
-    );
   } catch (error) {
     const retries = (task.retries || 0) + 1;
 
     if (retries < MAX_RETRIES) {
-      // Re-queue with incremented retry count
-      console.log(
-        JSON.stringify({
-          timestamp: new Date().toISOString(),
-          level: "warn",
-          service: "webhook-queue",
-          action: "task_retry",
-          type: task.type,
-          retries,
-          error: String(error),
-        })
-      );
-
       await queueWebhookTask({ ...task, retries });
     } else {
       // Max retries exceeded, add to failed tasks
@@ -104,18 +80,6 @@ async function processWebhookTask(task: WebhookTask): Promise<void> {
         error: String(error),
         failedAt: new Date(),
       });
-
-      console.log(
-        JSON.stringify({
-          timestamp: new Date().toISOString(),
-          level: "error",
-          service: "webhook-queue",
-          action: "task_failed",
-          type: task.type,
-          retries,
-          error: String(error),
-        })
-      );
     }
   }
 }
@@ -143,16 +107,6 @@ export async function retryFailedTasks(): Promise<number> {
     await queueWebhookTask({ ...task, retries: 0 });
     retried++;
   }
-
-  console.log(
-    JSON.stringify({
-      timestamp: new Date().toISOString(),
-      level: "info",
-      service: "webhook-queue",
-      action: "retry_failed_tasks",
-      count: retried,
-    })
-  );
 
   return retried;
 }

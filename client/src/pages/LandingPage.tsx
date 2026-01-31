@@ -1,36 +1,34 @@
-import { Button } from "@/components/ui/button";
-import {
-  ArrowRight,
-  CheckCircle2,
-  TrendingUp,
-  Users,
-  Shield,
-  Star,
-  BookOpen,
-  Smartphone,
-  Zap,
-  Calendar,
-} from "lucide-react";
-import { Link } from "wouter";
-import { useAuth } from "@/_core/hooks/useAuth";
-import { useEffect, useState } from "react";
-import { useLocation } from "wouter";
-import { trpc } from "@/lib/trpc";
 import { SignInButton as ClerkSignInButton } from "@clerk/clerk-react";
 import {
-  NeonCard,
-  NeonCardContent,
-  NeonCardHeader,
-  NeonCardTitle,
-} from "@/components/ui/neon-card";
+  ArrowRight,
+  BookOpen,
+  Calendar,
+  Shield,
+  Smartphone,
+  Star,
+  TrendingUp,
+  Users,
+  Zap,
+} from "lucide-react";
 import { motion } from "motion/react";
+import { useEffect, useState } from "react";
+import { useLocation } from "wouter";
+import { useAuth } from "@/_core/hooks/useAuth";
 import {
   AnimatedAccordion,
   AnimatedAccordionContent,
   AnimatedAccordionItem,
   AnimatedAccordionTrigger,
 } from "@/components/ui/animated-accordion";
-import { slideUp, staggerContainer, fadeIn } from "@/lib/animation-variants";
+import { Button } from "@/components/ui/button";
+import {
+  NeonCard,
+  NeonCardContent,
+  NeonCardHeader,
+  NeonCardTitle,
+} from "@/components/ui/neon-card";
+import { fadeIn, slideUp, staggerContainer } from "@/lib/animation-variants";
+import { trpc } from "@/lib/trpc";
 
 export default function LandingPage() {
   const { isAuthenticated, loading, user } = useAuth();
@@ -38,12 +36,11 @@ export default function LandingPage() {
   const [hasCheckedAuth, setHasCheckedAuth] = useState(false);
 
   // Check if user is a mentorado - only if authenticated
-  const { data: mentorado, isLoading: loadingMentorado } =
-    trpc.mentorados.me.useQuery(undefined, {
-      enabled: isAuthenticated && hasCheckedAuth,
-      retry: false,
-      refetchOnWindowFocus: false,
-    });
+  const { data: mentorado, isLoading: loadingMentorado } = trpc.mentorados.me.useQuery(undefined, {
+    enabled: isAuthenticated && hasCheckedAuth,
+    retry: false,
+    refetchOnWindowFocus: false,
+  });
 
   // Wait for initial auth check to complete before deciding to redirect
   useEffect(() => {
@@ -69,22 +66,9 @@ export default function LandingPage() {
     } else {
       setLocation("/primeiro-acesso");
     }
-  }, [
-    hasCheckedAuth,
-    isAuthenticated,
-    loading,
-    loadingMentorado,
-    mentorado,
-    user,
-    setLocation,
-  ]);
+  }, [hasCheckedAuth, isAuthenticated, loading, loadingMentorado, mentorado, user, setLocation]);
 
-  if (
-    loading ||
-    !hasCheckedAuth ||
-    (isAuthenticated && loadingMentorado) ||
-    isAuthenticated
-  ) {
+  if (loading || !hasCheckedAuth || (isAuthenticated && loadingMentorado) || isAuthenticated) {
     return (
       <div className="min-h-screen bg-paper flex items-center justify-center">
         <div className="animate-pulse text-neon-blue-medium font-medium tracking-wide">
@@ -118,34 +102,19 @@ export default function LandingPage() {
           </div>
         </div>
         <nav className="hidden md:flex gap-6 text-sm font-medium text-muted-foreground items-center">
-          <a
-            href="#purpose"
-            className="hover:text-neon-blue-dark transition-colors"
-          >
+          <a href="#purpose" className="hover:text-neon-blue-dark transition-colors">
             O que é
           </a>
-          <a
-            href="#methodology"
-            className="hover:text-neon-blue-dark transition-colors"
-          >
+          <a href="#methodology" className="hover:text-neon-blue-dark transition-colors">
             Como usar
           </a>
-          <a
-            href="#expectations"
-            className="hover:text-neon-blue-dark transition-colors"
-          >
+          <a href="#expectations" className="hover:text-neon-blue-dark transition-colors">
             Expectativas
           </a>
-          <a
-            href="#onboarding"
-            className="hover:text-neon-blue-dark transition-colors"
-          >
+          <a href="#onboarding" className="hover:text-neon-blue-dark transition-colors">
             Primeiros Passos
           </a>
-          <a
-            href="#faq"
-            className="hover:text-neon-blue-dark transition-colors"
-          >
+          <a href="#faq" className="hover:text-neon-blue-dark transition-colors">
             FAQ
           </a>
           <ClerkSignInButton mode="modal">
@@ -191,9 +160,8 @@ export default function LandingPage() {
             variants={slideUp}
             className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed"
           >
-            Você agora faz parte do meu grupo de elite. Esta plataforma é o seu
-            centro de comando para escalar sua clínica com previsibilidade e
-            lucro.
+            Você agora faz parte do meu grupo de elite. Esta plataforma é o seu centro de comando
+            para escalar sua clínica com previsibilidade e lucro.
           </motion.p>
 
           <motion.div
@@ -223,9 +191,8 @@ export default function LandingPage() {
               O Seu Novo Centro de Comando
             </h2>
             <p className="text-muted-foreground text-lg">
-              Mais do que um dashboard, este é o seu ambiente de trabalho
-              oficial da Mentoria Black. Projetado para eliminar distrações e
-              focar no que importa: resultados.
+              Mais do que um dashboard, este é o seu ambiente de trabalho oficial da Mentoria Black.
+              Projetado para eliminar distrações e focar no que importa: resultados.
             </p>
           </div>
 
@@ -242,16 +209,13 @@ export default function LandingPage() {
                   <div className="w-14 h-14 rounded-2xl bg-neon-blue/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
                     <BookOpen className="w-7 h-7 text-neon-blue" />
                   </div>
-                  <NeonCardTitle className="text-xl">
-                    Caderno de Atividades Digital
-                  </NeonCardTitle>
+                  <NeonCardTitle className="text-xl">Caderno de Atividades Digital</NeonCardTitle>
                 </NeonCardHeader>
                 <NeonCardContent>
                   <p className="text-muted-foreground leading-relaxed">
-                    Seu espaço dedicado para anotações e atividades ao longo da
-                    jornada. Com ferramentas integradas para você{" "}
-                    <strong>responder e executar</strong> tudo que for ensinado,
-                    sem perder nada em cadernos físicos ou notas soltas.
+                    Seu espaço dedicado para anotações e atividades ao longo da jornada. Com
+                    ferramentas integradas para você <strong>responder e executar</strong> tudo que
+                    for ensinado, sem perder nada em cadernos físicos ou notas soltas.
                   </p>
                 </NeonCardContent>
               </NeonCard>
@@ -263,20 +227,17 @@ export default function LandingPage() {
                   <div className="w-14 h-14 rounded-2xl bg-neon-gold/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
                     <TrendingUp className="w-7 h-7 text-neon-gold" />
                   </div>
-                  <NeonCardTitle className="text-xl">
-                    Gestão Completa (360º)
-                  </NeonCardTitle>
+                  <NeonCardTitle className="text-xl">Gestão Completa (360º)</NeonCardTitle>
                 </NeonCardHeader>
                 <NeonCardContent>
                   <p className="text-muted-foreground leading-relaxed">
                     Gerencie sua clínica de ponta a ponta:
                     <strong>
                       {" "}
-                      Administrativo, Conteúdo, CRM, Análise de Dados e
-                      Planejamento.{" "}
+                      Administrativo, Conteúdo, CRM, Análise de Dados e Planejamento.{" "}
                     </strong>
-                    Tenha controle total sobre os números que realmente movem o
-                    ponteiro do seu negócio.
+                    Tenha controle total sobre os números que realmente movem o ponteiro do seu
+                    negócio.
                   </p>
                 </NeonCardContent>
               </NeonCard>
@@ -289,12 +250,9 @@ export default function LandingPage() {
       <section id="methodology" className="py-24 bg-neon-gray/30 relative">
         <div className="container mx-auto px-4">
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <h2 className="text-3xl font-bold text-neon-blue-dark mb-6">
-              Como Usar a Plataforma
-            </h2>
+            <h2 className="text-3xl font-bold text-neon-blue-dark mb-6">Como Usar a Plataforma</h2>
             <p className="text-muted-foreground">
-              Para extrair o máximo da Mentoria Black, siga este protocolo de
-              uso.
+              Para extrair o máximo da Mentoria Black, siga este protocolo de uso.
             </p>
           </div>
 
@@ -304,13 +262,10 @@ export default function LandingPage() {
               <div className="w-16 h-16 rounded-full bg-slate-50 flex items-center justify-center mb-6 text-neon-blue-dark">
                 <Smartphone className="w-8 h-8" />
               </div>
-              <h3 className="text-lg font-bold text-neon-blue-dark mb-3">
-                Onipresença
-              </h3>
+              <h3 className="text-lg font-bold text-neon-blue-dark mb-3">Onipresença</h3>
               <p className="text-sm text-muted-foreground leading-relaxed">
-                Use no computador ou celular. Tenha a plataforma sempre aberta
-                ao assistir às aulas gravadas e durante os encontros ao vivo.
-                Ela é sua extensão.
+                Use no computador ou celular. Tenha a plataforma sempre aberta ao assistir às aulas
+                gravadas e durante os encontros ao vivo. Ela é sua extensão.
               </p>
             </div>
 
@@ -322,13 +277,11 @@ export default function LandingPage() {
               <div className="w-16 h-16 rounded-full bg-neon-gold/10 flex items-center justify-center mb-6 text-neon-gold">
                 <Zap className="w-8 h-8" />
               </div>
-              <h3 className="text-lg font-bold text-neon-blue-dark mb-3">
-                Execução &gt; Consumo
-              </h3>
+              <h3 className="text-lg font-bold text-neon-blue-dark mb-3">Execução &gt; Consumo</h3>
               <p className="text-sm text-muted-foreground leading-relaxed">
                 Não maratone as aulas sem aplicar. À medida que assistir,{" "}
-                <strong>responda às ferramentas e perguntas</strong>. A execução
-                gera resultados, não apenas o estudo.
+                <strong>responda às ferramentas e perguntas</strong>. A execução gera resultados,
+                não apenas o estudo.
               </p>
             </div>
 
@@ -337,13 +290,10 @@ export default function LandingPage() {
               <div className="w-16 h-16 rounded-full bg-slate-50 flex items-center justify-center mb-6 text-neon-blue-dark">
                 <Calendar className="w-8 h-8" />
               </div>
-              <h3 className="text-lg font-bold text-neon-blue-dark mb-3">
-                Hábito Diário
-              </h3>
+              <h3 className="text-lg font-bold text-neon-blue-dark mb-3">Hábito Diário</h3>
               <p className="text-sm text-muted-foreground leading-relaxed">
-                Crie o hábito de abrir a plataforma diariamente. Use-a para
-                gerenciar tarefas, produção de conteúdo, hábitos e rotina.
-                Transforme disciplina em dados.
+                Crie o hábito de abrir a plataforma diariamente. Use-a para gerenciar tarefas,
+                produção de conteúdo, hábitos e rotina. Transforme disciplina em dados.
               </p>
             </div>
           </div>
@@ -354,12 +304,9 @@ export default function LandingPage() {
       <section id="expectations" className="py-24 bg-white relative">
         <div className="container mx-auto px-4">
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <h2 className="text-3xl font-bold text-neon-blue-dark mb-4">
-              O Que Espero de Você
-            </h2>
+            <h2 className="text-3xl font-bold text-neon-blue-dark mb-4">O Que Espero de Você</h2>
             <p className="text-muted-foreground text-lg">
-              Para que a mentoria funcione, preciso do seu compromisso com estes
-              princípios.
+              Para que a mentoria funcione, preciso do seu compromisso com estes princípios.
             </p>
           </div>
 
@@ -368,9 +315,7 @@ export default function LandingPage() {
               <div className="w-12 h-12 rounded-xl bg-neon-gold/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                 <Zap className="w-6 h-6 text-neon-gold" />
               </div>
-              <h3 className="text-lg font-bold text-neon-blue-dark mb-3">
-                Execução Radical
-              </h3>
+              <h3 className="text-lg font-bold text-neon-blue-dark mb-3">Execução Radical</h3>
               <p className="text-muted-foreground text-sm leading-relaxed">
                 O conhecimento só tem poder quando aplicado. Não acumule teoria.{" "}
                 <strong>Execute.</strong>
@@ -381,12 +326,9 @@ export default function LandingPage() {
               <div className="w-12 h-12 rounded-xl bg-neon-blue/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                 <Shield className="w-6 h-6 text-neon-blue" />
               </div>
-              <h3 className="text-lg font-bold text-neon-blue-dark mb-3">
-                Não Maratone
-              </h3>
+              <h3 className="text-lg font-bold text-neon-blue-dark mb-3">Não Maratone</h3>
               <p className="text-muted-foreground text-sm leading-relaxed">
-                Respeite o processo. Implemente uma aula antes de passar para a
-                próxima.
+                Respeite o processo. Implemente uma aula antes de passar para a próxima.
               </p>
             </div>
 
@@ -394,9 +336,7 @@ export default function LandingPage() {
               <div className="w-12 h-12 rounded-xl bg-neon-gold/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                 <Star className="w-6 h-6 text-neon-gold" />
               </div>
-              <h3 className="text-lg font-bold text-neon-blue-dark mb-3">
-                Constância
-              </h3>
+              <h3 className="text-lg font-bold text-neon-blue-dark mb-3">Constância</h3>
               <p className="text-muted-foreground text-sm leading-relaxed">
                 O resultado vem do trabalho diário e consistente.{" "}
                 <strong>Apareça todos os dias.</strong>
@@ -415,9 +355,7 @@ export default function LandingPage() {
 
         <div className="container mx-auto px-4 relative z-10">
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <h2 className="text-3xl font-bold mb-4">
-              Primeiros Passos no Sistema
-            </h2>
+            <h2 className="text-3xl font-bold mb-4">Primeiros Passos no Sistema</h2>
             <p className="text-neon-blue-light/80 text-lg">
               Siga este guia rápido para começar a usar a plataforma.
             </p>
@@ -490,12 +428,8 @@ export default function LandingPage() {
       <section id="faq" className="py-24 bg-white relative">
         <div className="container mx-auto px-4 max-w-3xl">
           <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold text-neon-blue-dark mb-4">
-              Perguntas Frequentes
-            </h2>
-            <p className="text-muted-foreground">
-              Tire suas dúvidas sobre a plataforma.
-            </p>
+            <h2 className="text-3xl font-bold text-neon-blue-dark mb-4">Perguntas Frequentes</h2>
+            <p className="text-muted-foreground">Tire suas dúvidas sobre a plataforma.</p>
           </div>
 
           <AnimatedAccordion type="single" collapsible className="space-y-4">
@@ -507,9 +441,8 @@ export default function LandingPage() {
                 Para que serve este Portal?
               </AnimatedAccordionTrigger>
               <AnimatedAccordionContent className="text-muted-foreground">
-                É seu centro de comando. Aqui você encontra ferramentas,
-                registra métricas, acompanha seu progresso e acessa materiais de
-                apoio complementar às aulas.
+                É seu centro de comando. Aqui você encontra ferramentas, registra métricas,
+                acompanha seu progresso e acessa materiais de apoio complementar às aulas.
               </AnimatedAccordionContent>
             </AnimatedAccordionItem>
 
@@ -521,8 +454,8 @@ export default function LandingPage() {
                 Como usar este sistema?
               </AnimatedAccordionTrigger>
               <AnimatedAccordionContent className="text-muted-foreground">
-                Acesse diariamente. Mantenha suas métricas atualizadas na aba de
-                Dashboard. Use o Caderno Digital para suas anotações de aula.
+                Acesse diariamente. Mantenha suas métricas atualizadas na aba de Dashboard. Use o
+                Caderno Digital para suas anotações de aula.
               </AnimatedAccordionContent>
             </AnimatedAccordionItem>
 
@@ -534,9 +467,8 @@ export default function LandingPage() {
                 Onde estão as aulas gravadas?
               </AnimatedAccordionTrigger>
               <AnimatedAccordionContent className="text-muted-foreground">
-                As aulas estão hospedadas na nossa área de membros oficial. Este
-                portal é focado na <strong>GESTÃO e EXECUÇÃO</strong> do
-                aprendizado.
+                As aulas estão hospedadas na nossa área de membros oficial. Este portal é focado na{" "}
+                <strong>GESTÃO e EXECUÇÃO</strong> do aprendizado.
               </AnimatedAccordionContent>
             </AnimatedAccordionItem>
 
@@ -548,8 +480,7 @@ export default function LandingPage() {
                 Posso acessar pelo celular?
               </AnimatedAccordionTrigger>
               <AnimatedAccordionContent className="text-muted-foreground">
-                Sim! A plataforma é 100% responsiva. Acesse de qualquer
-                dispositivo com internet.
+                Sim! A plataforma é 100% responsiva. Acesse de qualquer dispositivo com internet.
               </AnimatedAccordionContent>
             </AnimatedAccordionItem>
           </AnimatedAccordion>
@@ -560,12 +491,8 @@ export default function LandingPage() {
       <section id="team" className="py-24 bg-neon-gray/30 relative">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold text-neon-blue-dark mb-4">
-              Conheça o Time
-            </h2>
-            <p className="text-muted-foreground">
-              A equipe por trás da sua transformação.
-            </p>
+            <h2 className="text-3xl font-bold text-neon-blue-dark mb-4">Conheça o Time</h2>
+            <p className="text-muted-foreground">A equipe por trás da sua transformação.</p>
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto">
@@ -587,9 +514,7 @@ export default function LandingPage() {
                   M
                 </div>
               </div>
-              <h3 className="font-bold text-neon-blue-dark">
-                Maurício Magalhães
-              </h3>
+              <h3 className="font-bold text-neon-blue-dark">Maurício Magalhães</h3>
               <p className="text-sm text-neon-blue-medium">Financeiro & Tech</p>
             </div>
 
@@ -624,12 +549,10 @@ export default function LandingPage() {
           <div className="w-12 h-12 bg-neon-blue-dark rounded-full flex items-center justify-center mb-6 animate-in zoom-in duration-500">
             <span className="text-neon-gold font-bold text-xl">N</span>
           </div>
-          <p className="mb-4">
-            © 2026 Neon - Mentoria Black. Todos os direitos reservados.
-          </p>
+          <p className="mb-4">© 2026 Neon - Mentoria Black. Todos os direitos reservados.</p>
           <p className="max-w-md mx-auto text-xs text-slate-400">
-            Plataforma exclusiva para membros da Mentoria Black. O acesso é
-            restrito e monitorado. Grupo US.
+            Plataforma exclusiva para membros da Mentoria Black. O acesso é restrito e monitorado.
+            Grupo US.
           </p>
         </div>
       </footer>

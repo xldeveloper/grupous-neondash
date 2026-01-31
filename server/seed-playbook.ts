@@ -1,6 +1,6 @@
-import { drizzle } from "drizzle-orm/neon-serverless";
 import { Pool } from "@neondatabase/serverless";
-import { playbookModules, playbookItems } from "../drizzle/schema";
+import { drizzle } from "drizzle-orm/neon-serverless";
+import { playbookItems, playbookModules } from "../drizzle/schema";
 
 const seedData = async () => {
   if (!process.env.DATABASE_URL) {
@@ -9,8 +9,6 @@ const seedData = async () => {
 
   const pool = new Pool({ connectionString: process.env.DATABASE_URL });
   const db = drizzle(pool);
-
-  console.log("Seeding Playbook data...");
 
   try {
     // --- NEON ESTRUTURA ---
@@ -115,10 +113,7 @@ const seedData = async () => {
         order: 3,
       },
     ]);
-
-    console.log("Playbook seeded successfully!");
-  } catch (error) {
-    console.error("Error seeding playbook:", error);
+  } catch (_error) {
   } finally {
     // Close connection not strictly needed in serverless but good practice in logs
   }

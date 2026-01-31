@@ -14,11 +14,9 @@ function isSecureRequest(req: Request) {
   const forwardedProto = req.headers["x-forwarded-proto"];
   if (!forwardedProto) return false;
 
-  const protoList = Array.isArray(forwardedProto)
-    ? forwardedProto
-    : forwardedProto.split(",");
+  const protoList = Array.isArray(forwardedProto) ? forwardedProto : forwardedProto.split(",");
 
-  return protoList.some(proto => proto.trim().toLowerCase() === "https");
+  return protoList.some((proto) => proto.trim().toLowerCase() === "https");
 }
 
 export function getSessionCookieOptions(
@@ -29,23 +27,11 @@ export function getSessionCookieOptions(
 
   // For Manus proxy domains (*.manus.computer, *.manus.space), don't set domain
   // This allows the cookie to be set for the exact hostname
-  const isManusProxy =
-    hostname.includes("manus.computer") || hostname.includes("manus.space");
-  const isLocalHost =
-    !hostname || LOCAL_HOSTS.has(hostname) || isIpAddress(hostname);
+  const _isManusProxy = hostname.includes("manus.computer") || hostname.includes("manus.space");
+  const _isLocalHost = !hostname || LOCAL_HOSTS.has(hostname) || isIpAddress(hostname);
 
   // Don't set domain for Manus proxy or localhost - let browser use exact hostname
   const domain = undefined;
-
-  console.log("[Cookie] Configuration:", {
-    hostname,
-    isSecure,
-    isManusProxy,
-    isLocalHost,
-    domain,
-    sameSite: isSecure ? "none" : "lax",
-    secure: isSecure,
-  });
 
   return {
     domain,
