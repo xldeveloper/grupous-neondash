@@ -21,10 +21,10 @@ $ARGUMENTS
 
 ## Skills to Activate
 
-| Priority | Skill                             | Purpose                       |
-| -------- | --------------------------------- | ----------------------------- |
-| P0       | `.agent/skills/planning/SKILL.md` | Core R.P.I.V methodology      |
-| P1       | APEX Research Protocol (below)    | Advanced multi-source search  |
+| Priority | Skill                             | Purpose                      |
+| -------- | --------------------------------- | ---------------------------- |
+| P0       | `.agent/skills/planning/SKILL.md` | Core R.P.I.V methodology     |
+| P1       | APEX Research Protocol (below)    | Advanced multi-source search |
 
 **MANDATORY**: Read `.agent/skills/planning/SKILL.md` FIRST, then apply APEX Research Protocol.
 
@@ -72,13 +72,13 @@ SEARCH_CONTEXT:
 
 ### Search Quality Metrics
 
-| Metric       | Target     | Validation                          |
-| ------------ | ---------- | ----------------------------------- |
-| Precision    | > 90%      | Findings directly answer objectives |
-| Coverage     | Complete   | All major aspects researched        |
-| Sources      | ≥ 3 types  | Codebase + docs + web/synthesis     |
-| Confidence   | 4-5 / 5    | Each finding rated                  |
-| Edge Cases   | ≥ 5 for L4 | Documented failure modes            |
+| Metric     | Target     | Validation                          |
+| ---------- | ---------- | ----------------------------------- |
+| Precision  | > 90%      | Findings directly answer objectives |
+| Coverage   | Complete   | All major aspects researched        |
+| Sources    | ≥ 3 types  | Codebase + docs + web/synthesis     |
+| Confidence | 4-5 / 5    | Each finding rated                  |
+| Edge Cases | ≥ 5 for L4 | Documented failure modes            |
 
 ### Research Outputs (Required)
 
@@ -160,12 +160,12 @@ CONSTRAINTS:
 
 ## Complexity Classification
 
-| Level  | Description                   | Research Depth     | Edge Cases |
-| ------ | ----------------------------- | ------------------ | ---------- |
-| L1-L2  | Bug fix, single function      | Repo-only          | 2          |
-| L3-L5  | Feature, multi-file           | Docs + repo        | 3-5        |
-| L6-L8  | Architecture, integration     | Deep research      | 5-8        |
-| L9-L10 | Migrations, multi-service     | Comprehensive      | 8+         |
+| Level  | Description               | Research Depth | Edge Cases |
+| ------ | ------------------------- | -------------- | ---------- |
+| L1-L2  | Bug fix, single function  | Repo-only      | 2          |
+| L3-L5  | Feature, multi-file       | Docs + repo    | 3-5        |
+| L6-L8  | Architecture, integration | Deep research  | 5-8        |
+| L9-L10 | Migrations, multi-service | Comprehensive  | 8+         |
 
 ---
 

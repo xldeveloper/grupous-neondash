@@ -66,7 +66,7 @@ NeonTabsList.displayName = "NeonTabsList";
 
 interface NeonTabsTriggerProps
   extends React.ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger> {
-    icon?: React.ReactNode;
+  icon?: React.ReactNode;
 }
 
 const NeonTabsTrigger = React.forwardRef<
@@ -83,7 +83,9 @@ const NeonTabsTrigger = React.forwardRef<
       className={cn(
         "relative inline-flex items-center justify-center whitespace-nowrap rounded-xl px-5 py-2 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
         "flex-1 md:flex-none gap-2",
-        isActive ? "text-black dark:text-black font-bold" : "text-slate-400 hover:text-slate-200",
+        isActive
+          ? "text-black dark:text-black font-bold"
+          : "text-slate-400 hover:text-slate-200",
         className
       )}
       {...props}

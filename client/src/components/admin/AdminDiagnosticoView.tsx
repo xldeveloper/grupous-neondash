@@ -4,11 +4,10 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { AlertCircle, CheckCircle2 } from "lucide-react";
 
 export function AdminDiagnosticoView({ mentoradoId }: { mentoradoId: number }) {
-  const { data: diagnostico, isLoading } =
-    trpc.diagnostico.get.useQuery(
-      { mentoradoId },
-      { enabled: !!mentoradoId }
-    );
+  const { data: diagnostico, isLoading } = trpc.diagnostico.get.useQuery(
+    { mentoradoId },
+    { enabled: !!mentoradoId }
+  );
 
   if (!mentoradoId) {
     return (
@@ -175,16 +174,13 @@ export function AdminDiagnosticoView({ mentoradoId }: { mentoradoId: number }) {
         </CardContent>
       </Card>
 
-
       <Card className="border-neon-pink/20 bg-neon-pink/5">
         <CardHeader>
           <CardTitle className="text-neon-pink">Primeiros Passos</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div>
-            <h4 className="font-semibold text-white text-sm">
-              Organização
-            </h4>
+            <h4 className="font-semibold text-white text-sm">Organização</h4>
             <div className="text-gray-400 whitespace-pre-wrap">
               {diagnostico.organizacao || "Não informado"}
             </div>

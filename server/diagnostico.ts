@@ -16,7 +16,8 @@ export const diagnosticoRouter = router({
         if (ctx.user.role !== "admin") {
           throw new TRPCError({
             code: "FORBIDDEN",
-            message: "Apenas administradores podem visualizar outros diagnósticos.",
+            message:
+              "Apenas administradores podem visualizar outros diagnósticos.",
           });
         }
         const result = await db

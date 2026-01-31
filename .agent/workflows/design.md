@@ -51,6 +51,7 @@ python3 .agent/skills/frontend-design/scripts/search.py "<product_type> <industr
 ```
 
 **Example:**
+
 ```bash
 python3 .agent/skills/frontend-design/scripts/search.py "beauty spa wellness service" --design-system -p "Serenity Spa"
 ```
@@ -59,14 +60,14 @@ python3 .agent/skills/frontend-design/scripts/search.py "beauty spa wellness ser
 
 **These are FORBIDDEN as defaults:**
 
-| ❌ Forbidden Default | ✅ Alternative |
-|---------------------|----------------|
-| Left/Right Split Hero | Massive Typography, Vertical Narrative |
-| Bento Grids | Asymmetric layouts, Overlapping layers |
-| Mesh/Aurora Gradients | Solid colors, Grain textures |
-| Glassmorphism | High-contrast flat |
-| Deep Cyan/Fintech Blue | Red, Black, Neon Green |
-| Purple/Violet anything | **PURPLE BAN ✅** |
+| ❌ Forbidden Default   | ✅ Alternative                         |
+| ---------------------- | -------------------------------------- |
+| Left/Right Split Hero  | Massive Typography, Vertical Narrative |
+| Bento Grids            | Asymmetric layouts, Overlapping layers |
+| Mesh/Aurora Gradients  | Solid colors, Grain textures           |
+| Glassmorphism          | High-contrast flat                     |
+| Deep Cyan/Fintech Blue | Red, Black, Neon Green                 |
+| Purple/Violet anything | **PURPLE BAN ✅**                      |
 
 ---
 
@@ -76,6 +77,7 @@ python3 .agent/skills/frontend-design/scripts/search.py "beauty spa wellness ser
 
 ```markdown
 🎨 DESIGN COMMITMENT:
+
 - **Style:** [Brutalist / Neo-Retro / Swiss Punk / Liquid Digital]
 - **Why this style?** → How does it break sector clichés?
 - **Geometry:** [Sharp 0-2px / Extreme rounded 16-32px]
@@ -105,11 +107,11 @@ python3 .agent/skills/frontend-design/scripts/search.py "responsive form" --stac
 
 ### Phase 4: Asset Generation (Parallel)
 
-| Asset Type | Method | Reference |
-|------------|--------|-----------|
-| **Placeholder Images** | `python3 .agent/skills/frontend-design/scripts/generate_images.py "prompt" "filename"` | `nanobananaskill.md` |
-| **Generative Art** | p5.js with `assets/p5-templates/` | `algorithmic-art-guide.md` |
-| **Static Visuals** | PDF/PNG with `assets/canvas-fonts/` | `canvas-design-guide.md` |
+| Asset Type             | Method                                                                                 | Reference                  |
+| ---------------------- | -------------------------------------------------------------------------------------- | -------------------------- |
+| **Placeholder Images** | `python3 .agent/skills/frontend-design/scripts/generate_images.py "prompt" "filename"` | `nanobananaskill.md`       |
+| **Generative Art**     | p5.js with `assets/p5-templates/`                                                      | `algorithmic-art-guide.md` |
+| **Static Visuals**     | PDF/PNG with `assets/canvas-fonts/`                                                    | `canvas-design-guide.md`   |
 
 ---
 
@@ -135,36 +137,39 @@ python3 .agent/skills/frontend-design/scripts/search.py "responsive form" --stac
 
 **Verify HONESTLY before delivering:**
 
-| Question | FAIL | PASS |
-|----------|------|------|
-| "Could this be a Vercel/Stripe template?" | "Well, it's clean..." | "No way, this is unique." |
-| "Would I scroll past this on Dribbble?" | "It's professional..." | "I'd stop and think 'how?'" |
+| Question                                          | FAIL                    | PASS                                     |
+| ------------------------------------------------- | ----------------------- | ---------------------------------------- |
+| "Could this be a Vercel/Stripe template?"         | "Well, it's clean..."   | "No way, this is unique."                |
+| "Would I scroll past this on Dribbble?"           | "It's professional..."  | "I'd stop and think 'how?'"              |
 | "Can I describe it without 'clean' or 'minimal'?" | "It's clean corporate." | "It's brutalist with staggered reveals." |
 
 **Rejection Triggers (delete and restart if any are true):**
 
-| Trigger | Fix |
-|---------|-----|
-| "Safe Split" (50/50, 60/40) | Switch to 90/10 or Overlapping |
-| "Glass Trap" (backdrop-blur without solid borders) | Use solid colors and raw borders |
-| "Bento Trap" (safe rounded grid boxes) | Break alignment intentionally |
-| "Blue Trap" (default blue/teal primary) | Use Acid Green, Signal Orange, Deep Red |
+| Trigger                                            | Fix                                     |
+| -------------------------------------------------- | --------------------------------------- |
+| "Safe Split" (50/50, 60/40)                        | Switch to 90/10 or Overlapping          |
+| "Glass Trap" (backdrop-blur without solid borders) | Use solid colors and raw borders        |
+| "Bento Trap" (safe rounded grid boxes)             | Break alignment intentionally           |
+| "Blue Trap" (default blue/teal primary)            | Use Acid Green, Signal Orange, Deep Red |
 
 ---
 
 ## Pre-Delivery Checklist
 
 ### Visual Quality
+
 - [ ] No emojis as icons (use SVG: Heroicons/Lucide)
 - [ ] `cursor-pointer` on all clickable elements
 - [ ] Hover states with smooth transitions (150-300ms)
 
 ### Contrast & Accessibility
+
 - [ ] Light mode text contrast 4.5:1 minimum
 - [ ] Focus states visible for keyboard navigation
 - [ ] `prefers-reduced-motion` respected
 
 ### Responsive
+
 - [ ] Tested at 375px, 768px, 1024px, 1440px
 - [ ] No horizontal scroll on mobile
 
@@ -174,19 +179,19 @@ python3 .agent/skills/frontend-design/scripts/search.py "responsive form" --stac
 
 All design knowledge is in the unified `frontend-design` skill:
 
-| Reference File | When to Read |
-|----------------|--------------|
-| `SKILL.md` | Always (master index) |
-| `ux-psychology.md` | Always (core UX principles) |
-| `tailwind-v4-patterns.md` | Tailwind CSS v4, container queries |
-| `color-system.md` | Color/palette decisions |
-| `typography-system.md` | Font selection |
-| `visual-effects.md` | Shadows, gradients, glassmorphism |
-| `animation-guide.md` | Animation needed |
-| `design-system-search.md` | Using search scripts |
-| `algorithmic-art-guide.md` | p5.js generative art |
-| `canvas-design-guide.md` | PDF/PNG visual art |
-| `nanobananaskill.md` | AI image generation |
+| Reference File             | When to Read                       |
+| -------------------------- | ---------------------------------- |
+| `SKILL.md`                 | Always (master index)              |
+| `ux-psychology.md`         | Always (core UX principles)        |
+| `tailwind-v4-patterns.md`  | Tailwind CSS v4, container queries |
+| `color-system.md`          | Color/palette decisions            |
+| `typography-system.md`     | Font selection                     |
+| `visual-effects.md`        | Shadows, gradients, glassmorphism  |
+| `animation-guide.md`       | Animation needed                   |
+| `design-system-search.md`  | Using search scripts               |
+| `algorithmic-art-guide.md` | p5.js generative art               |
+| `canvas-design-guide.md`   | PDF/PNG visual art                 |
+| `nanobananaskill.md`       | AI image generation                |
 
 ---
 

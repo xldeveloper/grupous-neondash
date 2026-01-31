@@ -140,17 +140,17 @@ export default function MyDashboard() {
                       title: m.nomeCompleto,
                       icon: (
                         <div className="h-full w-full rounded-full overflow-hidden bg-slate-800 flex items-center justify-center">
-                           {m.fotoUrl ? (
-                             <img
-                                src={m.fotoUrl}
-                                alt={m.nomeCompleto}
-                                className="h-full w-full object-cover"
-                              />
-                           ) : (
-                              <span className="text-xs font-bold text-white">
-                                {m.nomeCompleto.slice(0, 2).toUpperCase()}
-                              </span>
-                           )}
+                          {m.fotoUrl ? (
+                            <img
+                              src={m.fotoUrl}
+                              alt={m.nomeCompleto}
+                              className="h-full w-full object-cover"
+                            />
+                          ) : (
+                            <span className="text-xs font-bold text-white">
+                              {m.nomeCompleto.slice(0, 2).toUpperCase()}
+                            </span>
+                          )}
                         </div>
                       ),
                       onClick: () => setSelectedMentoradoId(m.id.toString()),
@@ -171,7 +171,9 @@ export default function MyDashboard() {
               <NeonTabsTrigger value="diagnostico">Diagnóstico</NeonTabsTrigger>
               <NeonTabsTrigger value="evolucao">Evolução</NeonTabsTrigger>
               <NeonTabsTrigger value="comparativo">Comparativo</NeonTabsTrigger>
-              <NeonTabsTrigger value="lancar-metricas">Lançar Métricas</NeonTabsTrigger>
+              <NeonTabsTrigger value="lancar-metricas">
+                Lançar Métricas
+              </NeonTabsTrigger>
               <NeonTabsTrigger value="jornada">Playbook</NeonTabsTrigger>
               <NeonTabsTrigger value="atividades">Atividades</NeonTabsTrigger>
             </NeonTabsList>
@@ -200,7 +202,9 @@ export default function MyDashboard() {
                                 />
                               ) : (
                                 <span className="text-3xl font-bold text-white/50">
-                                  {currentMentorado?.nomeCompleto?.slice(0, 2).toUpperCase()}
+                                  {currentMentorado?.nomeCompleto
+                                    ?.slice(0, 2)
+                                    .toUpperCase()}
                                 </span>
                               )}
                             </div>

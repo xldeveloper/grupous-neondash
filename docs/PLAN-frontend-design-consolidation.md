@@ -8,6 +8,7 @@ Unificar 5 skills em uma única `frontend-design` skill que abranja todas as cap
 
 > [!IMPORTANT]
 > **Breaking Change**: Este plano remove 4 skills existentes após consolidação.
+>
 > - `algorithmic-art/` → será deletada
 > - `canvas-design/` → será deletada
 > - `tailwind-patterns/` → será deletada
@@ -20,23 +21,23 @@ Unificar 5 skills em uma única `frontend-design` skill que abranja todas as cap
 
 ## Research Findings
 
-| # | Finding | Confidence | Source | Impact |
-|---|---------|------------|--------|--------|
-| 1 | Skills devem usar progressive disclosure (metadata → SKILL.md → resources) | 5/5 | skill-creator/SKILL.md | Estrutura |
-| 2 | SKILL.md deve ter <5k palavras; detalhes em references/ | 5/5 | skill-creator L66 | Tamanho |
-| 3 | Scripts podem ser executados sem carregar contexto | 5/5 | skill-creator L54 | Performance |
-| 4 | Modular skill architecture é padrão 2025 (AgentForge paper) | 4/5 | Tavily/ArXiv | Arquitetura |
-| 5 | frontend-design já tem 9 reference files bem estruturados | 5/5 | Análise local | Base sólida |
+| #   | Finding                                                                    | Confidence | Source                 | Impact      |
+| --- | -------------------------------------------------------------------------- | ---------- | ---------------------- | ----------- |
+| 1   | Skills devem usar progressive disclosure (metadata → SKILL.md → resources) | 5/5        | skill-creator/SKILL.md | Estrutura   |
+| 2   | SKILL.md deve ter <5k palavras; detalhes em references/                    | 5/5        | skill-creator L66      | Tamanho     |
+| 3   | Scripts podem ser executados sem carregar contexto                         | 5/5        | skill-creator L54      | Performance |
+| 4   | Modular skill architecture é padrão 2025 (AgentForge paper)                | 4/5        | Tavily/ArXiv           | Arquitetura |
+| 5   | frontend-design já tem 9 reference files bem estruturados                  | 5/5        | Análise local          | Base sólida |
 
 ### Skills Analysis
 
-| Skill | SKILL.md Lines | References | Scripts | Assets | Unique Value |
-|-------|---------------|------------|---------|--------|--------------|
-| `frontend-design` | 414 | 9 files | 6 | - | UX psychology, color, typography |
-| `algorithmic-art` | 444 | - | - | 2 templates | p5.js generative art |
-| `canvas-design` | 138 | - | - | 81 fonts | PDF/PNG visual art |
-| `tailwind-patterns` | 270 | - | - | - | Tailwind CSS v4 patterns |
-| `ui-ux-pro-max` | 365 | - | 3 py | 12 CSVs | Design system search |
+| Skill               | SKILL.md Lines | References | Scripts | Assets      | Unique Value                     |
+| ------------------- | -------------- | ---------- | ------- | ----------- | -------------------------------- |
+| `frontend-design`   | 414            | 9 files    | 6       | -           | UX psychology, color, typography |
+| `algorithmic-art`   | 444            | -          | -       | 2 templates | p5.js generative art             |
+| `canvas-design`     | 138            | -          | -       | 81 fonts    | PDF/PNG visual art               |
+| `tailwind-patterns` | 270            | -          | -       | -           | Tailwind CSS v4 patterns         |
+| `ui-ux-pro-max`     | 365            | -          | 3 py    | 12 CSVs     | Design system search             |
 
 ---
 
@@ -47,6 +48,7 @@ Unificar 5 skills em uma única `frontend-design` skill que abranja todas as cap
 #### [MODIFY] [frontend-design/SKILL.md](file:///Users/mauricio/Projetos/neondash/.agent/skills/frontend-design/SKILL.md)
 
 Reescrever SKILL.md como master index com:
+
 - Nova description cobrindo todas as capacidades
 - Selective Loading Table expandida com todos os references
 - Seções: Core Design → CSS/Tailwind → Visual Assets → Design Intelligence
@@ -154,6 +156,7 @@ Remover após migração completa.
 ### Manual Verification
 
 1. **Script functionality**
+
    ```bash
    # Testar generate_images.py
    python .agent/skills/frontend-design/scripts/generate_images.py "test placeholder hero" "test_output"
@@ -180,51 +183,66 @@ Remover após migração completa.
 ## Atomic Tasks
 
 ### AT-01: Criar estrutura de diretórios
+
 ⚡ PARALLEL-SAFE
+
 ```bash
 mkdir -p .agent/skills/frontend-design/assets/{canvas-fonts,p5-templates,ui-ux-data}
 ```
+
 **Validation**: `ls -la .agent/skills/frontend-design/assets/`
 **Rollback**: `rm -rf .agent/skills/frontend-design/assets/`
 
 ---
 
 ### AT-02: Migrar canvas fonts
+
 ⚡ PARALLEL-SAFE
+
 ```bash
 cp -r .agent/skills/canvas-design/canvas-fonts/* .agent/skills/frontend-design/assets/canvas-fonts/
 ```
+
 **Validation**: `ls .agent/skills/frontend-design/assets/canvas-fonts/ | wc -l` (deve ser 81)
 **Rollback**: `rm -rf .agent/skills/frontend-design/assets/canvas-fonts/*`
 
 ---
 
 ### AT-03: Migrar p5 templates
+
 ⚡ PARALLEL-SAFE
+
 ```bash
 cp .agent/skills/algorithmic-art/templates/* .agent/skills/frontend-design/assets/p5-templates/
 ```
+
 **Validation**: `ls .agent/skills/frontend-design/assets/p5-templates/`
 **Rollback**: `rm -rf .agent/skills/frontend-design/assets/p5-templates/*`
 
 ---
 
 ### AT-04: Migrar UI/UX data
+
 ⚡ PARALLEL-SAFE
+
 ```bash
 cp -r .agent/skills/ui-ux-pro-max/data/* .agent/skills/frontend-design/assets/ui-ux-data/
 ```
+
 **Validation**: `ls .agent/skills/frontend-design/assets/ui-ux-data/*.csv | wc -l` (deve ser ≥12)
 **Rollback**: `rm -rf .agent/skills/frontend-design/assets/ui-ux-data/*`
 
 ---
 
 ### AT-05: Migrar e ajustar scripts UI/UX
+
 Depende: AT-04
+
 ```bash
 # Copiar scripts
 cp .agent/skills/ui-ux-pro-max/scripts/*.py .agent/skills/frontend-design/scripts/
 ```
+
 Ajustar paths nos arquivos para `../assets/ui-ux-data/`
 **Validation**: `python .agent/skills/frontend-design/scripts/search.py "test" --domain style`
 **Rollback**: `rm .agent/skills/frontend-design/scripts/{design_system,core,search}.py`
@@ -232,6 +250,7 @@ Ajustar paths nos arquivos para `../assets/ui-ux-data/`
 ---
 
 ### AT-06: Criar tailwind-v4-patterns.md
+
 ⚡ PARALLEL-SAFE
 Converter conteúdo de `tailwind-patterns/SKILL.md` para reference file.
 **Validation**: `wc -l .agent/skills/frontend-design/tailwind-v4-patterns.md` (deve ser ~270)
@@ -240,6 +259,7 @@ Converter conteúdo de `tailwind-patterns/SKILL.md` para reference file.
 ---
 
 ### AT-07: Criar algorithmic-art-guide.md
+
 ⚡ PARALLEL-SAFE
 Adaptar conteúdo de `algorithmic-art/SKILL.md` para reference file.
 **Validation**: `wc -l .agent/skills/frontend-design/algorithmic-art-guide.md`
@@ -248,6 +268,7 @@ Adaptar conteúdo de `algorithmic-art/SKILL.md` para reference file.
 ---
 
 ### AT-08: Criar canvas-design-guide.md
+
 ⚡ PARALLEL-SAFE
 Adaptar conteúdo de `canvas-design/SKILL.md` para reference file.
 **Validation**: `wc -l .agent/skills/frontend-design/canvas-design-guide.md`
@@ -256,6 +277,7 @@ Adaptar conteúdo de `canvas-design/SKILL.md` para reference file.
 ---
 
 ### AT-09: Criar design-system-search.md
+
 ⚡ PARALLEL-SAFE
 Documentar uso dos scripts de busca + CSVs.
 **Validation**: `head -20 .agent/skills/frontend-design/design-system-search.md`
@@ -264,6 +286,7 @@ Documentar uso dos scripts de busca + CSVs.
 ---
 
 ### AT-10: Reescrever SKILL.md
+
 Depende: AT-06, AT-07, AT-08, AT-09
 Criar novo SKILL.md consolidado com todas as capacidades.
 **Validation**: `wc -w .agent/skills/frontend-design/SKILL.md` (deve ser < 5000 palavras)
@@ -272,6 +295,7 @@ Criar novo SKILL.md consolidado com todas as capacidades.
 ---
 
 ### AT-11: Testar scripts migrados
+
 Depende: AT-05, AT-10
 Executar todos os scripts para garantir funcionamento.
 **Validation**: Scripts executam sem erro
@@ -279,13 +303,16 @@ Executar todos os scripts para garantir funcionamento.
 ---
 
 ### AT-12: Deletar skills antigas
+
 Depende: AT-11
+
 ```bash
 rm -rf .agent/skills/algorithmic-art
 rm -rf .agent/skills/canvas-design
 rm -rf .agent/skills/tailwind-patterns
 rm -rf .agent/skills/ui-ux-pro-max
 ```
+
 **Validation**: `ls .agent/skills/` não contém as 4 skills
 **Rollback**: `git checkout -- .agent/skills/`
 
@@ -294,6 +321,7 @@ rm -rf .agent/skills/ui-ux-pro-max
 ## Pre-Submission Checklist
 
 ### Research
+
 - [x] Codebase patterns searched and documented
 - [x] skill-creator guidelines reviewed
 - [x] Web search for modern patterns (2025)
@@ -301,11 +329,13 @@ rm -rf .agent/skills/ui-ux-pro-max
 - [x] Cross-validation across sources
 
 ### Context
+
 - [x] Findings Table with confidence scores
 - [x] Edge cases documented
 - [x] Relevant files specified with paths
 
 ### Tasks
+
 - [x] Truly atomic (single action)
 - [x] Validation command for each
 - [x] Dependencies mapped
@@ -313,6 +343,7 @@ rm -rf .agent/skills/ui-ux-pro-max
 - [x] Parallel-safe marked with ⚡
 
 ### Quality
+
 - [x] Mode specified (CONSERVATIVE)
 - [x] Output format explicit
 - [x] Success criteria measurable

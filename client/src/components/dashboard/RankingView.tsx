@@ -31,7 +31,9 @@ export function RankingView({ selectedMonth, selectedYear }: RankingViewProps) {
         return <Award className="w-6 h-6 text-orange-500" />;
       default:
         return (
-          <span className="text-lg font-bold text-muted-foreground">{posicao}º</span>
+          <span className="text-lg font-bold text-muted-foreground">
+            {posicao}º
+          </span>
         );
     }
   };
@@ -132,7 +134,9 @@ export function RankingView({ selectedMonth, selectedYear }: RankingViewProps) {
                     </Badge>
                     <div className="text-2xl font-bold text-neon-green">
                       {item.ranking.pontuacaoTotal}
-                      <span className="text-sm text-muted-foreground ml-1">pts</span>
+                      <span className="text-sm text-muted-foreground ml-1">
+                        pts
+                      </span>
                     </div>
                     {item.ranking.pontosBonus > 0 && (
                       <p className="text-xs text-purple-600 mt-1 font-medium bg-purple-50 inline-block px-2 py-0.5 rounded-full">

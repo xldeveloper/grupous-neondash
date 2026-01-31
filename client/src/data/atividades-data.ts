@@ -22,6 +22,86 @@ export interface Atividade {
 
 export const ATIVIDADES: Atividade[] = [
   // ═══════════════════════════════════════════════════════════════════════════
+  // MÓDULO 1 - COMECE AQUI (NEON ESTRUTURA)
+  // ═══════════════════════════════════════════════════════════════════════════
+  {
+    codigo: "m1-boas-vindas",
+    titulo: "Boas-Vindas à Jornada NEON",
+    etapa: "Módulo 1",
+    icone: "👋",
+    descricao: "Seu primeiro passo na metodologia NEON.",
+    steps: [
+      { codigo: "m1-bv-1", label: "Assistir vídeo de boas-vindas" },
+      { codigo: "m1-bv-2", label: "Ler guia de navegação da plataforma" },
+      { codigo: "m1-bv-3", label: "Configurar foto de perfil" },
+      { codigo: "m1-bv-4", label: "Preencher informações básicas do perfil" },
+      { codigo: "m1-bv-5", label: "Conhecer a comunidade e mentores" },
+    ],
+  },
+  {
+    codigo: "m1-diagnostico",
+    titulo: "Diagnóstico do Negócio",
+    etapa: "Módulo 1",
+    icone: "📊",
+    descricao: "Entenda sua situação atual para traçar o caminho.",
+    steps: [
+      { codigo: "m1-diag-1", label: "Preencher formulário de diagnóstico" },
+      {
+        codigo: "m1-diag-2",
+        label: "Calcular faturamento dos últimos 3 meses",
+      },
+      { codigo: "m1-diag-3", label: "Identificar principais despesas fixas" },
+      { codigo: "m1-diag-4", label: "Definir margem de lucro atual" },
+      { codigo: "m1-diag-5", label: "Mapear pontos de melhoria identificados" },
+    ],
+  },
+  {
+    codigo: "m1-juridico",
+    titulo: "Estruturação Jurídica",
+    etapa: "Módulo 1",
+    icone: "⚖️",
+    descricao: "Regularize sua atuação profissional.",
+    steps: [
+      { codigo: "m1-jur-1", label: "Verificar tipo de constituição ideal" },
+      { codigo: "m1-jur-2", label: "Providenciar documentação para CNPJ" },
+      { codigo: "m1-jur-3", label: "Solicitar alvará de funcionamento" },
+      { codigo: "m1-jur-4", label: "Registrar no Conselho de Classe" },
+      { codigo: "m1-jur-5", label: "Contratar serviço de contabilidade" },
+    ],
+  },
+  {
+    codigo: "m1-financeiro",
+    titulo: "Organização Financeira Básica",
+    etapa: "Módulo 1",
+    icone: "💳",
+    descricao: "Separe suas finanças pessoais das profissionais.",
+    steps: [
+      { codigo: "m1-fin-1", label: "Abrir conta bancária PJ" },
+      { codigo: "m1-fin-2", label: "Configurar planilha de fluxo de caixa" },
+      { codigo: "m1-fin-3", label: "Definir pró-labore mensal" },
+      { codigo: "m1-fin-4", label: "Mapear custos fixos e variáveis" },
+      { codigo: "m1-fin-5", label: "Criar reserva de emergência do negócio" },
+    ],
+  },
+  {
+    codigo: "m1-precificacao",
+    titulo: "Precificação Estratégica",
+    etapa: "Módulo 1",
+    icone: "🏷️",
+    descricao: "Defina preços que geram lucro e valor percebido.",
+    steps: [
+      { codigo: "m1-prec-1", label: "Calcular custo por procedimento" },
+      { codigo: "m1-prec-2", label: "Pesquisar preços da concorrência" },
+      { codigo: "m1-prec-3", label: "Definir margem de lucro desejada" },
+      { codigo: "m1-prec-4", label: "Criar tabela de preços" },
+      {
+        codigo: "m1-prec-5",
+        label: "Definir política de descontos (se houver)",
+      },
+    ],
+  },
+
+  // ═══════════════════════════════════════════════════════════════════════════
   // MÓDULO 2 - ATIVIDADES PRIMORDIAIS
   // ═══════════════════════════════════════════════════════════════════════════
   {
@@ -99,6 +179,86 @@ export const ATIVIDADES: Atividade[] = [
       },
       { codigo: "org-4", label: "Criar sistema de lembretes" },
       { codigo: "org-5", label: "Configurar automações de confirmação" },
+    ],
+  },
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // MÓDULO 2 - ESCALA (GESTÃO AVANÇADA)
+  // ═══════════════════════════════════════════════════════════════════════════
+  {
+    codigo: "m2-gestao-equipe",
+    titulo: "Gestão de Equipe",
+    etapa: "Módulo 2",
+    icone: "👥",
+    descricao: "Construa e gerencie sua equipe de alta performance.",
+    steps: [
+      { codigo: "m2-eq-1", label: "Mapear cargos necessários" },
+      { codigo: "m2-eq-2", label: "Criar descritivo de funções" },
+      { codigo: "m2-eq-3", label: "Definir processo seletivo" },
+      { codigo: "m2-eq-4", label: "Estruturar onboarding de colaboradores" },
+      { codigo: "m2-eq-5", label: "Criar sistema de feedback e avaliação" },
+    ],
+  },
+  {
+    codigo: "m2-processos",
+    titulo: "Processos e SOPs",
+    etapa: "Módulo 2",
+    icone: "📋",
+    descricao: "Documente e padronize seus processos operacionais.",
+    steps: [
+      { codigo: "m2-proc-1", label: "Listar processos-chave do negócio" },
+      { codigo: "m2-proc-2", label: "Documentar SOP de atendimento" },
+      { codigo: "m2-proc-3", label: "Documentar SOP de vendas/conversão" },
+      {
+        codigo: "m2-proc-4",
+        label: "Documentar SOP financeiro (recebimentos)",
+      },
+      { codigo: "m2-proc-5", label: "Criar checklist de qualidade" },
+    ],
+  },
+  {
+    codigo: "m2-kpis",
+    titulo: "KPIs e Métricas de Performance",
+    etapa: "Módulo 2",
+    icone: "📈",
+    descricao: "Monitore os indicadores-chave do seu negócio.",
+    steps: [
+      { codigo: "m2-kpi-1", label: "Definir KPIs de faturamento" },
+      {
+        codigo: "m2-kpi-2",
+        label: "Definir KPIs de marketing (leads, conversão)",
+      },
+      { codigo: "m2-kpi-3", label: "Definir KPIs de atendimento (satisfação)" },
+      { codigo: "m2-kpi-4", label: "Configurar dashboard de acompanhamento" },
+      { codigo: "m2-kpi-5", label: "Estabelecer rotina de análise semanal" },
+    ],
+  },
+  {
+    codigo: "m2-automacao",
+    titulo: "Automação e Sistemas",
+    etapa: "Módulo 2",
+    icone: "⚙️",
+    descricao: "Automatize tarefas repetitivas e ganhe eficiência.",
+    steps: [
+      { codigo: "m2-auto-1", label: "Implementar agendamento online" },
+      { codigo: "m2-auto-2", label: "Configurar CRM para gestão de leads" },
+      { codigo: "m2-auto-3", label: "Automatizar lembretes e confirmações" },
+      { codigo: "m2-auto-4", label: "Integrar sistema de pagamento" },
+      { codigo: "m2-auto-5", label: "Automatizar relatórios mensais" },
+    ],
+  },
+  {
+    codigo: "m2-financeiro-avancado",
+    titulo: "Financeiro Avançado",
+    etapa: "Módulo 2",
+    icone: "💹",
+    descricao: "Domine a gestão financeira do seu negócio.",
+    steps: [
+      { codigo: "m2-fina-1", label: "Implementar DRE mensal" },
+      { codigo: "m2-fina-2", label: "Analisar fluxo de caixa projetado" },
+      { codigo: "m2-fina-3", label: "Definir metas de margem de lucro" },
+      { codigo: "m2-fina-4", label: "Criar política de reinvestimento" },
+      { codigo: "m2-fina-5", label: "Estruturar planejamento tributário" },
     ],
   },
 

@@ -4,11 +4,7 @@ import { cn } from "@/lib/utils";
 import { ChevronLeft, ChevronRight, Users } from "lucide-react";
 import { Button } from "./button";
 import { Popover, PopoverContent, PopoverTrigger } from "./popover";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "./tooltip";
+import { Tooltip, TooltipContent, TooltipTrigger } from "./tooltip";
 
 interface FloatingDockItem {
   id: string;
@@ -60,44 +56,43 @@ function DockItem({
     <div className="relative">
       <Tooltip>
         <TooltipTrigger asChild>
+          <motion.button
+            ref={ref}
+            onClick={item.onClick}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+            style={{ width, height }}
+            className={cn(
+              "relative flex items-center justify-center rounded-2xl transition-colors duration-200",
+              "hover:bg-white/10",
+              item.isActive
+                ? "bg-white/15 ring-2 ring-neon-purple/50 shadow-[0_0_20px_rgba(139,92,246,0.3)]"
+                : "bg-white/5"
+            )}
+          >
+            {/* Active indicator */}
+            {item.isActive && (
+              <motion.div
+                layoutId="activeIndicator"
+                className="absolute inset-0 rounded-2xl bg-gradient-to-br from-neon-purple/20 to-transparent"
+                transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+              />
+            )}
 
-      <motion.button
-        ref={ref}
-        onClick={item.onClick}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-        style={{ width, height }}
-        className={cn(
-          "relative flex items-center justify-center rounded-2xl transition-colors duration-200",
-          "hover:bg-white/10",
-          item.isActive
-            ? "bg-white/15 ring-2 ring-neon-purple/50 shadow-[0_0_20px_rgba(139,92,246,0.3)]"
-            : "bg-white/5"
-        )}
-      >
-        {/* Active indicator */}
-        {item.isActive && (
-          <motion.div
-            layoutId="activeIndicator"
-            className="absolute inset-0 rounded-2xl bg-gradient-to-br from-neon-purple/20 to-transparent"
-            transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-          />
-        )}
+            {/* Icon with scale effect */}
+            <motion.div style={{ scale: iconScale }} className="relative z-10">
+              {item.icon}
+            </motion.div>
 
-        {/* Icon with scale effect */}
-        <motion.div style={{ scale: iconScale }} className="relative z-10">
-          {item.icon}
-        </motion.div>
-
-        {/* Active dot */}
-        {item.isActive && (
-          <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            className="absolute -bottom-1 w-1.5 h-1.5 rounded-full bg-neon-purple"
-          />
-        )}
-      </motion.button>
+            {/* Active dot */}
+            {item.isActive && (
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                className="absolute -bottom-1 w-1.5 h-1.5 rounded-full bg-neon-purple"
+              />
+            )}
+          </motion.button>
         </TooltipTrigger>
         <TooltipContent className="bg-black/80 backdrop-blur-md text-white border-white/10">
           <p>{item.title}</p>
