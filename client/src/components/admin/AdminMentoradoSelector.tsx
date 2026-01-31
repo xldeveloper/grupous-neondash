@@ -23,7 +23,7 @@ export function AdminMentoradoSelector({
   onSelect,
 }: AdminMentoradoSelectorProps) {
   const [open, setOpen] = useState(false);
-  const { data: mentorados, isLoading } = trpc.mentorados.list.useQuery();
+  const { data: mentorados } = trpc.mentorados.list.useQuery();
 
   const selectedMentorado = mentorados?.find((m) => m.id === selectedMentoradoId);
 

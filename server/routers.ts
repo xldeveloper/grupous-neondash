@@ -8,6 +8,7 @@ import { leadsRouter } from "./leadsRouter";
 import { mentoradosRouter } from "./mentoradosRouter";
 import { moltbotRouter } from "./moltbotRouter";
 import { authRouter } from "./routers/auth";
+import { calendarRouter } from "./routers/calendar";
 import { classesRouter } from "./routers/classes";
 import { playbookRouter } from "./routers/playbook";
 import { tasksRouter } from "./routers/tasks";
@@ -25,6 +26,7 @@ export const appRouter = router({
   atividades: atividadesRouter,
   interactionTemplates: interactionTemplatesRouter,
   diagnostico: diagnosticoRouter,
+  calendar: calendarRouter,
 });
 
 export type AppRouter = typeof appRouter;

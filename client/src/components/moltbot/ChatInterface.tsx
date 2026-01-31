@@ -22,7 +22,6 @@ import { cn } from "@/lib/utils";
 
 export function ChatInterface() {
   const {
-    sessionId,
     isActive,
     createSession,
     endSession,

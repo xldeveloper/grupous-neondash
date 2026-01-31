@@ -67,6 +67,8 @@ export const tipoInteracaoEnum = pgEnum("tipo_interacao", [
   "nota",
 ]);
 
+export const prioridadeTaskEnum = pgEnum("prioridade_task", ["alta", "media", "baixa"]);
+
 // ═══════════════════════════════════════════════════════════════════════════
 // TABLES
 // ═══════════════════════════════════════════════════════════════════════════
@@ -454,6 +456,7 @@ export const tasks = pgTable(
     title: text("title").notNull(),
     status: text("status").notNull().default("todo"), // "todo" | "done"
     category: text("category").default("geral"),
+    priority: prioridadeTaskEnum("priority").default("media").notNull(),
     source: text("source").default("manual"), // "manual" | "atividade"
     atividadeCodigo: varchar("atividade_codigo", { length: 100 }), // Link to origin activity
     createdAt: timestamp("created_at").defaultNow().notNull(),
@@ -462,6 +465,7 @@ export const tasks = pgTable(
   (table) => [
     index("tasks_mentorado_idx").on(table.mentoradoId),
     index("tasks_status_idx").on(table.status),
+    index("tasks_priority_idx").on(table.priority),
   ]
 );
 
@@ -678,3 +682,26 @@ export const diagnosticos = pgTable(
 
 export type Diagnostico = typeof diagnosticos.$inferSelect;
 export type InsertDiagnostico = typeof diagnosticos.$inferInsert;
+
+/**
+ * Google Tokens - OAuth tokens for Google Calendar integration
+ */
+export const googleTokens = pgTable(
+  "google_tokens",
+  {
+    id: serial("id").primaryKey(),
+    userId: integer("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    accessToken: text("access_token").notNull(),
+    refreshToken: text("refresh_token"),
+    expiresAt: timestamp("expires_at").notNull(),
+    scope: text("scope").notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().notNull(),
+  },
+  (table) => [uniqueIndex("google_tokens_user_idx").on(table.userId)]
+);
+
+export type GoogleToken = typeof googleTokens.$inferSelect;
+export type InsertGoogleToken = typeof googleTokens.$inferInsert;

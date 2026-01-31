@@ -24,6 +24,11 @@ const LeadsPage = lazy(() =>
 );
 const MentorshipStart = lazy(() => import("./pages/MentorshipStart"));
 const DiagnosticoPage = lazy(() => import("./pages/Diagnostico"));
+const AgendaPage = lazy(() =>
+  import("./pages/Agenda").then((module) => ({
+    default: module.Agenda,
+  }))
+);
 
 // Loading fallback for lazy components
 function PageLoader() {
@@ -50,6 +55,7 @@ function Router() {
       <Route path="/assistente" component={MoltbotPage} />
       <Route path="/crm/leads" component={LeadsPage} />
       <Route path="/diagnostico" component={DiagnosticoPage} />
+      <Route path="/agenda" component={AgendaPage} />
 
       {/* 404 Pages */}
       <Route path="/404" component={NotFound} />

@@ -1,0 +1,237 @@
+/**
+ * Calendar Router - Google Calendar integration
+ */
+
+import { TRPCError } from "@trpc/server";
+import { eq } from "drizzle-orm";
+import { z } from "zod";
+import { googleTokens } from "../../drizzle/schema";
+import { protectedProcedure, router } from "../_core/trpc";
+import { getDb } from "../db";
+import {
+  exchangeCodeForTokens,
+  getAuthUrl,
+  getEvents,
+  isGoogleConfigured,
+  refreshAccessToken,
+  revokeToken,
+} from "../services/googleCalendarService";
+
+export const calendarRouter = router({
+  /**
+   * Check if Google Calendar is configured and user's connection status
+   */
+  getStatus: protectedProcedure.query(async ({ ctx }) => {
+    const db = getDb();
+    const configured = isGoogleConfigured();
+
+    if (!ctx.user) {
+      return { configured, connected: false };
+    }
+
+    const [token] = await db
+      .select()
+      .from(googleTokens)
+      .where(eq(googleTokens.userId, ctx.user.id))
+      .limit(1);
+
+    return {
+      configured,
+      connected: Boolean(token),
+      expiresAt: token?.expiresAt,
+    };
+  }),
+
+  /**
+   * Get OAuth authorization URL
+   */
+  getAuthUrl: protectedProcedure.query(({ ctx }) => {
+    if (!isGoogleConfigured()) {
+      throw new TRPCError({
+        code: "PRECONDITION_FAILED",
+        message: "Google Calendar não está configurado.",
+      });
+    }
+
+    // Use user ID as state for validation on callback
+    const state = ctx.user?.id.toString() || "";
+    return { url: getAuthUrl(state) };
+  }),
+
+  /**
+   * Handle OAuth callback and store tokens
+   */
+  handleCallback: protectedProcedure
+    .input(
+      z.object({
+        code: z.string(),
+        state: z.string().optional(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const db = getDb();
+
+      if (!ctx.user) {
+        throw new TRPCError({ code: "UNAUTHORIZED" });
+      }
+
+      // Validate state matches user ID
+      if (input.state && input.state !== ctx.user.id.toString()) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "State parameter inválido.",
+        });
+      }
+
+      try {
+        const tokenResponse = await exchangeCodeForTokens(input.code);
+
+        // Calculate expiration timestamp
+        const expiresAt = new Date(Date.now() + tokenResponse.expires_in * 1000);
+
+        // Upsert tokens (delete existing, insert new)
+        await db.delete(googleTokens).where(eq(googleTokens.userId, ctx.user.id));
+
+        await db.insert(googleTokens).values({
+          userId: ctx.user.id,
+          accessToken: tokenResponse.access_token,
+          refreshToken: tokenResponse.refresh_token,
+          expiresAt,
+          scope: tokenResponse.scope,
+        });
+
+        return { success: true };
+      } catch (error) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: error instanceof Error ? error.message : "Falha ao conectar Google Calendar.",
+        });
+      }
+    }),
+
+  /**
+   * Get calendar events for a date range
+   */
+  getEvents: protectedProcedure
+    .input(
+      z
+        .object({
+          timeMin: z.string().datetime().optional(),
+          timeMax: z.string().datetime().optional(),
+        })
+        .optional()
+    )
+    .query(async ({ ctx, input }) => {
+      const db = getDb();
+
+      if (!ctx.user) {
+        throw new TRPCError({ code: "UNAUTHORIZED" });
+      }
+
+      const [token] = await db
+        .select()
+        .from(googleTokens)
+        .where(eq(googleTokens.userId, ctx.user.id))
+        .limit(1);
+
+      if (!token) {
+        throw new TRPCError({
+          code: "PRECONDITION_FAILED",
+          message: "Google Calendar não conectado.",
+        });
+      }
+
+      // Check if token is expired and refresh if needed
+      let accessToken = token.accessToken;
+      if (new Date() >= token.expiresAt) {
+        if (!token.refreshToken) {
+          // Token expired and no refresh token - user needs to reconnect
+          await db.delete(googleTokens).where(eq(googleTokens.userId, ctx.user.id));
+          throw new TRPCError({
+            code: "PRECONDITION_FAILED",
+            message: "Sessão expirada. Por favor, reconecte o Google Calendar.",
+          });
+        }
+
+        try {
+          const refreshed = await refreshAccessToken(token.refreshToken);
+          accessToken = refreshed.access_token;
+          const expiresAt = new Date(Date.now() + refreshed.expires_in * 1000);
+
+          await db
+            .update(googleTokens)
+            .set({
+              accessToken: refreshed.access_token,
+              expiresAt,
+              updatedAt: new Date(),
+            })
+            .where(eq(googleTokens.userId, ctx.user.id));
+        } catch {
+          // Refresh failed - user needs to reconnect
+          await db.delete(googleTokens).where(eq(googleTokens.userId, ctx.user.id));
+          throw new TRPCError({
+            code: "PRECONDITION_FAILED",
+            message: "Falha ao atualizar sessão. Por favor, reconecte o Google Calendar.",
+          });
+        }
+      }
+
+      // Default to current month if no range specified
+      const now = new Date();
+      const timeMin = input?.timeMin
+        ? new Date(input.timeMin)
+        : new Date(now.getFullYear(), now.getMonth(), 1);
+      const timeMax = input?.timeMax
+        ? new Date(input.timeMax)
+        : new Date(now.getFullYear(), now.getMonth() + 1, 0);
+
+      try {
+        const events = await getEvents(accessToken, timeMin, timeMax);
+        return { events };
+      } catch (error) {
+        // Check if it's a 401 error (token revoked by user)
+        if (error instanceof Error && error.message.includes("401")) {
+          await db.delete(googleTokens).where(eq(googleTokens.userId, ctx.user.id));
+          throw new TRPCError({
+            code: "PRECONDITION_FAILED",
+            message: "Acesso revogado. Por favor, reconecte o Google Calendar.",
+          });
+        }
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: error instanceof Error ? error.message : "Falha ao buscar eventos.",
+        });
+      }
+    }),
+
+  /**
+   * Disconnect Google Calendar
+   */
+  disconnect: protectedProcedure.mutation(async ({ ctx }) => {
+    const db = getDb();
+
+    if (!ctx.user) {
+      throw new TRPCError({ code: "UNAUTHORIZED" });
+    }
+
+    const [token] = await db
+      .select()
+      .from(googleTokens)
+      .where(eq(googleTokens.userId, ctx.user.id))
+      .limit(1);
+
+    if (token) {
+      // Try to revoke the token
+      try {
+        await revokeToken(token.accessToken);
+      } catch {
+        // Ignore revocation errors - token might already be revoked
+      }
+
+      // Delete from database
+      await db.delete(googleTokens).where(eq(googleTokens.userId, ctx.user.id));
+    }
+
+    return { success: true };
+  }),
+});

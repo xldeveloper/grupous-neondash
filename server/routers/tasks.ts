@@ -1,5 +1,5 @@
 import { TRPCError } from "@trpc/server";
-import { desc, eq } from "drizzle-orm";
+import { and, desc, eq, ilike } from "drizzle-orm";
 import { z } from "zod";
 import { tasks } from "../../drizzle/schema";
 import { protectedProcedure, router } from "../_core/trpc";
@@ -7,7 +7,16 @@ import { getDb } from "../db";
 
 export const tasksRouter = router({
   list: protectedProcedure
-    .input(z.object({ mentoradoId: z.number().optional() }).optional())
+    .input(
+      z
+        .object({
+          mentoradoId: z.number().optional(),
+          search: z.string().optional(),
+          category: z.string().optional(),
+          priority: z.enum(["alta", "media", "baixa"]).optional(),
+        })
+        .optional()
+    )
     .query(async ({ ctx, input }) => {
       const db = getDb();
 
@@ -30,10 +39,25 @@ export const tasksRouter = router({
         });
       }
 
+      // Build dynamic WHERE conditions
+      const conditions = [eq(tasks.mentoradoId, targetMentoradoId)];
+
+      if (input?.search) {
+        conditions.push(ilike(tasks.title, `%${input.search}%`));
+      }
+
+      if (input?.category) {
+        conditions.push(eq(tasks.category, input.category));
+      }
+
+      if (input?.priority) {
+        conditions.push(eq(tasks.priority, input.priority));
+      }
+
       return db
         .select()
         .from(tasks)
-        .where(eq(tasks.mentoradoId, targetMentoradoId))
+        .where(and(...conditions))
         .orderBy(desc(tasks.createdAt));
     }),
 
@@ -42,6 +66,7 @@ export const tasksRouter = router({
       z.object({
         title: z.string().min(1),
         category: z.enum(["geral", "aula", "crm", "financeiro", "atividade"]).default("geral"),
+        priority: z.enum(["alta", "media", "baixa"]).default("media"),
         source: z.enum(["manual", "atividade"]).default("manual"),
         atividadeCodigo: z.string().optional(),
         mentoradoId: z.number().optional(), // Admin override
@@ -75,6 +100,7 @@ export const tasksRouter = router({
           mentoradoId: targetMentoradoId,
           title: input.title,
           category: input.category,
+          priority: input.priority,
           source: input.source,
           atividadeCodigo: input.atividadeCodigo,
           status: "todo",

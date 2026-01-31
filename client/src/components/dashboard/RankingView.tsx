@@ -1,5 +1,4 @@
 import { Award, Crown, Loader2, Medal, TrendingUp, Trophy } from "lucide-react";
-import { useAuth } from "@/_core/hooks/useAuth";
 
 import { Badge } from "@/components/ui/badge";
 import { BentoCard, BentoCardContent } from "@/components/ui/bento-grid";
@@ -13,7 +12,6 @@ interface RankingViewProps {
 }
 
 export function RankingView({ selectedMonth, selectedYear }: RankingViewProps) {
-  const { user } = useAuth();
   const { data: ranking, isLoading } = trpc.gamificacao.ranking.useQuery({
     ano: selectedYear,
     mes: selectedMonth,
