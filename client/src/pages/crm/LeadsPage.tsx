@@ -15,8 +15,8 @@ import {
   ShieldAlert,
 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
-import { AdminMentoradoSelector } from "@/components/admin/AdminMentoradoSelector";
 import { useUser } from "@clerk/clerk-react";
+import { AnimatedTooltipSelector } from "@/components/ui/animated-tooltip";
 import { Card, CardContent } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useSearch } from "wouter";
@@ -31,12 +31,24 @@ export function LeadsPage() {
   const searchParams = new URLSearchParams(search);
   const mentoradoIdParam = searchParams.get("mentoradoId");
 
-  // Local state for admin selection if not in URL, or sync with URL
-  const [adminSelectedMentoradoId, setAdminSelectedMentoradoId] = useState<
-    number | undefined
-  >(mentoradoIdParam ? parseInt(mentoradoIdParam) : undefined);
+  // 1. Fetch all mentorados if admin
+  const { data: allMentorados } = trpc.mentorados.list.useQuery(undefined, {
+    enabled: isAdmin,
+  });
 
-  const viewMentoradoId = adminSelectedMentoradoId;
+  // 2. Local state or URL param logic
+  const [adminSelectedMentoradoId, setAdminSelectedMentoradoId] = useState<
+    string | undefined
+  >(mentoradoIdParam || undefined);
+
+  const viewMentoradoId = adminSelectedMentoradoId
+    ? parseInt(adminSelectedMentoradoId)
+    : undefined;
+
+  const handleAdminSelect = (id: string) => {
+    setAdminSelectedMentoradoId(id);
+    // Optional: update URL sync logic here if needed
+  };
 
   const [view, setView] = useState<"table" | "kanban">("kanban");
   const [filtersOpen, setFiltersOpen] = useState(false);
@@ -69,11 +81,6 @@ export function LeadsPage() {
     setSelectedLeadId(leadId);
   };
 
-  const handleAdminSelect = (id: number | undefined) => {
-    setAdminSelectedMentoradoId(id);
-    // Optional: update URL
-  };
-
   const isReadOnly = !!viewMentoradoId;
 
   return (
@@ -96,13 +103,25 @@ export function LeadsPage() {
                 </p>
               </div>
               {isAdmin && (
-                <div className="ml-4 border-l pl-4">
-                  <p className="text-xs text-muted-foreground font-semibold mb-1 uppercase tracking-wider">
+                <div className="ml-4 pl-4 border-l border-white/10">
+                  <p className="text-xs text-muted-foreground font-semibold mb-2 uppercase tracking-wider">
                     Visualização Admin
                   </p>
-                  <AdminMentoradoSelector
-                    selectedMentoradoId={viewMentoradoId}
-                    onSelect={handleAdminSelect}
+                  <AnimatedTooltipSelector
+                    items={
+                      allMentorados?.map(m => ({
+                        id: m.id.toString(),
+                        name: m.nomeCompleto,
+                        designation: m.turma,
+                        image:
+                          m.fotoUrl ||
+                          `https://ui-avatars.com/api/?name=${encodeURIComponent(m.nomeCompleto)}&background=0f4c75&color=fff`,
+                        onClick: () => handleAdminSelect(m.id.toString()),
+                        isActive: adminSelectedMentoradoId === m.id.toString(),
+                      })) || []
+                    }
+                    selectedId={adminSelectedMentoradoId}
+                    className="border-none bg-transparent p-0"
                   />
                 </div>
               )}
@@ -217,7 +236,10 @@ export function LeadsPage() {
               </div>
             ) : (
               <div className="p-4 flex-1 overflow-auto bg-muted/10">
-                <PipelineKanban />
+                <PipelineKanban
+                  mentoradoId={viewMentoradoId}
+                  isReadOnly={isReadOnly}
+                />
               </div>
             )}
           </div>

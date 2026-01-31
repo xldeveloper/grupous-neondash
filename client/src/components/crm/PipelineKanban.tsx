@@ -63,7 +63,15 @@ const COLUMNS = [
   },
 ];
 
-export function PipelineKanban() {
+export interface PipelineKanbanProps {
+  mentoradoId?: number;
+  isReadOnly?: boolean;
+}
+
+export function PipelineKanban({
+  mentoradoId,
+  isReadOnly = false,
+}: PipelineKanbanProps) {
   const [activeId, setActiveId] = useState<string | null>(null);
   const [selectedLeadId, setSelectedLeadId] = useState<number | null>(null);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
@@ -71,7 +79,9 @@ export function PipelineKanban() {
   const [selectedLeads, setSelectedLeads] = useState<number[]>([]);
 
   const utils = trpc.useUtils();
-  const { data: leadsData, isLoading } = trpc.leads.list.useQuery({});
+  const { data: leadsData, isLoading } = trpc.leads.list.useQuery({
+    mentoradoId: mentoradoId,
+  });
 
   const updateStatusMutation = trpc.leads.updateStatus.useMutation({
     onSuccess: () => {
@@ -111,6 +121,8 @@ export function PipelineKanban() {
   };
 
   const handleDragEnd = (event: any) => {
+    if (isReadOnly) return;
+
     const { active, over } = event;
 
     if (!over) return;
@@ -187,24 +199,28 @@ export function PipelineKanban() {
         </h1>
 
         <div className="flex items-center gap-2">
-          <Button
-            variant={isSelectMode ? "secondary" : "ghost"}
-            size="sm"
-            onClick={() => {
-              setIsSelectMode(!isSelectMode);
-              setSelectedLeads([]);
-            }}
-          >
-            <CheckSquare className="mr-2 h-4 w-4" />
-            {isSelectMode ? "Cancelar" : "Selecionar"}
-          </Button>
+          {!isReadOnly && (
+            <Button
+              variant={isSelectMode ? "secondary" : "ghost"}
+              size="sm"
+              onClick={() => {
+                setIsSelectMode(!isSelectMode);
+                setSelectedLeads([]);
+              }}
+            >
+              <CheckSquare className="mr-2 h-4 w-4" />
+              {isSelectMode ? "Cancelar" : "Selecionar"}
+            </Button>
+          )}
           <div className="h-4 w-px bg-border" />
           <Button variant="outline" size="sm">
             <ListFilter className="mr-2 h-4 w-4" /> Filtrar
           </Button>
-          <Button className="bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg shadow-primary/20">
-            <Plus className="mr-2 h-4 w-4" /> Novo Lead
-          </Button>
+          {!isReadOnly && (
+            <Button className="bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg shadow-primary/20">
+              <Plus className="mr-2 h-4 w-4" /> Novo Lead
+            </Button>
+          )}
         </div>
       </div>
 
@@ -213,6 +229,7 @@ export function PipelineKanban() {
         collisionDetection={closestCorners}
         onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
+        autoScroll={!isReadOnly}
       >
         <div className="flex-1 overflow-x-auto pb-4">
           <div className="flex gap-4 min-w-[1200px] h-full">
@@ -237,7 +254,7 @@ export function PipelineKanban() {
         </div>
 
         <DragOverlay>
-          {activeId ? (
+          {activeId && !isReadOnly ? (
             <div className="rotate-2 scale-105 cursor-grabbing opacity-90 shadow-2xl">
               <LeadCard
                 lead={leadsData?.leads?.find(l => `lead-${l.id}` === activeId)!}

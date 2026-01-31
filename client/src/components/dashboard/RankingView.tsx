@@ -31,7 +31,7 @@ export function RankingView({ selectedMonth, selectedYear }: RankingViewProps) {
         return <Award className="w-6 h-6 text-orange-500" />;
       default:
         return (
-          <span className="text-lg font-bold text-slate-500">{posicao}º</span>
+          <span className="text-lg font-bold text-muted-foreground">{posicao}º</span>
         );
     }
   };
@@ -53,10 +53,10 @@ export function RankingView({ selectedMonth, selectedYear }: RankingViewProps) {
     <div className="space-y-8">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-slate-900 tracking-tight">
+          <h2 className="text-2xl font-bold text-foreground tracking-tight">
             Ranking Mensal
           </h2>
-          <p className="text-slate-500 mt-1">
+          <p className="text-muted-foreground mt-1">
             Classificação de performance dos mentorados
           </p>
         </div>
@@ -70,10 +70,10 @@ export function RankingView({ selectedMonth, selectedYear }: RankingViewProps) {
         <Card className="border-none shadow-sm">
           <CardContent className="py-12 text-center">
             <Trophy className="w-12 h-12 mx-auto text-slate-300 mb-4" />
-            <h3 className="text-lg font-semibold text-slate-700 mb-2">
+            <h3 className="text-lg font-semibold text-foreground mb-2">
               Ranking não disponível
             </h3>
-            <p className="text-slate-500">
+            <p className="text-muted-foreground">
               O ranking selecionado ainda não foi calculado.
             </p>
           </CardContent>
@@ -116,12 +116,12 @@ export function RankingView({ selectedMonth, selectedYear }: RankingViewProps) {
                           className="w-full h-full object-cover"
                         />
                       ) : (
-                        <span className="text-2xl font-bold text-slate-400">
+                        <span className="text-2xl font-bold text-muted-foreground">
                           {item.mentorado.nomeCompleto.charAt(0)}
                         </span>
                       )}
                     </div>
-                    <h3 className="font-bold text-slate-900 mb-1 truncate px-2 text-lg">
+                    <h3 className="font-bold text-foreground mb-1 truncate px-2 text-lg">
                       {item.mentorado.nomeCompleto.split(" ")[0]}
                     </h3>
                     <Badge
@@ -132,7 +132,7 @@ export function RankingView({ selectedMonth, selectedYear }: RankingViewProps) {
                     </Badge>
                     <div className="text-2xl font-bold text-neon-green">
                       {item.ranking.pontuacaoTotal}
-                      <span className="text-sm text-slate-500 ml-1">pts</span>
+                      <span className="text-sm text-muted-foreground ml-1">pts</span>
                     </div>
                     {item.ranking.pontosBonus > 0 && (
                       <p className="text-xs text-purple-600 mt-1 font-medium bg-purple-50 inline-block px-2 py-0.5 rounded-full">
@@ -176,14 +176,14 @@ export function RankingView({ selectedMonth, selectedYear }: RankingViewProps) {
                             className="w-full h-full object-cover"
                           />
                         ) : (
-                          <span className="text-sm font-bold text-slate-400">
+                          <span className="text-sm font-bold text-muted-foreground">
                             {item.mentorado.nomeCompleto.charAt(0)}
                           </span>
                         )}
                       </div>
 
                       <div className="flex-1 min-w-0">
-                        <h4 className="font-semibold text-slate-900 truncate">
+                        <h4 className="font-semibold text-foreground truncate">
                           {item.mentorado.nomeCompleto}
                           {isCurrentUser && (
                             <Badge variant="secondary" className="ml-2 text-xs">
@@ -191,13 +191,13 @@ export function RankingView({ selectedMonth, selectedYear }: RankingViewProps) {
                             </Badge>
                           )}
                         </h4>
-                        <p className="text-sm text-slate-500">Neon</p>
+                        <p className="text-sm text-muted-foreground">Neon</p>
                       </div>
 
                       <div className="text-right">
-                        <div className="text-xl font-bold text-slate-900">
+                        <div className="text-xl font-bold text-foreground">
                           {item.ranking.pontuacaoTotal}
-                          <span className="text-sm text-slate-500 ml-1">
+                          <span className="text-sm text-muted-foreground ml-1">
                             pts
                           </span>
                         </div>

@@ -295,3 +295,28 @@
 @utility border-neon-border {
   border-color: var(--color-neon-border);
 }
+
+/* GPU-25/29: Brand Color Text Utilities */
+@utility text-neon-petroleo {
+  color: var(--color-neon-petroleo);
+}
+
+@utility text-neon-petroleo-light {
+  color: var(--color-neon-petroleo-light);
+}
+
+@utility text-neon-petroleo-dark {
+  color: var(--color-neon-petroleo-dark);
+}
+
+@utility text-neon-gold-bright {
+  color: var(--color-neon-gold-bright);
+}
+
+@utility text-neon-blue-light {
+  color: var(--color-neon-blue-light);
+}
+
+@utility text-neon-blue-highlight {
+  color: var(--color-neon-blue-highlight);
+}

@@ -102,10 +102,10 @@ export default function Home() {
       >
         <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-slate-900 tracking-tight">
+            <h1 className="text-3xl font-bold text-foreground tracking-tight">
               Painel Administrativo
             </h1>
-            <p className="text-slate-500 mt-2">
+            <p className="text-muted-foreground mt-2">
               Visão consolidada e gestão de turmas
             </p>
           </div>
