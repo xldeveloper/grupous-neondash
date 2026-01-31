@@ -1,61 +1,204 @@
 ---
-description: Orchestrates high-quality frontend design using specialized skills
+description: Orchestrates high-quality frontend design using the unified frontend-design skill. Triggers on /design command.
 ---
 
 # Command: /design
 
-## Universal Description
+Comprehensive design workflow for web/mobile applications. Combines UI/UX design principles, design system search (50+ styles, 97 palettes), and implementation best practices.
 
-**INTELLIGENT DESIGN ORCHESTRATION** - Multi-skill parallel execution for distinctive, production-grade frontend interfaces and visual assets. Leverages `@frontend-design`, `@theme-factory`, `@algorithmic-art`, `@canvas-design`, and `@artifacts-builder` to deliver cohesive, bold, and unforgettable UI/UX solutions.
+## Trigger
 
-## Purpose
+- `/design` or `/design "description"`
+- Design-related requests: create UI, build component, design page, improve UX
 
-To provide a unified entry point for all design-related tasks, ensuring that every interface is built with a clear aesthetic point-of-view, professional theming, and high-quality visual assets, while avoiding generic "AI slop".
+---
 
-## Orchestration Workflow
+## Prerequisites
 
-### Phase 1: Aesthetic Discovery
+```bash
+# Verify Python for design system search
+python3 --version || python --version
+```
 
-- **Agent**: `@apex-ui-ux-designer`
-- **Skill**: `@frontend-design`
-- **Action**: Define the "Bold Aesthetic" (Brutalist, Minimalist, etc.), Tone, and "Unforgettable" element.
+---
 
-### Phase 2: Theming & Identity
+## Workflow
 
-- **Agent**: `@apex-ui-ux-designer`
-- **Skill**: `@theme-factory` + `@ui-ux-pro-max`
-- **Action**: Pick or create a theme (colors/fonts) that matches the aesthetic. Define CSS variables.
+### Phase 1: Deep Design Thinking (MANDATORY)
 
-### Phase 3: Asset Generation (Parallel)
+**⛔ DO NOT start designing until you complete this analysis!**
 
-- **Static Visuals**: Invoke `@canvas-design` for posters, logos, or branding.
-- **Generative Art**: Invoke `@algorithmic-art` for interactive backgrounds or patterns.
+#### 1.1 Self-Questioning (Internal)
 
-### Phase 4: Implementation
+```
+🔍 CONTEXT ANALYSIS:
+├── What is the sector? → What emotions should it evoke?
+├── Who is the target audience? → Age, tech-savviness, expectations?
+├── What do competitors look like? → What should I NOT do?
+└── What is the soul of this site/app? → In one word?
 
-- **Standalone**: Use `@artifacts-builder` for prototypes/demos.
-- **Integrated**: Implement in `src/` using React 19 + Tailwind v4 + shadcn/ui.
+🎨 DESIGN IDENTITY:
+├── What will make this design UNFORGETTABLE?
+├── What unexpected element can I use?
+├── 🚫 MODERN CLICHÉ CHECK: Am I using Bento Grid or Mesh Gradient? (IF YES → CHANGE!)
+└── Will I remember this design in a year?
+```
 
-## Skill Selection Guide
+#### 1.2 Generate Design System (REQUIRED)
 
-| If the user wants...        | Use Skill...        | Why?                                          |
-| :-------------------------- | :------------------ | :-------------------------------------------- |
-| **A new look/feel**         | `frontend-design`   | Sets the conceptual and aesthetic foundation. |
-| **Consistent colors/fonts** | `theme-factory`     | Ensures professional and cohesive styling.    |
-| **Interactive patterns**    | `algorithmic-art`   | Creates living, generative p5.js assets.      |
-| **Static posters/logos**    | `canvas-design`     | Produces high-fidelity PDF/PNG assets.        |
-| **A complex prototype**     | `artifacts-builder` | Bundles a full React app into a single HTML.  |
+```bash
+python3 .agent/skills/frontend-design/scripts/search.py "<product_type> <industry> <keywords>" --design-system -p "Project Name"
+```
 
-## Safety & Quality Rules
+**Example:**
+```bash
+python3 .agent/skills/frontend-design/scripts/search.py "beauty spa wellness service" --design-system -p "Serenity Spa"
+```
 
-- **NEVER** use generic Inter/Arial fonts or purple gradients by default.
-- **ALWAYS** use `templates/viewer.html` for p5.js art.
-- **ALWAYS** ensure Portuguese interface for user-facing text.
-- **ALWAYS** validate WCAG 2.1 AA compliance.
-- **ALWAYS** use `bun` for any package operations.
+#### 1.3 Anti-Safe Harbor Check
+
+**These are FORBIDDEN as defaults:**
+
+| ❌ Forbidden Default | ✅ Alternative |
+|---------------------|----------------|
+| Left/Right Split Hero | Massive Typography, Vertical Narrative |
+| Bento Grids | Asymmetric layouts, Overlapping layers |
+| Mesh/Aurora Gradients | Solid colors, Grain textures |
+| Glassmorphism | High-contrast flat |
+| Deep Cyan/Fintech Blue | Red, Black, Neon Green |
+| Purple/Violet anything | **PURPLE BAN ✅** |
+
+---
+
+### Phase 2: Design Commitment
+
+**You must declare before coding:**
+
+```markdown
+🎨 DESIGN COMMITMENT:
+- **Style:** [Brutalist / Neo-Retro / Swiss Punk / Liquid Digital]
+- **Why this style?** → How does it break sector clichés?
+- **Geometry:** [Sharp 0-2px / Extreme rounded 16-32px]
+- **Palette:** [e.g., High Contrast Red/Black - NOT Cyan/Blue]
+- **Layout uniqueness:** [e.g., 90/10 asymmetry, NOT 50/50 split]
+```
+
+---
+
+### Phase 3: Supplementary Searches (as needed)
+
+```bash
+# Domain-specific details
+python3 .agent/skills/frontend-design/scripts/search.py "animation accessibility" --domain ux
+python3 .agent/skills/frontend-design/scripts/search.py "elegant luxury" --domain typography
+python3 .agent/skills/frontend-design/scripts/search.py "dark mode dashboard" --domain style
+
+# Stack-specific guidelines (default: html-tailwind)
+python3 .agent/skills/frontend-design/scripts/search.py "responsive form" --stack html-tailwind
+```
+
+**Available Domains:** `product`, `style`, `typography`, `color`, `landing`, `chart`, `ux`, `react`, `web`
+
+**Available Stacks:** `html-tailwind`, `react`, `nextjs`, `shadcn`, `vue`, `svelte`, `react-native`
+
+---
+
+### Phase 4: Asset Generation (Parallel)
+
+| Asset Type | Method | Reference |
+|------------|--------|-----------|
+| **Placeholder Images** | `python3 .agent/skills/frontend-design/scripts/generate_images.py "prompt" "filename"` | `nanobananaskill.md` |
+| **Generative Art** | p5.js with `assets/p5-templates/` | `algorithmic-art-guide.md` |
+| **Static Visuals** | PDF/PNG with `assets/canvas-fonts/` | `canvas-design-guide.md` |
+
+---
+
+### Phase 5: Implementation
+
+**Build order:**
+
+1. **HTML structure** (semantic, accessible)
+2. **CSS/Tailwind** (8-point grid, design system tokens)
+3. **Interactivity** (states, transitions, animations)
+
+**Requirements:**
+
+- React 19 + Tailwind v4 + shadcn/ui (or pure Tailwind if preferred)
+- Mobile-first, 44px+ touch targets
+- WCAG 2.1 AA compliance (contrast 4.5:1, keyboard nav, screen reader)
+- `prefers-reduced-motion` respected
+- Portuguese interface when applicable
+
+---
+
+### Phase 6: Reality Check (ANTI-SELF-DECEPTION)
+
+**Verify HONESTLY before delivering:**
+
+| Question | FAIL | PASS |
+|----------|------|------|
+| "Could this be a Vercel/Stripe template?" | "Well, it's clean..." | "No way, this is unique." |
+| "Would I scroll past this on Dribbble?" | "It's professional..." | "I'd stop and think 'how?'" |
+| "Can I describe it without 'clean' or 'minimal'?" | "It's clean corporate." | "It's brutalist with staggered reveals." |
+
+**Rejection Triggers (delete and restart if any are true):**
+
+| Trigger | Fix |
+|---------|-----|
+| "Safe Split" (50/50, 60/40) | Switch to 90/10 or Overlapping |
+| "Glass Trap" (backdrop-blur without solid borders) | Use solid colors and raw borders |
+| "Bento Trap" (safe rounded grid boxes) | Break alignment intentionally |
+| "Blue Trap" (default blue/teal primary) | Use Acid Green, Signal Orange, Deep Red |
+
+---
+
+## Pre-Delivery Checklist
+
+### Visual Quality
+- [ ] No emojis as icons (use SVG: Heroicons/Lucide)
+- [ ] `cursor-pointer` on all clickable elements
+- [ ] Hover states with smooth transitions (150-300ms)
+
+### Contrast & Accessibility
+- [ ] Light mode text contrast 4.5:1 minimum
+- [ ] Focus states visible for keyboard navigation
+- [ ] `prefers-reduced-motion` respected
+
+### Responsive
+- [ ] Tested at 375px, 768px, 1024px, 1440px
+- [ ] No horizontal scroll on mobile
+
+---
+
+## Skill References
+
+All design knowledge is in the unified `frontend-design` skill:
+
+| Reference File | When to Read |
+|----------------|--------------|
+| `SKILL.md` | Always (master index) |
+| `ux-psychology.md` | Always (core UX principles) |
+| `tailwind-v4-patterns.md` | Tailwind CSS v4, container queries |
+| `color-system.md` | Color/palette decisions |
+| `typography-system.md` | Font selection |
+| `visual-effects.md` | Shadows, gradients, glassmorphism |
+| `animation-guide.md` | Animation needed |
+| `design-system-search.md` | Using search scripts |
+| `algorithmic-art-guide.md` | p5.js generative art |
+| `canvas-design-guide.md` | PDF/PNG visual art |
+| `nanobananaskill.md` | AI image generation |
+
+---
 
 ## Usage Examples
 
-- `/design "Crie uma dashboard brutalista para métricas de vendas"`
-- `/design "Identidade visual minimalista para clínica de estética"`
-- `/design "Background generativo de partículas para a landing page"`
+```bash
+/design "Dashboard brutalista para métricas de vendas"
+/design "Landing page minimalista para clínica de estética"
+/design "Background generativo de partículas para a landing"
+/design  # (interactive mode - will ask questions)
+```
+
+---
+
+> 🔴 **MAESTRO RULE:** "If I can find this layout in a Tailwind UI template, I have FAILED."
