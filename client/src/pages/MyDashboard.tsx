@@ -91,7 +91,10 @@ export default function MyDashboard() {
     // If not admin and no mentorado, show restricted access
     return (
       <DashboardLayout>
-        <Alert variant="destructive" className="bg-red-950/20 border-red-900/50 text-red-400">
+        <Alert
+          variant="destructive"
+          className="bg-destructive/10 border-destructive/20 text-destructive"
+        >
           <AlertCircle className="h-4 w-4" />
           <AlertTitle>Acesso Restrito</AlertTitle>
           <AlertDescription>
@@ -108,10 +111,10 @@ export default function MyDashboard() {
       <div className="space-y-8 animate-in fade-in duration-500">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
           <div>
-            <h1 className="text-3xl font-bold text-neon-petroleo dark:text-neon-gold-bright">
+            <h1 className="text-3xl font-bold text-foreground">
               {isAdmin ? "Visão Admin" : "Meu Dashboard"}
             </h1>
-            <p className="text-neon-petroleo-light dark:text-neon-blue-light mt-1">
+            <p className="text-muted-foreground mt-1">
               {isAdmin
                 ? "Selecione um mentorado para visualizar os dados"
                 : "Acompanhe seu progresso e metas em tempo real"}
@@ -127,7 +130,7 @@ export default function MyDashboard() {
                       id: m.id.toString(),
                       title: m.nomeCompleto,
                       icon: (
-                        <div className="h-full w-full rounded-full overflow-hidden bg-slate-800 flex items-center justify-center">
+                        <div className="h-full w-full rounded-full overflow-hidden bg-muted flex items-center justify-center">
                           {m.fotoUrl ? (
                             <img
                               src={m.fotoUrl}
@@ -135,7 +138,7 @@ export default function MyDashboard() {
                               className="h-full w-full object-cover"
                             />
                           ) : (
-                            <span className="text-xs font-bold text-white">
+                            <span className="text-xs font-bold text-muted-foreground">
                               {m.nomeCompleto.slice(0, 2).toUpperCase()}
                             </span>
                           )}
@@ -170,16 +173,16 @@ export default function MyDashboard() {
               {/* Hero Section */}
               <div className="md:col-span-8">
                 {(currentMentorado || isLoading) && (
-                  <NeonCard className="h-full relative overflow-hidden group">
-                    <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  <NeonCard className="h-full relative overflow-hidden group border-border">
+                    <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
                     <div className="relative z-10 flex flex-col md:flex-row items-center gap-6 p-2">
                       <div className="relative">
-                        <div className="w-24 h-24 rounded-full border-2 border-white/10 overflow-hidden shadow-[0_0_30px_rgba(168,85,247,0.2)]">
+                        <div className="w-24 h-24 rounded-full border-2 border-border overflow-hidden shadow-lg shadow-primary/10">
                           {isLoading ? (
-                            <Skeleton className="w-full h-full bg-slate-800" />
+                            <Skeleton className="w-full h-full" />
                           ) : (
-                            <div className="w-full h-full bg-slate-800 flex items-center justify-center">
+                            <div className="w-full h-full bg-muted flex items-center justify-center">
                               {currentMentorado?.fotoUrl ? (
                                 <img
                                   src={currentMentorado.fotoUrl}
@@ -187,7 +190,7 @@ export default function MyDashboard() {
                                   className="w-full h-full object-cover"
                                 />
                               ) : (
-                                <span className="text-3xl font-bold text-white/50">
+                                <span className="text-3xl font-bold text-muted-foreground/50">
                                   {currentMentorado?.nomeCompleto?.slice(0, 2).toUpperCase()}
                                 </span>
                               )}
@@ -195,7 +198,7 @@ export default function MyDashboard() {
                           )}
                         </div>
                         <div className="absolute bottom-0 right-0 translate-x-1/4 translate-y-1/4">
-                          <div className="bg-black border border-white/10 rounded-full p-2 shadow-xl">
+                          <div className="bg-card border border-border rounded-full p-2 shadow-xl">
                             <TrendingUp className="w-4 h-4 text-green-500" />
                           </div>
                         </div>
@@ -204,20 +207,20 @@ export default function MyDashboard() {
                       <div className="text-center md:text-left space-y-2 flex-1">
                         {isLoading ? (
                           <div className="space-y-2">
-                            <Skeleton className="h-8 w-48 bg-slate-800" />
-                            <Skeleton className="h-4 w-32 bg-slate-800" />
+                            <Skeleton className="h-8 w-48" />
+                            <Skeleton className="h-4 w-32" />
                           </div>
                         ) : (
                           <>
                             <div className="flex items-center justify-center md:justify-start gap-3">
-                              <h2 className="text-2xl font-bold text-neon-petroleo-dark dark:text-neon-gold-bright">
+                              <h2 className="text-2xl font-bold text-foreground">
                                 Olá, {currentMentorado?.nomeCompleto?.split(" ")[0]}
                               </h2>
-                              <span className="px-2 py-0.5 rounded-full bg-purple-500/10 border border-purple-500/20 text-xs text-purple-400 font-medium uppercase tracking-wider">
+                              <span className="px-2 py-0.5 rounded-full bg-primary/10 border border-primary/20 text-xs text-primary font-bold uppercase tracking-wider">
                                 NEON
                               </span>
                             </div>
-                            <p className="text-neon-petroleo-light dark:text-neon-blue-light max-w-md">
+                            <p className="text-muted-foreground max-w-md">
                               Mantenha o foco nas metas de{" "}
                               {new Date().toLocaleString("pt-BR", {
                                 month: "long",
@@ -234,25 +237,19 @@ export default function MyDashboard() {
 
               {/* Quick Stats */}
               <div className="md:col-span-4">
-                <NeonCard className="h-full flex flex-col justify-between p-6">
+                <NeonCard className="h-full flex flex-col justify-between p-6 border-border">
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
-                      <h3 className="text-lg font-semibold text-neon-petroleo-dark dark:text-neon-gold-bright">
-                        Progresso Geral
-                      </h3>
-                      <span className="text-sm text-neon-petroleo-light dark:text-neon-blue-light">
-                        Mês Atual
-                      </span>
+                      <h3 className="text-lg font-semibold text-foreground">Progresso Geral</h3>
+                      <span className="text-sm text-muted-foreground">Mês Atual</span>
                     </div>
                     <div className="flex items-end gap-2">
-                      <span className="text-4xl font-bold text-neon-petroleo dark:text-neon-gold-bright">
-                        75%
-                      </span>
-                      <span className="text-green-400 flex items-center text-sm">
+                      <span className="text-4xl font-bold text-primary">75%</span>
+                      <span className="text-green-500 flex items-center text-sm">
                         <TrendingUp className="w-4 h-4 mr-1" /> +5%
                       </span>
                     </div>
-                    <p className="text-neon-petroleo-light dark:text-neon-blue-highlight text-sm">
+                    <p className="text-muted-foreground text-sm">
                       Você está no caminho certo! Continue assim.
                     </p>
                   </div>

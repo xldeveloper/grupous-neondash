@@ -114,9 +114,9 @@ export default function Home() {
                 variants={staggerContainer}
               >
                 <motion.div variants={slideUp}>
-                  <Card className="border-none shadow-sm bg-card overflow-hidden relative group">
+                  <Card className="border shadow-sm bg-card overflow-hidden relative group">
                     <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                      <DollarSign className="w-16 h-16 text-neon-gold" />
+                      <DollarSign className="w-16 h-16 text-primary" />
                     </div>
                     <CardHeader className="pb-2">
                       <CardTitle className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
@@ -137,17 +137,17 @@ export default function Home() {
                           }
                         />
                       </div>
-                      <p className="text-xs text-neon-gold mt-1 font-medium flex items-center gap-1">
-                        <TrendingUp className="w-3 h-3 text-neon-gold" /> Dezembro 2025
+                      <p className="text-xs text-primary mt-1 font-medium flex items-center gap-1">
+                        <TrendingUp className="w-3 h-3 text-primary" /> Dezembro 2025
                       </p>
                     </CardContent>
                   </Card>
                 </motion.div>
 
                 <motion.div variants={slideUp}>
-                  <Card className="border-none shadow-sm bg-card overflow-hidden relative group">
+                  <Card className="border shadow-sm bg-card overflow-hidden relative group">
                     <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                      <Users className="w-16 h-16 text-neon-blue" />
+                      <Users className="w-16 h-16 text-blue-500" />
                     </div>
                     <CardHeader className="pb-2">
                       <CardTitle className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
@@ -158,7 +158,7 @@ export default function Home() {
                       <div className="text-3xl font-bold text-foreground">
                         <AnimatedCounter to={totalMentorados} duration={1} />
                       </div>
-                      <span className="bg-neon-gold/20 text-neon-blue-dark px-2 py-0.5 rounded-full font-medium">
+                      <span className="bg-blue-500/10 text-blue-600 dark:text-blue-400 px-2 py-0.5 rounded-full font-medium text-xs">
                         14 Mentorados
                       </span>
                     </CardContent>
@@ -166,9 +166,9 @@ export default function Home() {
                 </motion.div>
 
                 <motion.div variants={slideUp}>
-                  <Card className="border-none shadow-sm bg-card overflow-hidden relative group">
+                  <Card className="border shadow-sm bg-card overflow-hidden relative group">
                     <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                      <Award className="w-16 h-16 text-neon-blue-dark" />
+                      <Award className="w-16 h-16 text-purple-500" />
                     </div>
                     <CardHeader className="pb-2">
                       <CardTitle className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
@@ -193,7 +193,7 @@ export default function Home() {
 
               {/* Charts Section */}
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <Card className="lg:col-span-2 border-none shadow-sm">
+                <Card className="lg:col-span-2 border shadow-sm">
                   <CardHeader>
                     <CardTitle>Top 10 Faturamento</CardTitle>
                   </CardHeader>
@@ -203,30 +203,36 @@ export default function Home() {
                         data={chartData}
                         margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
                       >
-                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                        <CartesianGrid
+                          strokeDasharray="3 3"
+                          vertical={false}
+                          stroke="hsl(var(--border))"
+                        />
                         <XAxis
                           dataKey="name"
                           axisLine={false}
                           tickLine={false}
-                          tick={{ fill: "#64748b", fontSize: 12 }}
+                          tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 12 }}
                         />
                         <YAxis
                           axisLine={false}
                           tickLine={false}
-                          tick={{ fill: "#64748b", fontSize: 12 }}
+                          tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 12 }}
                           tickFormatter={(value) => `R$${value / 1000}k`}
                         />
                         <Tooltip
-                          cursor={{ fill: "#f8fafc" }}
+                          cursor={{ fill: "hsl(var(--muted)/0.5)" }}
                           contentStyle={{
-                            borderRadius: "8px",
-                            border: "none",
+                            borderRadius: "var(--radius)",
+                            border: "1px solid hsl(var(--border))",
+                            backgroundColor: "hsl(var(--card))",
+                            color: "hsl(var(--card-foreground))",
                             boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
                           }}
                         />
                         <Bar dataKey="faturamento" radius={[4, 4, 0, 0]}>
                           {chartData.map((entry) => (
-                            <Cell key={entry.name} fill="#AC9469" />
+                            <Cell key={entry.name} fill="hsl(var(--primary))" />
                           ))}
                         </Bar>
                       </BarChart>
@@ -234,7 +240,7 @@ export default function Home() {
                   </CardContent>
                 </Card>
 
-                <Card className="border-none shadow-sm">
+                <Card className="border shadow-sm">
                   <CardHeader>
                     <CardTitle>Top Performers (Score)</CardTitle>
                   </CardHeader>
@@ -250,11 +256,11 @@ export default function Home() {
                               className={cn(
                                 "w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm",
                                 index === 0
-                                  ? "bg-yellow-100 text-yellow-700 dark:bg-yellow-500/10 dark:text-yellow-400"
+                                  ? "bg-primary/10 text-primary"
                                   : index === 1
-                                    ? "bg-slate-200 text-slate-700 dark:bg-slate-800 dark:text-slate-300"
+                                    ? "bg-muted text-muted-foreground"
                                     : index === 2
-                                      ? "bg-orange-100 text-orange-700 dark:bg-orange-500/10 dark:text-orange-400"
+                                      ? "bg-orange-100 text-orange-700 dark:bg-orange-900/20 dark:text-orange-400"
                                       : "bg-card text-muted-foreground border border-border"
                               )}
                             >
@@ -265,7 +271,7 @@ export default function Home() {
                               <div className="text-xs text-muted-foreground">{performer.grupo}</div>
                             </div>
                           </div>
-                          <div className="font-bold text-neon-blue">{performer.score}</div>
+                          <div className="font-bold text-primary">{performer.score}</div>
                         </div>
                       )}
                       keyExtractor={(item) => item.nome}

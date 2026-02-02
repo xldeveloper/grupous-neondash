@@ -56,7 +56,7 @@ export function RankingView({ selectedMonth, selectedYear }: RankingViewProps) {
 
       {isLoading ? (
         <div className="flex items-center justify-center py-12">
-          <Loader2 className="w-8 h-8 animate-spin text-neon-green" />
+          <Loader2 className="w-8 h-8 animate-spin text-primary" />
         </div>
       ) : !ranking || ranking.length === 0 ? (
         <Card className="border-none shadow-sm">
@@ -89,14 +89,14 @@ export function RankingView({ selectedMonth, selectedYear }: RankingViewProps) {
                     "text-center relative overflow-hidden",
                     idx === 0 && "md:-mt-4 z-10",
                     getPosicaoStyle(item.ranking.posicao),
-                    isCurrentUser && "ring-2 ring-neon-green"
+                    isCurrentUser && "ring-2 ring-primary"
                   )}
                 >
                   <BentoCardContent className="pt-6 pb-4">
                     <div className="mb-3 flex justify-center">
                       {getPosicaoIcon(item.ranking.posicao)}
                     </div>
-                    <div className="w-16 h-16 mx-auto rounded-full bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center mb-3 overflow-hidden shadow-inner">
+                    <div className="w-16 h-16 mx-auto rounded-full bg-gradient-to-br from-muted to-muted/50 flex items-center justify-center mb-3 overflow-hidden shadow-inner">
                       {item.mentorado.fotoUrl ? (
                         <img
                           src={item.mentorado.fotoUrl}
@@ -112,15 +112,18 @@ export function RankingView({ selectedMonth, selectedYear }: RankingViewProps) {
                     <h3 className="font-bold text-foreground mb-1 truncate px-2 text-lg">
                       {item.mentorado.nomeCompleto.split(" ")[0]}
                     </h3>
-                    <Badge variant="outline" className="text-xs mb-2 bg-white/50 backdrop-blur-sm">
+                    <Badge
+                      variant="outline"
+                      className="text-xs mb-2 bg-background/50 backdrop-blur-sm"
+                    >
                       Neon
                     </Badge>
-                    <div className="text-2xl font-bold text-neon-green">
+                    <div className="text-2xl font-bold text-primary">
                       {item.ranking.pontuacaoTotal}
                       <span className="text-sm text-muted-foreground ml-1">pts</span>
                     </div>
                     {item.ranking.pontosBonus > 0 && (
-                      <p className="text-xs text-purple-600 mt-1 font-medium bg-purple-50 inline-block px-2 py-0.5 rounded-full">
+                      <p className="text-xs text-purple-600 mt-1 font-medium bg-purple-100 dark:bg-purple-900/20 inline-block px-2 py-0.5 rounded-full">
                         +{item.ranking.pontosBonus} bônus
                       </p>
                     )}
@@ -131,7 +134,7 @@ export function RankingView({ selectedMonth, selectedYear }: RankingViewProps) {
           </div>
 
           {/* Full Ranking List */}
-          <Card className="border-none shadow-sm">
+          <Card className="border shadow-sm">
             <CardHeader>
               <CardTitle className="text-lg">Classificação Completa</CardTitle>
             </CardHeader>
@@ -144,9 +147,9 @@ export function RankingView({ selectedMonth, selectedYear }: RankingViewProps) {
                     <div
                       key={item.ranking.id}
                       className={cn(
-                        "flex items-center gap-4 p-4 rounded-lg transition-colors",
+                        "flex items-center gap-4 p-4 rounded-lg transition-colors border border-transparent",
                         getPosicaoStyle(item.ranking.posicao),
-                        isCurrentUser && "ring-2 ring-neon-green"
+                        isCurrentUser && "ring-2 ring-primary border-primary/50"
                       )}
                     >
                       <div className="w-10 flex justify-center">

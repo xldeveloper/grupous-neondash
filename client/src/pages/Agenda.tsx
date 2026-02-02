@@ -80,12 +80,12 @@ export function Agenda() {
   if (!statusQuery.data?.configured) {
     return (
       <div className="p-6">
-        <NeonCard className="p-8 text-center">
-          <CalendarIcon className="w-16 h-16 mx-auto mb-4 text-slate-500" />
-          <h2 className="text-xl font-bold font-mono text-slate-300 mb-2">
+        <NeonCard className="p-8 text-center border-border">
+          <CalendarIcon className="w-16 h-16 mx-auto mb-4 text-muted-foreground" />
+          <h2 className="text-xl font-bold font-mono text-foreground mb-2">
             Google Calendar não configurado
           </h2>
-          <p className="text-sm text-slate-500 font-mono max-w-md mx-auto">
+          <p className="text-sm text-muted-foreground font-mono max-w-md mx-auto">
             O administrador precisa configurar as credenciais do Google Cloud para habilitar a
             integração com o Google Calendar.
           </p>
@@ -98,19 +98,19 @@ export function Agenda() {
   if (!statusQuery.data?.connected) {
     return (
       <div className="p-6">
-        <NeonCard className="p-8 text-center">
-          <CalendarIcon className="w-16 h-16 mx-auto mb-4 text-neon-gold" />
-          <h2 className="text-xl font-bold font-mono text-slate-300 mb-2">
+        <NeonCard className="p-8 text-center border-border">
+          <CalendarIcon className="w-16 h-16 mx-auto mb-4 text-primary" />
+          <h2 className="text-xl font-bold font-mono text-foreground mb-2">
             Conecte seu Google Calendar
           </h2>
-          <p className="text-sm text-slate-500 font-mono max-w-md mx-auto mb-6">
+          <p className="text-sm text-muted-foreground font-mono max-w-md mx-auto mb-6">
             Visualize seus compromissos diretamente no dashboard. Seus dados permanecem seguros e
             privados.
           </p>
           <Button
             onClick={handleConnect}
             disabled={!authUrlQuery.data?.url}
-            className="bg-neon-blue hover:bg-neon-blue/80 text-black font-mono"
+            className="bg-primary hover:bg-primary/90 text-primary-foreground font-mono"
           >
             <Link className="w-4 h-4 mr-2" />
             Conectar Google Calendar
@@ -124,12 +124,12 @@ export function Agenda() {
     <div className="p-6 space-y-4">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <h2 className="text-xl font-bold font-mono text-neon-gold flex items-center gap-2">
+        <h2 className="text-xl font-bold font-mono text-primary flex items-center gap-2">
           <CalendarIcon className="w-5 h-5" />
           AGENDA
         </h2>
         <div className="flex items-center gap-2">
-          <Badge variant="outline" className="border-green-500/50 text-green-400 font-mono">
+          <Badge variant="outline" className="border-green-500/50 text-green-500 font-mono">
             Conectado
           </Badge>
           <Button
@@ -146,7 +146,7 @@ export function Agenda() {
             size="sm"
             onClick={handleDisconnect}
             disabled={disconnectMutation.isPending}
-            className="text-red-400 hover:text-red-300 hover:bg-red-950/20 font-mono"
+            className="text-destructive hover:text-destructive hover:bg-destructive/10 font-mono"
           >
             <Unlink className="w-4 h-4 mr-1" />
             Desconectar

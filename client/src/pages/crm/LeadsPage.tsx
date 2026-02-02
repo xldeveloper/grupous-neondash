@@ -105,7 +105,7 @@ export function LeadsPage() {
                         designation: m.turma,
                         image:
                           m.fotoUrl ||
-                          `https://ui-avatars.com/api/?name=${encodeURIComponent(m.nomeCompleto)}&background=0f4c75&color=fff`,
+                          `https://ui-avatars.com/api/?name=${encodeURIComponent(m.nomeCompleto)}&background=ec1380&color=fff`,
                         onClick: () => handleAdminSelect(m.id.toString()),
                         isActive: adminSelectedMentoradoId === m.id.toString(),
                       })) || []

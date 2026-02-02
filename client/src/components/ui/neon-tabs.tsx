@@ -54,7 +54,7 @@ const NeonTabsList = React.forwardRef<
   <TabsPrimitive.List
     ref={ref}
     className={cn(
-      "inline-flex h-12 items-center justify-center rounded-2xl bg-[#0F172A] p-1 text-muted-foreground shadow-lg border border-white/5",
+      "inline-flex h-12 items-center justify-center rounded-2xl bg-muted/50 p-1 text-muted-foreground shadow-sm border border-border/50",
       className
     )}
     {...props}
@@ -81,7 +81,9 @@ const NeonTabsTrigger = React.forwardRef<
       className={cn(
         "relative inline-flex items-center justify-center whitespace-nowrap rounded-xl px-5 py-2 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
         "flex-1 md:flex-none gap-2",
-        isActive ? "text-black dark:text-black font-bold" : "text-slate-400 hover:text-slate-200",
+        isActive
+          ? "text-primary-foreground font-bold"
+          : "text-muted-foreground hover:text-foreground",
         className
       )}
       {...props}
@@ -89,7 +91,7 @@ const NeonTabsTrigger = React.forwardRef<
       {isActive && (
         <motion.div
           layoutId="active-neon-tab"
-          className="absolute inset-0 z-0 rounded-xl bg-gradient-to-r from-[#F59E0B] to-[#FBBF24] shadow-[0_0_20px_rgba(245,158,11,0.3)]"
+          className="absolute inset-0 z-0 rounded-xl bg-primary shadow-lg shadow-primary/20"
           initial={false}
           transition={{
             type: "spring",

@@ -13,12 +13,12 @@ const NeonCard = React.forwardRef<
       className={cn(
         "rounded-xl border bg-card text-card-foreground shadow-sm transition-all duration-300",
         // Default: Clean white/navy with subtle border
-        variant === "default" && "border-neon-border hover:shadow-md hover:border-neon-blue/30",
+        variant === "default" && "border-border hover:shadow-md hover:border-primary/30",
         // Glow: For prominent KPIs
         variant === "glow" &&
-          "border-neon-gold/50 shadow-neon-gold/10 hover:shadow-neon-gold/20 hover:border-neon-gold",
+          "border-primary/50 shadow-primary/10 hover:shadow-primary/20 hover:border-primary",
         // Glass: Modern frosted look
-        variant === "glass" && "bg-card border-border shadow-lg",
+        variant === "glass" && "bg-card/80 backdrop-blur-md border-border/50 shadow-lg",
         className
       )}
       {...props}
@@ -40,10 +40,7 @@ const NeonCardTitle = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn(
-      "text-2xl font-semibold leading-none tracking-tight text-neon-blue-dark",
-      className
-    )}
+    className={cn("text-2xl font-semibold leading-none tracking-tight text-foreground", className)}
     {...props}
   />
 ));
