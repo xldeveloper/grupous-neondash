@@ -98,98 +98,98 @@
   --popover: 0 0% 100%;
   --popover-foreground: 203 65% 26%;
 
-  --primary: 330 85% 50%; /* Neon Pink #ec1380 */
-  --primary-foreground: 210 40% 98%;
+  --primary: 38 60% 45%; /* GPUS Gold */
+  --primary-foreground: 0 0% 100%;
 
-  --secondary: 210 40% 96.1%; /* Slate 100 */
-  --secondary-foreground: 203 65% 26%;
+  --secondary: 38 50% 85%; /* Gold Light */
+  --secondary-foreground: 222 47% 11%;
 
-  --muted: 214 32% 91%; /* Slate 200 - Increased contrast for light mode */
-  --muted-foreground: 203 50% 40%; /* Azul Petróleo Light */
+  --muted: 210 40% 96%;
+  --muted-foreground: 215 25% 40%;
 
-  --accent: 330 85% 96%; /* Pink Light */
-  --accent-foreground: 330 85% 50%;
+  --accent: 38 60% 95%; /* Gold Accent */
+  --accent-foreground: 222 47% 11%;
 
   --destructive: 0 84.2% 60.2%;
   --destructive-foreground: 210 40% 98%;
 
-  --border: 214 32% 91%; /* Slate 200 */
+  --border: 214 32% 91%;
   --input: 214 32% 91%;
-  --ring: 330 85% 50%; /* Pink Ring */
+  --ring: 38 60% 45%; /* Gold Ring */
 
-  --chart-1: 330 85% 50%;
-  --chart-2: 212 95% 68%;
-  --chart-3: 216 92% 60%;
-  --chart-4: 210 98% 78%;
-  --chart-5: 212 97% 87%;
+  --chart-1: 38 60% 45%;
+  --chart-2: 142 76% 36%;
+  --chart-3: 38 92% 50%;
+  --chart-4: 0 84% 60%;
+  --chart-5: 217 91% 60%;
 
-  --sidebar: 0 0% 100%;
+  --sidebar: 0 0% 98%;
   --sidebar-foreground: 222 47% 11%;
-  --sidebar-primary: 330 85% 50%;
-  --sidebar-primary-foreground: 210 40% 98%;
-  --sidebar-accent: 330 85% 96%;
-  --sidebar-accent-foreground: 330 85% 50%;
+  --sidebar-primary: 38 60% 45%;
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 38 60% 95%;
+  --sidebar-accent-foreground: 222 47% 11%;
   --sidebar-border: 214 32% 91%;
-  --sidebar-ring: 330 85% 50%;
+  --sidebar-ring: 38 60% 45%;
 }
 
-/* Dark Mode - OLED / High Contrast Dark */
+/* Dark Mode - GPUS Navy/Gold Theme */
 .dark {
-  /* Solid Colors - No Transparency */
-  --background: 222 47% 4%; /* Slate 950 (Darker) #020617 */
-  --foreground: 210 40% 98%; /* Slate 50 */
+  /* === DARK THEME - NAVY/GOLD === */
+  --background: 211 49% 10%; /* Navy #0f2744 */
+  --foreground: 39 44% 65%; /* Gold text */
 
-  --card: 222 47% 6%; /* Slightly lighter than bg #060912 */
-  --card-foreground: 210 40% 98%;
+  --card: 212 48% 13%; /* Slightly lighter navy */
+  --card-foreground: 39 44% 65%;
 
-  --popover: 222 47% 4%;
-  --popover-foreground: 210 40% 98%;
+  --popover: 211 49% 10%;
+  --popover-foreground: 39 44% 65%;
 
-  --primary: 330 85% 50%; /* Neon Pink #ec1380 */
-  --primary-foreground: 210 40% 98%;
+  --primary: 39 44% 65%; /* GPUS Gold */
+  --primary-foreground: 48 10% 80%;
 
-  --secondary: 217.2 32.6% 17.5%; /* Slate 800 */
-  --secondary-foreground: 210 40% 98%;
+  --secondary: 211 49% 10%;
+  --secondary-foreground: 39 44% 65%;
 
-  --muted: 217.2 32.6% 17.5%;
-  --muted-foreground: 215 20.2% 65.1%; /* Slate 400 */
+  --muted: 39 29% 54%;
+  --muted-foreground: 48 10% 80%;
 
-  --accent: 330 85% 20%; /* Darker Pink for Dark Mode Accent */
-  --accent-foreground: 330 85% 60%;
+  --accent: 26 5% 27%;
+  --accent-foreground: 39 44% 65%;
 
-  --destructive: 0 62.8% 30.6%;
-  --destructive-foreground: 210 40% 98%;
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 30 11% 11%;
 
-  --border: 217.2 32.6% 17.5%;
-  --input: 217.2 32.6% 17.5%;
-  --ring: 330 85% 50%;
+  --border: 26 6% 21%;
+  --input: 26 6% 21%;
+  --ring: 39 29% 54%;
 
-  --chart-1: 330 85% 50%;
-  --chart-2: 160 60% 45%;
-  --chart-3: 30 80% 55%;
-  --chart-4: 280 65% 60%;
-  --chart-5: 340 75% 55%;
+  --chart-1: 38 60% 45%;
+  --chart-2: 142 76% 36%;
+  --chart-3: 38 92% 50%;
+  --chart-4: 0 84% 60%;
+  --chart-5: 217 91% 60%;
 
-  --sidebar: 222 47% 4%;
-  --sidebar-foreground: 210 40% 98%;
-  --sidebar-primary: 330 85% 50%;
-  --sidebar-primary-foreground: 0 0% 100%;
-  --sidebar-accent: 217.2 32.6% 17.5%;
-  --sidebar-accent-foreground: 210 40% 98%;
-  --sidebar-border: 217.2 32.6% 17.5%;
-  --sidebar-ring: 330 85% 50%;
+  --sidebar: 212 48% 13%;
+  --sidebar-foreground: 39 44% 65%;
+  --sidebar-primary: 40 14% 66%;
+  --sidebar-primary-foreground: 207 37% 25%;
+  --sidebar-accent: 26 5% 27%;
+  --sidebar-accent-foreground: 39 44% 65%;
+  --sidebar-border: 39 29% 54%;
+  --sidebar-ring: 39 29% 54%;
 
-  /* Legacy Color Overrides */
-  --color-neon-blue-dark: #020617;
-  --color-neon-blue: #0ea5e9;
-  --color-neon-gold: #f59e0b;
+  /* Legacy Color Overrides - Gold themed */
+  --color-neon-blue-dark: #0f2744;
+  --color-neon-blue: #64b5f6;
+  --color-neon-gold: #c9a962;
 
-  /* GPU-29: Dark Mode - Azul Claro & Dourado (prioritário) */
+  /* GPU-29: Dark Mode - Dourado */
   --color-neon-blue-light: #64b5f6;
   --color-neon-blue-highlight: #90caf9;
   --color-neon-gold-bright: #ffd700;
   --color-neon-gold-light: #ffecb3;
-  --color-neon-petroleo: #64b5f6; /* Map to light blue in dark mode */
+  --color-neon-petroleo: #64b5f6;
   --color-neon-petroleo-light: #90caf9;
   --color-neon-petroleo-dark: #3282b8;
 }

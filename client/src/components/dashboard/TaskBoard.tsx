@@ -98,7 +98,7 @@ export function TaskBoard({ mentoradoId }: { mentoradoId?: number }) {
   return (
     <div className="h-full flex flex-col space-y-4">
       <div className="flex items-center justify-between">
-        <h2 className="text-xl font-bold font-mono text-neon-gold flex items-center gap-2">
+        <h2 className="text-xl font-bold font-mono text-primary flex items-center gap-2">
           <CheckCircle2 className="w-5 h-5" />
           TAREFAS [DBE]
         </h2>
@@ -112,13 +112,13 @@ export function TaskBoard({ mentoradoId }: { mentoradoId?: number }) {
           <TabsList className="grid w-full grid-cols-2 mb-4 bg-muted border border-border">
             <TabsTrigger
               value="todo"
-              className="data-[state=active]:bg-neon-blue/20 data-[state=active]:text-neon-blue font-mono"
+              className="data-[state=active]:bg-primary/20 data-[state=active]:text-primary font-mono"
             >
               A Fazer ({todoTasks.length})
             </TabsTrigger>
             <TabsTrigger
               value="done"
-              className="data-[state=active]:bg-neon-gold/20 data-[state=active]:text-neon-gold font-mono"
+              className="data-[state=active]:bg-primary/20 data-[state=active]:text-primary font-mono"
             >
               Concluídas ({doneTasks.length})
             </TabsTrigger>
@@ -130,7 +130,7 @@ export function TaskBoard({ mentoradoId }: { mentoradoId?: number }) {
               value={newTask}
               onChange={(e) => setNewTask(e.target.value)}
               placeholder="Nova tarefa..."
-              className="bg-background border-input focus:border-neon-blue font-mono text-sm flex-1"
+              className="bg-background border-input focus:border-primary font-mono text-sm flex-1"
             />
             <Select
               value={newTaskPriority}
@@ -155,7 +155,7 @@ export function TaskBoard({ mentoradoId }: { mentoradoId?: number }) {
               type="submit"
               size="icon"
               disabled={createTask.isPending}
-              className="bg-neon-blue hover:bg-neon-blue/80 text-black"
+              className="bg-primary hover:bg-primary/80 text-primary-foreground"
             >
               <Plus className="w-4 h-4" />
             </Button>
@@ -182,7 +182,7 @@ export function TaskBoard({ mentoradoId }: { mentoradoId?: number }) {
                       <Checkbox
                         checked={false}
                         onCheckedChange={() => toggleTask.mutate({ id: task.id })}
-                        className="border-slate-600 data-[state=checked]:bg-neon-gold data-[state=checked]:text-black"
+                        className="border-slate-600 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground"
                       />
                       <span className="text-sm text-slate-300 font-mono">{task.title}</span>
 

@@ -15,7 +15,7 @@ export function NeonCRM({ mentoradoId }: { mentoradoId?: number }) {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h2 className="text-xl font-bold font-mono text-neon-blue flex items-center gap-2">
+        <h2 className="text-xl font-bold font-mono text-primary flex items-center gap-2">
           <Activity className="w-5 h-5" />
           CRM [DBE]
         </h2>
@@ -23,21 +23,21 @@ export function NeonCRM({ mentoradoId }: { mentoradoId?: number }) {
       </div>
 
       <div className="grid grid-cols-2 gap-4">
-        <NeonCard className="p-4 border-neon-blue/20 bg-card hover:border-neon-blue/50 transition-colors">
+        <NeonCard className="p-4 border-primary/20 bg-card hover:border-primary/50 transition-colors">
           <div className="flex flex-col">
             <span className="text-xs text-muted-foreground font-mono uppercase">Leads Ativos</span>
             <div className="flex items-center gap-2 mt-1">
-              <Users className="w-4 h-4 text-neon-blue" />
+              <Users className="w-4 h-4 text-primary" />
               <span className="text-2xl font-bold text-foreground">{stats?.totalAtivos || 0}</span>
             </div>
           </div>
         </NeonCard>
 
-        <NeonCard className="p-4 border-neon-gold/20 bg-card hover:border-neon-gold/50 transition-colors">
+        <NeonCard className="p-4 border-primary/20 bg-card hover:border-primary/50 transition-colors">
           <div className="flex flex-col">
             <span className="text-xs text-muted-foreground font-mono uppercase">Pipeline (R$)</span>
             <div className="flex items-center gap-2 mt-1">
-              <DollarSign className="w-4 h-4 text-neon-gold" />
+              <DollarSign className="w-4 h-4 text-primary" />
               <span className="text-2xl font-bold text-foreground">
                 {stats?.valorPipeline?.toLocaleString("pt-BR", {
                   style: "currency",

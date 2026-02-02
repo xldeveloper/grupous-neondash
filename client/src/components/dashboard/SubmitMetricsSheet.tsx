@@ -17,7 +17,7 @@ export function SubmitMetricsSheet() {
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <Button className="bg-neon-gold hover:bg-neon-gold/90 text-neon-blue-dark font-semibold">
+        <Button className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold">
           <PlusCircle className="mr-2 h-4 w-4" />
           Enviar Métricas
         </Button>
