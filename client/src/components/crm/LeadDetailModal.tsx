@@ -44,6 +44,7 @@ import {
 } from "@/components/ui/sheet";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { trpc } from "@/lib/trpc";
+import { LeadChatWindow } from "../chat/LeadChatWindow";
 import { AddInteractionDialog } from "./AddInteractionDialog";
 
 interface LeadDetailModalProps {
@@ -388,6 +389,12 @@ export function LeadDetailModal({
                           className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent px-0 pb-3 -mb-[2px] transition-none"
                         >
                           Histórico
+                        </TabsTrigger>
+                        <TabsTrigger
+                          value="chat"
+                          className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent px-0 pb-3 -mb-[2px] transition-none"
+                        >
+                          Chat
                         </TabsTrigger>
                       </TabsList>
                     </div>
@@ -779,6 +786,15 @@ export function LeadDetailModal({
                           </div>
                         ))}
                       </div>
+                    </TabsContent>
+
+                    {/* Chat Tab */}
+                    <TabsContent value="chat" className="p-0 m-0 flex-1">
+                      <LeadChatWindow
+                        leadId={leadId!}
+                        phone={data?.lead?.telefone || undefined}
+                        leadName={data?.lead?.nome}
+                      />
                     </TabsContent>
                   </Tabs>
                 </div>

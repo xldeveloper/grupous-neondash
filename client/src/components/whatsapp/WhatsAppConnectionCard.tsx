@@ -34,7 +34,7 @@ import { trpc } from "@/lib/trpc";
 
 type ConnectionStatus = "disconnected" | "connecting" | "connected";
 
-type WhatsAppConnectionCardProps = {};
+type WhatsAppConnectionCardProps = Record<string, never>;
 
 export function WhatsAppConnectionCard(_props: WhatsAppConnectionCardProps) {
   const [instanceId, setInstanceId] = useState("");

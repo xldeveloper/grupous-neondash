@@ -51,7 +51,7 @@ Diretrizes:
 const DEFAULT_GREETING = `Olá! 👋 Tudo bem? Vi que você entrou em contato conosco. 
 Como posso te ajudar hoje?`;
 
-type AIAgentSettingsCardProps = {};
+type AIAgentSettingsCardProps = Record<string, never>;
 
 export function AIAgentSettingsCard(_props: AIAgentSettingsCardProps) {
   const [isAdvancedOpen, setIsAdvancedOpen] = useState(false);
