@@ -101,13 +101,13 @@ export async function createContext(opts: CreateExpressContextOptions): Promise<
             mentoradoId: mentoradoByEmail[0].id,
             userId: user.id,
           });
-          // Link the user to the mentorado
+          // Link the user to the mentorado and mark onboarding as complete
           await db
             .update(mentorados)
-            .set({ userId: user.id })
+            .set({ userId: user.id, onboardingCompleted: "sim" })
             .where(eq(mentorados.id, mentoradoByEmail[0].id));
 
-          mentorado = { ...mentoradoByEmail[0], userId: user.id };
+          mentorado = { ...mentoradoByEmail[0], userId: user.id, onboardingCompleted: "sim" };
         } else {
           // Auto-create mentorado if not found
           logger.info("auto_create_mentorado", {

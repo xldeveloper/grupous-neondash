@@ -1,6 +1,8 @@
+import { Moon, Sun } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useLocation } from "wouter";
 import { useAuth } from "@/_core/hooks/useAuth";
+import { useTheme } from "@/_core/hooks/useTheme";
 import { SignInButton } from "@/components/auth/SignInButton";
 import {
   BenefitsSection,
@@ -9,10 +11,12 @@ import {
   SimpleFooter,
   SocialProofSection,
 } from "@/components/landing/LandingComponents";
+import { Button } from "@/components/ui/button";
 import { trpc } from "@/lib/trpc";
 
 export default function LandingPage() {
   const { isAuthenticated, loading, user } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const [, setLocation] = useLocation();
   const [hasCheckedAuth, setHasCheckedAuth] = useState(false);
 
@@ -51,8 +55,8 @@ export default function LandingPage() {
 
   if (loading || !hasCheckedAuth || (isAuthenticated && loadingMentorado) || isAuthenticated) {
     return (
-      <div className="min-h-screen bg-paper flex items-center justify-center">
-        <div className="animate-pulse text-neon-blue-medium font-medium tracking-wide">
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="animate-pulse text-muted-foreground font-medium tracking-wide">
           Carregando Neon...
         </div>
       </div>
@@ -60,9 +64,9 @@ export default function LandingPage() {
   }
 
   return (
-    <div className="min-h-screen bg-paper flex flex-col relative overflow-hidden font-sans text-foreground selection:bg-neon-gold/30 scroll-smooth">
+    <div className="min-h-screen bg-background flex flex-col relative overflow-hidden font-sans text-foreground selection:bg-primary/30 scroll-smooth">
       {/* Header */}
-      <header className="fixed top-0 w-full py-4 px-6 md:px-12 flex justify-between items-center z-50 bg-paper/80 backdrop-blur-md border-b border-neon-border/50">
+      <header className="fixed top-0 w-full py-4 px-6 md:px-12 flex justify-between items-center z-50 bg-background/80 backdrop-blur-md border-b border-border/50">
         <div className="flex items-center gap-3">
           <img
             src="/brand/neon-symbol-official.png"
@@ -70,15 +74,29 @@ export default function LandingPage() {
             className="w-8 h-8 object-contain"
           />
           <div>
-            <span className="font-bold text-xl tracking-tight text-neon-blue-dark block leading-none">
+            <span className="font-bold text-xl tracking-tight text-foreground block leading-none">
               NEON
             </span>
-            <span className="text-[9px] text-neon-blue-medium uppercase tracking-[0.25em] font-mono font-medium">
+            <span className="text-[9px] text-muted-foreground uppercase tracking-[0.25em] font-mono font-medium">
               Mentoria Black
             </span>
           </div>
         </div>
-        <nav className="hidden md:flex gap-6 text-sm font-medium text-muted-foreground items-center">
+        <nav className="flex gap-4 text-sm font-medium text-muted-foreground items-center">
+          {/* Theme Toggle Button */}
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={toggleTheme}
+            className="w-9 h-9 rounded-full"
+            aria-label={theme === "dark" ? "Mudar para tema claro" : "Mudar para tema escuro"}
+          >
+            {theme === "dark" ? (
+              <Sun className="w-5 h-5 text-primary" />
+            ) : (
+              <Moon className="w-5 h-5 text-muted-foreground" />
+            )}
+          </Button>
           <SignInButton />
         </nav>
       </header>
