@@ -1,26 +1,15 @@
-import { SignInButton as ClerkSignInButton } from "@clerk/clerk-react";
-import {
-  ArrowRight,
-  BookOpen,
-  Calendar,
-  Shield,
-  Smartphone,
-  Star,
-  TrendingUp,
-  Users,
-  Zap,
-} from "lucide-react";
+import { BookOpen, Calendar, Shield, Smartphone, Star, TrendingUp, Users, Zap } from "lucide-react";
 import { motion } from "motion/react";
 import { useEffect, useState } from "react";
 import { useLocation } from "wouter";
 import { useAuth } from "@/_core/hooks/useAuth";
+import { SignInButton } from "@/components/auth/SignInButton";
 import {
   AnimatedAccordion,
   AnimatedAccordionContent,
   AnimatedAccordionItem,
   AnimatedAccordionTrigger,
 } from "@/components/ui/animated-accordion";
-import { Button } from "@/components/ui/button";
 import {
   NeonCard,
   NeonCardContent,
@@ -117,14 +106,7 @@ export default function LandingPage() {
           <a href="#faq" className="hover:text-neon-blue-dark transition-colors">
             FAQ
           </a>
-          <ClerkSignInButton mode="modal">
-            <Button
-              size="sm"
-              className="bg-neon-blue-dark hover:bg-neon-blue text-white shadow-md hover:shadow-lg transition-all"
-            >
-              Entrar
-            </Button>
-          </ClerkSignInButton>
+          <SignInButton />
         </nav>
       </header>
 
@@ -168,15 +150,7 @@ export default function LandingPage() {
             variants={slideUp}
             className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-6"
           >
-            <ClerkSignInButton mode="modal">
-              <Button
-                size="lg"
-                className="h-14 px-8 text-base bg-neon-blue-dark hover:bg-neon-blue text-white shadow-xl hover:shadow-neon-blue/20 hover:-translate-y-0.5 transition-all duration-300 group rounded-full"
-              >
-                Acessar Portal do Mentor
-                <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </Button>
-            </ClerkSignInButton>
+            <SignInButton />
           </motion.div>
         </motion.div>
       </section>
@@ -411,15 +385,7 @@ export default function LandingPage() {
           </div>
 
           <div className="text-center mt-12">
-            <ClerkSignInButton mode="modal">
-              <Button
-                size="lg"
-                className="bg-neon-gold hover:bg-neon-gold/90 text-neon-blue-dark font-bold px-8 shadow-xl hover:shadow-neon-gold/20 transition-all"
-              >
-                Fazer Login Agora
-                <ArrowRight className="ml-2 w-4 h-4" />
-              </Button>
-            </ClerkSignInButton>
+            <SignInButton />
           </div>
         </div>
       </section>

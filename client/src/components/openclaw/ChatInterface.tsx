@@ -17,7 +17,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { useMoltbot } from "@/hooks/useMoltbot";
+import { useOpenClaw } from "@/hooks/useOpenClaw";
 import { cn } from "@/lib/utils";
 
 export function ChatInterface() {
@@ -31,7 +31,7 @@ export function ChatInterface() {
     isSending,
     isConnected,
     error,
-  } = useMoltbot();
+  } = useOpenClaw();
 
   const [input, setInput] = useState("");
   const scrollAreaRef = useRef<HTMLDivElement>(null);

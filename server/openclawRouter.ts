@@ -1,5 +1,5 @@
 /**
- * Moltbot Router - tRPC procedures for AI assistant integration
+ * OpenClaw Router - tRPC procedures for AI assistant integration
  *
  * Provides:
  * - Session management (create, terminate, list)
@@ -11,10 +11,10 @@
 import { TRPCError } from "@trpc/server";
 import { and, desc, eq } from "drizzle-orm";
 import { z } from "zod";
-import { feedbacks, metricasMensais, moltbotMessages, moltbotSessions } from "../drizzle/schema";
+import { feedbacks, metricasMensais, openclawMessages, openclawSessions } from "../drizzle/schema";
 import { protectedProcedure, router } from "./_core/trpc";
 import { getDb } from "./db";
-import { moltbotService } from "./services/moltbotService";
+import { openclawService } from "./services/openclawService";
 
 // ═══════════════════════════════════════════════════════════════════════════
 // MIDDLEWARE
@@ -26,7 +26,7 @@ import { moltbotService } from "./services/moltbotService";
 async function validateSessionOwnership(
   sessionId: string,
   userId: number
-): Promise<typeof moltbotSessions.$inferSelect> {
+): Promise<typeof openclawSessions.$inferSelect> {
   const db = await getDb();
   if (!db)
     throw new TRPCError({
@@ -36,8 +36,8 @@ async function validateSessionOwnership(
 
   const [session] = await db
     .select()
-    .from(moltbotSessions)
-    .where(eq(moltbotSessions.sessionId, sessionId))
+    .from(openclawSessions)
+    .where(eq(openclawSessions.sessionId, sessionId))
     .limit(1);
 
   if (!session) {
@@ -55,7 +55,7 @@ async function validateSessionOwnership(
 // ROUTER
 // ═══════════════════════════════════════════════════════════════════════════
 
-export const moltbotRouter = router({
+export const openclawRouter = router({
   /**
    * Create a webchat session for the current user
    */
@@ -66,11 +66,11 @@ export const moltbotRouter = router({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const sessionId = await moltbotService.createSession(ctx.user.id, "webchat");
+      const sessionId = await openclawService.createSession(ctx.user.id, "webchat");
 
       // If initial message provided, send it
       if (input.initialMessage) {
-        await moltbotService.sendMessage(sessionId, input.initialMessage, ctx.user.id);
+        await openclawService.sendMessage(sessionId, input.initialMessage, ctx.user.id);
       }
 
       return { sessionId, status: "active" };
@@ -89,9 +89,9 @@ export const moltbotRouter = router({
 
     const sessions = await db
       .select()
-      .from(moltbotSessions)
-      .where(and(eq(moltbotSessions.userId, ctx.user.id), eq(moltbotSessions.isActive, "sim")))
-      .orderBy(desc(moltbotSessions.lastActivityAt));
+      .from(openclawSessions)
+      .where(and(eq(openclawSessions.userId, ctx.user.id), eq(openclawSessions.isActive, "sim")))
+      .orderBy(desc(openclawSessions.lastActivityAt));
 
     return sessions;
   }),
@@ -109,7 +109,7 @@ export const moltbotRouter = router({
       // Validate ownership
       await validateSessionOwnership(input.sessionId, ctx.user.id);
 
-      const success = await moltbotService.terminateSession(input.sessionId);
+      const success = await openclawService.terminateSession(input.sessionId);
 
       return { success };
     }),
@@ -128,7 +128,7 @@ export const moltbotRouter = router({
       // Validate ownership
       await validateSessionOwnership(input.sessionId, ctx.user.id);
 
-      const messageId = await moltbotService.sendMessage(
+      const messageId = await openclawService.sendMessage(
         input.sessionId,
         input.content,
         ctx.user.id
@@ -161,9 +161,9 @@ export const moltbotRouter = router({
 
       const messages = await db
         .select()
-        .from(moltbotMessages)
-        .where(eq(moltbotMessages.sessionId, session.id))
-        .orderBy(desc(moltbotMessages.createdAt))
+        .from(openclawMessages)
+        .where(eq(openclawMessages.sessionId, session.id))
+        .orderBy(desc(openclawMessages.createdAt))
         .limit(input.limit + 1); // +1 to check if more exist
 
       const hasMore = messages.length > input.limit;
@@ -179,7 +179,7 @@ export const moltbotRouter = router({
   /**
    * Get mentorado context data for AI assistant
    */
-  getMoltbotContext: protectedProcedure.query(async ({ ctx }) => {
+  getOpenClawContext: protectedProcedure.query(async ({ ctx }) => {
     const db = await getDb();
     if (!db)
       throw new TRPCError({
@@ -252,7 +252,7 @@ export const moltbotRouter = router({
    * Request WhatsApp QR code for pairing
    */
   requestWhatsAppQR: protectedProcedure.mutation(async ({ ctx }) => {
-    const result = await moltbotService.requestQRCode(ctx.user.id);
+    const result = await openclawService.requestQRCode(ctx.user.id);
 
     return result;
   }),
@@ -261,13 +261,13 @@ export const moltbotRouter = router({
    * Disconnect WhatsApp session
    */
   disconnectWhatsApp: protectedProcedure.mutation(async ({ ctx }) => {
-    const success = await moltbotService.disconnectWhatsApp(ctx.user.id);
+    const success = await openclawService.disconnectWhatsApp(ctx.user.id);
 
     return { success };
   }),
 
   /**
-   * Get connection status for Moltbot gateway
+   * Get connection status for OpenClaw gateway
    */
   getStatus: protectedProcedure.query(async ({ ctx }) => {
     const db = await getDb();
@@ -280,14 +280,14 @@ export const moltbotRouter = router({
     // Get active sessions for user
     const sessions = await db
       .select()
-      .from(moltbotSessions)
-      .where(and(eq(moltbotSessions.userId, ctx.user.id), eq(moltbotSessions.isActive, "sim")));
+      .from(openclawSessions)
+      .where(and(eq(openclawSessions.userId, ctx.user.id), eq(openclawSessions.isActive, "sim")));
 
     // Check for WhatsApp session
     const whatsappSession = sessions.find((s) => s.channelType === "whatsapp");
 
     return {
-      isGatewayConnected: moltbotService.isConnected(),
+      isGatewayConnected: openclawService.isConnected(),
       activeSessionCount: sessions.length,
       whatsappConnected: !!whatsappSession,
       webchatActive: sessions.some((s) => s.channelType === "webchat"),

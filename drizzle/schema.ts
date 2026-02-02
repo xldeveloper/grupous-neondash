@@ -330,9 +330,9 @@ export type Notificacao = typeof notificacoes.$inferSelect;
 export type InsertNotificacao = typeof notificacoes.$inferInsert;
 
 /**
- * Moltbot Sessions - Chat sessions for AI assistant
+ * OpenClaw Sessions - Chat sessions for AI assistant
  */
-export const moltbotSessions = pgTable(
+export const openclawSessions = pgTable(
   "moltbot_sessions",
   {
     id: serial("id").primaryKey(),
@@ -354,19 +354,19 @@ export const moltbotSessions = pgTable(
   ]
 );
 
-export type MoltbotSession = typeof moltbotSessions.$inferSelect;
-export type InsertMoltbotSession = typeof moltbotSessions.$inferInsert;
+export type OpenClawSession = typeof openclawSessions.$inferSelect;
+export type InsertOpenClawSession = typeof openclawSessions.$inferInsert;
 
 /**
- * Moltbot Messages - Chat message history
+ * OpenClaw Messages - Chat message history
  */
-export const moltbotMessages = pgTable(
+export const openclawMessages = pgTable(
   "moltbot_messages",
   {
     id: serial("id").primaryKey(),
     sessionId: integer("session_id")
       .notNull()
-      .references(() => moltbotSessions.id, { onDelete: "cascade" }),
+      .references(() => openclawSessions.id, { onDelete: "cascade" }),
     role: varchar("role", { length: 20 }).notNull(), // "user" | "assistant"
     content: text("content").notNull(),
     metadata: text("metadata"), // JSON stringified metadata
@@ -378,8 +378,8 @@ export const moltbotMessages = pgTable(
   ]
 );
 
-export type MoltbotMessage = typeof moltbotMessages.$inferSelect;
-export type InsertMoltbotMessage = typeof moltbotMessages.$inferInsert;
+export type OpenClawMessage = typeof openclawMessages.$inferSelect;
+export type InsertOpenClawMessage = typeof openclawMessages.$inferInsert;
 
 /**
  * Leads - CRM Leads

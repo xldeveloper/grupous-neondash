@@ -1,6 +1,7 @@
-import { SignedIn, SignedOut, SignInButton } from "@clerk/clerk-react";
 import { Award, BookOpen, CheckCircle2, Clock, Coffee, PlayCircle, Users } from "lucide-react";
 import { Link } from "wouter";
+import { useAuth } from "@/_core/hooks/useAuth";
+import { SignInButton } from "@/components/auth/SignInButton";
 import {
   Accordion,
   AccordionContent,
@@ -9,6 +10,28 @@ import {
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
+/**
+ * LoginSection - Auth-aware button that shows sign-in or dashboard link
+ */
+function LoginSection() {
+  const { isAuthenticated } = useAuth();
+
+  if (isAuthenticated) {
+    return (
+      <Link href="/dashboard">
+        <Button
+          size="lg"
+          className="bg-neon-gold hover:bg-neon-gold/90 text-neon-blue-dark font-bold px-8"
+        >
+          Área do Aluno (Dashboard)
+        </Button>
+      </Link>
+    );
+  }
+
+  return <SignInButton />;
+}
 
 export function MentorshipContent() {
   return (
@@ -67,23 +90,7 @@ export function MentorshipContent() {
           </div>
 
           <div className="mt-12 text-center">
-            <SignedOut>
-              <SignInButton mode="modal">
-                <Button size="lg" className="bg-neon-blue-dark hover:bg-neon-blue text-white px-8">
-                  Fazer Login Agora
-                </Button>
-              </SignInButton>
-            </SignedOut>
-            <SignedIn>
-              <Link href="/dashboard">
-                <Button
-                  size="lg"
-                  className="bg-neon-gold hover:bg-neon-gold/90 text-neon-blue-dark font-bold px-8"
-                >
-                  Área do Aluno (Dashboard)
-                </Button>
-              </Link>
-            </SignedIn>
+            <LoginSection />
           </div>
         </div>
       </section>

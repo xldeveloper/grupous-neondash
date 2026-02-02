@@ -6,6 +6,13 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 
 # Frontend Design System
 
+> [!IMPORTANT]
+> **Dual Skill Architecture:** This skill works in partnership with `ui-ux-pro-max`:
+> - **ui-ux-pro-max** → Design System Generation (what design to use)
+> - **frontend-design** → Assets + Validation (how to implement)
+>
+> For design system searches, use `ui-ux-pro-max/scripts/search.py`.
+
 > **Philosophy:** Every pixel has purpose. Restraint is luxury. User psychology drives decisions.
 > **Core Principle:** THINK, don't memorize. ASK, don't assume.
 > **Default Theme:** GPUS Navy/Gold palette from `gpus-theme` skill.
@@ -34,14 +41,15 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 
 ---
 
-## 🔧 Runtime Scripts
+## 🔧 Runtime Scripts (Unique to frontend-design)
 
 | Script | Purpose | Usage |
 | ------ | ------- | ----- |
 | `scripts/ux_audit.py` | UX & Accessibility Audit | `python scripts/ux_audit.py <project_path>` |
 | `scripts/accessibility_checker.py` | WCAG Compliance Check | `python scripts/accessibility_checker.py <file>` |
 | `scripts/generate_images.py` | Nano Banana Image Gen | `python scripts/generate_images.py "prompt" "filename"` |
-| `scripts/search.py` | Design System Search | `python scripts/search.py "query" --design-system` |
+
+> **Note:** For design system generation, use `ui-ux-pro-max/scripts/search.py --design-system`. See [ui-ux-pro-max SKILL.md](../ui-ux-pro-max/SKILL.md).
 
 ---
 
@@ -130,8 +138,8 @@ python .agent/skills/frontend-design/scripts/generate_images.py "Your prompt" "o
 ```
 
 Models:
-- **gemini-2.5-flash-image**: Speed/bulk placeholders
-- **gemini-3-pro-image-preview**: Hero/marketing assets
+- **gemini-3-flash-preview**: Speed/bulk placeholders
+- **gemini-3-pro-preview**: Hero/marketing assets
 
 ### Generative Art (p5.js)
 

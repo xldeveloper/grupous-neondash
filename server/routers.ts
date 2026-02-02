@@ -7,7 +7,7 @@ import { interacoesRouter } from "./interacoesRouter";
 import { interactionTemplatesRouter } from "./interactionTemplatesRouter";
 import { leadsRouter } from "./leadsRouter";
 import { mentoradosRouter } from "./mentoradosRouter";
-import { moltbotRouter } from "./moltbotRouter";
+import { openclawRouter } from "./openclawRouter";
 import { authRouter } from "./routers/auth";
 import { calendarRouter } from "./routers/calendar";
 import { classesRouter } from "./routers/classes";
@@ -19,7 +19,7 @@ export const appRouter = router({
   auth: authRouter,
   mentorados: mentoradosRouter,
   gamificacao: gamificacaoRouter,
-  moltbot: moltbotRouter,
+  openclaw: openclawRouter,
   leads: leadsRouter,
   tasks: tasksRouter,
   classes: classesRouter,

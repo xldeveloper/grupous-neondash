@@ -1,5 +1,5 @@
 /**
- * useMoltbot - React hook for Moltbot chat functionality
+ * useOpenClaw - React hook for OpenClaw AI chat functionality
  *
  * Provides:
  * - Session management (create, terminate)
@@ -19,7 +19,7 @@ interface ChatMessage {
   createdAt: Date;
 }
 
-interface UseMoltbotReturn {
+interface UseOpenClawReturn {
   // Session
   sessionId: string | null;
   isActive: boolean;
@@ -37,7 +37,7 @@ interface UseMoltbotReturn {
   error: string | null;
 }
 
-export function useMoltbot(): UseMoltbotReturn {
+export function useOpenClaw(): UseOpenClawReturn {
   const { isAuthenticated, user } = useAuth();
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -47,20 +47,20 @@ export function useMoltbot(): UseMoltbotReturn {
   const wsRef = useRef<WebSocket | null>(null);
 
   // tRPC mutations and queries
-  const createSessionMutation = trpc.moltbot.createWebchatSession.useMutation();
-  const terminateSessionMutation = trpc.moltbot.terminateSession.useMutation();
-  const sendMessageMutation = trpc.moltbot.sendMessage.useMutation();
-  const statusQuery = trpc.moltbot.getStatus.useQuery(undefined, {
+  const createSessionMutation = trpc.openclaw.createWebchatSession.useMutation();
+  const terminateSessionMutation = trpc.openclaw.terminateSession.useMutation();
+  const sendMessageMutation = trpc.openclaw.sendMessage.useMutation();
+  const statusQuery = trpc.openclaw.getStatus.useQuery(undefined, {
     enabled: isAuthenticated,
   });
 
   // Get active sessions on mount
-  const activeSessionsQuery = trpc.moltbot.getActiveSessions.useQuery(undefined, {
+  const activeSessionsQuery = trpc.openclaw.getActiveSessions.useQuery(undefined, {
     enabled: isAuthenticated,
   });
 
   // Get message history when session changes
-  const historyQuery = trpc.moltbot.getMessageHistory.useQuery(
+  const historyQuery = trpc.openclaw.getMessageHistory.useQuery(
     { sessionId: sessionId ?? "", limit: 100 },
     { enabled: !!sessionId }
   );
@@ -96,7 +96,7 @@ export function useMoltbot(): UseMoltbotReturn {
     if (!sessionId || !isAuthenticated || !user?.id) return;
 
     const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
-    const wsUrl = `${protocol}//${window.location.host}/ws/moltbot?userId=${user.id}`;
+    const wsUrl = `${protocol}//${window.location.host}/ws/openclaw?userId=${user.id}`;
 
     const ws = new WebSocket(wsUrl);
     wsRef.current = ws;

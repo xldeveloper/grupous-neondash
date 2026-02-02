@@ -1,19 +1,19 @@
 /**
- * Moltbot Page - AI Assistant Chat Interface
+ * OpenClaw Page - AI Assistant Chat Interface
  *
  * Main page for interacting with the NEON AI Assistant.
  * Includes chat interface and optional sidebar with context.
  */
 
 import { Bot, Calendar, Target, TrendingUp } from "lucide-react";
-import { ChatInterface } from "@/components/moltbot/ChatInterface";
+import { ChatInterface } from "@/components/openclaw/ChatInterface";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { trpc } from "@/lib/trpc";
 
-export default function MoltbotPage() {
-  const contextQuery = trpc.moltbot.getMoltbotContext.useQuery();
+export default function OpenClawPage() {
+  const contextQuery = trpc.openclaw.getOpenClawContext.useQuery();
 
   // Get latest metrics (first item in the array)
   const latestMetrics = Array.isArray(contextQuery.data?.metrics)

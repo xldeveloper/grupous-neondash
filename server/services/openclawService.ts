@@ -1,5 +1,5 @@
 /**
- * MoltbotGatewayService - WebSocket communication with Moltbot Gateway
+ * OpenClawGatewayService - WebSocket communication with OpenClaw Gateway
  *
  * Handles:
  * - Persistent WebSocket connection to gateway (ws://127.0.0.1:18789)
@@ -13,7 +13,7 @@
 import { randomUUID } from "node:crypto";
 import { and, eq } from "drizzle-orm";
 import { type RawData, WebSocket } from "ws";
-import { moltbotMessages, moltbotSessions } from "../../drizzle/schema";
+import { openclawMessages, openclawSessions } from "../../drizzle/schema";
 import { getDb } from "../db";
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -58,7 +58,7 @@ interface QRCodePendingRequest {
 // SERVICE CLASS
 // ═══════════════════════════════════════════════════════════════════════════
 
-class MoltbotGatewayService {
+class OpenClawGatewayService {
   private gatewayWs: WebSocket | null = null;
 
   // Multi-session support: indexed by sessionId
@@ -81,7 +81,7 @@ class MoltbotGatewayService {
   private gatewayUrl: string;
 
   constructor() {
-    this.gatewayUrl = process.env.MOLTBOT_GATEWAY_URL || "ws://127.0.0.1:18789";
+    this.gatewayUrl = process.env.OPENCLAW_GATEWAY_URL || "ws://127.0.0.1:18789";
   }
 
   // ─────────────────────────────────────────────────────────────────────────
@@ -178,14 +178,14 @@ class MoltbotGatewayService {
 
     // Store in database
     const [_dbSession] = await db
-      .insert(moltbotSessions)
+      .insert(openclawSessions)
       .values({
         userId,
         channelType,
         sessionId,
         isActive: "sim",
       })
-      .returning({ id: moltbotSessions.id });
+      .returning({ id: openclawSessions.id });
 
     // Store in memory (indexed by sessionId)
     const context: SessionContext = {
@@ -218,9 +218,9 @@ class MoltbotGatewayService {
 
     // Update database
     await db
-      .update(moltbotSessions)
+      .update(openclawSessions)
       .set({ isActive: "nao", updatedAt: new Date() })
-      .where(eq(moltbotSessions.sessionId, sessionId));
+      .where(eq(openclawSessions.sessionId, sessionId));
 
     // Remove from memory
     const session = this.activeSessions.get(sessionId);
@@ -274,8 +274,8 @@ class MoltbotGatewayService {
     // Get session from database
     const [dbSession] = await db
       .select()
-      .from(moltbotSessions)
-      .where(eq(moltbotSessions.sessionId, sessionId))
+      .from(openclawSessions)
+      .where(eq(openclawSessions.sessionId, sessionId))
       .limit(1);
 
     if (!dbSession) {
@@ -284,13 +284,13 @@ class MoltbotGatewayService {
 
     // Save user message to database
     const [message] = await db
-      .insert(moltbotMessages)
+      .insert(openclawMessages)
       .values({
         sessionId: dbSession.id,
         role: "user",
         content,
       })
-      .returning({ id: moltbotMessages.id });
+      .returning({ id: openclawMessages.id });
 
     // Send to gateway
     this.sendToGateway({
@@ -302,9 +302,9 @@ class MoltbotGatewayService {
 
     // Update session activity
     await db
-      .update(moltbotSessions)
+      .update(openclawSessions)
       .set({ lastActivityAt: new Date(), updatedAt: new Date() })
-      .where(eq(moltbotSessions.id, dbSession.id));
+      .where(eq(openclawSessions.id, dbSession.id));
 
     return message.id;
   }
@@ -313,9 +313,9 @@ class MoltbotGatewayService {
     const db = getDb();
     return db
       .select()
-      .from(moltbotMessages)
-      .where(eq(moltbotMessages.sessionId, sessionDbId))
-      .orderBy(moltbotMessages.createdAt)
+      .from(openclawMessages)
+      .where(eq(openclawMessages.sessionId, sessionDbId))
+      .orderBy(openclawMessages.createdAt)
       .limit(limit);
   }
 
@@ -404,12 +404,12 @@ class MoltbotGatewayService {
 
     const sessions = await db
       .select()
-      .from(moltbotSessions)
+      .from(openclawSessions)
       .where(
         and(
-          eq(moltbotSessions.userId, userId),
-          eq(moltbotSessions.channelType, "whatsapp"),
-          eq(moltbotSessions.isActive, "sim")
+          eq(openclawSessions.userId, userId),
+          eq(openclawSessions.channelType, "whatsapp"),
+          eq(openclawSessions.isActive, "sim")
         )
       );
 
@@ -463,14 +463,14 @@ class MoltbotGatewayService {
     // Get session from database
     const [dbSession] = await db
       .select()
-      .from(moltbotSessions)
-      .where(eq(moltbotSessions.sessionId, message.sessionId))
+      .from(openclawSessions)
+      .where(eq(openclawSessions.sessionId, message.sessionId))
       .limit(1);
 
     if (!dbSession) return;
 
     // Save assistant message to database
-    await db.insert(moltbotMessages).values({
+    await db.insert(openclawMessages).values({
       sessionId: dbSession.id,
       role: "assistant",
       content: message.content,
@@ -545,9 +545,9 @@ class MoltbotGatewayService {
 
     // Update session in database
     await db
-      .update(moltbotSessions)
+      .update(openclawSessions)
       .set({ isActive: "sim", updatedAt: new Date() })
-      .where(eq(moltbotSessions.sessionId, message.sessionId));
+      .where(eq(openclawSessions.sessionId, message.sessionId));
 
     // Notify client
     const session = this.activeSessions.get(message.sessionId);
@@ -583,4 +583,4 @@ class MoltbotGatewayService {
 }
 
 // Singleton instance
-export const moltbotService = new MoltbotGatewayService();
+export const openclawService = new OpenClawGatewayService();

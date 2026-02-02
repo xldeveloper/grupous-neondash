@@ -1,5 +1,4 @@
 "use client";
-import { UserButton } from "@clerk/clerk-react";
 import { motion } from "framer-motion";
 import { Bot, Briefcase, Calendar, LayoutDashboard, Moon, Sun, UserCog, Users } from "lucide-react";
 import type React from "react";
@@ -7,6 +6,7 @@ import { useState } from "react";
 import { Link, Redirect, useLocation } from "wouter";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { useTheme } from "@/_core/hooks/useTheme";
+import { UserButton } from "@/components/auth/UserButton";
 import { Button } from "@/components/ui/button";
 import { Sidebar, SidebarBody, SidebarLink } from "@/components/ui/sidebar";
 import { trpc } from "@/lib/trpc";
@@ -130,7 +130,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             </div>
             <div className="flex items-center gap-2 p-2 rounded-md hover:bg-secondary transition-colors">
               <div className="h-7 w-7 flex-shrink-0 flex items-center justify-center">
-                <UserButton afterSignOutUrl="/" />
+                <UserButton />
               </div>
               {open && (
                 <motion.div

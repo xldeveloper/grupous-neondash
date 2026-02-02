@@ -7,7 +7,6 @@ import { AuthSync } from "./components/auth/AuthSync";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 // Eagerly loaded (landing + lightweight pages)
-// Eagerly loaded (landing + lightweight pages)
 import LandingPage from "./pages/LandingPage";
 import PrimeiroAcesso from "./pages/PrimeiroAcesso";
 
@@ -16,7 +15,7 @@ const Home = lazy(() => import("./pages/Home"));
 const MyDashboard = lazy(() => import("./pages/MyDashboard"));
 
 const GestaoMentorados = lazy(() => import("./pages/GestaoMentorados"));
-const MoltbotPage = lazy(() => import("./pages/MoltbotPage"));
+const OpenClawPage = lazy(() => import("./pages/OpenClawPage"));
 const LeadsPage = lazy(() =>
   import("./pages/crm/LeadsPage").then((module) => ({
     default: module.LeadsPage,
@@ -52,7 +51,7 @@ function Router() {
 
       <Route path="/admin/mentorados" component={GestaoMentorados} />
       <Route path="/primeiro-acesso" component={PrimeiroAcesso} />
-      <Route path="/assistente" component={MoltbotPage} />
+      <Route path="/assistente" component={OpenClawPage} />
       <Route path="/crm/leads" component={LeadsPage} />
       <Route path="/diagnostico" component={DiagnosticoPage} />
       <Route path="/agenda" component={AgendaPage} />

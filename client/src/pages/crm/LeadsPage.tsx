@@ -1,8 +1,8 @@
-import { useUser } from "@clerk/clerk-react";
 import { Filter as FilterIcon, LayoutGrid, List, Plus, ShieldAlert } from "lucide-react";
 import { motion } from "motion/react";
 import { useState } from "react";
 import { useSearch } from "wouter";
+import { useAuth } from "@/_core/hooks/useAuth";
 import { CreateLeadDialog } from "@/components/crm/CreateLeadDialog";
 import { FiltersPanel } from "@/components/crm/FiltersPanel";
 import { LeadDetailModal } from "@/components/crm/LeadDetailModal";
@@ -17,8 +17,8 @@ import { staggerContainer } from "@/lib/animation-variants";
 import { trpc } from "@/lib/trpc";
 
 export function LeadsPage() {
-  const { user } = useUser();
-  const isAdmin = user?.publicMetadata?.role === "admin";
+  const { user } = useAuth();
+  const isAdmin = user?.role === "admin";
 
   const search = useSearch();
   const searchParams = new URLSearchParams(search);

@@ -7,7 +7,7 @@ import { createExpressMiddleware } from "@trpc/server/adapters/express";
 import express from "express";
 import { type WebSocket, WebSocketServer } from "ws";
 import { appRouter } from "../routers";
-import { moltbotService } from "../services/moltbotService";
+import { openclawService } from "../services/openclawService";
 import { handleClerkWebhook } from "../webhooks/clerk";
 import { createContext } from "./context";
 import { userRateLimiter } from "./rateLimiter";
@@ -47,20 +47,20 @@ async function startServer() {
 
   // Handle WebSocket connections
   wss.on("connection", (ws: WebSocket, userId: number) => {
-    // Register with moltbot service
-    moltbotService.registerClientConnection(userId, ws);
+    // Register with openclaw service
+    openclawService.registerClientConnection(userId, ws);
 
     // Handle incoming messages
     ws.on("message", async (data) => {
       try {
         const message = JSON.parse(data.toString());
-        await moltbotService.handleClientMessage(userId, message);
+        await openclawService.handleClientMessage(userId, message);
       } catch (_error) {}
     });
 
     // Handle disconnection
     ws.on("close", () => {
-      moltbotService.unregisterClientConnection(userId);
+      openclawService.unregisterClientConnection(userId);
     });
 
     // Send connection confirmation
@@ -71,8 +71,8 @@ async function startServer() {
   server.on("upgrade", (request, socket, head) => {
     const url = new URL(request.url || "", `http://${request.headers.host}`);
 
-    // Only handle /ws/moltbot path
-    if (url.pathname !== "/ws/moltbot") {
+    // Only handle /ws/openclaw path
+    if (url.pathname !== "/ws/openclaw") {
       socket.destroy();
       return;
     }
@@ -165,7 +165,7 @@ async function startServer() {
   // ─────────────────────────────────────────────────────────────────────────
 
   try {
-    await moltbotService.connect();
+    await openclawService.connect();
   } catch (_error) {}
 
   // ─────────────────────────────────────────────────────────────────────────
@@ -185,8 +185,8 @@ async function startServer() {
   // ─────────────────────────────────────────────────────────────────────────
 
   const shutdown = async () => {
-    // Disconnect moltbot service
-    await moltbotService.disconnect();
+    // Disconnect openclaw service
+    await openclawService.disconnect();
 
     // Close WebSocket server
     wss.close();

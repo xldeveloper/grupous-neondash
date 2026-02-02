@@ -1,14 +1,14 @@
-import { useAuth } from "@clerk/clerk-react";
 import { Redirect } from "wouter";
+import { useAuth } from "@/_core/hooks/useAuth";
 
 export function ProtectedRoute({ children }: { children: React.ReactNode }) {
-  const { isLoaded, isSignedIn } = useAuth();
+  const { loading, isAuthenticated } = useAuth();
 
-  if (!isLoaded) {
+  if (loading) {
     return <div>Carregando...</div>;
   }
 
-  if (!isSignedIn) {
+  if (!isAuthenticated) {
     return <Redirect to="/" />;
   }
 
