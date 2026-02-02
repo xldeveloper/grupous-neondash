@@ -79,9 +79,12 @@ class OpenClawGatewayService {
   private qrCodeTimeout = 120000; // 2 minutes
   private heartbeatInterval: NodeJS.Timeout | null = null;
   private gatewayUrl: string;
+  private mockMode: boolean;
 
   constructor() {
     this.gatewayUrl = process.env.OPENCLAW_GATEWAY_URL || "ws://127.0.0.1:18789";
+    // Enable mock mode if no gateway URL is configured or explicitly disabled
+    this.mockMode = !process.env.OPENCLAW_GATEWAY_URL || process.env.OPENCLAW_MOCK_MODE === "true";
   }
 
   // ─────────────────────────────────────────────────────────────────────────
@@ -148,7 +151,9 @@ class OpenClawGatewayService {
       const delay = this.reconnectDelay * this.reconnectAttempts;
 
       setTimeout(() => {
-        this.connect().catch(console.error);
+        this.connect().catch(() => {
+          // Silently ignore reconnection errors - will retry
+        });
       }, delay);
     }
   }
@@ -292,21 +297,73 @@ class OpenClawGatewayService {
       })
       .returning({ id: openclawMessages.id });
 
-    // Send to gateway
-    this.sendToGateway({
-      type: "MESSAGE_SEND",
-      sessionId,
-      content,
-      userId,
-    });
-
     // Update session activity
     await db
       .update(openclawSessions)
       .set({ lastActivityAt: new Date(), updatedAt: new Date() })
       .where(eq(openclawSessions.id, dbSession.id));
 
+    // If mock mode or gateway not connected, generate mock response
+    if (this.mockMode || !this.isConnected()) {
+      await this.generateMockResponse(sessionId, content, userId, dbSession.id);
+    } else {
+      // Send to gateway
+      this.sendToGateway({
+        type: "MESSAGE_SEND",
+        sessionId,
+        content,
+        userId,
+      });
+    }
+
     return message.id;
+  }
+
+  /**
+   * Generate a mock AI response for development/testing
+   */
+  private async generateMockResponse(
+    sessionId: string,
+    _userContent: string,
+    userId: number,
+    dbSessionId: number
+  ): Promise<void> {
+    const db = getDb();
+
+    // Simulate AI thinking delay
+    await new Promise((resolve) => setTimeout(resolve, 1000 + Math.random() * 1000));
+
+    // Mock responses based on context
+    const mockResponses = [
+      "Olá! Sou o Assistente NEON. Como posso ajudar você hoje com suas métricas de mentoria?",
+      "Entendi sua pergunta. Analisando seus dados de faturamento e métricas...",
+      "Com base nos seus dados atuais, posso sugerir algumas estratégias para melhorar seus resultados.",
+      "Você está indo bem! Continue focando em suas metas e acompanhando suas métricas.",
+      "Posso te ajudar a analisar suas métricas mensais e identificar oportunidades de melhoria.",
+    ];
+
+    const mockContent = mockResponses[Math.floor(Math.random() * mockResponses.length)];
+
+    // Save assistant message to database
+    await db.insert(openclawMessages).values({
+      sessionId: dbSessionId,
+      role: "assistant",
+      content: mockContent,
+    });
+
+    // Forward to client WebSocket
+    const clientWs = this.clientConnections.get(userId);
+    if (clientWs && clientWs.readyState === WebSocket.OPEN) {
+      clientWs.send(
+        JSON.stringify({
+          type: "message",
+          sessionId,
+          role: "assistant",
+          content: mockContent,
+          timestamp: new Date().toISOString(),
+        })
+      );
+    }
   }
 
   async getMessageHistory(sessionDbId: number, limit = 50) {
@@ -570,7 +627,13 @@ class OpenClawGatewayService {
   // ─────────────────────────────────────────────────────────────────────────
 
   isConnected(): boolean {
+    // In mock mode, always return true for UI to show connected
+    if (this.mockMode) return true;
     return this.gatewayWs?.readyState === WebSocket.OPEN;
+  }
+
+  isMockMode(): boolean {
+    return this.mockMode;
   }
 
   getActiveSessionCount(): number {

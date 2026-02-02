@@ -71,9 +71,9 @@ async function startServer() {
   server.on("upgrade", (request, socket, head) => {
     const url = new URL(request.url || "", `http://${request.headers.host}`);
 
-    // Only handle /ws/openclaw path
+    // Only handle /ws/openclaw path - let other paths (like Vite HMR) pass through
     if (url.pathname !== "/ws/openclaw") {
-      socket.destroy();
+      // Don't destroy - let other handlers (like Vite HMR) handle this
       return;
     }
 
