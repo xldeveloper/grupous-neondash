@@ -140,6 +140,16 @@ export const leadsRouter = router({
         empresa: z.string().optional(),
         origem: z.enum(["instagram", "whatsapp", "google", "indicacao", "site", "outro"]),
         valorEstimado: z.number().optional(),
+        // Novos campos
+        indicadoPor: z.string().optional(),
+        profissao: z.string().optional(),
+        produtoInteresse: z.string().optional(),
+        possuiClinica: z.enum(["sim", "nao"]).optional(),
+        anosEstetica: z.number().optional(),
+        faturamentoMensal: z.string().optional(),
+        dorPrincipal: z.string().optional(),
+        desejoPrincipal: z.string().optional(),
+        temperatura: z.enum(["frio", "morno", "quente"]).optional(),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -156,6 +166,16 @@ export const leadsRouter = router({
           origem: input.origem,
           valorEstimado: input.valorEstimado,
           status: "novo",
+          // Novos campos
+          indicadoPor: input.indicadoPor,
+          profissao: input.profissao,
+          produtoInteresse: input.produtoInteresse,
+          possuiClinica: input.possuiClinica,
+          anosEstetica: input.anosEstetica,
+          faturamentoMensal: input.faturamentoMensal,
+          dorPrincipal: input.dorPrincipal,
+          desejoPrincipal: input.desejoPrincipal,
+          temperatura: input.temperatura,
         })
         .returning({ id: leads.id });
 
@@ -172,6 +192,16 @@ export const leadsRouter = router({
         empresa: z.string().optional(),
         valorEstimado: z.number().optional(),
         tags: z.array(z.string()).optional(),
+        // Novos campos
+        indicadoPor: z.string().optional(),
+        profissao: z.string().optional(),
+        produtoInteresse: z.string().optional(),
+        possuiClinica: z.enum(["sim", "nao"]).optional(),
+        anosEstetica: z.number().optional(),
+        faturamentoMensal: z.string().optional(),
+        dorPrincipal: z.string().optional(),
+        desejoPrincipal: z.string().optional(),
+        temperatura: z.enum(["frio", "morno", "quente"]).optional(),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -202,6 +232,16 @@ export const leadsRouter = router({
           empresa: input.empresa,
           valorEstimado: input.valorEstimado,
           tags: input.tags,
+          // Novos campos
+          indicadoPor: input.indicadoPor,
+          profissao: input.profissao,
+          produtoInteresse: input.produtoInteresse,
+          possuiClinica: input.possuiClinica,
+          anosEstetica: input.anosEstetica,
+          faturamentoMensal: input.faturamentoMensal,
+          dorPrincipal: input.dorPrincipal,
+          desejoPrincipal: input.desejoPrincipal,
+          temperatura: input.temperatura,
           updatedAt: new Date(),
         })
         .where(eq(leads.id, input.id));

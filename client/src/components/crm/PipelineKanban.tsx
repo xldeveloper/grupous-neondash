@@ -6,7 +6,7 @@ import {
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
-import { CheckSquare, ListFilter, Plus, Trash2 } from "lucide-react";
+import { Trash2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import {
@@ -23,7 +23,8 @@ import { LeadCard } from "./LeadCard";
 import { LeadDetailModal } from "./LeadDetailModal";
 
 // Definindo as colunas do Kanban com IDs alinhados ao banco (enum status_lead)
-const COLUMNS = [
+// Definindo as colunas do Kanban com IDs alinhados ao banco (enum status_lead)
+export const DEFAULT_COLUMNS = [
   {
     id: "novo",
     title: "Novo",
@@ -66,12 +67,14 @@ export interface PipelineKanbanProps {
   mentoradoId?: number;
   isReadOnly?: boolean;
   onCreateLead?: () => void;
+  columns?: typeof DEFAULT_COLUMNS;
 }
 
 export function PipelineKanban({
   mentoradoId,
   isReadOnly = false,
   onCreateLead,
+  columns = DEFAULT_COLUMNS,
 }: PipelineKanbanProps) {
   const [activeId, setActiveId] = useState<string | null>(null);
   const [selectedLeadId, setSelectedLeadId] = useState<number | null>(null);
@@ -133,7 +136,7 @@ export function PipelineKanban({
 
     const leadId = parseInt(activeId.toString().replace("lead-", ""), 10);
     // Se soltou sobre uma coluna
-    const newStatus = COLUMNS.find((col) => col.id === overId)?.id;
+    const newStatus = columns.find((col) => col.id === overId)?.id;
 
     if (newStatus) {
       updateStatusMutation.mutate({
@@ -197,7 +200,7 @@ export function PipelineKanban({
       >
         <div className="flex-1 overflow-x-auto pb-4">
           <div className="flex gap-4 min-w-[1200px] h-full">
-            {COLUMNS.map((column) => (
+            {columns.map((column) => (
               <KanbanColumn
                 key={column.id}
                 id={column.id}
@@ -241,7 +244,7 @@ export function PipelineKanban({
                 <SelectValue placeholder="Mover para..." />
               </SelectTrigger>
               <SelectContent>
-                {COLUMNS.map((col) => (
+                {columns.map((col) => (
                   <SelectItem key={col.id} value={col.id}>
                     {col.title}
                   </SelectItem>

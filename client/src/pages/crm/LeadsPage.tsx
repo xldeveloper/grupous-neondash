@@ -1,13 +1,14 @@
-import { Filter as FilterIcon, LayoutGrid, List, Plus, ShieldAlert } from "lucide-react";
+import { Filter as FilterIcon, LayoutGrid, List, Settings, ShieldAlert } from "lucide-react";
 import { motion } from "motion/react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useSearch } from "wouter";
 import { useAuth } from "@/_core/hooks/useAuth";
+import { ColumnEditDialog } from "@/components/crm/ColumnEditDialog";
 import { CreateLeadDialog } from "@/components/crm/CreateLeadDialog";
 import { FiltersPanel } from "@/components/crm/FiltersPanel";
 import { LeadDetailModal } from "@/components/crm/LeadDetailModal";
 import { LeadsTable } from "@/components/crm/LeadsTable";
-import { PipelineKanban } from "@/components/crm/PipelineKanban";
+import { DEFAULT_COLUMNS, PipelineKanban } from "@/components/crm/PipelineKanban";
 import DashboardLayout from "@/components/DashboardLayout";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AnimatedTooltipSelector } from "@/components/ui/animated-tooltip";
@@ -38,6 +39,8 @@ export function LeadsPage() {
     ? parseInt(adminSelectedMentoradoId, 10)
     : undefined;
 
+  const isReadOnly = !!viewMentoradoId;
+
   const handleAdminSelect = (id: string) => {
     setAdminSelectedMentoradoId(id);
     // Optional: update URL sync logic here if needed
@@ -67,11 +70,33 @@ export function LeadsPage() {
     { staleTime: 30000 }
   );
 
+  // 3. Columns Logic
+  const { data: storedColumns } = trpc.crmColumns.list.useQuery(undefined, {
+    enabled: !isReadOnly, // Only load user's custom columns when not in readonly mode (for now)
+  });
+
+  const activeColumns = useMemo(() => {
+    if (!storedColumns || storedColumns.length === 0) return DEFAULT_COLUMNS;
+
+    // storedColumns are sorted by order from backend
+    return storedColumns
+      .filter((c) => c.visible === "sim")
+      .map((c) => {
+        const def = DEFAULT_COLUMNS.find((d) => d.id === c.originalId);
+        return {
+          id: c.originalId,
+          title: c.label,
+          color: c.color,
+          border: def?.border || "border-border/20",
+        };
+      });
+  }, [storedColumns]);
+
+  const [columnEditDialogOpen, setColumnEditDialogOpen] = useState(false);
+
   const handleLeadClick = (leadId: number) => {
     setSelectedLeadId(leadId);
   };
-
-  const isReadOnly = !!viewMentoradoId;
 
   return (
     <DashboardLayout>
@@ -124,6 +149,15 @@ export function LeadsPage() {
                 className={filtersOpen ? "bg-muted" : ""}
               >
                 <FilterIcon className="h-4 w-4" />
+              </Button>
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={() => setColumnEditDialogOpen(true)}
+                disabled={isReadOnly}
+                title="Editar Colunas"
+              >
+                <Settings className="h-4 w-4" />
               </Button>
               <div className="bg-muted p-1 rounded-lg flex items-center">
                 <Button
@@ -215,6 +249,7 @@ export function LeadsPage() {
                   mentoradoId={viewMentoradoId}
                   isReadOnly={isReadOnly}
                   onCreateLead={() => setCreateDialogOpen(true)}
+                  columns={activeColumns}
                 />
               </div>
             )}
@@ -235,6 +270,12 @@ export function LeadsPage() {
           isOpen={!!selectedLeadId}
           onClose={() => setSelectedLeadId(null)}
           isReadOnly={isReadOnly}
+        />
+
+        <ColumnEditDialog
+          isOpen={columnEditDialogOpen}
+          onClose={() => setColumnEditDialogOpen(false)}
+          defaultColumns={DEFAULT_COLUMNS}
         />
       </motion.div>
     </DashboardLayout>

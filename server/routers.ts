@@ -1,6 +1,7 @@
 import { systemRouter } from "./_core/systemRouter";
 import { router } from "./_core/trpc";
 import { atividadesRouter } from "./atividadesRouter";
+import { crmColumnsRouter } from "./crmColumnsRouter";
 import { diagnosticoRouter } from "./diagnostico";
 import { gamificacaoRouter } from "./gamificacaoRouter";
 import { interacoesRouter } from "./interacoesRouter";
@@ -29,6 +30,7 @@ export const appRouter = router({
   diagnostico: diagnosticoRouter,
   interacoes: interacoesRouter,
   calendar: calendarRouter,
+  crmColumns: crmColumnsRouter,
 });
 
 export type AppRouter = typeof appRouter;

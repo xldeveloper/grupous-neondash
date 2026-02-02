@@ -8,12 +8,32 @@ import { MeetingHistory } from "./MeetingHistory";
 import { MentorNotes } from "./MentorNotes";
 import { MilestoneTimeline } from "./MilestoneTimeline";
 
-export function MenteeOverview() {
-  // Single optimized query that fetches everything
-  const { data: stats, isLoading } = trpc.mentorados.getOverviewStats.useQuery();
-  const { data: mentorado } = trpc.mentorados.me.useQuery();
+interface MenteeOverviewProps {
+  mentoradoId?: number;
+}
 
-  if (isLoading || !mentorado || !stats) {
+export function MenteeOverview({ mentoradoId }: MenteeOverviewProps) {
+  // Determine if viewing another mentorado (admin mode)
+  const isViewingOther = mentoradoId !== undefined;
+
+  // Fetch stats - pass mentoradoId only if viewing another user
+  const { data: stats, isLoading: isLoadingStats } = trpc.mentorados.getOverviewStats.useQuery(
+    isViewingOther ? { mentoradoId } : undefined
+  );
+
+  // Fetch mentorado info - use getById for admin view, me for self view
+  const { data: mentoradoMe } = trpc.mentorados.me.useQuery(undefined, {
+    enabled: !isViewingOther,
+  });
+  const { data: mentoradoById } = trpc.mentorados.getById.useQuery(
+    { id: mentoradoId! },
+    { enabled: isViewingOther }
+  );
+
+  const mentorado = isViewingOther ? mentoradoById : mentoradoMe;
+  const isLoading = isLoadingStats || !mentorado;
+
+  if (isLoading || !stats) {
     return <OverviewSkeleton />;
   }
 

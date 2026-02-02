@@ -429,6 +429,7 @@ export const leads = pgTable(
 export type Lead = typeof leads.$inferSelect;
 export type InsertLead = typeof leads.$inferInsert;
 
+
 /**
  * Interacoes - CRM Interactions
  */
@@ -437,7 +438,6 @@ export const interacoes = pgTable(
   {
     id: serial("id").primaryKey(),
     leadId: integer("lead_id")
-
       .references(() => leads.id, { onDelete: "cascade" }),
     mentoradoId: integer("mentorado_id")
       .notNull()
@@ -457,6 +457,34 @@ export const interacoes = pgTable(
 
 export type Interacao = typeof interacoes.$inferSelect;
 export type InsertInteracao = typeof interacoes.$inferInsert;
+
+/**
+ * CRM Column Config - Custom Kanban columns
+ */
+export const crmColumnConfig = pgTable(
+  "crm_column_config",
+  {
+    id: serial("id").primaryKey(),
+    mentoradoId: integer("mentorado_id")
+      .notNull()
+      .references(() => mentorados.id, { onDelete: "cascade" }),
+    originalId: varchar("original_id", { length: 50 }).notNull(), // 'novo', 'qualificado', etc
+    label: varchar("label", { length: 100 }).notNull(), // Custom display name
+    color: varchar("color", { length: 20 }).notNull(),   // e.g. "bg-blue-500"
+    visible: simNaoEnum("visible").default("sim").notNull(),
+    order: integer("order").notNull().default(0),
+    updatedAt: timestamp("updated_at").defaultNow().notNull(),
+  },
+  (table) => [
+    index("crm_col_config_mentorado_idx").on(table.mentoradoId),
+    uniqueIndex("crm_col_config_unique_idx").on(table.mentoradoId, table.originalId),
+    index("crm_col_config_order_idx").on(table.mentoradoId, table.order),
+  ]
+);
+
+export type CrmColumnConfig = typeof crmColumnConfig.$inferSelect;
+export type InsertCrmColumnConfig = typeof crmColumnConfig.$inferInsert;
+
 
 /**
  * Tasks - Mentorado specific tasks/checklist

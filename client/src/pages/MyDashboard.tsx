@@ -2,11 +2,9 @@ import { AlertCircle } from "lucide-react";
 import { useState } from "react";
 import DashboardLayout from "@/components/DashboardLayout";
 import { AtividadesContent } from "@/components/dashboard/AtividadesContent";
-import { ComparativoView } from "@/components/dashboard/ComparativoView";
 import { DiagnosticoForm } from "@/components/dashboard/DiagnosticoForm";
 import { EvolucaoView } from "@/components/dashboard/EvolucaoView";
 import { MenteeOverview } from "@/components/dashboard/MenteeOverview";
-import { PlaybookView } from "@/components/dashboard/PlaybookView";
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { FloatingDock } from "@/components/ui/floating-dock";
@@ -159,31 +157,12 @@ export default function MyDashboard() {
               <NeonTabsTrigger value="visao-geral">Visão Geral</NeonTabsTrigger>
               <NeonTabsTrigger value="diagnostico">Diagnóstico</NeonTabsTrigger>
               <NeonTabsTrigger value="evolucao">Evolução</NeonTabsTrigger>
-              <NeonTabsTrigger value="comparativo">Comparativo</NeonTabsTrigger>
-
-              <NeonTabsTrigger value="jornada">Playbook</NeonTabsTrigger>
               <NeonTabsTrigger value="atividades">Atividades</NeonTabsTrigger>
             </NeonTabsList>
           </div>
 
           <NeonTabsContent value="visao-geral" className="space-y-6">
-            <MenteeOverview />
-          </NeonTabsContent>
-
-          <NeonTabsContent value="evolucao">
-            <div className="grid grid-cols-1">
-              <NeonCard className="p-6 bg-white/95 dark:bg-black/40 border-white/5">
-                <EvolucaoView mentoradoId={targetMentoradoId} />
-              </NeonCard>
-            </div>
-          </NeonTabsContent>
-
-          <NeonTabsContent value="comparativo">
-            <div className="grid grid-cols-1">
-              <NeonCard className="p-6 bg-white/95 dark:bg-black/40 border-white/5">
-                <ComparativoView />
-              </NeonCard>
-            </div>
+            <MenteeOverview mentoradoId={targetMentoradoId} />
           </NeonTabsContent>
 
           <NeonTabsContent value="diagnostico">
@@ -192,10 +171,10 @@ export default function MyDashboard() {
             </div>
           </NeonTabsContent>
 
-          <NeonTabsContent value="jornada">
+          <NeonTabsContent value="evolucao">
             <div className="grid grid-cols-1">
-              <NeonCard className="p-6 bg-black/40 border-white/5">
-                <PlaybookView turma={currentMentorado?.turma} />
+              <NeonCard className="p-6 bg-white/95 dark:bg-black/40 border-white/5">
+                <EvolucaoView mentoradoId={targetMentoradoId} />
               </NeonCard>
             </div>
           </NeonTabsContent>

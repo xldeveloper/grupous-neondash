@@ -354,94 +354,118 @@ export const mentoradosRouter = router({
   /**
    * Get Overview Stats for Dashboard Redesign (Optimized)
    * Fetches all data in parallel for better performance
+   * Admins can pass mentoradoId to view any mentorado's stats
    */
-  getOverviewStats: mentoradoProcedure.query(async ({ ctx }) => {
-    const db = getDb();
-    const mentoradoId = ctx.mentorado.id;
+  getOverviewStats: protectedProcedure
+    .input(z.object({ mentoradoId: z.number().optional() }).optional())
+    .query(async ({ ctx, input }) => {
+      const db = getDb();
 
-    // Parallel fetching for performance
-    const [metrics, diagnostico, meetings, notes] = await Promise.all([
-      // 1. Fetch Last 12 months metrics
-      db
-        .select()
-        .from(metricasMensais)
-        .where(eq(metricasMensais.mentoradoId, mentoradoId))
-        .orderBy(desc(metricasMensais.ano), desc(metricasMensais.mes))
-        .limit(12),
+      // Determine target mentorado ID
+      let mentoradoId: number;
 
-      // 2. Get Specialty from Diagnosticos
-      db
-        .select({ specialty: diagnosticos.atuacaoSaude })
-        .from(diagnosticos)
-        .where(eq(diagnosticos.mentoradoId, mentoradoId))
-        .limit(1)
-        .then((res) => res[0]),
+      if (input?.mentoradoId) {
+        // Admin requesting specific mentorado
+        if (ctx.user?.role !== "admin") {
+          throw new TRPCError({
+            code: "FORBIDDEN",
+            message: "Apenas administradores podem acessar dados de outros mentorados",
+          });
+        }
+        mentoradoId = input.mentoradoId;
+      } else if (ctx.mentorado) {
+        // Regular user viewing their own stats
+        mentoradoId = ctx.mentorado.id;
+      } else {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Perfil de mentorado não encontrado",
+        });
+      }
 
-      // 3. Get recent meetings
-      db
-        .select({
-          id: interacoes.id,
-          createdAt: interacoes.createdAt,
-          duracao: interacoes.duracao,
-          notas: interacoes.notas,
-        })
-        .from(interacoes)
-        .where(and(eq(interacoes.mentoradoId, mentoradoId), eq(interacoes.tipo, "reuniao")))
-        .orderBy(desc(interacoes.createdAt))
-        .limit(5),
+      // Parallel fetching for performance
+      const [metrics, diagnostico, meetings, notes] = await Promise.all([
+        // 1. Fetch Last 12 months metrics
+        db
+          .select()
+          .from(metricasMensais)
+          .where(eq(metricasMensais.mentoradoId, mentoradoId))
+          .orderBy(desc(metricasMensais.ano), desc(metricasMensais.mes))
+          .limit(12),
 
-      // 4. Get recent notes
-      db
-        .select({
-          id: interacoes.id,
-          createdAt: interacoes.createdAt,
-          notas: interacoes.notas,
-        })
-        .from(interacoes)
-        .where(
-          and(
-            eq(interacoes.mentoradoId, mentoradoId),
-            eq(interacoes.tipo, "nota"),
-            isNull(interacoes.leadId)
+        // 2. Get Specialty from Diagnosticos
+        db
+          .select({ specialty: diagnosticos.atuacaoSaude })
+          .from(diagnosticos)
+          .where(eq(diagnosticos.mentoradoId, mentoradoId))
+          .limit(1)
+          .then((res) => res[0]),
+
+        // 3. Get recent meetings
+        db
+          .select({
+            id: interacoes.id,
+            createdAt: interacoes.createdAt,
+            duracao: interacoes.duracao,
+            notas: interacoes.notas,
+          })
+          .from(interacoes)
+          .where(and(eq(interacoes.mentoradoId, mentoradoId), eq(interacoes.tipo, "reuniao")))
+          .orderBy(desc(interacoes.createdAt))
+          .limit(5),
+
+        // 4. Get recent notes
+        db
+          .select({
+            id: interacoes.id,
+            createdAt: interacoes.createdAt,
+            notas: interacoes.notas,
+          })
+          .from(interacoes)
+          .where(
+            and(
+              eq(interacoes.mentoradoId, mentoradoId),
+              eq(interacoes.tipo, "nota"),
+              isNull(interacoes.leadId)
+            )
           )
-        )
-        .orderBy(desc(interacoes.createdAt))
-        .limit(5),
-    ]);
+          .orderBy(desc(interacoes.createdAt))
+          .limit(5),
+      ]);
 
-    // Calculate Financials
-    const chartData = [...metrics].sort((a, b) => {
-      if (a.ano !== b.ano) return a.ano - b.ano;
-      return a.mes - b.mes;
-    });
+      // Calculate Financials
+      const chartData = [...metrics].sort((a, b) => {
+        if (a.ano !== b.ano) return a.ano - b.ano;
+        return a.mes - b.mes;
+      });
 
-    const totalRevenue = metrics.reduce((acc, m) => acc + m.faturamento, 0);
-    const totalProfit = metrics.reduce((acc, m) => acc + m.lucro, 0);
-    const averageRevenue = metrics.length > 0 ? totalRevenue / metrics.length : 0;
+      const totalRevenue = metrics.reduce((acc, m) => acc + m.faturamento, 0);
+      const totalProfit = metrics.reduce((acc, m) => acc + m.lucro, 0);
+      const averageRevenue = metrics.length > 0 ? totalRevenue / metrics.length : 0;
 
-    // Calculate growth (compare latest month vs first month in data)
-    let growthPercent = 0;
-    if (chartData.length >= 2) {
-      const first = chartData[0].faturamento || 1;
-      const last = chartData[chartData.length - 1].faturamento;
-      growthPercent = Math.round(((last - first) / first) * 100);
-    }
+      // Calculate growth (compare latest month vs first month in data)
+      let growthPercent = 0;
+      if (chartData.length >= 2) {
+        const first = chartData[0].faturamento || 1;
+        const last = chartData[chartData.length - 1].faturamento;
+        growthPercent = Math.round(((last - first) / first) * 100);
+      }
 
-    return {
-      financials: {
-        totalRevenue,
-        totalProfit,
-        averageRevenue,
-        growthPercent,
-        chartData,
-      },
-      profile: {
-        specialty: diagnostico?.specialty || "N/A",
-      },
-      meetings,
-      notes,
-    };
-  }),
+      return {
+        financials: {
+          totalRevenue,
+          totalProfit,
+          averageRevenue,
+          growthPercent,
+          chartData,
+        },
+        profile: {
+          specialty: diagnostico?.specialty || "N/A",
+        },
+        meetings,
+        notes,
+      };
+    }),
 
   // Link email to mentorado (admin only)
   linkEmail: adminProcedure
