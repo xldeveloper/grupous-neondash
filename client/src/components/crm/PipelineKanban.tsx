@@ -9,6 +9,7 @@ import {
 import { Trash2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { EventFormDialog } from "@/components/agenda/EventFormDialog";
 import {
   Select,
   SelectContent,
@@ -81,6 +82,7 @@ export function PipelineKanban({
   const [isDetailOpen, setIsDetailOpen] = useState(false);
   const [isSelectMode, setIsSelectMode] = useState(false);
   const [selectedLeads, setSelectedLeads] = useState<number[]>([]);
+  const [scheduleDialogOpen, setScheduleDialogOpen] = useState(false);
 
   const utils = trpc.useUtils();
   const { data: leadsData, isLoading } = trpc.leads.list.useQuery({
@@ -176,6 +178,10 @@ export function PipelineKanban({
     }
   };
 
+  const handleScheduleLead = (_lead: { id: number; nome: string }) => {
+    setScheduleDialogOpen(true);
+  };
+
   if (isLoading) {
     return (
       <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4 h-[calc(100vh-12rem)]">
@@ -214,6 +220,7 @@ export function PipelineKanban({
                 onToggleSelect={toggleSelectLead}
                 showAddButton={column.id === "novo" && !isReadOnly}
                 onAddLead={onCreateLead}
+                onSchedule={handleScheduleLead}
               />
             ))}
           </div>
@@ -269,8 +276,22 @@ export function PipelineKanban({
           isOpen={isDetailOpen}
           onClose={() => setIsDetailOpen(false)}
           leadId={selectedLeadId}
+          onSchedule={() => {
+            setScheduleDialogOpen(true);
+          }}
         />
       )}
+
+      {/* Schedule Appointment Dialog */}
+      <EventFormDialog
+        open={scheduleDialogOpen}
+        onOpenChange={setScheduleDialogOpen}
+        defaultDate={{
+          start: new Date(),
+          end: new Date(Date.now() + 60 * 60 * 1000),
+        }}
+        onSuccess={() => setScheduleDialogOpen(false)}
+      />
     </div>
   );
 }

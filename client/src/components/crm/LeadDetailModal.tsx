@@ -2,6 +2,7 @@ import { format } from "date-fns";
 import {
   AlertTriangle,
   Calendar,
+  CalendarPlus,
   Clock,
   Edit2,
   FileText,
@@ -50,6 +51,7 @@ interface LeadDetailModalProps {
   isOpen: boolean;
   onClose: () => void;
   isReadOnly?: boolean;
+  onSchedule?: (leadName: string) => void;
 }
 
 export function LeadDetailModal({
@@ -57,6 +59,7 @@ export function LeadDetailModal({
   isOpen,
   onClose,
   isReadOnly = false,
+  onSchedule,
 }: LeadDetailModalProps) {
   const [interactionDialogOpen, setInteractionDialogOpen] = useState(false);
   const [interactionType, setInteractionType] = useState<any>("nota");
@@ -345,6 +348,17 @@ export function LeadDetailModal({
                     >
                       <Mail className="h-3.5 w-3.5" /> Email
                     </Button>
+                    {/* Schedule Appointment Button */}
+                    {onSchedule && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="h-8 gap-2 border-primary/30 bg-primary/5 text-primary hover:bg-primary/10"
+                        onClick={() => onSchedule(data?.lead?.nome || "Procedimento")}
+                      >
+                        <CalendarPlus className="h-3.5 w-3.5" /> Agendar
+                      </Button>
+                    )}
                     <Button
                       variant="default"
                       size="sm"

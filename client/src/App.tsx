@@ -1,5 +1,5 @@
 import { lazy, Suspense } from "react";
-import { Route, Switch } from "wouter";
+import { Redirect, Route, Switch } from "wouter";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/NotFound";
@@ -11,7 +11,6 @@ import LandingPage from "./pages/LandingPage";
 import PrimeiroAcesso from "./pages/PrimeiroAcesso";
 
 // Lazy loaded (heavy pages with charts/complex UI)
-const Home = lazy(() => import("./pages/Home"));
 const MyDashboard = lazy(() => import("./pages/MyDashboard"));
 
 const GestaoMentorados = lazy(() => import("./pages/GestaoMentorados"));
@@ -46,7 +45,9 @@ function Router() {
       <Route path="/comece-aqui" component={MentorshipStart} />
 
       {/* Dashboard Routes (protected by DashboardLayout) */}
-      <Route path="/dashboard" component={Home} />
+      <Route path="/dashboard">
+        <Redirect to="/admin/mentorados" />
+      </Route>
       <Route path="/meu-dashboard" component={MyDashboard} />
 
       <Route path="/admin/mentorados" component={GestaoMentorados} />

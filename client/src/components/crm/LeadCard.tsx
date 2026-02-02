@@ -1,6 +1,6 @@
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { MessageCircle, Phone } from "lucide-react";
+import { CalendarPlus, MessageCircle, Phone } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -23,6 +23,7 @@ interface LeadCardProps {
   isSelected?: boolean;
   onToggleSelect?: () => void;
   isSelectMode?: boolean;
+  onSchedule?: (lead: Lead) => void;
 }
 
 export function LeadCard({
@@ -31,6 +32,7 @@ export function LeadCard({
   isSelected,
   onToggleSelect,
   isSelectMode,
+  onSchedule,
 }: LeadCardProps) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: `lead-${lead.id}`,
@@ -141,6 +143,21 @@ export function LeadCard({
         </span>
 
         <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+          {/* Schedule Appointment Button */}
+          {onSchedule && (
+            <Button
+              size="icon"
+              variant="ghost"
+              className="h-7 w-7 text-primary hover:text-primary/80 hover:bg-primary/10"
+              onClick={(e) => {
+                e.stopPropagation();
+                onSchedule(lead);
+              }}
+              title="Agendar Procedimento"
+            >
+              <CalendarPlus className="h-3.5 w-3.5" />
+            </Button>
+          )}
           <Button
             size="icon"
             variant="ghost"

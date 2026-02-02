@@ -4,7 +4,6 @@ import {
   BarChart3,
   BriefcaseBusiness,
   CalendarRange,
-  LayoutTemplate,
   Moon,
   Sparkles,
   Sun,
@@ -54,13 +53,12 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   }
 
   const navItems = [
-    { href: "/dashboard", label: "Visão Geral", icon: LayoutTemplate, adminOnly: true },
     { href: "/meu-dashboard", label: "Meu Dashboard", icon: BarChart3 },
     { href: "/agenda", label: "Agenda", icon: CalendarRange },
     { href: "/crm/leads", label: "CRM Leads", icon: BriefcaseBusiness },
     {
       href: "/admin/mentorados",
-      label: "Área Administrativa",
+      label: "Painel Administrativo",
       icon: UsersRound,
       adminOnly: true,
     },
@@ -69,7 +67,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   // Logic to prevent non-admins from accessing admin routes
   const currentPath = location;
-  const restrictedRoutes = ["/dashboard", "/assistente", "/admin"];
+  const restrictedRoutes = ["/assistente", "/admin"];
   const isRestricted = restrictedRoutes.some((route) => currentPath.startsWith(route));
 
   if (user && user.role !== "admin" && isRestricted) {

@@ -3,6 +3,7 @@ import { motion } from "motion/react";
 import { useMemo, useState } from "react";
 import { useSearch } from "wouter";
 import { useAuth } from "@/_core/hooks/useAuth";
+import { EventFormDialog } from "@/components/agenda/EventFormDialog";
 import { ColumnEditDialog } from "@/components/crm/ColumnEditDialog";
 import { CreateLeadDialog } from "@/components/crm/CreateLeadDialog";
 import { FiltersPanel } from "@/components/crm/FiltersPanel";
@@ -94,8 +95,15 @@ export function LeadsPage() {
 
   const [columnEditDialogOpen, setColumnEditDialogOpen] = useState(false);
 
+  // Schedule appointment state
+  const [scheduleDialogOpen, setScheduleDialogOpen] = useState(false);
+
   const handleLeadClick = (leadId: number) => {
     setSelectedLeadId(leadId);
+  };
+
+  const handleScheduleLead = (_leadName: string) => {
+    setScheduleDialogOpen(true);
   };
 
   return (
@@ -270,12 +278,24 @@ export function LeadsPage() {
           isOpen={!!selectedLeadId}
           onClose={() => setSelectedLeadId(null)}
           isReadOnly={isReadOnly}
+          onSchedule={handleScheduleLead}
         />
 
         <ColumnEditDialog
           isOpen={columnEditDialogOpen}
           onClose={() => setColumnEditDialogOpen(false)}
           defaultColumns={DEFAULT_COLUMNS}
+        />
+
+        {/* Schedule Appointment Dialog */}
+        <EventFormDialog
+          open={scheduleDialogOpen}
+          onOpenChange={setScheduleDialogOpen}
+          defaultDate={{
+            start: new Date(),
+            end: new Date(Date.now() + 60 * 60 * 1000),
+          }}
+          onSuccess={() => setScheduleDialogOpen(false)}
         />
       </motion.div>
     </DashboardLayout>

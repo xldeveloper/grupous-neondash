@@ -7,6 +7,7 @@ import {
   HeroSection,
   MethodologySection,
   SimpleFooter,
+  SocialProofSection,
 } from "@/components/landing/LandingComponents";
 import { trpc } from "@/lib/trpc";
 
@@ -86,6 +87,7 @@ export default function LandingPage() {
         <HeroSection />
         <BenefitsSection />
         <MethodologySection />
+        <SocialProofSection />
       </main>
 
       <SimpleFooter />
