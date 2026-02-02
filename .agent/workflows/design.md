@@ -4,7 +4,7 @@ description: Unified frontend design workflow using ui-ux-pro-max (design intell
 
 # Command: /design
 
-Comprehensive design workflow for web/mobile applications. Combines design system intelligence from `ui-ux-pro-max` with asset generation and validation from `frontend-design`.
+Comprehensive design workflow for web/mobile applications. Combines **planning and research** from `/plan` with design system intelligence from `ui-ux-pro-max` and asset generation/validation from `frontend-design`.
 
 ## Trigger
 
@@ -13,17 +13,189 @@ Comprehensive design workflow for web/mobile applications. Combines design syste
 
 ---
 
-## Dual Skill Architecture
+## Triple Skill Architecture
 
 > [!IMPORTANT]
-> This workflow uses TWO complementary skills:
+> This workflow uses THREE complementary skills in sequence:
 
-| Skill | Role | When Used |
-|-------|------|-----------|
-| `ui-ux-pro-max` | Design Intelligence | Phase 1 (Design System) |
-| `frontend-design` | Assets + Validation | Phase 2-4 (Implementation) |
+| Priority | Skill | Role | When Used |
+|----------|-------|------|-----------|
+| P0 | `planning` | Research & Plan | Pre-Phase (APEX Research) |
+| P1 | `ui-ux-pro-max` | Design Intelligence | Phase 1 (Design System) |
+| P2 | `frontend-design` | Assets + Validation | Phase 2-4 (Implementation) |
 
-**Priority:** Design decisions from `ui-ux-pro-max` take precedence over conflicting advice.
+**Note:** Design decisions from `ui-ux-pro-max` take precedence over conflicting advice.
+
+---
+
+## 🔴 MANDATORY: Pre-Phase - Planning & Research
+
+> [!CAUTION]
+> **DO NOT START DESIGNING WITHOUT COMPLETING RESEARCH!**
+>
+> For L4+ complexity design tasks, you MUST execute the `/plan` workflow first.
+> This creates `docs/PLAN-design-{slug}.md` with research findings.
+
+### When to Execute Pre-Phase
+
+| Complexity | Description | Research Required |
+|------------|-------------|-------------------|
+| L1-L2 | Simple component tweak | Skip to Phase 0 |
+| L3 | New component | Minimal (Phase 0 sufficient) |
+| L4+ | New page/feature/redesign | **FULL /plan execution** |
+
+### Pre-Phase Execution (L4+ Tasks)
+
+**Step 1: Activate Planning Skill**
+
+Read `.agent/skills/planning/SKILL.md` first.
+
+**Step 2: Execute APEX Research Protocol**
+
+```yaml
+DESIGN_RESEARCH_CONTEXT:
+  objectives:
+    - Existing design patterns in codebase
+    - Component library inventory (shadcn/ui)
+    - Color palette and theme tokens (GPUS)
+    - Similar screens/pages for consistency
+    - Industry benchmarks and UX best practices
+  
+  quality_criteria:
+    - Precision > 90%
+    - Cross-validated with 2+ sources
+    - Current patterns (< 12 months)
+  
+  mandatory_research:
+    1. LOCAL_CODEBASE:
+       - grep_search: existing components in `client/src/components/`
+       - grep_search: current color classes in use
+       - view_file: `index.css` for theme tokens
+       - view_file: similar pages for layout patterns
+    
+    2. CONTEXT7_DOCS:
+       - shadcn/ui: component APIs and variants
+       - Tailwind CSS v4: utility patterns
+       - React 19: ref handling, hooks
+       - Framer Motion: animation patterns (if needed)
+    
+    3. TAVILY_WEB (if needed):
+       - Industry-specific UX patterns
+       - Accessibility best practices
+       - Mobile-first design patterns
+    
+    4. SEQUENTIAL_THINKING:
+       - Synthesize findings
+       - Define design approach
+       - List edge cases (min 5)
+       - Assign confidence score
+```
+
+**Step 3: Create Design Plan File**
+
+```bash
+# Output location
+docs/PLAN-design-{component-or-page-slug}.md
+```
+
+**Design Plan Template (Required Structure):**
+
+```markdown
+# PLAN-design-{slug}: {Design Title}
+
+> **Goal:** {One-line design objective}
+
+## 0. Research Findings
+
+| # | Finding | Confidence | Source | Impact |
+|---|---------|------------|--------|--------|
+| 1 | Existing color palette uses GPUS Navy/Gold | 5/5 | index.css | High |
+| 2 | Similar dashboard cards use Card component | 5/5 | codebase | High |
+| 3 | shadcn/ui recommends X pattern for Y | 4/5 | Context7 | Medium |
+
+### Design Patterns Found
+- {Pattern 1 from codebase}
+- {Pattern 2 from similar pages}
+
+### Knowledge Gaps
+- **Gap:** {Unknown aspect needing design decision}
+
+### Assumptions
+- **Assumption:** {What we assume about user needs}
+
+---
+
+## 1. User Review Required (If Any)
+
+> [!IMPORTANT]
+> {Breaking changes, major UX shifts, or style decisions needing approval}
+
+---
+
+## 2. Design Specifications
+
+### Visual Hierarchy
+- Primary: {Main focus elements}
+- Secondary: {Supporting elements}
+- Tertiary: {Background/decorative}
+
+### Color Application (60-30-10)
+- 60% Background: {Color}
+- 30% Foreground: {Color}
+- 10% Accent: {Color}
+
+### Typography
+- Heading: {Font/Size}
+- Body: {Font/Size}
+- Caption: {Font/Size}
+
+### Spacing Grid
+- Base unit: 8px
+- Sections: {Spacing values}
+
+---
+
+## 3. Component Breakdown
+
+### [Component Name]
+- **Shadcn Base:** {Card, Button, etc.}
+- **Customizations:** {Additional classes}
+- **States:** hover, focus, active, disabled
+
+---
+
+## 4. Atomic Implementation Tasks
+
+### AT-001: {Task Title}
+**Goal:** {What this task accomplishes}
+**Dependencies:** None
+
+#### Subtasks:
+- [ ] ST-001.1: {Specific action}
+  - **File:** `client/src/components/...`
+  - **Validation:** Visual check, responsive test
+- [ ] ST-001.2: {Specific action}
+  - **File:** `client/src/pages/...`
+  - **Validation:** Browser test at 375px, 768px, 1440px
+
+---
+
+## 5. Verification Plan
+
+### Visual Checks
+- [ ] Light/dark mode contrast 4.5:1
+- [ ] Responsive at 375px, 768px, 1024px, 1440px
+- [ ] Touch targets 44px+ on mobile
+
+### Code Checks
+- `bun run check` - TypeScript
+- `bun run lint` - Biome
+- `python3 .agent/skills/frontend-design/scripts/ux_audit.py`
+```
+
+**Step 4: Request User Approval (If Needed)**
+
+For significant design decisions, use `notify_user` with `BlockedOnUser: true`.
 
 ---
 
@@ -272,6 +444,13 @@ bun test        # Unit tests
 
 ## Pre-Delivery Checklist
 
+### Research & Planning (Pre-Phase)
+
+- [ ] Codebase patterns documented?
+- [ ] Similar components/pages reviewed?
+- [ ] Design plan file created? (`docs/PLAN-design-{slug}.md`)
+- [ ] User approval obtained (if needed)?
+
 ### Visual Quality (ui-ux-pro-max)
 
 - [ ] No emojis as icons (use SVG: Heroicons/Lucide)
@@ -314,6 +493,13 @@ bun test        # Unit tests
 
 ## Skill References
 
+### planning (Research & Planning)
+
+| Reference | When to Read |
+|-----------|-------------|
+| `SKILL.md` | L4+ designs (full APEX methodology) |
+| `APEX Research Protocol` | Always for research structure |
+
 ### ui-ux-pro-max (Design Intelligence)
 
 | Reference | When to Read |
@@ -354,6 +540,49 @@ bun test        # Unit tests
 /design "Landing page minimalista para clínica de estética"
 /design "Background generativo de partículas para a landing"
 /design  # (interactive mode - will ask questions)
+```
+
+---
+
+## Complete Workflow Summary
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  /design WORKFLOW (Complete Execution)                          │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  PRE-PHASE: Research & Planning (L4+ tasks)                      │
+│  ├─→ Activate planning skill                                    │
+│  ├─→ Execute APEX Research (codebase → docs → web → synthesis)  │
+│  ├─→ Create docs/PLAN-design-{slug}.md                          │
+│  └─→ Get user approval if needed                                │
+│                                                                  │
+│  PHASE 0: Requirement Analysis                                   │
+│  ├─→ Constraint analysis (timeline, brand, audience)            │
+│  ├─→ Extract requirements (product type, style, industry)       │
+│  └─→ Socratic gate (ask if unclear)                             │
+│                                                                  │
+│  PHASE 1: Design System (ui-ux-pro-max)                          │
+│  ├─→ Generate design system with search.py                      │
+│  ├─→ Persist for cross-session (optional)                       │
+│  └─→ Supplementary domain/stack searches                        │
+│                                                                  │
+│  PHASE 2: Asset Generation (frontend-design) - Optional          │
+│  ├─→ Image generation (Nano Banana)                             │
+│  ├─→ Generative art (p5.js)                                     │
+│  └─→ Canvas art (PDF/PNG)                                       │
+│                                                                  │
+│  PHASE 3: Implementation                                         │
+│  ├─→ Theme integration (GPUS 60-30-10)                          │
+│  ├─→ Component usage (shadcn/ui)                                │
+│  └─→ Build order (HTML → CSS → Interactivity)                   │
+│                                                                  │
+│  PHASE 4: Validation (MANDATORY)                                 │
+│  ├─→ UX audit script                                            │
+│  ├─→ Accessibility check script                                 │
+│  └─→ Code quality (check, lint, test)                           │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
 ```
 
 ---
