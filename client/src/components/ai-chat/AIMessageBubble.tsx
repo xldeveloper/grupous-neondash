@@ -34,24 +34,19 @@ export function AIMessageBubble({ role, content, timestamp, className }: AIMessa
       <div
         className={cn(
           "max-w-[85%] rounded-2xl px-3 py-2",
-          isUser ? "bg-primary text-primary-foreground" : "bg-muted text-foreground"
+          isUser ? "bg-primary text-white" : "bg-slate-800 dark:bg-slate-700 text-white"
         )}
       >
         {isUser ? (
           <p className="text-sm leading-relaxed whitespace-pre-wrap">{content}</p>
         ) : (
-          <div className="prose prose-sm dark:prose-invert max-w-none text-sm">
+          <div className="prose prose-sm prose-invert max-w-none text-sm [&_*]:text-white">
             <Streamdown>{content}</Streamdown>
           </div>
         )}
 
         {timestamp && (
-          <p
-            className={cn(
-              "mt-1 text-[10px]",
-              isUser ? "text-primary-foreground/70" : "text-muted-foreground"
-            )}
-          >
+          <p className="mt-1 text-[10px] text-white/70">
             {timestamp.toLocaleTimeString("pt-BR", {
               hour: "2-digit",
               minute: "2-digit",

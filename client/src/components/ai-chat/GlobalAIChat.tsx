@@ -148,15 +148,15 @@ export function GlobalAIChat() {
             className={cn(
               "fixed bottom-24 right-6 z-50",
               "w-[380px] max-w-[calc(100vw-3rem)]",
-              "h-[500px] max-h-[calc(100vh-8rem)]",
+              "h-[520px] max-h-[calc(100vh-8rem)]",
               "rounded-2xl shadow-2xl",
-              "bg-card/95 backdrop-blur-lg",
-              "border border-border/50",
-              "flex flex-col overflow-hidden"
+              "bg-card backdrop-blur-lg",
+              "border border-border",
+              "flex flex-col"
             )}
           >
             {/* Header */}
-            <div className="flex items-center justify-between px-4 py-3 border-b border-border/50">
+            <div className="flex-shrink-0 flex items-center justify-between px-4 py-3 border-b border-border bg-muted/30">
               <div className="flex items-center gap-3">
                 <Avatar className="h-9 w-9 border border-primary/20">
                   <AvatarFallback className="bg-primary/10 text-primary">
@@ -182,7 +182,7 @@ export function GlobalAIChat() {
             </div>
 
             {/* Chat Content */}
-            <div className="flex-1 flex flex-col min-h-0">
+            <div className="flex-1 flex flex-col overflow-hidden">
               {!isActive ? (
                 /* Start Session View */
                 <div className="flex-1 flex flex-col items-center justify-center gap-4 p-6 text-center">
@@ -203,8 +203,8 @@ export function GlobalAIChat() {
               ) : (
                 /* Chat View */
                 <>
-                  <ScrollArea ref={scrollAreaRef} className="flex-1 p-4">
-                    <div className="flex flex-col gap-3">
+                  <ScrollArea ref={scrollAreaRef} className="flex-1 min-h-0">
+                    <div className="flex flex-col gap-3 p-4">
                       {messages.map((message) => (
                         <AIMessageBubble
                           key={message.id}
@@ -229,8 +229,8 @@ export function GlobalAIChat() {
                     </div>
                   </ScrollArea>
 
-                  {/* Input Area */}
-                  <div className="p-3 border-t border-border/50">
+                  {/* Input Area - Always visible */}
+                  <div className="flex-shrink-0 p-3 border-t border-border bg-background">
                     <AIPromptInput
                       onSend={handleSend}
                       isLoading={isSending}
