@@ -328,8 +328,50 @@ export const calendarRouter = router({
         });
       }
 
+      // Check if token has write permission (calendar.events scope)
+      if (token.scope && !token.scope.includes("calendar.events")) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message:
+            "Permissão insuficiente. Desconecte e reconecte o Google Calendar para atualizar permissões.",
+        });
+      }
+
+      // Refresh token if expired
+      let accessToken = token.accessToken;
+      if (new Date() >= token.expiresAt) {
+        if (!token.refreshToken) {
+          await db.delete(googleTokens).where(eq(googleTokens.userId, ctx.user.id));
+          throw new TRPCError({
+            code: "PRECONDITION_FAILED",
+            message: "Sessão expirada. Por favor, reconecte o Google Calendar.",
+          });
+        }
+
+        try {
+          const refreshed = await refreshAccessToken(token.refreshToken);
+          accessToken = refreshed.access_token;
+          const expiresAt = new Date(Date.now() + refreshed.expires_in * 1000);
+
+          await db
+            .update(googleTokens)
+            .set({
+              accessToken: refreshed.access_token,
+              expiresAt,
+              updatedAt: new Date(),
+            })
+            .where(eq(googleTokens.userId, ctx.user.id));
+        } catch {
+          await db.delete(googleTokens).where(eq(googleTokens.userId, ctx.user.id));
+          throw new TRPCError({
+            code: "PRECONDITION_FAILED",
+            message: "Falha ao atualizar sessão. Por favor, reconecte o Google Calendar.",
+          });
+        }
+      }
+
       try {
-        const event = await updateEvent(token.accessToken, input.id, {
+        const event = await updateEvent(accessToken, input.id, {
           title: input.title,
           description: input.description,
           start: input.start ? new Date(input.start) : undefined,
@@ -339,6 +381,19 @@ export const calendarRouter = router({
         });
         return { success: true, event };
       } catch (error) {
+        // Check for scope/permission errors from Google API
+        const errorMsg = error instanceof Error ? error.message : "";
+        if (
+          errorMsg.includes("403") ||
+          errorMsg.includes("PERMISSION") ||
+          errorMsg.includes("SCOPE")
+        ) {
+          throw new TRPCError({
+            code: "FORBIDDEN",
+            message:
+              "Permissão negada pelo Google. Desconecte e reconecte sua conta para atualizar permissões.",
+          });
+        }
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: error instanceof Error ? error.message : "Falha ao atualizar evento.",

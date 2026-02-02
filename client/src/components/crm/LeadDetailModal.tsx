@@ -1,7 +1,27 @@
 import { format } from "date-fns";
-import { Calendar, Clock, Edit2, FileText, Mail, MessageSquare, Phone, Trash2 } from "lucide-react";
+import {
+  AlertTriangle,
+  Calendar,
+  Clock,
+  Edit2,
+  FileText,
+  Mail,
+  MessageSquare,
+  Phone,
+  Trash2,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -42,6 +62,7 @@ export function LeadDetailModal({
   const [interactionType, setInteractionType] = useState<any>("nota");
   const [isEditing, setIsEditing] = useState(false);
   const [editData, setEditData] = useState<any>(null);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   const utils = trpc.useUtils();
 
@@ -49,6 +70,24 @@ export function LeadDetailModal({
     { id: leadId! },
     { enabled: !!leadId }
   );
+
+  // Delete mutation
+  const deleteMutation = trpc.leads.delete.useMutation({
+    onSuccess: () => {
+      toast.success("Lead excluído com sucesso");
+      utils.leads.list.invalidate();
+      onClose();
+    },
+    onError: (error) => {
+      toast.error(`Erro ao excluir lead: ${error.message}`);
+    },
+  });
+
+  const handleDelete = () => {
+    if (leadId) {
+      deleteMutation.mutate({ id: leadId });
+    }
+  };
 
   useEffect(() => {
     if (data?.lead && !isEditing) {
@@ -270,6 +309,7 @@ export function LeadDetailModal({
                               variant="ghost"
                               size="icon"
                               className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                              onClick={() => setShowDeleteConfirm(true)}
                             >
                               <Trash2 className="h-4 w-4" />
                             </Button>
@@ -741,6 +781,32 @@ export function LeadDetailModal({
         defaultType={interactionType}
         onSuccess={() => refetch()}
       />
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={showDeleteConfirm} onOpenChange={setShowDeleteConfirm}>
+        <AlertDialogContent className="bg-card border-border">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="flex items-center gap-2 text-destructive">
+              <AlertTriangle className="h-5 w-5" />
+              Excluir Lead
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              Tem certeza que deseja excluir este lead? Esta ação não pode ser desfeita. Todas as
+              interações e notas associadas serão perdidas.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDelete}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              disabled={deleteMutation.isPending}
+            >
+              {deleteMutation.isPending ? "Excluindo..." : "Excluir Lead"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   );
 }

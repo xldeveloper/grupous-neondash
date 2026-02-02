@@ -8,8 +8,7 @@ import withDragAndDrop, {
   type EventInteractionArgs,
 } from "react-big-calendar/lib/addons/dragAndDrop";
 import { NextPatientBanner } from "@/components/agenda/NextPatientBanner";
-import { QuickStats } from "@/components/agenda/QuickStats";
-import { ScheduleFilters } from "@/components/agenda/ScheduleFilters";
+
 import { Button } from "@/components/ui/button";
 import { NeonCard } from "@/components/ui/neon-card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -206,24 +205,6 @@ export function Agenda() {
     };
   }, [myEvents]);
 
-  // Calculate Quick Stats
-  const stats = React.useMemo(() => {
-    const now = new Date();
-    const currentMonth = now.getMonth();
-    const currentYear = now.getFullYear();
-
-    const monthlyEvents = myEvents.filter((ev) => {
-      return ev.start.getMonth() === currentMonth && ev.start.getFullYear() === currentYear;
-    });
-
-    return {
-      totalAppointments: monthlyEvents.length,
-      expectedRevenue: monthlyEvents.length * 450, // Est. R$450 avg ticket
-      newPatients: monthlyEvents.filter((ev) => ev.description?.toLowerCase().includes("primeira"))
-        .length,
-    };
-  }, [myEvents]);
-
   const handleConnect = () => {
     if (authUrlQuery.data?.url) {
       window.location.href = authUrlQuery.data.url;
@@ -318,74 +299,60 @@ export function Agenda() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-6">
-          {/* Main Content (Left) */}
-          <div className="space-y-6">
-            {nextPatient && <NextPatientBanner {...nextPatient} />}
+        <div className="space-y-6">
+          {nextPatient && <NextPatientBanner {...nextPatient} />}
 
-            <div className="bg-card border border-border rounded-xl p-4 lg:p-6 shadow-lg">
-              {eventsQuery.isLoading ? (
-                <Skeleton className="h-[500px] w-full" />
-              ) : (
-                <DnDCalendar
-                  localizer={localizer}
-                  events={myEvents}
-                  startAccessor="start"
-                  endAccessor="end"
-                  onEventDrop={onEventDrop}
-                  onEventResize={onEventResize}
-                  onSelectSlot={handleSelectSlot}
-                  selectable={true}
-                  draggableAccessor={() => true}
-                  resizable
-                  {...calendarStyles}
-                  messages={{
-                    today: "Hoje",
-                    previous: "Anterior",
-                    next: "Próximo",
-                    month: "Mês",
-                    week: "Semana",
-                    day: "Dia",
-                    agenda: "Agenda",
-                    date: "Data",
-                    time: "Hora",
-                    event: "Evento",
-                    noEventsInRange: "Nenhum evento neste período.",
-                    showMore: (total) => `+${total} mais`,
-                  }}
-                  onSelectEvent={(event: CalendarEvent) => {
-                    setSelectedSlot({ start: event.start, end: event.end, allDay: event.allDay });
-                    // Optional: Open dialog to edit? For now just link or view
-                    if (event.htmlLink) {
-                      window.open(event.htmlLink, "_blank");
-                    }
-                  }}
-                />
-              )}
-              <EventFormDialog
-                open={isDialogOpen}
-                onOpenChange={setIsDialogOpen}
-                defaultDate={
-                  selectedSlot
-                    ? {
-                        start: selectedSlot.start,
-                        end: selectedSlot.end,
-                        allDay: selectedSlot.allDay,
-                      }
-                    : undefined
-                }
+          <div className="bg-card border border-border rounded-xl p-4 lg:p-6 shadow-lg">
+            {eventsQuery.isLoading ? (
+              <Skeleton className="h-[500px] w-full" />
+            ) : (
+              <DnDCalendar
+                localizer={localizer}
+                events={myEvents}
+                startAccessor="start"
+                endAccessor="end"
+                onEventDrop={onEventDrop}
+                onEventResize={onEventResize}
+                onSelectSlot={handleSelectSlot}
+                selectable={true}
+                draggableAccessor={() => true}
+                resizable
+                {...calendarStyles}
+                messages={{
+                  today: "Hoje",
+                  previous: "Anterior",
+                  next: "Próximo",
+                  month: "Mês",
+                  week: "Semana",
+                  day: "Dia",
+                  agenda: "Agenda",
+                  date: "Data",
+                  time: "Hora",
+                  event: "Evento",
+                  noEventsInRange: "Nenhum evento neste período.",
+                  showMore: (total) => `+${total} mais`,
+                }}
+                onSelectEvent={(event: CalendarEvent) => {
+                  setSelectedSlot({ start: event.start, end: event.end, allDay: event.allDay });
+                  if (event.htmlLink) {
+                    window.open(event.htmlLink, "_blank");
+                  }
+                }}
               />
-            </div>
-          </div>
-
-          {/* Sidebar Widgets (Right) */}
-          <div className="lg:col-span-1 space-y-6">
-            <QuickStats
-              totalAppointments={stats.totalAppointments}
-              expectedRevenue={stats.expectedRevenue}
-              newPatients={stats.newPatients}
+            )}
+            <EventFormDialog
+              open={isDialogOpen}
+              onOpenChange={setIsDialogOpen}
+              defaultDate={
+                selectedSlot
+                  ? {
+                      start: selectedSlot.start,
+                      end: selectedSlot.end,
+                      allDay: selectedSlot.allDay,
+                    }
+                  : undefined
+              }
             />
-            <ScheduleFilters />
           </div>
         </div>
 

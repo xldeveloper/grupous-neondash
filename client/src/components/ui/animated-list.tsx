@@ -52,7 +52,7 @@ export function AnimatedList<T>({
           <motion.div
             key={keyExtractor(item)}
             layout
-            variants={itemVariant}
+            variants={itemVariant as Variants}
             initial={typeof initial === "string" ? initial : (initial as any)}
             animate={typeof animate === "string" ? animate : (animate as any)}
             exit={typeof exit === "string" ? exit : (exit as any)}
