@@ -9,7 +9,9 @@ import {
   ShieldCheck,
   UserCircle,
 } from "lucide-react";
+import { useEffect, useRef } from "react";
 import { toast } from "sonner";
+import { useLocation } from "wouter";
 import { useAuth } from "@/_core/hooks/useAuth";
 import DashboardLayout from "@/components/DashboardLayout";
 import { Badge } from "@/components/ui/badge";
@@ -19,6 +21,8 @@ import { trpc } from "@/lib/trpc";
 
 export default function PrimeiroAcesso() {
   const { user } = useAuth();
+  const [, navigate] = useLocation();
+  const hasTriedAutoComplete = useRef(false);
 
   // Fetch diagnostic data
   const {
@@ -28,6 +32,32 @@ export default function PrimeiroAcesso() {
   } = trpc.auth.diagnostic.useQuery(undefined, {
     refetchOnWindowFocus: false,
   });
+
+  // Complete onboarding mutation
+  const { mutate: completeOnboarding, isPending: isCompletingOnboarding } =
+    trpc.mentorados.completeOnboarding.useMutation({
+      onSuccess: () => {
+        toast.success("Redirecionando para seu dashboard...");
+        navigate("/meu-dashboard");
+      },
+      onError: () => {
+        // Even if mutation fails, still redirect (profile is linked)
+        navigate("/meu-dashboard");
+      },
+    });
+
+  // Auto-redirect when profile is fully linked
+  useEffect(() => {
+    if (
+      diagnostic?.status.isFullyLinked &&
+      !loadingDiag &&
+      !hasTriedAutoComplete.current &&
+      !isCompletingOnboarding
+    ) {
+      hasTriedAutoComplete.current = true;
+      completeOnboarding();
+    }
+  }, [diagnostic?.status.isFullyLinked, loadingDiag, isCompletingOnboarding, completeOnboarding]);
 
   // Sync mutation
   const { mutate: syncUser, isPending: syncing } = trpc.auth.syncUser.useMutation({

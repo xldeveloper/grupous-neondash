@@ -127,7 +127,7 @@ export const authRouter = router({
       if (existingMentorado) {
         await db
           .update(mentorados)
-          .set({ userId: user.id })
+          .set({ userId: user.id, onboardingCompleted: "sim" })
           .where(eq(mentorados.id, existingMentorado.id));
 
         linked = true;
