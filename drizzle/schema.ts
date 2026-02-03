@@ -130,7 +130,8 @@ export const mentorados = pgTable(
     onboardingCompleted: simNaoEnum("onboarding_completed").default("nao").notNull(),
     // Z-API WhatsApp Integration
     zapiInstanceId: varchar("zapi_instance_id", { length: 128 }),
-    zapiToken: text("zapi_token"), // Encrypted
+    zapiToken: text("zapi_token"), // Encrypted - Instance Token
+    zapiClientToken: text("zapi_client_token"), // Encrypted - Account Security Token (optional)
     zapiConnected: simNaoEnum("zapi_connected").default("nao"),
     zapiConnectedAt: timestamp("zapi_connected_at"),
     zapiPhone: varchar("zapi_phone", { length: 20 }),

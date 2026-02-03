@@ -42,6 +42,7 @@ type WhatsAppConnectionCardProps = Record<string, never>;
 export function WhatsAppConnectionCard(_props: WhatsAppConnectionCardProps) {
   const [instanceId, setInstanceId] = useState("");
   const [token, setToken] = useState("");
+  const [clientToken, setClientToken] = useState("");
   const [showDisconnectDialog, setShowDisconnectDialog] = useState(false);
   const [status, setStatus] = useState<ConnectionStatus>("disconnected");
   const [qrError, setQrError] = useState<string | null>(null);
@@ -116,7 +117,11 @@ export function WhatsAppConnectionCard(_props: WhatsAppConnectionCardProps) {
     if (!instanceId.trim() || !token.trim()) return;
     setQrError(null);
     setConfigError(null);
-    configureMutation.mutate({ instanceId: instanceId.trim(), token: token.trim() });
+    configureMutation.mutate({
+      instanceId: instanceId.trim(),
+      token: token.trim(),
+      clientToken: clientToken.trim() || undefined,
+    });
   };
 
   const handleDisconnect = () => {
@@ -390,15 +395,34 @@ export function WhatsAppConnectionCard(_props: WhatsAppConnectionCardProps) {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="token">Token</Label>
+                  <Label htmlFor="token">Token da Instância</Label>
                   <Input
                     id="token"
                     type="password"
-                    placeholder="Ex: E8DAEF8FA386CB5C53AA42A6"
+                    placeholder="Ex: B1BE74099777CBBAB6DEA8E3"
                     value={token}
                     onChange={(e) => setToken(e.target.value)}
                     className="font-mono text-sm"
                   />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="clientToken">
+                    Token de Segurança{" "}
+                    <span className="text-muted-foreground text-xs">
+                      (obrigatório se ativado no Z-API)
+                    </span>
+                  </Label>
+                  <Input
+                    id="clientToken"
+                    type="password"
+                    placeholder="Ex: Ff61b3cb067054f178dea7749d4910c31S"
+                    value={clientToken}
+                    onChange={(e) => setClientToken(e.target.value)}
+                    className="font-mono text-sm"
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    Encontre em: Z-API → Segurança → Token de segurança da conta
+                  </p>
                 </div>
 
                 <Button

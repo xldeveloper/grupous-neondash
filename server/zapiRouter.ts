@@ -30,6 +30,7 @@ async function getMentoradoWithZapi(userId: number) {
 function buildCredentials(mentorado: {
   zapiInstanceId: string | null;
   zapiToken: string | null;
+  zapiClientToken?: string | null;
 }): ZApiCredentials | null {
   if (!mentorado.zapiInstanceId || !mentorado.zapiToken) {
     return null;
@@ -40,9 +41,15 @@ function buildCredentials(mentorado: {
     return null;
   }
 
+  // Decrypt client token (account security token) if present
+  const decryptedClientToken = mentorado.zapiClientToken
+    ? safeDecrypt(mentorado.zapiClientToken)
+    : undefined;
+
   return {
     instanceId: mentorado.zapiInstanceId,
     token: decryptedToken,
+    clientToken: decryptedClientToken ?? undefined,
   };
 }
 
@@ -94,6 +101,7 @@ export const zapiRouter = router({
       z.object({
         instanceId: z.string().min(1, "Instance ID é obrigatório"),
         token: z.string().min(1, "Token é obrigatório"),
+        clientToken: z.string().optional(), // Account Security Token (optional)
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -102,8 +110,9 @@ export const zapiRouter = router({
         throw new Error("Mentorado não encontrado");
       }
 
-      // Encrypt token before storing
+      // Encrypt tokens before storing
       const encryptedToken = encrypt(input.token);
+      const encryptedClientToken = input.clientToken ? encrypt(input.clientToken) : null;
 
       const db = getDb();
       await db
@@ -111,6 +120,7 @@ export const zapiRouter = router({
         .set({
           zapiInstanceId: input.instanceId,
           zapiToken: encryptedToken,
+          zapiClientToken: encryptedClientToken,
           zapiConnected: "nao",
           updatedAt: new Date(),
         })
