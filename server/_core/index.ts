@@ -9,6 +9,7 @@ import { handleClerkWebhook } from "../webhooks/clerk";
 import { registerZapiWebhooks } from "../webhooks/zapiWebhook";
 import { createContext } from "./context";
 import { userRateLimiter } from "./rateLimiter";
+import { initSchedulers, stopSchedulers } from "./scheduler";
 import { initRedis, invalidateSession } from "./sessionCache";
 import { serveStatic, setupVite } from "./vite";
 
@@ -34,6 +35,9 @@ async function findAvailablePort(startPort: number = 3000): Promise<number> {
 async function startServer() {
   // Initialize session cache (Redis or in-memory fallback)
   await initRedis();
+
+  // Initialize background schedulers (Instagram sync, etc.)
+  await initSchedulers();
 
   const app = express();
   const server = createServer(app);
@@ -229,6 +233,9 @@ async function startServer() {
   // ─────────────────────────────────────────────────────────────────────────
 
   const shutdown = async () => {
+    // Stop all scheduled tasks
+    stopSchedulers();
+
     // Close HTTP server
     server.close(() => {
       process.exit(0);

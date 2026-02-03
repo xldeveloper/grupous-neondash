@@ -129,17 +129,42 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 
 ---
 
+## 2.5 AI Prototyping (Stitch)
+
+**Google Stitch** allows generating UI code directly from prompts using `GEMINI_3_PRO`.
+
+### Usage (MCP)
+1.  **Create Project**: `stitch_create_project(title="Task Name")`
+2.  **Generate**: `stitch_generate_screen_from_text(project_id="...", prompt="...")`
+3.  **Refine**: `stitch_generate_screen_from_text` with feedback if needed.
+4.  **Save**: Capture `output_components` into `DESIGN-{slug}.md`.
+
+### Stitch Prompt Engineering
+- **Context**: "Dashboard for [User Type] doing [Action]"
+- **Constraints**: "Use Tailwind CSS v4, shadcn/ui components" (Note: Stitch output requires adaptation)
+- **Aesthetic**: "Use [Colors] from Design System, [Style] layout"
+- **Example**:
+    > "Create a dashboard for a mentor tracking student progress. Use a dark navy background (#0d1321) and gold accents (#d4af37). Include a metric card grid and a data table. Use Tailwind classes."
+
+---
+
 ## 3. Visual Asset Generation
 
-### Image Generation (Nano Banana)
+### Image Generation (Nano Banana Pro)
+
+**ALWAYS use `gemini-3-pro` (Nano Banana Pro) for final high-fidelity assets.**
 
 ```bash
-python .agent/skills/frontend-design/scripts/generate_images.py "Your prompt" "output_filename"
+# Default (Flash - Drafts)
+python .agent/skills/frontend-design/scripts/generate_images.py "Prompt" "filename"
+
+# PRO MODE (High Fidelity - REQUIRED for final assets)
+python .agent/skills/frontend-design/scripts/generate_images.py "Prompt" "filename" --model gemini-3-pro
 ```
 
 Models:
 - **gemini-3-flash-preview**: Speed/bulk placeholders
-- **gemini-3-pro-preview**: Hero/marketing assets
+- **gemini-3-pro-preview**: **Nano Banana Pro** - Hero/marketing/final assets
 
 ### Generative Art (p5.js)
 
