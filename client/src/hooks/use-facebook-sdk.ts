@@ -5,61 +5,11 @@
  */
 
 import { useCallback, useEffect, useState } from "react";
-
-// Facebook SDK types
-interface FacebookAuthResponse {
-  accessToken: string;
-  expiresIn: number;
-  signedRequest: string;
-  userID: string;
-}
-
-interface FacebookLoginStatusResponse {
-  status: "connected" | "not_authorized" | "unknown";
-  authResponse?: FacebookAuthResponse;
-}
-
-interface FacebookPage {
-  id: string;
-  name: string;
-  access_token: string;
-}
-
-interface FacebookPagesResponse {
-  data?: FacebookPage[];
-  error?: { message: string };
-}
-
-interface InstagramBusinessAccount {
-  id: string;
-  username: string;
-  name?: string;
-}
-
-interface FacebookPageWithInstagram {
-  instagram_business_account?: InstagramBusinessAccount;
-  error?: { message: string };
-}
-
-// Extend Window interface with Facebook SDK
-declare global {
-  interface Window {
-    fbAsyncInit: () => void;
-    FB: {
-      init: (params: { appId: string; cookie: boolean; xfbml: boolean; version: string }) => void;
-      getLoginStatus: (callback: (response: FacebookLoginStatusResponse) => void) => void;
-      login: (
-        callback: (response: FacebookLoginStatusResponse) => void,
-        options?: { scope: string; return_scopes?: boolean }
-      ) => void;
-      logout: (callback: () => void) => void;
-      api: <T>(path: string, callback: (response: T) => void) => void;
-      AppEvents: {
-        logPageView: () => void;
-      };
-    };
-  }
-}
+import type {
+  FacebookLoginStatusResponse,
+  FacebookPagesResponse,
+  FacebookPageWithInstagram,
+} from "@/types/facebook-sdk.d";
 
 export interface InstagramAccount {
   id: string;
@@ -167,7 +117,7 @@ export function useFacebookSDK(): UseFacebookSDKReturn {
 
       // Request permissions for Instagram Business API
       window.FB.login(
-        (response) => {
+        (response: FacebookLoginStatusResponse) => {
           handleStatusChange(response);
           resolve(response);
         },

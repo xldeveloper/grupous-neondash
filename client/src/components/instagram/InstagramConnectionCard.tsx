@@ -1,33 +1,39 @@
 /**
  * Instagram Connection Card
- * Allows mentorados to connect/disconnect their Instagram Business account.
- * Uses Facebook SDK for OAuth and syncs with backend.
+ * Uses official Facebook Login Button for OAuth flow.
+ * Implements checkLoginState() callback pattern per Meta documentation.
  */
 
 import { CheckCircle, Instagram, Loader2, RefreshCw, XCircle } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { useFacebookSDK } from "@/hooks/use-facebook-sdk";
 import { trpc } from "@/lib/trpc";
+import type {
+  FacebookLoginStatusResponse,
+  FacebookPagesResponse,
+  FacebookPageWithInstagram,
+  InstagramBusinessAccount,
+} from "@/types/facebook-sdk.d";
 
 interface InstagramConnectionCardProps {
   mentoradoId: number;
 }
 
 export function InstagramConnectionCard({ mentoradoId }: InstagramConnectionCardProps) {
-  const [isConnecting, setIsConnecting] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
   const [isSyncing, setIsSyncing] = useState(false);
-
-  const { isLoaded, login, logout, getInstagramAccount } = useFacebookSDK();
+  const [sdkLoaded, setSdkLoaded] = useState(false);
+  const loginButtonRef = useRef<HTMLDivElement>(null);
 
   // tRPC mutations
   const saveToken = trpc.instagram.saveToken.useMutation({
     onSuccess: () => {
       toast.success("Instagram conectado com sucesso!");
+      connectionStatus.refetch();
     },
     onError: (error: { message: string }) => {
       toast.error(`Erro ao salvar conexão: ${error.message}`);
@@ -37,6 +43,7 @@ export function InstagramConnectionCard({ mentoradoId }: InstagramConnectionCard
   const disconnect = trpc.instagram.disconnect.useMutation({
     onSuccess: () => {
       toast.success("Instagram desconectado");
+      connectionStatus.refetch();
     },
     onError: (error: { message: string }) => {
       toast.error(`Erro ao desconectar: ${error.message}`);
@@ -58,59 +65,127 @@ export function InstagramConnectionCard({ mentoradoId }: InstagramConnectionCard
     { enabled: !!mentoradoId }
   );
 
-  const handleConnect = async () => {
-    setIsConnecting(true);
+  // Initialize FB SDK and checkLoginState callback
+  useEffect(() => {
+    // Get Instagram Business Account from Facebook Pages
+    const getInstagramAccount = (): Promise<InstagramBusinessAccount | null> => {
+      return new Promise((resolve) => {
+        if (!window.FB) {
+          resolve(null);
+          return;
+        }
 
-    try {
-      // Step 1: Login with Facebook
-      const loginResponse = await login();
+        window.FB.api<FacebookPagesResponse>("/me/accounts", (pagesResponse) => {
+          if (pagesResponse.error || !pagesResponse.data?.length) {
+            resolve(null);
+            return;
+          }
 
-      if (loginResponse.status !== "connected") {
-        throw new Error("Login não autorizado. Por favor, tente novamente.");
-      }
+          const pageId = pagesResponse.data[0].id;
+          window.FB.api<FacebookPageWithInstagram>(
+            `/${pageId}?fields=instagram_business_account{id,username,name}`,
+            (igResponse) => {
+              if (igResponse.error || !igResponse.instagram_business_account) {
+                resolve(null);
+                return;
+              }
 
-      // Step 2: Get Instagram Business Account
-      const igAccount = await getInstagramAccount();
-
-      if (!igAccount) {
-        throw new Error(
-          "Conta Instagram Business não encontrada. Certifique-se de que sua conta Instagram está vinculada a uma Página do Facebook."
-        );
-      }
-
-      // Step 3: Get access token from auth response
-      const token = loginResponse.authResponse?.accessToken;
-      if (!token) {
-        throw new Error("Token de acesso não disponível.");
-      }
-
-      // Step 4: Save token to backend
-      await saveToken.mutateAsync({
-        mentoradoId,
-        accessToken: token,
-        instagramAccountId: igAccount.id,
-        instagramUsername: igAccount.username,
+              resolve(igResponse.instagram_business_account);
+            }
+          );
+        });
       });
+    };
 
-      // Refetch connection status
-      connectionStatus.refetch();
-    } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Erro ao conectar Instagram");
-    } finally {
-      setIsConnecting(false);
+    // Handle login status change - this is called by checkLoginState()
+    const handleStatusChange = async (response: FacebookLoginStatusResponse) => {
+      if (response.status === "connected" && response.authResponse) {
+        setIsProcessing(true);
+
+        try {
+          // Get Instagram Business Account
+          const igAccount = await getInstagramAccount();
+
+          if (!igAccount) {
+            toast.error(
+              "Conta Instagram Business não encontrada. Vincule sua conta Instagram a uma Página do Facebook."
+            );
+            return;
+          }
+
+          // Save token to backend
+          await saveToken.mutateAsync({
+            mentoradoId,
+            accessToken: response.authResponse.accessToken,
+            instagramAccountId: igAccount.id,
+            instagramUsername: igAccount.username,
+          });
+        } catch (error) {
+          toast.error(error instanceof Error ? error.message : "Erro ao conectar Instagram");
+        } finally {
+          setIsProcessing(false);
+        }
+      } else if (response.status === "not_authorized") {
+        toast.error("Você precisa autorizar o acesso ao Instagram.");
+      }
+    };
+
+    const checkSDKLoaded = () => {
+      if (window.FB) {
+        setSdkLoaded(true);
+
+        // Register global callback for fb:login-button onlogin
+        window.checkLoginState = () => {
+          window.FB.getLoginStatus((response) => {
+            handleStatusChange(response);
+          });
+        };
+
+        // Parse XFBML to render the login button
+        if (loginButtonRef.current) {
+          window.FB.XFBML.parse(loginButtonRef.current);
+        }
+
+        return true;
+      }
+      return false;
+    };
+
+    if (checkSDKLoaded()) return;
+
+    // Poll for SDK load
+    const interval = setInterval(() => {
+      if (checkSDKLoaded()) {
+        clearInterval(interval);
+      }
+    }, 100);
+
+    const timeout = setTimeout(() => clearInterval(interval), 10000);
+
+    return () => {
+      clearInterval(interval);
+      clearTimeout(timeout);
+    };
+  }, [mentoradoId, saveToken]);
+
+  // Re-parse XFBML when SDK becomes available
+  useEffect(() => {
+    if (sdkLoaded && loginButtonRef.current && window.FB?.XFBML) {
+      window.FB.XFBML.parse(loginButtonRef.current);
     }
-  };
+  }, [sdkLoaded]);
 
   const handleDisconnect = async () => {
     try {
       // Logout from Facebook SDK
-      await logout();
+      if (window.FB) {
+        window.FB.logout(() => {
+          // SDK logout complete
+        });
+      }
 
       // Remove from backend
       await disconnect.mutateAsync({ mentoradoId });
-
-      // Refetch connection status
-      connectionStatus.refetch();
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Erro ao desconectar");
     }
@@ -166,10 +241,17 @@ export function InstagramConnectionCard({ mentoradoId }: InstagramConnectionCard
       </CardHeader>
 
       <CardContent className="space-y-4">
-        {!isLoaded && (
+        {!sdkLoaded && (
           <Alert>
             <Loader2 className="h-4 w-4 animate-spin" />
             <AlertDescription>Carregando Facebook SDK...</AlertDescription>
+          </Alert>
+        )}
+
+        {isProcessing && (
+          <Alert>
+            <Loader2 className="h-4 w-4 animate-spin" />
+            <AlertDescription>Conectando Instagram...</AlertDescription>
           </Alert>
         )}
 
@@ -214,24 +296,30 @@ export function InstagramConnectionCard({ mentoradoId }: InstagramConnectionCard
               </Button>
             </>
           ) : (
-            <Button
-              onClick={handleConnect}
-              disabled={!isLoaded || isConnecting}
-              className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600"
-            >
-              {isConnecting ? (
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              ) : (
-                <Instagram className="mr-2 h-4 w-4" />
-              )}
-              Conectar Instagram
-            </Button>
+            <div ref={loginButtonRef} className="w-full flex justify-center">
+              {/* Official Facebook Login Button */}
+              {/* The onlogin callback calls checkLoginState() which is registered globally */}
+              <div
+                className="fb-login-button"
+                data-width="100%"
+                data-size="large"
+                data-button-type="login_with"
+                data-layout="default"
+                data-auto-logout-link="false"
+                data-use-continue-as="true"
+                data-scope="instagram_basic,instagram_manage_insights,pages_show_list,pages_read_engagement"
+                data-onlogin="checkLoginState();"
+              />
+            </div>
           )}
         </div>
 
         <p className="text-xs text-muted-foreground">
           Ao conectar, você autoriza a sincronização de métricas de posts e stories. Seus dados são
           usados apenas para análise de desempenho.
+          <a href="/account-deletion" className="ml-1 underline hover:text-foreground">
+            Solicitar exclusão de dados
+          </a>
         </p>
       </CardContent>
     </Card>

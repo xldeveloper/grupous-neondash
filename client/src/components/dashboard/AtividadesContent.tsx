@@ -485,7 +485,7 @@ export function AtividadesContent({ mentoradoId }: AtividadesContentProps) {
                                       )}
                                     </div>
 
-                                    {/* Ícone de nota com Popover inline */}
+                                    {/* Ícone de nota - sempre visível */}
                                     {!isReadOnly && (
                                       <AnimatedPopover
                                         onOpenChange={(open) => {
@@ -499,10 +499,10 @@ export function AtividadesContent({ mentoradoId }: AtividadesContentProps) {
                                           <button
                                             type="button"
                                             className={cn(
-                                              "p-1.5 rounded-lg transition-all cursor-pointer",
+                                              "p-1.5 rounded-lg transition-all cursor-pointer flex-shrink-0",
                                               hasNote
                                                 ? "text-primary bg-primary/10 hover:bg-primary/20"
-                                                : "text-muted-foreground opacity-0 group-hover:opacity-100 hover:bg-muted hover:text-foreground"
+                                                : "text-muted-foreground/60 hover:text-primary hover:bg-primary/10"
                                             )}
                                             title={hasNote ? "Editar nota" : "Adicionar nota"}
                                           >
@@ -513,18 +513,18 @@ export function AtividadesContent({ mentoradoId }: AtividadesContentProps) {
                                             )}
                                           </button>
                                         </AnimatedPopoverTrigger>
-                                        <AnimatedPopoverContent align="end" className="w-72">
+                                        <AnimatedPopoverContent align="end" className="w-80">
                                           <AnimatedPopoverClose>
                                             <X className="w-4 h-4" />
                                           </AnimatedPopoverClose>
-                                          <div className="space-y-3">
+                                          <div className="space-y-4">
                                             <div className="flex items-center gap-2">
-                                              <StickyNote className="w-4 h-4 text-primary" />
-                                              <h4 className="font-medium text-foreground text-sm">
+                                              <StickyNote className="w-5 h-5 text-primary" />
+                                              <h4 className="font-semibold text-foreground">
                                                 Nota Pessoal
                                               </h4>
                                             </div>
-                                            <p className="text-xs text-muted-foreground line-clamp-2">
+                                            <p className="text-sm text-muted-foreground border-l-2 border-primary/30 pl-3">
                                               {step.label}
                                             </p>
                                             <Textarea
@@ -533,14 +533,14 @@ export function AtividadesContent({ mentoradoId }: AtividadesContentProps) {
                                                 handleNoteChange(key, e.target.value)
                                               }
                                               placeholder="Escreva suas anotações aqui..."
-                                              className="bg-muted border-border text-foreground min-h-[100px] resize-none text-sm"
+                                              className="bg-muted border-border text-foreground min-h-[150px] resize-y text-sm"
                                             />
-                                            <div className="flex gap-2">
+                                            <div className="flex flex-col gap-2 sm:flex-row">
                                               <AnimatedPopoverClose asChild>
                                                 <Button
                                                   variant="outline"
                                                   size="sm"
-                                                  className="flex-1 cursor-pointer"
+                                                  className="w-full sm:flex-1 cursor-pointer"
                                                 >
                                                   Cancelar
                                                 </Button>
@@ -552,7 +552,7 @@ export function AtividadesContent({ mentoradoId }: AtividadesContentProps) {
                                                     saveNote(atividade.codigo, step.codigo)
                                                   }
                                                   disabled={updateNoteMutation.isPending}
-                                                  className="flex-1 bg-primary hover:bg-primary/90 cursor-pointer"
+                                                  className="w-full sm:flex-1 bg-primary hover:bg-primary/90 cursor-pointer"
                                                 >
                                                   {updateNoteMutation.isPending ? (
                                                     <Loader2 className="w-4 h-4 animate-spin" />
