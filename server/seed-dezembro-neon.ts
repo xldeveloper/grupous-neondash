@@ -1,3 +1,4 @@
+/* biome-ignore-all lint/suspicious/noConsole: Script CLI de seed - console é intencional */
 /**
  * Seed de Dados de Dezembro 2025 para Neon PostgreSQL
  *
@@ -430,16 +431,22 @@ export async function seedDezembroData() {
     }
   }
 
-  console.log("\n" + "=".repeat(60));
+  console.log(`\n${"=".repeat(60)}`);
   console.log("📋 RESUMO DA MIGRAÇÃO");
   console.log("=".repeat(60));
   console.log(`✅ Mentorados mapeados: ${results.mapped.length}`);
-  results.mapped.forEach((m) => console.log(`   - ${m}`));
+  for (const m of results.mapped) {
+    console.log(`   - ${m}`);
+  }
   console.log(`\n✨ Mentorados criados: ${results.created.length}`);
-  results.created.forEach((m) => console.log(`   - ${m}`));
+  for (const m of results.created) {
+    console.log(`   - ${m}`);
+  }
   if (results.errors.length > 0) {
     console.log(`\n❌ Erros: ${results.errors.length}`);
-    results.errors.forEach((e) => console.log(`   - ${e}`));
+    for (const e of results.errors) {
+      console.log(`   - ${e}`);
+    }
   }
   console.log("=".repeat(60));
 

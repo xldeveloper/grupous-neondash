@@ -1,3 +1,4 @@
+/* biome-ignore-all lint/suspicious/noConsole: Script CLI de verificação - console é intencional */
 import { and, eq } from "drizzle-orm";
 import { mentorados, metricasMensais } from "../drizzle/schema";
 import { getDb } from "./db";
