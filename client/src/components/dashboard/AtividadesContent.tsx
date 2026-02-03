@@ -9,6 +9,7 @@ import {
   Sparkles,
   StickyNote,
   Trophy,
+  X,
 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useCallback, useRef, useState } from "react";
@@ -19,18 +20,16 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { AnimatedCheckbox } from "@/components/ui/animated-checkbox";
+import {
+  AnimatedPopover,
+  AnimatedPopoverClose,
+  AnimatedPopoverContent,
+  AnimatedPopoverTrigger,
+} from "@/components/ui/animated-popover";
 import { AnimatedProgressBar, AnimatedProgressRing } from "@/components/ui/animated-progress";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { CelebrationEffect, useCelebration } from "@/components/ui/celebration-effect";
-import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-} from "@/components/ui/drawer";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import {
@@ -46,18 +45,13 @@ interface AtividadesContentProps {
   mentoradoId?: number; // For admin viewing specific mentorado
 }
 
-interface NoteDialogState {
-  open: boolean;
-  atividadeCodigo: string;
-  stepCodigo: string;
-  stepLabel: string;
+interface NotePopoverState {
+  key: string;
   currentNote: string;
 }
 
-interface TaskDialogState {
-  open: boolean;
-  atividadeCodigo: string;
-  atividadeTitulo: string;
+interface TaskPopoverState {
+  codigo: string;
   taskTitle: string;
 }
 
@@ -66,8 +60,8 @@ interface TaskDialogState {
  * - Lista atividades expansíveis (Accordion)
  * - Checkboxes animados para marcar passos como concluídos
  * - Celebração com confetti ao completar passos
- * - Notas pessoais para cada passo
- * - Criação de tarefas a partir de atividades
+ * - Notas pessoais para cada passo (Popover inline)
+ * - Criação de tarefas a partir de atividades (Popover inline)
  * - Anel de progresso circular animado
  * - Módulos coloridos por etapa
  */
@@ -80,21 +74,9 @@ export function AtividadesContent({ mentoradoId }: AtividadesContentProps) {
   } = useCelebration();
   const celebrationContainerRef = useRef<HTMLDivElement>(null);
 
-  // Dialog states
-  const [noteDialog, setNoteDialog] = useState<NoteDialogState>({
-    open: false,
-    atividadeCodigo: "",
-    stepCodigo: "",
-    stepLabel: "",
-    currentNote: "",
-  });
-
-  const [taskDialog, setTaskDialog] = useState<TaskDialogState>({
-    open: false,
-    atividadeCodigo: "",
-    atividadeTitulo: "",
-    taskTitle: "",
-  });
+  // Local state for popover content editing
+  const [noteStates, setNoteStates] = useState<Record<string, NotePopoverState>>({});
+  const [taskStates, setTaskStates] = useState<Record<string, TaskPopoverState>>({});
 
   // Fetch progress from server
   const progressQuery = mentoradoId
@@ -104,7 +86,6 @@ export function AtividadesContent({ mentoradoId }: AtividadesContentProps) {
   const toggleMutation = trpc.atividades.toggleStep.useMutation({
     onSuccess: (_, variables) => {
       progressQuery.refetch();
-      // Trigger celebration when completing a step (not when unchecking)
       if (variables.completed) {
         celebrate();
       }
@@ -114,7 +95,6 @@ export function AtividadesContent({ mentoradoId }: AtividadesContentProps) {
   const updateNoteMutation = trpc.atividades.updateNote.useMutation({
     onSuccess: () => {
       progressQuery.refetch();
-      setNoteDialog((prev) => ({ ...prev, open: false }));
     },
   });
 
@@ -123,9 +103,7 @@ export function AtividadesContent({ mentoradoId }: AtividadesContentProps) {
   const createTaskMutation = trpc.tasks.create.useMutation({
     onSuccess: () => {
       utils.tasks.list.invalidate();
-      setTaskDialog((prev) => ({ ...prev, open: false, taskTitle: "" }));
     },
-    onError: (_error) => {},
   });
 
   const progressMap = progressQuery.data ?? {};
@@ -137,7 +115,7 @@ export function AtividadesContent({ mentoradoId }: AtividadesContentProps) {
 
   const handleToggle = useCallback(
     (atividadeCodigo: string, stepCodigo: string) => {
-      if (mentoradoId) return; // Admin can't toggle for mentorado
+      if (mentoradoId) return;
 
       const key = `${atividadeCodigo}:${stepCodigo}`;
       const currentlyCompleted = progressMap[key]?.completed ?? false;
@@ -151,47 +129,55 @@ export function AtividadesContent({ mentoradoId }: AtividadesContentProps) {
     [mentoradoId, progressMap, toggleMutation]
   );
 
-  const openNoteDialog = useCallback(
-    (atividadeCodigo: string, stepCodigo: string, stepLabel: string) => {
-      const key = `${atividadeCodigo}:${stepCodigo}`;
-      const currentNote = progressMap[key]?.notes ?? "";
-      setNoteDialog({
-        open: true,
-        atividadeCodigo,
-        stepCodigo,
-        stepLabel,
-        currentNote,
-      });
-    },
-    [progressMap]
-  );
-
-  const saveNote = useCallback(() => {
-    updateNoteMutation.mutate({
-      atividadeCodigo: noteDialog.atividadeCodigo,
-      stepCodigo: noteDialog.stepCodigo,
-      notes: noteDialog.currentNote,
-    });
-  }, [noteDialog, updateNoteMutation]);
-
-  const openTaskDialog = useCallback((atividadeCodigo: string, atividadeTitulo: string) => {
-    setTaskDialog({
-      open: true,
-      atividadeCodigo,
-      atividadeTitulo,
-      taskTitle: "",
-    });
+  const handleNoteChange = useCallback((key: string, note: string) => {
+    setNoteStates((prev) => ({
+      ...prev,
+      [key]: { key, currentNote: note },
+    }));
   }, []);
 
-  const createTask = useCallback(() => {
-    if (!taskDialog.taskTitle.trim()) return;
-    createTaskMutation.mutate({
-      title: taskDialog.taskTitle,
-      category: "atividade",
-      source: "atividade",
-      atividadeCodigo: taskDialog.atividadeCodigo,
-    });
-  }, [taskDialog, createTaskMutation]);
+  const saveNote = useCallback(
+    (atividadeCodigo: string, stepCodigo: string) => {
+      const key = `${atividadeCodigo}:${stepCodigo}`;
+      const noteState = noteStates[key];
+      if (!noteState) return;
+
+      updateNoteMutation.mutate({
+        atividadeCodigo,
+        stepCodigo,
+        notes: noteState.currentNote,
+      });
+    },
+    [noteStates, updateNoteMutation]
+  );
+
+  const handleTaskChange = useCallback((codigo: string, title: string) => {
+    setTaskStates((prev) => ({
+      ...prev,
+      [codigo]: { codigo, taskTitle: title },
+    }));
+  }, []);
+
+  const createTask = useCallback(
+    (atividadeCodigo: string) => {
+      const taskState = taskStates[atividadeCodigo];
+      if (!taskState?.taskTitle.trim()) return;
+
+      createTaskMutation.mutate({
+        title: taskState.taskTitle,
+        category: "atividade",
+        source: "atividade",
+        atividadeCodigo,
+      });
+
+      // Clear the input after creating
+      setTaskStates((prev) => ({
+        ...prev,
+        [atividadeCodigo]: { codigo: atividadeCodigo, taskTitle: "" },
+      }));
+    },
+    [taskStates, createTaskMutation]
+  );
 
   const isReadOnly = !!mentoradoId;
 
@@ -262,10 +248,7 @@ export function AtividadesContent({ mentoradoId }: AtividadesContentProps) {
         <Card className="bg-card border-border overflow-hidden">
           <CardContent className="p-6">
             <div className="flex flex-col md:flex-row items-center gap-6">
-              {/* Anel de Progresso */}
               <AnimatedProgressRing value={percentage} size={140} strokeWidth={10} />
-
-              {/* Informações de progresso */}
               <div className="flex-1 text-center md:text-left space-y-3">
                 <div className="flex items-center justify-center md:justify-start gap-2">
                   {percentage === 100 ? (
@@ -275,15 +258,12 @@ export function AtividadesContent({ mentoradoId }: AtividadesContentProps) {
                   )}
                   <span className="text-lg font-semibold text-foreground">Progresso Geral</span>
                 </div>
-
                 <p className="text-muted-foreground">
                   <span className="text-2xl font-bold text-primary">{completed}</span>
                   <span className="text-muted-foreground"> de </span>
                   <span className="text-foreground font-medium">{total}</span>
                   <span className="text-muted-foreground"> passos concluídos</span>
                 </p>
-
-                {/* Mensagem motivacional */}
                 <motion.div
                   key={motivational.message}
                   initial={{ opacity: 0, x: -10 }}
@@ -384,17 +364,69 @@ export function AtividadesContent({ mentoradoId }: AtividadesContentProps) {
                             </p>
                           )}
 
-                          {/* Botão para criar tarefa */}
+                          {/* Botão para criar tarefa com Popover */}
                           {!isReadOnly && (
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              className="mb-4 border-border text-muted-foreground hover:bg-muted hover:text-foreground cursor-pointer"
-                              onClick={() => openTaskDialog(atividade.codigo, atividade.titulo)}
-                            >
-                              <Plus className="w-4 h-4 mr-1" />
-                              Criar Tarefa
-                            </Button>
+                            <AnimatedPopover>
+                              <AnimatedPopoverTrigger asChild>
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  className="mb-4 border-border text-muted-foreground hover:bg-muted hover:text-foreground cursor-pointer"
+                                >
+                                  <Plus className="w-4 h-4 mr-1" />
+                                  Criar Tarefa
+                                </Button>
+                              </AnimatedPopoverTrigger>
+                              <AnimatedPopoverContent align="start" className="w-80">
+                                <AnimatedPopoverClose>
+                                  <X className="w-4 h-4" />
+                                </AnimatedPopoverClose>
+                                <div className="space-y-4">
+                                  <div className="flex items-center gap-2">
+                                    <ListTodo className="w-5 h-5 text-primary" />
+                                    <h4 className="font-semibold text-foreground">Criar Tarefa</h4>
+                                  </div>
+                                  <p className="text-sm text-muted-foreground">
+                                    Vinculada à:{" "}
+                                    <span className="text-foreground">{atividade.titulo}</span>
+                                  </p>
+                                  <Input
+                                    value={taskStates[atividade.codigo]?.taskTitle ?? ""}
+                                    onChange={(e) =>
+                                      handleTaskChange(atividade.codigo, e.target.value)
+                                    }
+                                    placeholder="Título da tarefa..."
+                                    className="bg-muted border-border text-foreground"
+                                  />
+                                  <div className="flex gap-2">
+                                    <AnimatedPopoverClose asChild>
+                                      <Button
+                                        variant="outline"
+                                        size="sm"
+                                        className="flex-1 cursor-pointer"
+                                      >
+                                        Cancelar
+                                      </Button>
+                                    </AnimatedPopoverClose>
+                                    <Button
+                                      size="sm"
+                                      onClick={() => createTask(atividade.codigo)}
+                                      disabled={
+                                        createTaskMutation.isPending ||
+                                        !taskStates[atividade.codigo]?.taskTitle?.trim()
+                                      }
+                                      className="flex-1 bg-primary hover:bg-primary/90 cursor-pointer"
+                                    >
+                                      {createTaskMutation.isPending ? (
+                                        <Loader2 className="w-4 h-4 animate-spin" />
+                                      ) : (
+                                        "Criar"
+                                      )}
+                                    </Button>
+                                  </div>
+                                </div>
+                              </AnimatedPopoverContent>
+                            </AnimatedPopover>
                           )}
 
                           <div className="space-y-1">
@@ -406,7 +438,8 @@ export function AtividadesContent({ mentoradoId }: AtividadesContentProps) {
                                   notes: null,
                                 };
                                 const isCompleted = stepData.completed;
-                                const hasNote = !!stepData.notes;
+                                const savedNote = stepData.notes ?? "";
+                                const hasNote = !!savedNote;
                                 const isPending =
                                   toggleMutation.isPending &&
                                   toggleMutation.variables?.atividadeCodigo === atividade.codigo &&
@@ -445,35 +478,91 @@ export function AtividadesContent({ mentoradoId }: AtividadesContentProps) {
                                       {step.label}
                                     </label>
 
-                                    {/* Ícone de nota */}
+                                    {/* Ícone de nota com Popover inline */}
                                     {!isReadOnly && (
-                                      <button
-                                        type="button"
-                                        onClick={() =>
-                                          openNoteDialog(atividade.codigo, step.codigo, step.label)
-                                        }
-                                        className={cn(
-                                          "p-1.5 rounded-lg transition-all cursor-pointer",
-                                          hasNote
-                                            ? "text-primary bg-primary/10 hover:bg-primary/20"
-                                            : "text-muted-foreground opacity-0 group-hover:opacity-100 hover:bg-muted hover:text-foreground"
-                                        )}
-                                        title={hasNote ? "Editar nota" : "Adicionar nota"}
+                                      <AnimatedPopover
+                                        onOpenChange={(open) => {
+                                          if (open) {
+                                            // Initialize with current saved note
+                                            handleNoteChange(key, savedNote);
+                                          }
+                                        }}
                                       >
-                                        {hasNote ? (
-                                          <Pencil className="w-4 h-4" />
-                                        ) : (
-                                          <StickyNote className="w-4 h-4" />
-                                        )}
-                                      </button>
+                                        <AnimatedPopoverTrigger asChild>
+                                          <button
+                                            type="button"
+                                            className={cn(
+                                              "p-1.5 rounded-lg transition-all cursor-pointer",
+                                              hasNote
+                                                ? "text-primary bg-primary/10 hover:bg-primary/20"
+                                                : "text-muted-foreground opacity-0 group-hover:opacity-100 hover:bg-muted hover:text-foreground"
+                                            )}
+                                            title={hasNote ? "Editar nota" : "Adicionar nota"}
+                                          >
+                                            {hasNote ? (
+                                              <Pencil className="w-4 h-4" />
+                                            ) : (
+                                              <StickyNote className="w-4 h-4" />
+                                            )}
+                                          </button>
+                                        </AnimatedPopoverTrigger>
+                                        <AnimatedPopoverContent align="end" className="w-72">
+                                          <AnimatedPopoverClose>
+                                            <X className="w-4 h-4" />
+                                          </AnimatedPopoverClose>
+                                          <div className="space-y-3">
+                                            <div className="flex items-center gap-2">
+                                              <StickyNote className="w-4 h-4 text-primary" />
+                                              <h4 className="font-medium text-foreground text-sm">
+                                                Nota Pessoal
+                                              </h4>
+                                            </div>
+                                            <p className="text-xs text-muted-foreground line-clamp-2">
+                                              {step.label}
+                                            </p>
+                                            <Textarea
+                                              value={noteStates[key]?.currentNote ?? savedNote}
+                                              onChange={(e) =>
+                                                handleNoteChange(key, e.target.value)
+                                              }
+                                              placeholder="Escreva suas anotações aqui..."
+                                              className="bg-muted border-border text-foreground min-h-[100px] resize-none text-sm"
+                                            />
+                                            <div className="flex gap-2">
+                                              <AnimatedPopoverClose asChild>
+                                                <Button
+                                                  variant="outline"
+                                                  size="sm"
+                                                  className="flex-1 cursor-pointer"
+                                                >
+                                                  Cancelar
+                                                </Button>
+                                              </AnimatedPopoverClose>
+                                              <AnimatedPopoverClose asChild>
+                                                <Button
+                                                  size="sm"
+                                                  onClick={() =>
+                                                    saveNote(atividade.codigo, step.codigo)
+                                                  }
+                                                  disabled={updateNoteMutation.isPending}
+                                                  className="flex-1 bg-primary hover:bg-primary/90 cursor-pointer"
+                                                >
+                                                  {updateNoteMutation.isPending ? (
+                                                    <Loader2 className="w-4 h-4 animate-spin" />
+                                                  ) : (
+                                                    "Salvar"
+                                                  )}
+                                                </Button>
+                                              </AnimatedPopoverClose>
+                                            </div>
+                                          </div>
+                                        </AnimatedPopoverContent>
+                                      </AnimatedPopover>
                                     )}
 
                                     {/* Indicador de nota (readonly) */}
                                     {isReadOnly && hasNote && (
-                                      <span
-                                        className="text-primary p-1"
-                                        title={stepData.notes ?? ""}
-                                      >
+                                      <span className="text-primary p-1" title={savedNote}>
                                         <StickyNote className="w-4 h-4" />
                                       </span>
                                     )}
@@ -508,108 +597,6 @@ export function AtividadesContent({ mentoradoId }: AtividadesContentProps) {
           ? "Visualização do progresso do mentorado"
           : "Marque os passos concluídos para acompanhar seu progresso"}
       </motion.p>
-
-      {/* Drawer para Notas */}
-      <Drawer
-        open={noteDialog.open}
-        onOpenChange={(open) => setNoteDialog((prev) => ({ ...prev, open }))}
-      >
-        <DrawerContent className="bg-card border-border">
-          <DrawerHeader>
-            <DrawerTitle className="text-foreground flex items-center gap-2">
-              <StickyNote className="w-5 h-5 text-primary" />
-              Nota Pessoal
-            </DrawerTitle>
-          </DrawerHeader>
-          <div className="px-4 pb-2 space-y-3">
-            <p className="text-sm text-muted-foreground">{noteDialog.stepLabel}</p>
-            <Textarea
-              value={noteDialog.currentNote}
-              onChange={(e) =>
-                setNoteDialog((prev) => ({
-                  ...prev,
-                  currentNote: e.target.value,
-                }))
-              }
-              placeholder="Escreva suas anotações aqui..."
-              className="bg-muted border-border text-foreground min-h-[120px] resize-none"
-            />
-          </div>
-          <DrawerFooter className="flex-row gap-2">
-            <DrawerClose asChild>
-              <Button
-                variant="outline"
-                className="flex-1 border-border text-muted-foreground cursor-pointer"
-              >
-                Cancelar
-              </Button>
-            </DrawerClose>
-            <Button
-              onClick={saveNote}
-              disabled={updateNoteMutation.isPending}
-              className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground cursor-pointer"
-            >
-              {updateNoteMutation.isPending ? (
-                <Loader2 className="w-4 h-4 animate-spin" />
-              ) : (
-                "Salvar"
-              )}
-            </Button>
-          </DrawerFooter>
-        </DrawerContent>
-      </Drawer>
-
-      {/* Drawer para Criar Tarefa */}
-      <Drawer
-        open={taskDialog.open}
-        onOpenChange={(open) => setTaskDialog((prev) => ({ ...prev, open }))}
-      >
-        <DrawerContent className="bg-card border-border">
-          <DrawerHeader>
-            <DrawerTitle className="text-foreground flex items-center gap-2">
-              <ListTodo className="w-5 h-5 text-primary" />
-              Criar Tarefa
-            </DrawerTitle>
-          </DrawerHeader>
-          <div className="px-4 pb-2 space-y-3">
-            <p className="text-sm text-muted-foreground">
-              Vinculada à: <span className="text-foreground">{taskDialog.atividadeTitulo}</span>
-            </p>
-            <Input
-              value={taskDialog.taskTitle}
-              onChange={(e) =>
-                setTaskDialog((prev) => ({
-                  ...prev,
-                  taskTitle: e.target.value,
-                }))
-              }
-              placeholder="Título da tarefa..."
-              className="bg-muted border-border text-foreground"
-            />
-          </div>
-          <DrawerFooter className="flex-row gap-2">
-            <DrawerClose asChild>
-              <Button
-                variant="outline"
-                className="flex-1 border-border text-muted-foreground cursor-pointer"
-              >
-                Cancelar
-              </Button>
-            </DrawerClose>
-            <Button
-              onClick={createTask}
-              disabled={createTaskMutation.isPending || !taskDialog.taskTitle.trim()}
-              className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground cursor-pointer"
-            >
-              {createTaskMutation.isPending ? (
-                <Loader2 className="w-4 h-4 animate-spin" />
-              ) : (
-                "Criar"
-              )}
-            </Button>
-          </DrawerFooter>
-        </DrawerContent>
-      </Drawer>
     </div>
   );
 }
