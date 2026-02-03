@@ -1,14 +1,11 @@
 /**
- * useOpenClaw - React hook for OpenClaw AI chat functionality
+ * useOpenClaw - React hook for AI chat functionality
  *
- * Provides:
- * - Session management (create, terminate)
- * - Message sending and history
- * - Real-time WebSocket updates
- * - Connection status
+ * Simplified hook that uses the aiAssistant router.
+ * Provides session-like behavior using local state.
  */
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useState } from "react";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { trpc } from "@/lib/trpc";
 
@@ -38,132 +35,44 @@ interface UseOpenClawReturn {
 }
 
 export function useOpenClaw(): UseOpenClawReturn {
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated } = useAuth();
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isSending, setIsSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const wsRef = useRef<WebSocket | null>(null);
 
   // tRPC mutations and queries
-  const createSessionMutation = trpc.openclaw.createWebchatSession.useMutation();
-  const terminateSessionMutation = trpc.openclaw.terminateSession.useMutation();
-  const sendMessageMutation = trpc.openclaw.sendMessage.useMutation();
-  const statusQuery = trpc.openclaw.getStatus.useQuery(undefined, {
+  const chatMutation = trpc.aiAssistant.chat.useMutation();
+  const statusQuery = trpc.aiAssistant.status.useQuery(undefined, {
     enabled: isAuthenticated,
   });
 
-  // Get active sessions on mount
-  const activeSessionsQuery = trpc.openclaw.getActiveSessions.useQuery(undefined, {
-    enabled: isAuthenticated,
-  });
+  // Check if AI is configured
+  const isConfigured = statusQuery.data?.configured ?? false;
 
-  // Get message history when session changes
-  const historyQuery = trpc.openclaw.getMessageHistory.useQuery(
-    { sessionId: sessionId ?? "", limit: 100 },
-    { enabled: !!sessionId }
-  );
-
-  // Restore active session on mount
-  useEffect(() => {
-    if (activeSessionsQuery.data?.length) {
-      const webchatSession = activeSessionsQuery.data.find((s) => s.channelType === "webchat");
-      if (webchatSession) {
-        setSessionId(webchatSession.sessionId);
-      }
-    }
-  }, [activeSessionsQuery.data]);
-
-  // Load message history when session is set
-  useEffect(() => {
-    if (historyQuery.data?.items) {
-      setMessages(
-        historyQuery.data.items.map(
-          (m: { id: number; role: string; content: string; createdAt: Date }) => ({
-            id: m.id,
-            role: m.role as "user" | "assistant",
-            content: m.content,
-            createdAt: new Date(m.createdAt),
-          })
-        )
-      );
-    }
-  }, [historyQuery.data]);
-
-  // WebSocket connection for real-time updates
-  useEffect(() => {
-    if (!sessionId || !isAuthenticated || !user?.id) return;
-
-    const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
-    const wsUrl = `${protocol}//${window.location.host}/ws/openclaw?userId=${user.id}`;
-
-    const ws = new WebSocket(wsUrl);
-    wsRef.current = ws;
-
-    ws.onopen = () => {
-      ws.send(JSON.stringify({ type: "subscribe", sessionId }));
-    };
-
-    ws.onmessage = (event) => {
-      try {
-        const data = JSON.parse(event.data);
-        if (data.type === "message" && data.role === "assistant") {
-          setMessages((prev) => [
-            ...prev,
-            {
-              id: Date.now(),
-              role: "assistant",
-              content: data.content,
-              createdAt: new Date(),
-            },
-          ]);
-          setIsSending(false);
-        }
-      } catch (_err) {}
-    };
-
-    ws.onerror = (_err) => {
-      setError("Connection error");
-    };
-
-    ws.onclose = () => {};
-
-    return () => {
-      ws.close();
-      wsRef.current = null;
-    };
-  }, [sessionId, isAuthenticated, user?.id]);
-
-  // Create new chat session
+  // Create new chat session (now just simulated locally)
   const createSession = useCallback(async () => {
     setIsLoading(true);
     setError(null);
 
     try {
-      const result = await createSessionMutation.mutateAsync({});
-      setSessionId(result.sessionId);
+      // Generate a local session ID
+      const newSessionId = `session_${Date.now()}`;
+      setSessionId(newSessionId);
       setMessages([]);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to create session");
     } finally {
       setIsLoading(false);
     }
-  }, [createSessionMutation]);
+  }, []);
 
   // End current session
   const endSession = useCallback(async () => {
-    if (!sessionId) return;
-
-    try {
-      await terminateSessionMutation.mutateAsync({ sessionId });
-      setSessionId(null);
-      setMessages([]);
-      wsRef.current?.close();
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to end session");
-    }
-  }, [sessionId, terminateSessionMutation]);
+    setSessionId(null);
+    setMessages([]);
+  }, []);
 
   // Send message
   const sendMessage = useCallback(
@@ -175,30 +84,44 @@ export function useOpenClaw(): UseOpenClawReturn {
 
       // Optimistic update - add user message immediately
       const tempId = Date.now();
-      setMessages((prev) => [
-        ...prev,
-        {
-          id: tempId,
-          role: "user",
-          content,
-          createdAt: new Date(),
-        },
-      ]);
+      const userMessage: ChatMessage = {
+        id: tempId,
+        role: "user",
+        content,
+        createdAt: new Date(),
+      };
+      setMessages((prev) => [...prev, userMessage]);
 
       try {
-        await sendMessageMutation.mutateAsync({
-          sessionId,
-          content,
-        });
-        // Assistant response will come via WebSocket
+        // Build message history for context
+        const messageHistory = messages.map((m) => ({
+          role: m.role as "user" | "assistant",
+          content: m.content,
+        }));
+        messageHistory.push({ role: "user", content });
+
+        // Call the chat mutation
+        const result = await chatMutation.mutateAsync({ messages: messageHistory });
+
+        // Add assistant response
+        setMessages((prev) => [
+          ...prev,
+          {
+            id: Date.now(),
+            role: "assistant" as const,
+            content: result.message,
+            createdAt: new Date(),
+          },
+        ]);
       } catch (err) {
         setError(err instanceof Error ? err.message : "Failed to send message");
         // Remove optimistic message on error
         setMessages((prev) => prev.filter((m) => m.id !== tempId));
+      } finally {
         setIsSending(false);
       }
     },
-    [sessionId, sendMessageMutation]
+    [sessionId, messages, chatMutation]
   );
 
   return {
@@ -210,7 +133,7 @@ export function useOpenClaw(): UseOpenClawReturn {
     sendMessage,
     isLoading,
     isSending,
-    isConnected: statusQuery.data?.isGatewayConnected ?? false,
+    isConnected: isConfigured,
     error,
   };
 }
