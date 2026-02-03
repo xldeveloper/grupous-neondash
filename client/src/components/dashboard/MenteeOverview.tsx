@@ -3,6 +3,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { trpc } from "@/lib/trpc";
+import { AITasksCard } from "./AITasksCard";
 import { FinancialHistoryChart } from "./FinancialHistoryChart";
 import { MeetingHistory } from "./MeetingHistory";
 import { MentorNotes } from "./MentorNotes";
@@ -192,6 +193,11 @@ export function MenteeOverview({ mentoradoId, isAdmin }: MenteeOverviewProps) {
             </div>
             <h2 className="text-primary text-lg font-medium px-1">Anotações Privadas</h2>
             <MentorNotes existingNotes={stats.notes} />
+          </div>
+
+          <div className="pt-4 space-y-4">
+            {/* AI Tasks Section - Placed prominently below notes */}
+            <AITasksCard mentoradoId={mentorado.id} isAdmin={isAdmin} />
           </div>
 
           <div className="pt-4 space-y-4">

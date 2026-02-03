@@ -575,7 +575,10 @@ export function AtividadesContent({ mentoradoId }: AtividadesContentProps) {
 
                                           {/* Footer with save button */}
                                           <div className="p-4 pt-0">
-                                            <AnimatedPopoverClose asChild>
+                                            <AnimatedPopoverClose
+                                              asChild
+                                              className="static w-full top-auto right-auto"
+                                            >
                                               <Button
                                                 type="button"
                                                 size="default"

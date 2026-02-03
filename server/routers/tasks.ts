@@ -159,4 +159,126 @@ export const tasksRouter = router({
       await db.delete(tasks).where(eq(tasks.id, input.id));
       return { success: true };
     }),
+
+  generateFromAI: protectedProcedure
+    .input(
+      z.object({
+        mentoradoId: z.number().optional(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const db = getDb();
+      const { invokeLLM } = await import("../_core/llm");
+      const { metricasMensais, diagnosticos, mentorados } = await import("../../drizzle/schema");
+
+      let targetMentoradoId = ctx.mentorado?.id;
+
+      if (input.mentoradoId) {
+        if (ctx.user?.role !== "admin") {
+          throw new TRPCError({
+            code: "FORBIDDEN",
+            message: "Apenas admins podem gerar tarefas para outros.",
+          });
+        }
+        targetMentoradoId = input.mentoradoId;
+      }
+
+      if (!targetMentoradoId) {
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "Perfil de mentorado não encontrado.",
+        });
+      }
+
+      // Fetch context data
+      const [mentoradoData] = await db
+        .select()
+        .from(mentorados)
+        .where(eq(mentorados.id, targetMentoradoId))
+        .limit(1);
+
+      const recentMetrics = await db
+        .select()
+        .from(metricasMensais)
+        .where(eq(metricasMensais.mentoradoId, targetMentoradoId))
+        .orderBy(desc(metricasMensais.ano), desc(metricasMensais.mes))
+        .limit(2);
+
+      const [diagnosticoData] = await db
+        .select()
+        .from(diagnosticos)
+        .where(eq(diagnosticos.mentoradoId, targetMentoradoId))
+        .limit(1);
+
+      // Construct Prompt
+      const systemPrompt = `
+      Você é um Business Coach de Elite para clínicas de estética.
+      Sua missão é analisar os dados do mentorado e criar 3-5 tarefas TÁTICAS e IMEDIATAS para alavancar os resultados.
+      
+      Regras:
+      1. Seja direto e imperativo.
+      2. Foque em: Vendas, Marketing (Instagram) e Gestão.
+      3. Use tom motivador mas exigente ("Gamified").
+      4. Retorne APENAS um JSON array de strings. Nada mais.
+      Exemplo: ["Ligar para 10 leads antigos", "Postar story com caixinha de perguntas", "Revisar custos de produtos"]
+      `;
+
+      const userContext = `
+      Mentorado: ${mentoradoData?.nomeCompleto}
+      Meta Faturamento: R$ ${mentoradoData?.metaFaturamento}
+      
+      Últimas Métricas:
+      ${recentMetrics
+        .map(
+          (m) => `- ${m.mes}/${m.ano}: Fat R$${m.faturamento}, Lucro R$${m.lucro}, Leads ${m.leads}`
+        )
+        .join("\n")}
+      
+      Diagnóstico (Pontos de dor/Objetivos):
+      - Dor: ${diagnosticoData?.incomodaRotina || "Não informado"}
+      - Objetivo: ${diagnosticoData?.objetivo6Meses || "Não informado"}
+      - Nível Prioridade: ${diagnosticoData?.nivelPrioridade || "Normal"}
+      `;
+
+      // Call LLM
+      const result = await invokeLLM({
+        messages: [
+          { role: "system", content: systemPrompt },
+          { role: "user", content: userContext },
+        ],
+        response_format: { type: "json_object" },
+      });
+
+      const content = result.choices[0].message.content as string;
+      let suggestedTasks: string[] = [];
+
+      try {
+        const parsed = JSON.parse(content);
+        // Handle both { tasks: [] } and ["task1", "task2"] formats
+        suggestedTasks = Array.isArray(parsed) ? parsed : parsed.tasks || parsed.data || [];
+      } catch (e) {
+        // Fallback tasks if AI fails to format
+        suggestedTasks = [
+          "Revisar métricas do mês",
+          "Entrar em contato com 5 leads quentes",
+          "Planejar conteúdo da semana",
+        ];
+      }
+
+      // Insert tasks
+      if (suggestedTasks.length > 0) {
+        await db.insert(tasks).values(
+          suggestedTasks.map((title) => ({
+            mentoradoId: targetMentoradoId!,
+            title: String(title).substring(0, 255), // Safety check
+            status: "todo",
+            priority: "media" as any,
+            category: "atividade",
+            source: "atividade" as any, // Marking as from "atividade" (or could add 'ai' enum later) to differentiate
+          }))
+        );
+      }
+
+      return { success: true, count: suggestedTasks.length };
+    }),
 });
