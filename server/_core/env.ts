@@ -17,4 +17,7 @@ export const ENV = {
   googleClientSecret: process.env.GOOGLE_CLIENT_SECRET,
   googleRedirectUri:
     process.env.GOOGLE_REDIRECT_URI ?? "http://localhost:3000/api/calendar/callback",
+
+  // Brave Search API (optional, for web search tool)
+  braveSearchApiKey: process.env.BRAVE_SEARCH_API_KEY,
 };

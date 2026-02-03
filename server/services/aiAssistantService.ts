@@ -11,6 +11,7 @@ import { z } from "zod";
 import {
   diagnosticos,
   feedbacks,
+  googleTokens,
   leads,
   type Mentorado,
   mentorados,
@@ -18,7 +19,9 @@ import {
   tasks,
 } from "../../drizzle/schema";
 import { defaultModel, isAIConfigured } from "../_core/aiProvider";
+import { ENV } from "../_core/env";
 import { getDb } from "../db";
+import { getEvents, refreshAccessToken } from "./googleCalendarService";
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES
@@ -60,6 +63,8 @@ Você tem acesso às seguintes ferramentas para consultar dados do mentorado:
 - **getMyTasks**: Ver tarefas pendentes e seus status
 - **getMyGoals**: Ver metas atuais e progresso
 - **getDiagnostico**: Ver diagnóstico inicial de onboarding
+- **getMyAgenda**: Ver próximos eventos do Google Calendar
+- **searchWeb**: Pesquisar na web por informações atualizadas
 
 ## Diretrizes
 1. Sempre responda em **português brasileiro**
@@ -406,6 +411,182 @@ function createTools(ctx: ChatContext) {
           message: "Diagnóstico inicial do mentorado.",
           data: diag[0],
         };
+      },
+    }),
+
+    getMyAgenda: tool({
+      description:
+        "Obter próximos eventos do Google Calendar do usuário. Retorna compromissos, reuniões e lembretes.",
+      parameters: z.object({
+        days: z
+          .number()
+          .min(1)
+          .max(30)
+          .default(7)
+          .describe("Número de dias à frente para buscar (1-30)"),
+      }),
+      execute: async ({ days }) => {
+        // Check if user has Google Calendar connected
+        const [token] = await db
+          .select()
+          .from(googleTokens)
+          .where(eq(googleTokens.userId, ctx.userId));
+
+        if (!token) {
+          return {
+            status: "not_connected",
+            message:
+              "Google Calendar não conectado. O usuário precisa conectar sua conta Google na página Agenda.",
+            data: null,
+          };
+        }
+
+        // Check if token is expired and refresh if needed
+        let accessToken = token.accessToken;
+        if (new Date() >= token.expiresAt) {
+          if (!token.refreshToken) {
+            return {
+              status: "expired",
+              message:
+                "Sessão do Google Calendar expirou. O usuário precisa reconectar na página Agenda.",
+              data: null,
+            };
+          }
+
+          try {
+            const refreshed = await refreshAccessToken(token.refreshToken);
+            accessToken = refreshed.access_token;
+
+            // Update token in database
+            await db
+              .update(googleTokens)
+              .set({
+                accessToken: refreshed.access_token,
+                expiresAt: new Date(Date.now() + refreshed.expires_in * 1000),
+              })
+              .where(eq(googleTokens.userId, ctx.userId));
+          } catch {
+            return {
+              status: "refresh_failed",
+              message:
+                "Falha ao renovar sessão do Google Calendar. O usuário precisa reconectar na página Agenda.",
+              data: null,
+            };
+          }
+        }
+
+        // Fetch events
+        try {
+          const now = new Date();
+          const timeMin = now;
+          const timeMax = new Date(now.getTime() + days * 24 * 60 * 60 * 1000);
+
+          const events = await getEvents(accessToken, timeMin, timeMax, 20);
+
+          if (events.length === 0) {
+            return {
+              status: "empty",
+              message: `Nenhum evento encontrado nos próximos ${days} dias.`,
+              data: [],
+            };
+          }
+
+          return {
+            status: "success",
+            message: `Encontrados ${events.length} eventos nos próximos ${days} dias.`,
+            data: events.map((e) => ({
+              title: e.title,
+              start: e.start,
+              end: e.end,
+              allDay: e.allDay,
+              location: e.location,
+            })),
+          };
+        } catch {
+          return {
+            status: "error",
+            message: "Erro ao buscar eventos do Google Calendar.",
+            data: null,
+          };
+        }
+      },
+    }),
+
+    searchWeb: tool({
+      description:
+        "Pesquisar na web por informações atualizadas usando Brave Search. Use para buscar tendências, notícias ou informações que não estão no banco de dados.",
+      parameters: z.object({
+        query: z
+          .string()
+          .min(3)
+          .max(200)
+          .describe("Termo de busca (ex: 'tendências estética 2025', 'marketing clínicas')"),
+        count: z.number().min(1).max(10).default(5).describe("Número de resultados (1-10)"),
+      }),
+      execute: async ({ query, count }) => {
+        if (!ENV.braveSearchApiKey) {
+          return {
+            status: "not_configured",
+            message: "Pesquisa web não configurada. BRAVE_SEARCH_API_KEY não definida.",
+            data: null,
+          };
+        }
+
+        try {
+          const response = await fetch(
+            `https://api.search.brave.com/res/v1/web/search?q=${encodeURIComponent(query)}&count=${count}`,
+            {
+              headers: {
+                Accept: "application/json",
+                "Accept-Encoding": "gzip",
+                "X-Subscription-Token": ENV.braveSearchApiKey,
+              },
+            }
+          );
+
+          if (!response.ok) {
+            return {
+              status: "error",
+              message: `Erro na pesquisa: ${response.status} ${response.statusText}`,
+              data: null,
+            };
+          }
+
+          const data = (await response.json()) as {
+            web?: {
+              results?: Array<{
+                title: string;
+                url: string;
+                description: string;
+              }>;
+            };
+          };
+          const results = data.web?.results ?? [];
+
+          if (results.length === 0) {
+            return {
+              status: "empty",
+              message: `Nenhum resultado encontrado para "${query}".`,
+              data: [],
+            };
+          }
+
+          return {
+            status: "success",
+            message: `Encontrados ${results.length} resultados para "${query}".`,
+            data: results.map((r) => ({
+              title: r.title,
+              url: r.url,
+              description: r.description,
+            })),
+          };
+        } catch (error) {
+          return {
+            status: "error",
+            message: `Erro ao pesquisar: ${error instanceof Error ? error.message : "desconhecido"}`,
+            data: null,
+          };
+        }
       },
     }),
   };
