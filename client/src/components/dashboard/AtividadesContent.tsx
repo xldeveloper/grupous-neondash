@@ -3,6 +3,7 @@ import {
   CheckCircle2,
   ListTodo,
   Loader2,
+  MessageSquarePlus,
   Pencil,
   Play,
   Plus,
@@ -452,20 +453,25 @@ export function AtividadesContent({ mentoradoId }: AtividadesContentProps) {
                                     animate={{ opacity: 1, x: 0 }}
                                     transition={{ duration: 0.2, delay: 0.03 * stepIndex }}
                                     className={cn(
-                                      "flex items-center gap-3 py-2.5 px-3 rounded-lg group transition-colors",
+                                      "flex items-start gap-3 py-3 px-3 rounded-lg group transition-colors",
                                       "hover:bg-muted/50",
                                       isCompleted && "bg-primary/5"
                                     )}
                                   >
-                                    <AnimatedCheckbox
-                                      id={key}
-                                      checked={isCompleted}
-                                      disabled={isReadOnly || isPending}
-                                      onCheckedChange={() =>
-                                        handleToggle(atividade.codigo, step.codigo)
-                                      }
-                                      className="border-border data-[state=checked]:bg-primary data-[state=checked]:border-primary"
-                                    />
+                                    {/* Checkbox */}
+                                    <div className="pt-0.5 flex-shrink-0">
+                                      <AnimatedCheckbox
+                                        id={key}
+                                        checked={isCompleted}
+                                        disabled={isReadOnly || isPending}
+                                        onCheckedChange={() =>
+                                          handleToggle(atividade.codigo, step.codigo)
+                                        }
+                                        className="border-border data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+                                      />
+                                    </div>
+
+                                    {/* Conteúdo do step */}
                                     <div className="flex-1 min-w-0">
                                       <label
                                         htmlFor={key}
@@ -485,12 +491,11 @@ export function AtividadesContent({ mentoradoId }: AtividadesContentProps) {
                                       )}
                                     </div>
 
-                                    {/* Ícone de nota - sempre visível */}
+                                    {/* Botão de nota - estilo pill */}
                                     {!isReadOnly && (
                                       <AnimatedPopover
                                         onOpenChange={(open) => {
                                           if (open) {
-                                            // Initialize with current saved note
                                             handleNoteChange(key, savedNote);
                                           }
                                         }}
@@ -499,48 +504,66 @@ export function AtividadesContent({ mentoradoId }: AtividadesContentProps) {
                                           <button
                                             type="button"
                                             className={cn(
-                                              "p-1.5 rounded-lg transition-all cursor-pointer flex-shrink-0",
+                                              "flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-xs font-medium transition-all cursor-pointer flex-shrink-0",
                                               hasNote
-                                                ? "text-primary bg-primary/10 hover:bg-primary/20"
-                                                : "text-muted-foreground/60 hover:text-primary hover:bg-primary/10"
+                                                ? "bg-primary/15 text-primary hover:bg-primary/25 ring-1 ring-primary/30"
+                                                : "bg-muted/80 text-muted-foreground hover:bg-muted hover:text-foreground"
                                             )}
-                                            title={hasNote ? "Editar nota" : "Adicionar nota"}
                                           >
                                             {hasNote ? (
-                                              <Pencil className="w-4 h-4" />
+                                              <>
+                                                <Pencil className="w-3 h-3" />
+                                                <span>Nota</span>
+                                              </>
                                             ) : (
-                                              <StickyNote className="w-4 h-4" />
+                                              <>
+                                                <MessageSquarePlus className="w-3.5 h-3.5" />
+                                                <span className="hidden sm:inline">Nota</span>
+                                              </>
                                             )}
                                           </button>
                                         </AnimatedPopoverTrigger>
-                                        <AnimatedPopoverContent align="end" className="w-80">
+                                        <AnimatedPopoverContent
+                                          align="end"
+                                          side="bottom"
+                                          className="w-[340px]"
+                                        >
                                           <AnimatedPopoverClose>
                                             <X className="w-4 h-4" />
                                           </AnimatedPopoverClose>
                                           <div className="space-y-4">
                                             <div className="flex items-center gap-2">
-                                              <StickyNote className="w-5 h-5 text-primary" />
-                                              <h4 className="font-semibold text-foreground">
-                                                Nota Pessoal
-                                              </h4>
+                                              <div className="p-2 rounded-lg bg-primary/10">
+                                                <StickyNote className="w-5 h-5 text-primary" />
+                                              </div>
+                                              <div>
+                                                <h4 className="font-semibold text-foreground">
+                                                  Nota Pessoal
+                                                </h4>
+                                                <p className="text-xs text-muted-foreground">
+                                                  Suas anotações sobre este passo
+                                                </p>
+                                              </div>
                                             </div>
-                                            <p className="text-sm text-muted-foreground border-l-2 border-primary/30 pl-3">
-                                              {step.label}
-                                            </p>
+                                            <div className="p-3 bg-muted/50 rounded-lg border border-border/50">
+                                              <p className="text-sm text-muted-foreground line-clamp-2">
+                                                {step.label}
+                                              </p>
+                                            </div>
                                             <Textarea
                                               value={noteStates[key]?.currentNote ?? savedNote}
                                               onChange={(e) =>
                                                 handleNoteChange(key, e.target.value)
                                               }
-                                              placeholder="Escreva suas anotações aqui..."
-                                              className="bg-muted border-border text-foreground min-h-[150px] resize-y text-sm"
+                                              placeholder="Escreva suas anotações, dúvidas ou insights..."
+                                              className="bg-background border-border text-foreground min-h-[140px] resize-y text-sm placeholder:text-muted-foreground/50"
                                             />
-                                            <div className="flex flex-col gap-2 sm:flex-row">
+                                            <div className="flex gap-3">
                                               <AnimatedPopoverClose asChild>
                                                 <Button
-                                                  variant="outline"
+                                                  variant="ghost"
                                                   size="sm"
-                                                  className="w-full sm:flex-1 cursor-pointer"
+                                                  className="flex-1 cursor-pointer"
                                                 >
                                                   Cancelar
                                                 </Button>
@@ -552,12 +575,12 @@ export function AtividadesContent({ mentoradoId }: AtividadesContentProps) {
                                                     saveNote(atividade.codigo, step.codigo)
                                                   }
                                                   disabled={updateNoteMutation.isPending}
-                                                  className="w-full sm:flex-1 bg-primary hover:bg-primary/90 cursor-pointer"
+                                                  className="flex-1 bg-primary hover:bg-primary/90 cursor-pointer"
                                                 >
                                                   {updateNoteMutation.isPending ? (
                                                     <Loader2 className="w-4 h-4 animate-spin" />
                                                   ) : (
-                                                    "Salvar"
+                                                    "Salvar Nota"
                                                   )}
                                                 </Button>
                                               </AnimatedPopoverClose>
@@ -569,13 +592,16 @@ export function AtividadesContent({ mentoradoId }: AtividadesContentProps) {
 
                                     {/* Indicador de nota (readonly) */}
                                     {isReadOnly && hasNote && (
-                                      <span className="text-primary p-1" title={savedNote}>
+                                      <span
+                                        className="text-primary p-1.5 bg-primary/10 rounded-full"
+                                        title={savedNote}
+                                      >
                                         <StickyNote className="w-4 h-4" />
                                       </span>
                                     )}
 
                                     {isPending && (
-                                      <Loader2 className="w-4 h-4 animate-spin text-muted-foreground" />
+                                      <Loader2 className="w-4 h-4 animate-spin text-muted-foreground flex-shrink-0" />
                                     )}
                                   </motion.div>
                                 );
