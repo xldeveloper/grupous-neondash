@@ -246,10 +246,10 @@ export function DiagnosticoForm({ mentoradoId }: { mentoradoId?: number }) {
           </div>
         </motion.div>
 
-        {/* Form Sections - Masonry Layout */}
-        <div className="block columns-1 md:columns-2 xl:columns-3 gap-6">
+        {/* Form Sections - Responsive Grid Layout */}
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-[repeat(auto-fit,minmax(380px,1fr))] gap-6 transition-all duration-300 ease-in-out">
           {/* Section 1: Ponto de Partida */}
-          <div className="break-inside-avoid mb-6">
+          <div className="h-full">
             <SectionCard section={SECTIONS[0]} delay={0.1}>
               <FormField
                 control={form.control}
@@ -307,7 +307,7 @@ export function DiagnosticoForm({ mentoradoId }: { mentoradoId?: number }) {
           </div>
 
           {/* Section 2: Realidade Financeira */}
-          <div className="break-inside-avoid mb-6">
+          <div className="h-full">
             <SectionCard section={SECTIONS[1]} delay={0.15}>
               <FormField
                 control={form.control}
@@ -379,7 +379,7 @@ export function DiagnosticoForm({ mentoradoId }: { mentoradoId?: number }) {
           </div>
 
           {/* Section 3: Desafios Atuais */}
-          <div className="break-inside-avoid mb-6">
+          <div className="h-full">
             <SectionCard section={SECTIONS[2]} delay={0.2}>
               <FormField
                 control={form.control}
@@ -437,7 +437,7 @@ export function DiagnosticoForm({ mentoradoId }: { mentoradoId?: number }) {
           </div>
 
           {/* Section 4: Visão de Sucesso */}
-          <div className="break-inside-avoid mb-6">
+          <div className="h-full">
             <SectionCard section={SECTIONS[3]} delay={0.25}>
               <FormField
                 control={form.control}
@@ -514,7 +514,7 @@ export function DiagnosticoForm({ mentoradoId }: { mentoradoId?: number }) {
           </div>
 
           {/* Section 5: Compromisso */}
-          <div className="break-inside-avoid mb-6">
+          <div className="h-full">
             <SectionCard section={SECTIONS[4]} delay={0.3}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <FormField
@@ -634,10 +634,11 @@ function SectionCard({ section, delay = 0, children }: SectionCardProps) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay }}
+      className="h-full"
     >
       <Card
         className={cn(
-          "transition-all duration-200 hover:shadow-md",
+          "h-full transition-all duration-300 ease-in-out hover:shadow-md",
           section.bgClass,
           section.borderClass
         )}

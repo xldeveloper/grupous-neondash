@@ -406,8 +406,10 @@ export const zapiRouter = router({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      // TODO: Add admin check when role system is implemented
-      // if (ctx.user.role !== 'admin') throw new Error('Unauthorized');
+      // Admin-only: verify user role before proceeding
+      if (ctx.user.role !== "admin") {
+        throw new Error("Apenas administradores podem ativar instâncias");
+      }
 
       const db = getDb();
       const [mentorado] = await db
@@ -455,8 +457,10 @@ export const zapiRouter = router({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      // TODO: Add admin check when role system is implemented
-      // if (ctx.user.role !== 'admin') throw new Error('Unauthorized');
+      // Admin-only: verify user role before proceeding
+      if (ctx.user.role !== "admin") {
+        throw new Error("Apenas administradores podem cancelar instâncias");
+      }
 
       const db = getDb();
       const [mentorado] = await db

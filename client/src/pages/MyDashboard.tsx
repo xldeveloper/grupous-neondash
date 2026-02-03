@@ -163,9 +163,10 @@ export default function MyDashboard() {
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => {
-                    toast.loading("Tentando novamente...", { duration: 2000 });
-                    window.location.reload();
+                  onClick={async () => {
+                    toast.loading("Tentando novamente...", { id: "retry" });
+                    await refetchMentorado();
+                    toast.dismiss("retry");
                   }}
                   className="gap-2"
                 >
@@ -263,8 +264,8 @@ export default function MyDashboard() {
             />
           </NeonTabsContent>
 
-          <NeonTabsContent value="diagnostico">
-            <div className="grid grid-cols-1 max-w-4xl mx-auto w-full">
+          <NeonTabsContent value="diagnostico" className="w-full">
+            <div className="w-full">
               {isAdmin ? <DiagnosticoForm mentoradoId={targetMentoradoId} /> : <DiagnosticoForm />}
             </div>
           </NeonTabsContent>

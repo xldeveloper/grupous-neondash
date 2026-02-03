@@ -1,6 +1,6 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { BrainCircuit, ListTodo, Loader2, Sparkles } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Confetti from "react-confetti"; // Using Confetti again as requested in AT-004 logic
 import { useWindowSize } from "react-use"; // Ensure react-use is installed or remove if unused (kept from original intent)
 import { toast } from "sonner";
@@ -19,8 +19,18 @@ interface AITasksCardProps {
 
 export function AITasksCard({ mentoradoId, isAdmin }: AITasksCardProps) {
   const [showConfetti, setShowConfetti] = useState(false);
+  const confettiTimeoutRef = useRef<number | null>(null);
   const [activeTab, setActiveTab] = useState("ai");
   const { width, height } = useWindowSize();
+
+  // Cleanup confetti timeout on unmount to avoid stale setState
+  useEffect(() => {
+    return () => {
+      if (confettiTimeoutRef.current) {
+        window.clearTimeout(confettiTimeoutRef.current);
+      }
+    };
+  }, []);
 
   const {
     data: tasksData,
@@ -57,7 +67,13 @@ export function AITasksCard({ mentoradoId, isAdmin }: AITasksCardProps) {
         const isAiTask = data.source === "ai_coach" || data.category === "atividade";
         if (isAiTask) {
           setShowConfetti(true);
-          setTimeout(() => setShowConfetti(false), 5000);
+          if (confettiTimeoutRef.current) {
+            window.clearTimeout(confettiTimeoutRef.current);
+          }
+          confettiTimeoutRef.current = window.setTimeout(() => {
+            setShowConfetti(false);
+            confettiTimeoutRef.current = null;
+          }, 5000);
           toast.success("Missão Cumprida! 🚀");
         } else {
           toast.success("Tarefa concluída!");
