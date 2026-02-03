@@ -339,7 +339,7 @@ export function InstagramConnectionCard({ mentoradoId }: InstagramConnectionCard
             <div ref={loginButtonRef} className="w-full flex flex-col items-center gap-3">
               {/* Official Facebook Login Button (XFBML) */}
               {/* Note: This only renders on HTTPS. On HTTP, we show fallback button below */}
-              {!xfbmlFailed && (
+              {sdkLoaded && !xfbmlFailed && (
                 <div
                   className="fb-login-button"
                   data-width="100%"
@@ -353,20 +353,20 @@ export function InstagramConnectionCard({ mentoradoId }: InstagramConnectionCard
                 />
               )}
 
-              {/* Fallback button for HTTP environments or when XFBML fails */}
-              {xfbmlFailed && sdkLoaded && (
+              {/* Fallback button for HTTP environments, when XFBML fails, or when SDK is still loading */}
+              {(xfbmlFailed || !sdkLoaded) && (
                 <Button
                   onClick={handleManualLogin}
-                  disabled={isProcessing}
+                  disabled={isProcessing || !sdkLoaded}
                   className="w-full bg-[#1877F2] hover:bg-[#166FE5] text-white"
                   size="lg"
                 >
-                  {isProcessing ? (
+                  {isProcessing || !sdkLoaded ? (
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   ) : (
                     <Instagram className="mr-2 h-4 w-4" />
                   )}
-                  Conectar com Facebook
+                  {!sdkLoaded ? "Carregando..." : "Conectar com Facebook"}
                 </Button>
               )}
             </div>

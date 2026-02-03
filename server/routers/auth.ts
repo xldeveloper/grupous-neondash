@@ -154,6 +154,12 @@ export const authRouter = router({
   ensureMentorado: protectedProcedure.mutation(async ({ ctx }) => {
     const logger = createLogger({ service: "auth", userId: ctx.user?.clerkId });
 
+    // DEBUG: Log entry to mutation
+    logger.info("ensureMentorado_mutation_called", {
+      userId: ctx.user?.id,
+      hasMentoradoInContext: !!ctx.mentorado,
+    });
+
     // If mentorado already exists in context, return it
     if (ctx.mentorado) {
       logger.info("ensureMentorado_already_exists", {
@@ -172,6 +178,13 @@ export const authRouter = router({
     });
 
     try {
+      // DEBUG: Log insert attempt
+      logger.info("ensureMentorado_insert_attempt", {
+        userId: user.id,
+        userEmail: user.email,
+        userName: user.name,
+      });
+
       // Use onConflictDoNothing for idempotent insert (race condition safe)
       await db
         .insert(mentorados)
@@ -199,6 +212,13 @@ export const authRouter = router({
         where: eq(mentorados.userId, user.id),
       });
 
+      // DEBUG: Log fetch result
+      logger.info("ensureMentorado_fetch_result", {
+        userId: user.id,
+        hasMentorado: !!mentorado,
+        mentoradoId: mentorado?.id,
+      });
+
       if (!mentorado) {
         logger.error("ensureMentorado_fetch_failed", null, {
           userId: user.id,
@@ -222,9 +242,12 @@ export const authRouter = router({
 
       return { success: true, mentorado, created: wasCreated };
     } catch (error) {
+      // DEBUG: Log detailed error
       logger.error("ensureMentorado_failed", error, {
         userId: user.id,
         email: user.email,
+        errorMessage: error instanceof Error ? error.message : String(error),
+        errorName: error instanceof Error ? error.name : "Unknown",
       });
       throw error;
     }

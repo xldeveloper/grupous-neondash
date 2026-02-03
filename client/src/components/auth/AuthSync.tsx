@@ -3,6 +3,11 @@ import { toast } from "sonner";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { trpc } from "@/lib/trpc";
 
+// DEBUG: Add console logging for debugging
+const debugLog = (...args: unknown[]) => {
+  console.log("[AuthSync DEBUG]", new Date().toISOString(), ...args);
+};
+
 /**
  * AuthSync - Syncs user data with backend on authentication
  *
@@ -15,6 +20,15 @@ export function AuthSync() {
   const utils = trpc.useUtils();
 
   const { mutate: ensureMentorado, isPending } = trpc.auth.ensureMentorado.useMutation({
+    // DEBUG: Log mutation state changes
+    onSettled: (data, error) => {
+      debugLog("Mutation settled", {
+        hasData: !!data,
+        hasError: !!error,
+        dataCreated: data?.created,
+        errorMessage: error?.message,
+      });
+    },
     // AT-004: Exponential retry (1s, 2s, 4s)
     retry: 3,
     retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 10000),
@@ -53,6 +67,7 @@ export function AuthSync() {
   useEffect(() => {
     if (isAuthenticated && !hasSynced.current) {
       hasSynced.current = true;
+      debugLog("Calling ensureMentorado mutation", { isAuthenticated });
       ensureMentorado();
     }
   }, [isAuthenticated, ensureMentorado]);

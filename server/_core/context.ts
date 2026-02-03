@@ -134,6 +134,14 @@ export async function createContext(opts: CreateExpressContextOptions): Promise<
 
       mentorado = existingMentorado[0] ?? null;
 
+      // DEBUG: Log mentorado fetch result
+      logger.info("mentorado_fetch_result", {
+        userId: user.id,
+        hasMentorado: !!mentorado,
+        hasEmail: !!user.email,
+        userEmail: user.email,
+      });
+
       // Auto-link: If no mentorado found by userId but user has email, try to find by email
       if (!mentorado && user.email) {
         const mentoradoByEmail = await db
@@ -159,6 +167,13 @@ export async function createContext(opts: CreateExpressContextOptions): Promise<
           // Auto-create mentorado if not found
           logger.info("auto_create_mentorado", {
             userId: user.id,
+            email: user.email,
+          });
+
+          // DEBUG: Log that we're about to insert mentorado
+          logger.info("auto_create_mentorado_inserting", {
+            userId: user.id,
+            nomeCompleto: user.name || "Novo Usuário",
             email: user.email,
           });
 
@@ -193,12 +208,24 @@ export async function createContext(opts: CreateExpressContextOptions): Promise<
               reason: "mentorado_created",
             });
           } catch (error) {
+            // DEBUG: Log detailed error information
             logger.error("mentorado_creation_failed", error, {
               userId: user.id,
               email: user.email,
+              errorMessage: error instanceof Error ? error.message : String(error),
+              errorName: error instanceof Error ? error.name : "Unknown",
             });
           }
         }
+      } else {
+        // DEBUG: Log why auto-creation was skipped
+        logger.info("auto_create_mentorado_skipped", {
+          userId: user.id,
+          hasMentorado: !!mentorado,
+          hasEmail: !!user.email,
+          userEmail: user.email,
+          reason: !mentorado ? "mentorado already exists" : "user has no email",
+        });
       }
     }
   }

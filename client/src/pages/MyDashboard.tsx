@@ -1,6 +1,12 @@
 import { AlertCircle, RefreshCw } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
+
+// DEBUG: Add console logging for debugging
+const debugLog = (...args: unknown[]) => {
+  console.log("[MyDashboard DEBUG]", new Date().toISOString(), ...args);
+};
+
 import DashboardLayout from "@/components/DashboardLayout";
 import { AtividadesContent } from "@/components/dashboard/AtividadesContent";
 import { DiagnosticoForm } from "@/components/dashboard/DiagnosticoForm";
@@ -47,6 +53,18 @@ export default function MyDashboard() {
     retry: false,
   });
 
+  // DEBUG: Log query state changes
+  useEffect(() => {
+    debugLog("mentorados.me query state", {
+      isAdmin,
+      isLoadingMe,
+      hasData: !!mentoradoMe,
+      hasError: !!errorMe,
+      errorMessage: errorMe?.message,
+      dataId: mentoradoMe?.id,
+    });
+  }, [mentoradoMe, isLoadingMe, errorMe, isAdmin]);
+
   // If admin and selected -> fetch by ID
   const {
     data: mentoradoById,
@@ -60,6 +78,15 @@ export default function MyDashboard() {
   const currentMentorado = isAdmin ? mentoradoById : mentoradoMe;
   const isLoading = isAdmin ? (selectedMentoradoId ? isLoadingById : !allMentorados) : isLoadingMe;
   const error = isAdmin ? errorById : errorMe;
+
+  // DEBUG: Log component state
+  debugLog("Component state", {
+    isAdmin,
+    currentMentoradoId: currentMentorado?.id,
+    isLoading,
+    hasError: !!error,
+    errorMessage: error?.message,
+  });
 
   // Derived ID for child components
   const targetMentoradoId =
