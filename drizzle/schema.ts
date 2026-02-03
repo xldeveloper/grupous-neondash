@@ -725,25 +725,35 @@ export const diagnosticos = pgTable(
     mentoradoId: integer("mentorado_id")
       .notNull()
       .references(() => mentorados.id, { onDelete: "cascade" }),
-    // 1. Sobre o Momento Atual Profissional
+
+    // 1. Ponto de Partida (Context)
     atuacaoSaude: text("atuacao_saude"),
     tempoLivre: text("tempo_livre"),
     jaAtuaEstetica: text("ja_atua_estetica"),
     temClinica: text("tem_clinica"),
 
-    // 2. Resultados Atuais
+    // 2. Realidade Financeira (Financial Reality)
     rendaMensal: text("renda_mensal"),
     faturaEstetica: text("fatura_estetica"),
-    contas: text("contas"), // PJ, PF, Investimento
+    contas: text("contas"),
     custoVida: text("custo_vida"),
+    capacidadeInvestimento: text("capacidade_investimento"), // NEW: Investment capacity
 
-    // 3. Dores e Desafios
+    // 3. Desafios Atuais (Current Challenges)
     incomodaRotina: text("incomoda_rotina"),
     dificuldadeCrescer: text("dificuldade_crescer"),
+    tentativasAnteriores: text("tentativas_anteriores"), // NEW: Previous attempts
 
-    // 4. Objetivos e Sonhos
+    // 4. Visão de Sucesso (Success Vision)
     objetivo6Meses: text("objetivo_6_meses"),
     resultadoTransformador: text("resultado_transformador"),
+    visaoUmAno: text("visao_um_ano"), // NEW: 1-year vision
+    porqueAgora: text("porque_agora"), // NEW: Why now?
+
+    // 5. Compromisso (Commitment)
+    horasDisponiveis: text("horas_disponiveis"), // NEW: Available hours/week
+    nivelPrioridade: text("nivel_prioridade"), // NEW: Priority level 1-10
+    redeApoio: text("rede_apoio"), // NEW: Support network
     organizacao: text("organizacao"),
 
     createdAt: timestamp("created_at").defaultNow().notNull(),

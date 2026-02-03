@@ -129,3 +129,50 @@ export async function upsertFeedback(data: InsertFeedback) {
     return result[0].id;
   }
 }
+
+/**
+ * Upsert a partial metrica mensal record (for auto-save)
+ * Only updates the fields provided, creating record with defaults if needed
+ */
+export async function upsertMetricaMensalPartial(
+  mentoradoId: number,
+  ano: number,
+  mes: number,
+  partialData: Partial<Omit<InsertMetricaMensal, "mentoradoId" | "ano" | "mes">>
+) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  const existing = await getMetricaMensal(mentoradoId, ano, mes);
+
+  if (existing) {
+    // Filter out undefined values
+    const updateData = Object.fromEntries(
+      Object.entries(partialData).filter(([_, v]) => v !== undefined)
+    );
+
+    if (Object.keys(updateData).length > 0) {
+      await db.update(metricasMensais).set(updateData).where(eq(metricasMensais.id, existing.id));
+    }
+    return existing.id;
+  } else {
+    // Create new record with defaults (0) and merge provided values
+    const newData: InsertMetricaMensal = {
+      mentoradoId,
+      ano,
+      mes,
+      faturamento: 0,
+      lucro: 0,
+      leads: 0,
+      procedimentos: 0,
+      postsFeed: 0,
+      stories: 0,
+      ...partialData,
+    };
+    const result = await db
+      .insert(metricasMensais)
+      .values(newData)
+      .returning({ id: metricasMensais.id });
+    return result[0].id;
+  }
+}

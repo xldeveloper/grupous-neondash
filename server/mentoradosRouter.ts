@@ -20,6 +20,7 @@ import {
   getMetricasMensaisByMentorado,
   upsertFeedback,
   upsertMetricaMensal,
+  upsertMetricaMensalPartial,
 } from "./mentorados";
 import { instagramService } from "./services/instagramService";
 
@@ -160,6 +161,50 @@ export const mentoradosRouter = router({
       });
 
       return { id };
+    }),
+
+  /**
+   * Update a single metric field (for auto-save)
+   */
+  updateMetricaField: mentoradoProcedure
+    .input(
+      z.object({
+        ano: z.number(),
+        mes: z.number().min(1).max(12),
+        field: z.enum(["faturamento", "lucro", "leads", "procedimentos", "postsFeed", "stories"]),
+        value: z.number().min(0),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const partialData = { [input.field]: input.value };
+      const id = await upsertMetricaMensalPartial(
+        ctx.mentorado.id,
+        input.ano,
+        input.mes,
+        partialData
+      );
+      return { id, success: true };
+    }),
+
+  /**
+   * Get previous month's metrics (for comparison placeholders)
+   */
+  getPreviousMonthMetrics: mentoradoProcedure
+    .input(
+      z.object({
+        ano: z.number(),
+        mes: z.number().min(1).max(12),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      // Calculate previous month
+      let prevMes = input.mes - 1;
+      let prevAno = input.ano;
+      if (prevMes === 0) {
+        prevMes = 12;
+        prevAno = input.ano - 1;
+      }
+      return await getMetricaMensal(ctx.mentorado.id, prevAno, prevMes);
     }),
 
   // Get feedback for specific month

@@ -1,4 +1,4 @@
-import { CheckCircle2, Loader2, Sparkles } from "lucide-react";
+import { Check, CheckCircle2, Instagram, Loader2, Sparkles } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -13,13 +13,90 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { useAutoSave } from "@/hooks/useAutoSave";
+import { useInstagramMetrics } from "@/hooks/useInstagramMetrics";
+import { usePreviousMonthMetrics } from "@/hooks/usePreviousMonthMetrics";
 import { trpc } from "@/lib/trpc";
+import { cn } from "@/lib/utils";
+import { InstagramBadge } from "./InstagramBadge";
+import { InstagramOnboardingModal } from "./InstagramOnboardingModal";
+import { MetricComparison } from "./MetricComparison";
 
 interface SubmitMetricsFormProps {
   onSuccess?: () => void;
   className?: string;
   /** When true, suggests next month (January 2026) if user has December data */
   suggestNextMonth?: boolean;
+}
+
+/**
+ * Input component with auto-save indicator
+ */
+function AutoSaveInput({
+  id,
+  label,
+  value,
+  onChange,
+  isLoading,
+  isSaved,
+  onBlur,
+  type = "number",
+  step,
+  placeholder,
+  previousValue,
+  previousType,
+}: {
+  id: string;
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  isLoading: boolean;
+  isSaved: boolean;
+  onBlur: (value: number) => void;
+  type?: string;
+  step?: string;
+  placeholder?: string;
+  previousValue?: number;
+  previousType?: "currency" | "number";
+}) {
+  const handleBlur = () => {
+    const numValue = type === "number" ? parseFloat(value) || 0 : parseInt(value, 10) || 0;
+    if (!Number.isNaN(numValue)) {
+      onBlur(numValue);
+    }
+  };
+
+  return (
+    <div className="space-y-2">
+      <div className="flex items-center justify-between">
+        <Label htmlFor={id}>{label}</Label>
+        <div className="flex items-center gap-1 text-xs">
+          {isLoading && <Loader2 className="h-3 w-3 animate-spin text-muted-foreground" />}
+          {isSaved && (
+            <span className="flex items-center gap-1 text-green-600 dark:text-green-400">
+              <Check className="h-3 w-3" />
+              Salvo
+            </span>
+          )}
+        </div>
+      </div>
+      <Input
+        id={id}
+        type={type}
+        step={step}
+        placeholder={placeholder}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        onBlur={handleBlur}
+        className={cn(isSaved && "border-green-500/30")}
+      />
+      <MetricComparison
+        currentValue={parseFloat(value) || undefined}
+        previousValue={previousValue}
+        type={previousType}
+      />
+    </div>
+  );
 }
 
 export function SubmitMetricsForm({
@@ -43,8 +120,29 @@ export function SubmitMetricsForm({
   const [procedimentos, setProcedimentos] = useState("");
   const [observacoes, setObservacoes] = useState("");
   const [showSuggestion, setShowSuggestion] = useState(suggestNextMonth);
+  const [showInstagramModal, setShowInstagramModal] = useState(false);
 
   const utils = trpc.useUtils();
+  const { data: me } = trpc.mentorados.me.useQuery();
+  const mentoradoId = me?.id;
+
+  // Auto-save hooks for each field
+  const faturamentoSave = useAutoSave({ fieldName: "faturamento", ano, mes });
+  const lucroSave = useAutoSave({ fieldName: "lucro", ano, mes });
+  const leadsSave = useAutoSave({ fieldName: "leads", ano, mes });
+  const procedimentosSave = useAutoSave({ fieldName: "procedimentos", ano, mes });
+  const postsFeedSave = useAutoSave({ fieldName: "postsFeed", ano, mes });
+  const storiesSave = useAutoSave({ fieldName: "stories", ano, mes });
+
+  // Previous month data
+  const { previousMetrics } = usePreviousMonthMetrics({ ano, mes, enabled: true });
+
+  // Instagram metrics
+  const { data: instagramData, isLoading: isLoadingInstagram } = useInstagramMetrics({
+    ano,
+    mes,
+    enabled: true,
+  });
 
   // Update defaults when suggestNextMonth changes
   useEffect(() => {
@@ -167,61 +265,91 @@ export function SubmitMetricsForm({
       <div className="space-y-4">
         <h4 className="font-medium text-sm text-muted-foreground border-b pb-1">Financeiro</h4>
         <div className="grid grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="faturamento">Faturamento (R$)</Label>
-            <Input
-              id="faturamento"
-              type="number"
-              step="0.01"
-              placeholder="0.00"
-              value={faturamento}
-              onChange={(e) => setFaturamento(e.target.value)}
-              required
-            />
-          </div>
+          <AutoSaveInput
+            id="faturamento"
+            label="Faturamento (R$)"
+            value={faturamento}
+            onChange={setFaturamento}
+            isLoading={faturamentoSave.isLoading}
+            isSaved={faturamentoSave.isSaved}
+            onBlur={faturamentoSave.handleBlur}
+            step="0.01"
+            placeholder="0.00"
+            previousValue={previousMetrics?.faturamento}
+            previousType="currency"
+          />
 
-          <div className="space-y-2">
-            <Label htmlFor="lucro">Lucro (R$)</Label>
-            <Input
-              id="lucro"
-              type="number"
-              step="0.01"
-              placeholder="0.00"
-              value={lucro}
-              onChange={(e) => setLucro(e.target.value)}
-              required
-            />
-          </div>
+          <AutoSaveInput
+            id="lucro"
+            label="Lucro (R$)"
+            value={lucro}
+            onChange={setLucro}
+            isLoading={lucroSave.isLoading}
+            isSaved={lucroSave.isSaved}
+            onBlur={lucroSave.handleBlur}
+            step="0.01"
+            placeholder="0.00"
+            previousValue={previousMetrics?.lucro}
+            previousType="currency"
+          />
         </div>
       </div>
 
       {/* Marketing */}
       <div className="space-y-4">
-        <h4 className="font-medium text-sm text-muted-foreground border-b pb-1">Marketing</h4>
+        <div className="flex items-center justify-between border-b pb-1">
+          <h4 className="font-medium text-sm text-muted-foreground">Marketing</h4>
+          {/* Instagram integration */}
+          {instagramData ? (
+            <div className="flex gap-2">
+              <InstagramBadge
+                count={instagramData.postsCount}
+                syncedAt={instagramData.syncedAt}
+                type="posts"
+              />
+              <InstagramBadge
+                count={instagramData.storiesCount}
+                syncedAt={instagramData.syncedAt}
+                type="stories"
+              />
+            </div>
+          ) : !isLoadingInstagram ? (
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              onClick={() => setShowInstagramModal(true)}
+              className="text-xs"
+            >
+              <Instagram className="h-3 w-3 mr-1" />
+              Conectar Instagram
+            </Button>
+          ) : null}
+        </div>
         <div className="grid grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="postsFeed">Posts Feed</Label>
-            <Input
-              id="postsFeed"
-              type="number"
-              placeholder="0"
-              value={postsFeed}
-              onChange={(e) => setPostsFeed(e.target.value)}
-              required
-            />
-          </div>
+          <AutoSaveInput
+            id="postsFeed"
+            label="Posts Feed"
+            value={postsFeed}
+            onChange={setPostsFeed}
+            isLoading={postsFeedSave.isLoading}
+            isSaved={postsFeedSave.isSaved}
+            onBlur={postsFeedSave.handleBlur}
+            placeholder="0"
+            previousValue={previousMetrics?.postsFeed}
+          />
 
-          <div className="space-y-2">
-            <Label htmlFor="stories">Stories</Label>
-            <Input
-              id="stories"
-              type="number"
-              placeholder="0"
-              value={stories}
-              onChange={(e) => setStories(e.target.value)}
-              required
-            />
-          </div>
+          <AutoSaveInput
+            id="stories"
+            label="Stories"
+            value={stories}
+            onChange={setStories}
+            isLoading={storiesSave.isLoading}
+            isSaved={storiesSave.isSaved}
+            onBlur={storiesSave.handleBlur}
+            placeholder="0"
+            previousValue={previousMetrics?.stories}
+          />
         </div>
       </div>
 
@@ -229,29 +357,29 @@ export function SubmitMetricsForm({
       <div className="space-y-4">
         <h4 className="font-medium text-sm text-muted-foreground border-b pb-1">Operacional</h4>
         <div className="grid grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="leads">Leads</Label>
-            <Input
-              id="leads"
-              type="number"
-              placeholder="0"
-              value={leads}
-              onChange={(e) => setLeads(e.target.value)}
-              required
-            />
-          </div>
+          <AutoSaveInput
+            id="leads"
+            label="Leads"
+            value={leads}
+            onChange={setLeads}
+            isLoading={leadsSave.isLoading}
+            isSaved={leadsSave.isSaved}
+            onBlur={leadsSave.handleBlur}
+            placeholder="0"
+            previousValue={previousMetrics?.leads}
+          />
 
-          <div className="space-y-2">
-            <Label htmlFor="procedimentos">Procedimentos</Label>
-            <Input
-              id="procedimentos"
-              type="number"
-              placeholder="0"
-              value={procedimentos}
-              onChange={(e) => setProcedimentos(e.target.value)}
-              required
-            />
-          </div>
+          <AutoSaveInput
+            id="procedimentos"
+            label="Procedimentos"
+            value={procedimentos}
+            onChange={setProcedimentos}
+            isLoading={procedimentosSave.isLoading}
+            isSaved={procedimentosSave.isSaved}
+            onBlur={procedimentosSave.handleBlur}
+            placeholder="0"
+            previousValue={previousMetrics?.procedimentos}
+          />
         </div>
       </div>
 
@@ -284,6 +412,13 @@ export function SubmitMetricsForm({
           </>
         )}
       </Button>
+
+      {/* Instagram Onboarding Modal */}
+      <InstagramOnboardingModal
+        mentoradoId={mentoradoId}
+        isOpen={showInstagramModal}
+        onOpenChange={setShowInstagramModal}
+      />
     </form>
   );
 }

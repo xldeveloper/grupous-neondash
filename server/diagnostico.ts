@@ -46,18 +46,30 @@ export const diagnosticoRouter = router({
   upsert: protectedProcedure
     .input(
       z.object({
+        // 1. Ponto de Partida
         atuacaoSaude: z.string().optional(),
         tempoLivre: z.string().optional(),
         jaAtuaEstetica: z.string().optional(),
         temClinica: z.string().optional(),
+        // 2. Realidade Financeira
         rendaMensal: z.string().optional(),
         faturaEstetica: z.string().optional(),
         contas: z.string().optional(),
         custoVida: z.string().optional(),
+        capacidadeInvestimento: z.string().optional(), // NEW
+        // 3. Desafios Atuais
         incomodaRotina: z.string().optional(),
         dificuldadeCrescer: z.string().optional(),
+        tentativasAnteriores: z.string().optional(), // NEW
+        // 4. Visão de Sucesso
         objetivo6Meses: z.string().optional(),
         resultadoTransformador: z.string().optional(),
+        visaoUmAno: z.string().optional(), // NEW
+        porqueAgora: z.string().optional(), // NEW
+        // 5. Compromisso
+        horasDisponiveis: z.string().optional(), // NEW
+        nivelPrioridade: z.string().optional(), // NEW
+        redeApoio: z.string().optional(), // NEW
         organizacao: z.string().optional(),
         mentoradoId: z.number().optional(), // Admin override
       })
