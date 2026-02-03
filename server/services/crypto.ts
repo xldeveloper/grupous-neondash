@@ -1,8 +1,10 @@
 /**
  * Encryption utilities for sensitive data (Z-API tokens, etc.)
  * Uses AES-256-GCM for authenticated encryption
+ *
+ * NOTE: Bun automatically loads .env files - no dotenv needed.
+ * See: https://bun.sh/docs/runtime/environment-variables
  */
-import "dotenv/config";
 import { createCipheriv, createDecipheriv, randomBytes, scryptSync } from "node:crypto";
 
 const ALGORITHM = "aes-256-gcm";
@@ -10,13 +12,25 @@ const IV_LENGTH = 16;
 const SALT_LENGTH = 16;
 const KEY_LENGTH = 32;
 
+// Cache the encryption key to avoid repeated scrypt calls
+let _cachedKey: Buffer | null = null;
+
 function getEncryptionKey(): Buffer {
-  const secret = process.env.ENCRYPTION_KEY;
+  if (_cachedKey) return _cachedKey;
+
+  // Use Bun.env for more reliable access, fallback to process.env
+  const secret = Bun.env.ENCRYPTION_KEY ?? process.env.ENCRYPTION_KEY;
+
   if (!secret) {
-    throw new Error("ENCRYPTION_KEY environment variable is required");
+    throw new Error(
+      "ENCRYPTION_KEY environment variable is required. " +
+        "Add ENCRYPTION_KEY=<32-char-random-string> to your .env file."
+    );
   }
+
   // Derive a key from the secret using scrypt
-  return scryptSync(secret, "neondash-salt", KEY_LENGTH);
+  _cachedKey = scryptSync(secret, "neondash-salt", KEY_LENGTH);
+  return _cachedKey;
 }
 
 /**

@@ -60,7 +60,32 @@ export function useOpenClaw(): UseOpenClawReturn {
       // Generate a local session ID
       const newSessionId = `session_${Date.now()}`;
       setSessionId(newSessionId);
-      setMessages([]);
+
+      // Add welcome message explaining capabilities
+      const welcomeMessage: ChatMessage = {
+        id: Date.now(),
+        role: "assistant",
+        content: `Olá! Como **Assistente NEON**, sou especializado em mentoria de negócios para profissionais de estética. Tenho acesso a diversas ferramentas para te ajudar a acompanhar seu progresso e tomar decisões estratégicas:
+
+**🛠️ Ferramentas disponíveis:**
+
+- 📊 **Métricas mensais** - faturamento, lucro, leads, procedimentos, posts, stories
+- 📋 **CRM de Leads** - consultar e filtrar por status (novo, qualificado, proposta, fechado, etc.)
+- 🔍 **Busca de leads** - pesquisar por nome, email ou telefone
+- 💬 **Feedback da Dra. Sacha** - ver análises e sugestões do mentor
+- ✅ **Tarefas pendentes** - acompanhar status e progresso
+- 🎯 **Metas e objetivos** - verificar progresso atual
+- 📝 **Diagnóstico inicial** - consultar seu onboarding
+- 📅 **Google Calendar** - ver próximos eventos
+- 🌐 **Pesquisa web** - informações atualizadas e tendências
+
+Com essas ferramentas, posso te ajudar a analisar seus dados, identificar oportunidades e sugerir os próximos passos para o crescimento do seu negócio! 🚀
+
+**Como posso te ajudar hoje?**`,
+        createdAt: new Date(),
+      };
+
+      setMessages([welcomeMessage]);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to create session");
     } finally {
