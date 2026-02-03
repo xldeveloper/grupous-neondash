@@ -256,7 +256,7 @@ export const tasksRouter = router({
         const parsed = JSON.parse(content);
         // Handle both { tasks: [] } and ["task1", "task2"] formats
         suggestedTasks = Array.isArray(parsed) ? parsed : parsed.tasks || parsed.data || [];
-      } catch (e) {
+      } catch {
         // Fallback tasks if AI fails to format
         suggestedTasks = [
           "Revisar métricas do mês",
