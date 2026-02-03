@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { BrainCircuit, ListTodo, Loader2, Sparkles, Trophy } from "lucide-react";
+import { BrainCircuit, ListTodo, Loader2, Sparkles } from "lucide-react";
 import { useState } from "react";
 import Confetti from "react-confetti"; // Using Confetti again as requested in AT-004 logic
 import { useWindowSize } from "react-use"; // Ensure react-use is installed or remove if unused (kept from original intent)

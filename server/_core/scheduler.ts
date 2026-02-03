@@ -313,8 +313,6 @@ export async function initSchedulers(): Promise<void> {
   logger.info("scheduler_init_complete", {
     scheduledTasks: ["instagram_sync @ 06:00 daily"],
   });
-
-
 }
 
 /**

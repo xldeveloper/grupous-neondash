@@ -27,18 +27,36 @@ export function MenteeOverview({ mentoradoId, isAdmin, onNavigateToTab }: Mentee
   );
 
   // Fetch mentorado info - use getById for admin view, me for self view
-  const { data: mentoradoMe } = trpc.mentorados.me.useQuery(undefined, {
+  const { data: mentoradoMe, isLoading: isLoadingMe } = trpc.mentorados.me.useQuery(undefined, {
     enabled: !isViewingOther,
   });
-  const { data: mentoradoById } = trpc.mentorados.getById.useQuery(
+  const { data: mentoradoById, isLoading: isLoadingById } = trpc.mentorados.getById.useQuery(
     { id: mentoradoId! },
     { enabled: isViewingOther }
   );
 
   const mentorado = isViewingOther ? mentoradoById : mentoradoMe;
-  const isLoading = isLoadingStats || !mentorado;
 
-  if (isLoading || !stats) {
+  // Determine if queries have finished loading
+  const isQueriesLoading = isLoadingStats || (isViewingOther ? isLoadingById : isLoadingMe);
+
+  // If still loading, show skeleton
+  if (isQueriesLoading) {
+    return <OverviewSkeleton />;
+  }
+
+  // If no mentorado exists (user without mentorado profile), show welcome screen
+  if (!mentorado) {
+    return (
+      <NewMentoradoWelcome
+        mentoradoName="Novo Usuário"
+        onNavigateToDiagnostico={() => onNavigateToTab?.("diagnostico")}
+      />
+    );
+  }
+
+  // If stats failed to load, show skeleton (shouldn't happen normally)
+  if (!stats) {
     return <OverviewSkeleton />;
   }
 

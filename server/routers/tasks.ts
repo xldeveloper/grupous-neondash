@@ -2,6 +2,7 @@ import { TRPCError } from "@trpc/server";
 import { and, desc, eq, ilike } from "drizzle-orm";
 import { z } from "zod";
 import { tasks } from "../../drizzle/schema";
+import { createLogger } from "../_core/logger";
 import { protectedProcedure, router } from "../_core/trpc";
 import { getDb } from "../db";
 
@@ -285,9 +286,9 @@ export const tasksRouter = router({
           response_format: { type: "json_object" },
         });
 
+        const logger = createLogger({ service: "tasks-router" });
         const content = result.choices[0].message.content as string;
-        // biome-ignore lint/suspicious/noConsole: debugging
-        console.log("[TasksRouter] LLM Response:", content);
+        logger.info("llm_response", { content });
         let suggestedTasks: string[] = [];
 
         const parsed = JSON.parse(content);
@@ -308,9 +309,9 @@ export const tasksRouter = router({
         }
 
         return { success: true, count: suggestedTasks.length };
-      } catch (error: any) {
-        console.error("[TasksRouter] AI Generation Failed:", error);
-        if (error.cause) console.error("[TasksRouter] Cause:", error.cause);
+      } catch (error: unknown) {
+        const logger = createLogger({ service: "tasks-router" });
+        logger.error("ai_generation_failed", error);
 
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",

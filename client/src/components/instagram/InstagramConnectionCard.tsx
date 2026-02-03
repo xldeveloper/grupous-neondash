@@ -146,7 +146,7 @@ export function InstagramConnectionCard({ mentoradoId }: InstagramConnectionCard
         if (loginButtonRef.current) {
           // Check if we're on HTTP (XFBML button won't work)
           const isHttp = window.location.protocol === "http:";
-          
+
           if (isHttp) {
             // On HTTP, always show fallback button since XFBML won't render properly
             setXfbmlFailed(true);
