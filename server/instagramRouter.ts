@@ -41,33 +41,30 @@ export const instagramRouter = router({
     }),
 
   /**
-   * Check connection status for the current user's mentorado
+   * Check connection status for a mentorado
    */
-  getConnectionStatus: protectedProcedure.query(async ({ ctx }) => {
-    const mentoradoId = ctx.mentorado?.id;
+  getConnectionStatus: protectedProcedure
+    .input(z.object({ mentoradoId: z.number() }))
+    .query(async ({ input }) => {
+      const token = await instagramService.getInstagramToken(input.mentoradoId);
 
-    if (!mentoradoId) {
+      if (!token) {
+        return {
+          isConnected: false,
+          instagramAccountId: null,
+          instagramUsername: null,
+          lastSyncAt: null,
+        };
+      }
+
       return {
-        connected: false,
-        accountId: null,
+        isConnected: true,
+        instagramAccountId: token.instagramBusinessAccountId,
+        instagramUsername: token.instagramUsername,
+        lastSyncAt: token.updatedAt,
+        expiresAt: token.expiresAt,
       };
-    }
-
-    const token = await instagramService.getInstagramToken(mentoradoId);
-
-    if (!token) {
-      return {
-        connected: false,
-        accountId: null,
-      };
-    }
-
-    return {
-      connected: true,
-      accountId: token.instagramBusinessAccountId,
-      expiresAt: token.expiresAt,
-    };
-  }),
+    }),
 
   /**
    * Delete all Instagram data for the current user
@@ -118,47 +115,78 @@ export const instagramRouter = router({
   }),
 
   /**
-   * Disconnect Instagram (alias for deleteMyData)
+   * Save Instagram token from Facebook SDK login
    */
-  disconnect: protectedProcedure.mutation(async ({ ctx }) => {
-    const mentoradoId = ctx.mentorado?.id;
-
-    if (!mentoradoId) {
-      throw new TRPCError({
-        code: "NOT_FOUND",
-        message: "Nenhum perfil de mentorado encontrado.",
+  saveToken: protectedProcedure
+    .input(
+      z.object({
+        mentoradoId: z.number(),
+        accessToken: z.string(),
+        instagramAccountId: z.string(),
+        instagramUsername: z.string(),
+      })
+    )
+    .mutation(async ({ input }) => {
+      logger.info("save_token", {
+        mentoradoId: input.mentoradoId,
+        instagramAccountId: input.instagramAccountId,
       });
-    }
 
-    const success = await instagramService.revokeAccess(mentoradoId, logger);
+      try {
+        // Token expires in 60 days for long-lived tokens
+        const expiresAt = new Date();
+        expiresAt.setDate(expiresAt.getDate() + 60);
 
-    return {
-      success,
-      message: success ? "Instagram desconectado com sucesso." : "Erro ao desconectar Instagram.",
-    };
-  }),
+        await instagramService.upsertInstagramToken({
+          mentoradoId: input.mentoradoId,
+          accessToken: input.accessToken,
+          expiresAt,
+          scope: "instagram_basic,instagram_manage_insights,pages_show_list,pages_read_engagement",
+          instagramBusinessAccountId: input.instagramAccountId,
+          instagramUsername: input.instagramUsername,
+        });
+
+        return { success: true };
+      } catch (error) {
+        logger.error("save_token_failed", error, { mentoradoId: input.mentoradoId });
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Erro ao salvar token do Instagram.",
+        });
+      }
+    }),
 
   /**
-   * Manually trigger sync for current mentorado
+   * Disconnect Instagram
+   */
+  disconnect: protectedProcedure
+    .input(z.object({ mentoradoId: z.number() }))
+    .mutation(async ({ input }) => {
+      const success = await instagramService.revokeAccess(input.mentoradoId, logger);
+
+      return {
+        success,
+        message: success ? "Instagram desconectado com sucesso." : "Erro ao desconectar Instagram.",
+      };
+    }),
+
+  /**
+   * Manually trigger sync for a mentorado
    */
   syncMetrics: protectedProcedure
     .input(
       z.object({
+        mentoradoId: z.number(),
         ano: z.number().min(2020).max(2100),
         mes: z.number().min(1).max(12),
       })
     )
-    .mutation(async ({ ctx, input }) => {
-      const mentoradoId = ctx.mentorado?.id;
-
-      if (!mentoradoId) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "Nenhum perfil de mentorado encontrado.",
-        });
-      }
-
-      const result = await instagramService.syncMentoradoMetrics(mentoradoId, input.ano, input.mes);
+    .mutation(async ({ input }) => {
+      const result = await instagramService.syncMentoradoMetrics(
+        input.mentoradoId,
+        input.ano,
+        input.mes
+      );
 
       if (!result.success) {
         throw new TRPCError({
@@ -169,8 +197,8 @@ export const instagramRouter = router({
 
       return {
         success: true,
-        postsCount: result.postsCount,
-        storiesCount: result.storiesCount,
+        posts: result.postsCount,
+        stories: result.storiesCount,
       };
     }),
 });

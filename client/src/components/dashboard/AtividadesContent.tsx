@@ -466,17 +466,24 @@ export function AtividadesContent({ mentoradoId }: AtividadesContentProps) {
                                       }
                                       className="border-border data-[state=checked]:bg-primary data-[state=checked]:border-primary"
                                     />
-                                    <label
-                                      htmlFor={key}
-                                      className={cn(
-                                        "text-sm cursor-pointer select-none flex-1 transition-all",
-                                        isCompleted
-                                          ? "text-muted-foreground line-through"
-                                          : "text-foreground"
+                                    <div className="flex-1 min-w-0">
+                                      <label
+                                        htmlFor={key}
+                                        className={cn(
+                                          "text-sm cursor-pointer select-none block transition-all",
+                                          isCompleted
+                                            ? "text-muted-foreground line-through"
+                                            : "text-foreground"
+                                        )}
+                                      >
+                                        {step.label}
+                                      </label>
+                                      {step.descricao && (
+                                        <p className="text-xs text-muted-foreground/70 mt-0.5 line-clamp-2">
+                                          {step.descricao}
+                                        </p>
                                       )}
-                                    >
-                                      {step.label}
-                                    </label>
+                                    </div>
 
                                     {/* Ícone de nota com Popover inline */}
                                     {!isReadOnly && (

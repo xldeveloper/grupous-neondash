@@ -860,6 +860,7 @@ export const instagramTokens = pgTable(
     expiresAt: timestamp("expires_at").notNull(),
     scope: text("scope").notNull(),
     instagramBusinessAccountId: varchar("instagram_business_account_id", { length: 100 }),
+    instagramUsername: varchar("instagram_username", { length: 100 }),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().notNull(),
   },
