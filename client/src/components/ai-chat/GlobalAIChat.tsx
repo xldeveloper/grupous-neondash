@@ -10,7 +10,7 @@
  */
 
 import { AnimatePresence, motion } from "framer-motion";
-import { Bot, MessageSquarePlus, Sparkles, X } from "lucide-react";
+import { Bot, Maximize2, MessageSquarePlus, Minimize2, Sparkles, X } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -23,6 +23,7 @@ import { AIPromptInput } from "./AIPromptInput";
 
 export function GlobalAIChat() {
   const [isOpen, setIsOpen] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
 
@@ -146,39 +147,63 @@ export function GlobalAIChat() {
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ duration: 0.2, ease: "easeOut" }}
             className={cn(
-              "fixed bottom-24 right-6 z-50",
-              "w-[380px] max-w-[calc(100vw-3rem)]",
-              "h-[520px] max-h-[calc(100vh-8rem)]",
+              "fixed z-50 transition-all duration-300",
+              isExpanded
+                ? "bottom-4 right-4 w-[600px] max-w-[calc(100vw-2rem)] h-[80vh] max-h-[800px]"
+                : "bottom-24 right-6 w-[440px] max-w-[calc(100vw-3rem)] h-[600px] max-h-[calc(100vh-8rem)]",
               "rounded-2xl shadow-2xl",
-              "bg-card backdrop-blur-lg",
+              "bg-background",
               "border border-border",
               "flex flex-col"
             )}
           >
             {/* Header */}
-            <div className="flex-shrink-0 flex items-center justify-between px-4 py-3 border-b border-border bg-muted/30">
+            <div className="flex-shrink-0 flex items-center justify-between px-4 py-3 border-b border-border bg-gradient-to-r from-primary/10 to-primary/5">
               <div className="flex items-center gap-3">
-                <Avatar className="h-9 w-9 border border-primary/20">
-                  <AvatarFallback className="bg-primary/10 text-primary">
-                    <Bot className="h-4 w-4" />
-                  </AvatarFallback>
-                </Avatar>
+                <div className="relative">
+                  <Avatar className="h-10 w-10 border-2 border-primary/30 shadow-lg">
+                    <AvatarFallback className="bg-gradient-to-br from-primary to-primary/80 text-primary-foreground">
+                      <Bot className="h-5 w-5" />
+                    </AvatarFallback>
+                  </Avatar>
+                  <span
+                    className={cn(
+                      "absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full border-2 border-background",
+                      isConnected ? "bg-green-500" : "bg-amber-500"
+                    )}
+                  />
+                </div>
                 <div>
-                  <h3 className="text-sm font-semibold">Assistente NEON</h3>
+                  <h3 className="text-base font-semibold">Assistente NEON</h3>
                   <p className="text-xs text-muted-foreground">
-                    {isConnected ? "Online" : "Conectando..."}
+                    {isConnected ? "Online • Pronto para ajudar" : "Conectando..."}
                   </p>
                 </div>
               </div>
 
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setIsOpen(false)}
-                className="h-8 w-8 text-muted-foreground hover:text-foreground"
-              >
-                <X className="h-4 w-4" />
-              </Button>
+              <div className="flex items-center gap-1">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setIsExpanded(!isExpanded)}
+                  className="h-8 w-8 text-muted-foreground hover:text-foreground"
+                  title={isExpanded ? "Reduzir" : "Expandir"}
+                >
+                  {isExpanded ? (
+                    <Minimize2 className="h-4 w-4" />
+                  ) : (
+                    <Maximize2 className="h-4 w-4" />
+                  )}
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setIsOpen(false)}
+                  className="h-8 w-8 text-muted-foreground hover:text-foreground"
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
             </div>
 
             {/* Chat Content */}
