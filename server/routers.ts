@@ -6,6 +6,7 @@ import { atividadesRouter } from "./atividadesRouter";
 import { crmColumnsRouter } from "./crmColumnsRouter";
 import { diagnosticoRouter } from "./diagnostico";
 import { gamificacaoRouter } from "./gamificacaoRouter";
+import { instagramRouter } from "./instagramRouter";
 import { interacoesRouter } from "./interacoesRouter";
 import { interactionTemplatesRouter } from "./interactionTemplatesRouter";
 import { leadsRouter } from "./leadsRouter";
@@ -35,6 +36,7 @@ export const appRouter = router({
   crmColumns: crmColumnsRouter,
   zapi: zapiRouter,
   aiAgent: aiAgentRouter,
+  instagram: instagramRouter,
 });
 
 export type AppRouter = typeof appRouter;

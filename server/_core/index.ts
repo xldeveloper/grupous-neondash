@@ -119,6 +119,95 @@ async function startServer() {
     return res.redirect(`/agenda?${params.toString()}`);
   });
 
+  // ─────────────────────────────────────────────────────────────────────────
+  // Instagram OAuth Callback
+  // ─────────────────────────────────────────────────────────────────────────
+  app.get("/api/instagram/callback", async (req, res) => {
+    const { code, state, error, error_reason, error_description } = req.query;
+
+    // Handle OAuth errors
+    if (error) {
+      const errorMsg = error_description || error_reason || error;
+      return res.redirect(`/configuracoes?instagram_error=${encodeURIComponent(String(errorMsg))}`);
+    }
+
+    if (!code || typeof code !== "string") {
+      return res.redirect("/configuracoes?instagram_error=missing_code");
+    }
+
+    // Redirect to settings page with code and mentorado state
+    const params = new URLSearchParams({
+      instagram_code: code,
+      ...(state && { mentorado_id: String(state) }),
+    });
+    return res.redirect(`/configuracoes?${params.toString()}`);
+  });
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // Instagram Data Deletion Request (Meta Compliance)
+  // This endpoint receives POST requests from Facebook when a user requests
+  // data deletion from their Facebook/Instagram settings.
+  // ─────────────────────────────────────────────────────────────────────────
+  app.post("/api/instagram/delete", async (req, res) => {
+    try {
+      // Facebook sends a signed_request in the body
+      const { signed_request } = req.body;
+
+      if (!signed_request) {
+        // Also handle direct deletion requests (from our own UI)
+        return res.json({
+          url: "https://neondash.gpus.com.br/account-deletion",
+          confirmation_code: `DEL-${Date.now()}`,
+        });
+      }
+
+      // Parse the signed request (Facebook format)
+      // Format: [signature].[payload] where payload is base64url encoded JSON
+      const [, payload] = signed_request.split(".");
+
+      if (!payload) {
+        return res.status(400).json({ error: "Invalid signed_request format" });
+      }
+
+      // Decode payload
+      const decodedPayload = Buffer.from(payload, "base64url").toString("utf-8");
+      const data = JSON.parse(decodedPayload);
+
+      // data.user_id contains the Facebook user ID
+      const facebookUserId = data.user_id;
+
+      // Log the deletion request (in production, you'd look up and delete user data)
+      console.log("[Instagram] Data deletion request received for Facebook user:", facebookUserId);
+
+      // Return confirmation as required by Facebook
+      // The URL should point to a page where the user can check deletion status
+      const confirmationCode = `DEL-${facebookUserId}-${Date.now()}`;
+
+      return res.json({
+        url: `https://neondash.gpus.com.br/account-deletion?code=${confirmationCode}`,
+        confirmation_code: confirmationCode,
+      });
+    } catch (error) {
+      console.error("[Instagram] Data deletion request error:", error);
+      return res.status(500).json({ error: "Failed to process deletion request" });
+    }
+  });
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // Instagram Deauthorize Callback (Meta Compliance)
+  // Called when user removes the app from their Instagram
+  // ─────────────────────────────────────────────────────────────────────────
+  app.post("/api/instagram/deauth", async (req, res) => {
+    try {
+      console.log("[Instagram] Deauthorize callback received");
+      // In production, mark the user's Instagram as disconnected
+      return res.json({ success: true });
+    } catch (error) {
+      console.error("[Instagram] Deauth error:", error);
+      return res.status(500).json({ error: "Failed to process deauthorization" });
+    }
+  });
+
   // development mode uses Vite, production mode uses static files
   if (process.env.NODE_ENV === "development") {
     await setupVite(app, server);

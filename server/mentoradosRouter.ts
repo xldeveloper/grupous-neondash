@@ -1,7 +1,13 @@
-import { TRPCError } from "@trpc/server"; // Added import
+import { TRPCError } from "@trpc/server";
 import { and, desc, eq, isNull } from "drizzle-orm";
 import { z } from "zod";
-import { diagnosticos, interacoes, mentorados, metricasMensais } from "../drizzle/schema";
+import {
+  diagnosticos,
+  instagramSyncLog,
+  interacoes,
+  mentorados,
+  metricasMensais,
+} from "../drizzle/schema";
 import { adminProcedure, mentoradoProcedure, protectedProcedure, router } from "./_core/trpc";
 import { getDb } from "./db";
 import { sendWelcomeEmail } from "./emailService";
@@ -15,6 +21,41 @@ import {
   upsertFeedback,
   upsertMetricaMensal,
 } from "./mentorados";
+import { instagramService } from "./services/instagramService";
+
+// ═══════════════════════════════════════════════════════════════════════════
+// INSTAGRAM VALIDATION SCHEMAS
+// ═══════════════════════════════════════════════════════════════════════════
+
+/**
+ * Input schema for connecting Instagram
+ */
+const connectInstagramSchema = z.object({
+  mentoradoId: z.number().positive("ID do mentorado deve ser positivo"),
+});
+
+/**
+ * Input schema for Instagram OAuth callback
+ */
+const instagramCallbackSchema = z.object({
+  code: z.string().min(1, "Código de autorização é obrigatório"),
+  mentoradoId: z.number().positive("ID do mentorado deve ser positivo"),
+});
+
+/**
+ * Input schema for fetching Instagram metrics
+ */
+const getInstagramMetricsSchema = z.object({
+  ano: z.number().min(2020).max(2030),
+  mes: z.number().min(1).max(12),
+});
+
+/**
+ * Input schema for disconnecting Instagram
+ */
+const disconnectInstagramSchema = z.object({
+  mentoradoId: z.number().positive("ID do mentorado deve ser positivo"),
+});
 
 export const mentoradosRouter = router({
   // Get current user's mentorado profile
@@ -529,4 +570,183 @@ export const mentoradosRouter = router({
       .where(eq(mentorados.id, ctx.mentorado.id));
     return { success: true };
   }),
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // INSTAGRAM INTEGRATION ENDPOINTS
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  /**
+   * Initiate Instagram OAuth flow by generating authorization URL
+   *
+   * @param mentoradoId - The mentorado ID to connect Instagram for
+   * @returns Object with authorization URL to redirect user to
+   * @throws TRPCError with code "PRECONDITION_FAILED" if Instagram OAuth not configured
+   * @throws TRPCError with code "INTERNAL_SERVER_ERROR" on service failure
+   *
+   * @example
+   * // Frontend usage:
+   * const { authUrl } = await trpc.mentorados.connectInstagram.mutate({ mentoradoId: 123 });
+   * window.location.href = authUrl;
+   */
+  connectInstagram: protectedProcedure.input(connectInstagramSchema).mutation(async ({ input }) => {
+    try {
+      // Check if Instagram OAuth is configured
+      if (!instagramService.isInstagramConfigured()) {
+        throw new TRPCError({
+          code: "PRECONDITION_FAILED",
+          message:
+            "Instagram OAuth não está configurado. Configure INSTAGRAM_APP_ID e INSTAGRAM_APP_SECRET.",
+        });
+      }
+
+      // Generate authorization URL
+      const authUrl = instagramService.getAuthUrl(input.mentoradoId);
+
+      return { authUrl };
+    } catch (error) {
+      if (error instanceof TRPCError) throw error;
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message:
+          error instanceof Error ? error.message : "Erro ao gerar URL de autorização do Instagram",
+      });
+    }
+  }),
+
+  /**
+   * Process Instagram OAuth callback and store tokens
+   *
+   * @param code - Authorization code from Instagram OAuth callback
+   * @param mentoradoId - The mentorado ID to associate the token with
+   * @returns Object with success boolean
+   * @throws TRPCError with code "BAD_REQUEST" if business account validation fails
+   * @throws TRPCError with code "INTERNAL_SERVER_ERROR" on token exchange failure
+   *
+   * @example
+   * // Frontend usage (in callback handler):
+   * await trpc.mentorados.instagramCallback.mutate({ code: urlParams.code, mentoradoId: 123 });
+   */
+  instagramCallback: protectedProcedure
+    .input(instagramCallbackSchema)
+    .mutation(async ({ input }) => {
+      try {
+        // Exchange authorization code for short-lived token
+        const shortLivedResponse = await instagramService.exchangeCodeForTokens(input.code);
+
+        // Exchange short-lived token for long-lived token (60 days)
+        const longLivedResponse = await instagramService.exchangeForLongLivedToken(
+          shortLivedResponse.access_token
+        );
+
+        // Validate business account
+        const businessAccountInfo = await instagramService.validateBusinessAccount(
+          longLivedResponse.access_token
+        );
+
+        if (!businessAccountInfo.isValid) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message:
+              businessAccountInfo.errorMessage ??
+              "Conta do Instagram precisa ser Business ou Creator",
+          });
+        }
+
+        // Calculate expiration date
+        const expiresAt = new Date(Date.now() + longLivedResponse.expires_in * 1000);
+
+        // Upsert token to database
+        await instagramService.upsertInstagramToken({
+          mentoradoId: input.mentoradoId,
+          accessToken: longLivedResponse.access_token,
+          refreshToken: null,
+          expiresAt,
+          scope: "instagram_basic,instagram_manage_insights,pages_show_list",
+          instagramBusinessAccountId: businessAccountInfo.accountId ?? null,
+        });
+
+        return { success: true };
+      } catch (error) {
+        if (error instanceof TRPCError) throw error;
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message:
+            error instanceof Error ? error.message : "Erro ao processar callback do Instagram",
+        });
+      }
+    }),
+
+  /**
+   * Retrieve Instagram sync log for a specific month
+   *
+   * @param ano - Year (2020-2030)
+   * @param mes - Month (1-12)
+   * @returns Sync log record with postsCount, storiesCount, syncStatus, syncedAt, or null if not found
+   *
+   * @example
+   * // Frontend usage:
+   * const metrics = await trpc.mentorados.getInstagramMetrics.query({ ano: 2024, mes: 12 });
+   * if (metrics) {
+   *   console.log(`Posts: ${metrics.postsCount}, Stories: ${metrics.storiesCount}`);
+   * }
+   */
+  getInstagramMetrics: mentoradoProcedure
+    .input(getInstagramMetricsSchema)
+    .query(async ({ ctx, input }) => {
+      const db = getDb();
+
+      const [syncLog] = await db
+        .select({
+          postsCount: instagramSyncLog.postsCount,
+          storiesCount: instagramSyncLog.storiesCount,
+          syncStatus: instagramSyncLog.syncStatus,
+          errorMessage: instagramSyncLog.errorMessage,
+          syncedAt: instagramSyncLog.syncedAt,
+        })
+        .from(instagramSyncLog)
+        .where(
+          and(
+            eq(instagramSyncLog.mentoradoId, ctx.mentorado.id),
+            eq(instagramSyncLog.ano, input.ano),
+            eq(instagramSyncLog.mes, input.mes)
+          )
+        )
+        .limit(1);
+
+      return syncLog ?? null;
+    }),
+
+  /**
+   * Disconnect Instagram integration and delete tokens
+   *
+   * @param mentoradoId - The mentorado ID to disconnect Instagram for
+   * @returns Object with success boolean
+   * @throws TRPCError with code "FORBIDDEN" if user lacks permission
+   * @throws TRPCError with code "INTERNAL_SERVER_ERROR" on service failure
+   *
+   * @example
+   * // Frontend usage:
+   * await trpc.mentorados.disconnectInstagram.mutate({ mentoradoId: 123 });
+   */
+  disconnectInstagram: protectedProcedure
+    .input(disconnectInstagramSchema)
+    .mutation(async ({ ctx, input }) => {
+      // Verify authorization: admin can disconnect any, user can only disconnect self
+      if (ctx.user?.role !== "admin" && ctx.mentorado?.id !== input.mentoradoId) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Você não tem permissão para desconectar o Instagram deste mentorado",
+        });
+      }
+
+      try {
+        await instagramService.revokeAccess(input.mentoradoId);
+        return { success: true };
+      } catch (error) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: error instanceof Error ? error.message : "Erro ao desconectar Instagram",
+        });
+      }
+    }),
 });
