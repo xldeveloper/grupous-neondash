@@ -10,6 +10,7 @@ const ZAPI_BASE_URL = "https://api.z-api.io";
 export interface ZApiCredentials {
   instanceId: string;
   token: string;
+  clientToken?: string; // Account Security Token from Z-API dashboard (optional)
 }
 
 export interface ZApiQRCodeResponse {
@@ -51,13 +52,19 @@ export interface ZApiWebhookPayload {
 
 /**
  * Build headers for Z-API requests
- * Note: Authentication is done via URL path (token in URL), not via headers.
- * Client-Token header is only required when "Account Security Token" is enabled in Z-API dashboard.
+ * Note: Authentication is done via URL path (token in URL).
+ * Client-Token header is required when "Account Security Token" is enabled in Z-API dashboard.
  */
-function buildHeaders(): HeadersInit {
-  return {
+function buildHeaders(clientToken?: string): HeadersInit {
+  const headers: HeadersInit = {
     "Content-Type": "application/json",
   };
+
+  if (clientToken) {
+    headers["Client-Token"] = clientToken;
+  }
+
+  return headers;
 }
 
 /**
@@ -79,7 +86,7 @@ async function zapiRequest<T>(
   const url = buildUrl(credentials, endpoint);
   const options: RequestInit = {
     method,
-    headers: buildHeaders(),
+    headers: buildHeaders(credentials.clientToken),
   };
 
   if (body) {
