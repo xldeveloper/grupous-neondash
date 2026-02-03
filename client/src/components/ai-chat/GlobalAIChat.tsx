@@ -10,7 +10,7 @@
  */
 
 import { AnimatePresence, motion } from "framer-motion";
-import { Bot, Maximize2, MessageSquarePlus, Minimize2, Sparkles, X } from "lucide-react";
+import { Bot, Maximize2, MessageSquarePlus, Minimize2, X } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -123,7 +123,11 @@ export function GlobalAIChat() {
               exit={{ rotate: -90, opacity: 0 }}
               transition={{ duration: 0.15 }}
             >
-              <Sparkles className="h-6 w-6" />
+              <img
+                src="/ai-assistant-icon.jpg"
+                alt="Assistente IA"
+                className="h-10 w-10 rounded-full object-cover"
+              />
             </motion.div>
           )}
         </AnimatePresence>
@@ -149,8 +153,8 @@ export function GlobalAIChat() {
             className={cn(
               "fixed z-50 transition-all duration-300",
               isExpanded
-                ? "bottom-4 right-4 w-[600px] max-w-[calc(100vw-2rem)] h-[80vh] max-h-[800px]"
-                : "bottom-24 right-6 w-[440px] max-w-[calc(100vw-3rem)] h-[600px] max-h-[calc(100vh-8rem)]",
+                ? "bottom-4 right-4 w-[700px] max-w-[calc(100vw-2rem)] h-[85vh] max-h-[900px]"
+                : "bottom-20 right-6 w-[520px] max-w-[calc(100vw-3rem)] h-[700px] max-h-[calc(100vh-6rem)]",
               "rounded-2xl shadow-2xl",
               "bg-background",
               "border border-border",

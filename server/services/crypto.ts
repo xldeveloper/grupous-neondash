@@ -2,6 +2,7 @@
  * Encryption utilities for sensitive data (Z-API tokens, etc.)
  * Uses AES-256-GCM for authenticated encryption
  */
+import "dotenv/config";
 import { createCipheriv, createDecipheriv, randomBytes, scryptSync } from "node:crypto";
 
 const ALGORITHM = "aes-256-gcm";
