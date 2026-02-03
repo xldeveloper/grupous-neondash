@@ -527,7 +527,7 @@ export function AtividadesContent({ mentoradoId }: AtividadesContentProps) {
                                         <AnimatedPopoverContent
                                           align="end"
                                           side="bottom"
-                                          className="w-[420px] p-0"
+                                          className="w-[90vw] md:w-[800px] p-0"
                                         >
                                           {/* Header with close button */}
                                           <div className="flex items-start justify-between p-4 pb-3 border-b border-border/50">
@@ -569,7 +569,7 @@ export function AtividadesContent({ mentoradoId }: AtividadesContentProps) {
                                                 handleNoteChange(key, e.target.value)
                                               }
                                               placeholder="Escreva suas anotações, dúvidas ou insights..."
-                                              className="bg-background border-border text-foreground min-h-[160px] resize-y text-sm placeholder:text-muted-foreground/50"
+                                              className="bg-background border-border text-foreground min-h-[320px] resize-y text-sm placeholder:text-muted-foreground/50"
                                             />
                                           </div>
 
