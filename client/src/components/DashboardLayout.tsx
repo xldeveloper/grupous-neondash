@@ -1,6 +1,14 @@
 "use client";
 import { motion } from "framer-motion";
-import { BarChart3, BriefcaseBusiness, CalendarRange, Moon, Sun, UsersRound } from "lucide-react";
+import {
+  BarChart3,
+  BriefcaseBusiness,
+  CalendarRange,
+  Moon,
+  Settings2,
+  Sun,
+  UsersRound,
+} from "lucide-react";
 import type React from "react";
 import { useState } from "react";
 import { Link, Redirect, useLocation } from "wouter";
@@ -49,6 +57,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     { href: "/meu-dashboard", label: "Meu Dashboard", icon: BarChart3 },
     { href: "/agenda", label: "Agenda", icon: CalendarRange },
     { href: "/crm/leads", label: "CRM Leads", icon: BriefcaseBusiness },
+    { href: "/configuracoes", label: "Configurações", icon: Settings2 },
     {
       href: "/admin/mentorados",
       label: "Painel Administrativo",

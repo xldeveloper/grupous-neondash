@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "bun run --watch server/_core/index.ts",
     "build": "vite build && bun build server/_core/index.ts --outdir=dist --target=node --format=esm --packages external",
-    "start": "moltbot config set models.default google-antigravity/gemini-2.0-flash-exp && moltbot gateway --port 18789 --daemon & NODE_ENV=production bun dist/index.js",
+    "start": "NODE_ENV=production bun dist/index.js",
     "check": "bun run tsc --noEmit",
     "lint": "biome check --write .",
     "lint:check": "biome check .",
@@ -32,7 +32,9 @@
     "@dnd-kit/sortable": "^10.0.0",
     "@dnd-kit/utilities": "^3.2.2",
     "@fontsource/manrope": "^5.2.8",
+    "@ai-sdk/google": "^1.0.0",
     "@google/genai": "^1.39.0",
+    "ai": "^4.0.0",
     "@hookform/resolvers": "^5.2.2",
     "@neondatabase/serverless": "^0.10.3",
     "@notionhq/client": "^5.8.0",
@@ -85,7 +87,7 @@
     "ioredis": "^5.9.2",
     "jose": "6.1.0",
     "lucide-react": "^0.453.0",
-    "moltbot": "latest",
+
     "moment": "^2.30.1",
     "motion": "^12.29.2",
     "nanoid": "^5.1.5",
