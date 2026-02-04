@@ -193,9 +193,11 @@ async function runCatchUpSyncIfNeeded(logger: Logger): Promise<boolean> {
   try {
     const db = getDb();
 
-    // Calculate today at midnight for comparison
-    const todayMidnight = new Date();
-    todayMidnight.setHours(0, 0, 0, 0);
+    // Calculate today at midnight for comparison (UTC for timezone-agnostic behavior)
+    const now = new Date();
+    const todayMidnight = new Date(
+      Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), 0, 0, 0, 0)
+    );
 
     // Get last SUCCESSFUL sync for today (failed/partial syncs should be retried)
     const [lastSuccessfulSync] = await db

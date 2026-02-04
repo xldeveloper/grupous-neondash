@@ -133,8 +133,11 @@ export const mentoradosRouter = router({
       let targetId: number;
 
       if (input?.mentoradoId) {
-        // Admin requesting specific mentorado
-        if (ctx.user?.role !== "admin") {
+        // Check authorization: admin can access any, non-admin only their own
+        const isAdmin = ctx.user?.role === "admin";
+        const isOwnMentorado = ctx.mentorado?.id === input.mentoradoId;
+
+        if (!isAdmin && !isOwnMentorado) {
           throw new TRPCError({
             code: "FORBIDDEN",
             message: "Apenas administradores podem acessar dados de outros mentorados",
@@ -142,7 +145,7 @@ export const mentoradosRouter = router({
         }
         targetId = input.mentoradoId;
       } else if (ctx.mentorado) {
-        // Regular user viewing their own stats
+        // Regular user viewing their own stats (no mentoradoId passed)
         targetId = ctx.mentorado.id;
       } else {
         throw new TRPCError({
@@ -478,8 +481,11 @@ export const mentoradosRouter = router({
       let mentoradoId: number;
 
       if (input?.mentoradoId) {
-        // Admin requesting specific mentorado
-        if (ctx.user?.role !== "admin") {
+        // Check authorization: admin can access any, non-admin only their own
+        const isAdmin = ctx.user?.role === "admin";
+        const isOwnMentorado = ctx.mentorado?.id === input.mentoradoId;
+
+        if (!isAdmin && !isOwnMentorado) {
           throw new TRPCError({
             code: "FORBIDDEN",
             message: "Apenas administradores podem acessar dados de outros mentorados",
@@ -487,7 +493,7 @@ export const mentoradosRouter = router({
         }
         mentoradoId = input.mentoradoId;
       } else if (ctx.mentorado) {
-        // Regular user viewing their own stats
+        // Regular user viewing their own stats (no mentoradoId passed)
         mentoradoId = ctx.mentorado.id;
       } else {
         throw new TRPCError({

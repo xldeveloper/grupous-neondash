@@ -47,7 +47,6 @@ export function RoadmapView({ mentoradoId }: RoadmapViewProps) {
         {rows.map((rowModules, rowIndex) => {
           const isReverse = rowIndex % 2 !== 0; // Even rows (0, 2) left-to-right, Odd rows (1, 3) right-to-left
           const isLastRow = rowIndex === rows.length - 1;
-          const isFirstRow = rowIndex === 0;
 
           return (
             <div key={rowIndex} className="relative mb-24 last:mb-0">
@@ -74,14 +73,8 @@ export function RoadmapView({ mentoradoId }: RoadmapViewProps) {
                     left: isReverse ? "-2.5rem" : "auto",
 
                     // Border logic
-                    borderLeftWidth: isReverse ? "4px" : "0", // If reverse (RTL), we are connecting start (left) to next row. Logic: Even row ends at right. Connector curve on right.
-                    // Wait, logic check:
-                    // Row 0 (Even): LTR. Ends at right. Connector needs to curve from Right end down to Row 1 Right Start.
-                    // Row 1 (Odd): RTL. Ends at left. Connector needs to curve from Left end down to Row 2 Left Start.
-
-                    // Correct Logic:
-                    // If Even Row: Curve is on RIGHT. Border Right, Top, Bottom.
-                    // If Odd Row: Curve is on LEFT. Border Left, Top, Bottom.
+                    // If Even Row (!isReverse): Curve is on RIGHT. Border Right, Top, Bottom.
+                    // If Odd Row (isReverse): Curve is on LEFT. Border Left, Top, Bottom.
 
                     borderRightWidth: !isReverse ? "4px" : "0",
                     borderLeftWidth: isReverse ? "4px" : "0",
@@ -101,7 +94,7 @@ export function RoadmapView({ mentoradoId }: RoadmapViewProps) {
                 {/* Horizontal Connecting Line (Behind cards) */}
                 <div className="absolute top-1/2 left-0 w-full h-1 bg-slate-800 -z-10 hidden md:block -translate-y-1/2 rounded-full" />
 
-                {rowModules.map((module, index) => {
+                {rowModules.map((module) => {
                   return (
                     <div
                       key={module.id}

@@ -19,21 +19,18 @@ const logger = createLogger({ service: "seeds/initializeBadges" });
  * Uses onConflictDoNothing for idempotent execution
  */
 export async function initializeBadges() {
-  const db = await getDb();
-  if (!db) {
-    logger.error("database_connection_failed", new Error("Failed to connect to database"));
-    process.exit(1);
-  }
+  // getDb() throws on failure, no need for null check
+  const db = getDb();
 
   logger.info("seed_started", { badgeCount: BADGES_CONFIG.length });
 
-  for (const badge of BADGES_CONFIG) {
-    try {
-      await db.insert(badges).values(badge).onConflictDoNothing();
-      logger.info("badge_ready", { codigo: badge.codigo });
-    } catch (error) {
-      logger.error("badge_insert_failed", error, { codigo: badge.codigo });
-    }
+  try {
+    // Batch insert for better performance (16 badges in one query)
+    await db.insert(badges).values(BADGES_CONFIG).onConflictDoNothing();
+    logger.info("badges_inserted", { count: BADGES_CONFIG.length });
+  } catch (error) {
+    logger.error("badges_insert_failed", error);
+    throw error;
   }
 
   logger.info("seed_completed");

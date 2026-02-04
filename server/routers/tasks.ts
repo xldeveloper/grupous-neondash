@@ -174,8 +174,15 @@ export const tasksRouter = router({
       })
     )
     .mutation(async ({ ctx, input }) => {
+      const startTime = Date.now();
+      const requestId = `ai-tasks-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+      const logger = createLogger({ service: "tasks-router", requestId });
+
+      logger.info("generateFromAI_started", { mentoradoId: input.mentoradoId });
+
       const db = getDb();
-      const { invokeLLM } = await import("../_core/llm");
+      const { invokeLLM, validateLLMConfig, LLMConfigurationError, LLMInvocationError } =
+        await import("../_core/llm");
       const { metricasMensais, diagnosticos, mentorados, leads, systemSettings } = await import(
         "../../drizzle/schema"
       );
@@ -187,6 +194,10 @@ export const tasksRouter = router({
         const isAdmin = ctx.user?.role === "admin";
 
         if (!isOwnId && !isAdmin) {
+          logger.warn("unauthorized_ai_generation_attempt", {
+            requestedMentoradoId: input.mentoradoId,
+            userId: ctx.user?.id,
+          });
           throw new TRPCError({
             code: "FORBIDDEN",
             message: "Apenas admins podem gerar tarefas para outros.",
@@ -201,6 +212,18 @@ export const tasksRouter = router({
           message: "Perfil de mentorado não encontrado.",
         });
       }
+
+      // Validate LLM configuration before attempting generation
+      const llmConfig = validateLLMConfig();
+      if (!llmConfig.isValid) {
+        logger.error("llm_configuration_invalid", { errors: llmConfig.errors });
+        throw new TRPCError({
+          code: "PRECONDITION_FAILED",
+          message: "Configuração de IA incompleta. Contate o administrador.",
+        });
+      }
+
+      logger.info("llm_config_validated", { provider: llmConfig.provider, model: llmConfig.model });
 
       // 1. Fetch Prompt from System Settings
       const promptSetting = await db.query.systemSettings.findFirst({
@@ -285,7 +308,13 @@ export const tasksRouter = router({
       ${recentTasks.map((t) => `- ${t.title}`).join("\n")}
       `;
 
-      // 3. Call LLM
+      logger.info("context_prepared", {
+        mentorado: mentoradoData?.nomeCompleto,
+        metricsCount: recentMetrics.length,
+        hasDiagnostico: !!diagnosticoData,
+      });
+
+      // 3. Call LLM with enhanced error handling
       try {
         const result = await invokeLLM({
           messages: [
@@ -295,37 +324,140 @@ export const tasksRouter = router({
           response_format: { type: "json_object" },
         });
 
-        const logger = createLogger({ service: "tasks-router" });
-        const content = result.choices[0].message.content as string;
-        logger.info("llm_response", { content });
+        const content = result.choices[0]?.message?.content as string;
+
+        if (!content) {
+          logger.error("llm_empty_response", { result });
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Resposta vazia da IA. Tente novamente.",
+          });
+        }
+
+        logger.info("llm_response_received", {
+          contentLength: content.length,
+          model: result.model,
+          tokens: result.usage,
+        });
+
         let suggestedTasks: string[] = [];
 
-        const parsed = JSON.parse(content);
-        suggestedTasks = Array.isArray(parsed) ? parsed : parsed.tasks || parsed.data || [];
+        try {
+          const parsed = JSON.parse(content);
+          suggestedTasks = Array.isArray(parsed) ? parsed : parsed.tasks || parsed.data || [];
+
+          if (!Array.isArray(suggestedTasks)) {
+            logger.error("invalid_tasks_format", { parsed, content });
+            throw new Error("Formato de resposta inválido: esperado array de tarefas");
+          }
+        } catch (parseError) {
+          logger.error("json_parse_failed", {
+            content,
+            error: parseError instanceof Error ? parseError.message : "Unknown error",
+          });
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Erro ao processar resposta da IA. Tente novamente.",
+          });
+        }
+
+        logger.info("tasks_parsed", { taskCount: suggestedTasks.length });
 
         // 4. Insert tasks
         if (suggestedTasks.length > 0) {
-          await db.insert(tasks).values(
-            suggestedTasks.map((title) => ({
+          const tasksToInsert = suggestedTasks
+            .filter(
+              (title): title is string => typeof title === "string" && title.trim().length > 0
+            )
+            .map((title) => ({
               mentoradoId: targetMentoradoId!,
-              title: String(title).substring(0, 255),
-              status: "todo",
-              priority: "alta" as any, // AI tasks are high priority by default now
-              category: "atividade",
-              source: "ai_coach" as any, // New Source
-            }))
-          );
+              title: title.trim().substring(0, 255),
+              status: "todo" as const,
+              priority: "alta" as const,
+              category: "atividade" as const,
+              source: "ai_coach" as const,
+            }));
+
+          if (tasksToInsert.length > 0) {
+            await db.insert(tasks).values(tasksToInsert);
+            logger.info("tasks_inserted", { count: tasksToInsert.length });
+          }
         }
+
+        const duration = Date.now() - startTime;
+        logger.info("generateFromAI_completed", {
+          durationMs: duration,
+          tasksGenerated: suggestedTasks.length,
+        });
 
         return { success: true, count: suggestedTasks.length };
       } catch (error: unknown) {
-        const logger = createLogger({ service: "tasks-router" });
-        logger.error("ai_generation_failed", error);
+        const duration = Date.now() - startTime;
+
+        // Handle specific LLM errors
+        if (error instanceof LLMConfigurationError) {
+          logger.error("llm_configuration_error", {
+            code: error.code,
+            message: error.message,
+            durationMs: duration,
+          });
+          throw new TRPCError({
+            code: "PRECONDITION_FAILED",
+            message: "Configuração de IA incompleta. Contate o administrador.",
+          });
+        }
+
+        if (error instanceof LLMInvocationError) {
+          logger.error("llm_invocation_error", {
+            code: error.code,
+            status: error.status,
+            message: error.message,
+            details: error.details,
+            durationMs: duration,
+          });
+
+          // Map specific error codes to user-friendly messages
+          let userMessage = "Falha ao gerar plano com IA. Tente novamente.";
+
+          switch (error.code) {
+            case "TIMEOUT":
+              userMessage = "A IA demorou muito para responder. Tente novamente.";
+              break;
+            case "RATE_LIMITED":
+              userMessage = "Limite de requisições atingido. Aguarde um momento e tente novamente.";
+              break;
+            case "UNAUTHORIZED":
+              userMessage = "Erro de autenticação com a IA. Contate o administrador.";
+              break;
+            case "MODEL_NOT_FOUND":
+              userMessage = "Modelo de IA não encontrado. Contate o administrador.";
+              break;
+            case "SERVER_ERROR":
+              userMessage =
+                "Serviço de IA temporariamente indisponível. Tente novamente em alguns minutos.";
+              break;
+            case "NETWORK_ERROR":
+              userMessage = "Erro de conexão. Verifique sua internet e tente novamente.";
+              break;
+          }
+
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: userMessage,
+          });
+        }
+
+        // Handle unexpected errors
+        logger.error("unexpected_ai_generation_error", {
+          error,
+          durationMs: duration,
+          errorType: error?.constructor?.name,
+          errorMessage: error instanceof Error ? error.message : "Unknown error",
+        });
 
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
-          message: "Falha ao gerar plano com IA. Tente novamente.",
-          cause: error,
+          message: "Erro inesperado ao gerar plano. Tente novamente.",
         });
       }
     }),
