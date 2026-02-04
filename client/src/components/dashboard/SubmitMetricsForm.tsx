@@ -27,6 +27,12 @@ interface SubmitMetricsFormProps {
   className?: string;
   /** When true, suggests next month (January 2026) if user has December data */
   suggestNextMonth?: boolean;
+  /** Override default year selection */
+  defaultAno?: number;
+  /** Override default month selection */
+  defaultMes?: number;
+  /** When true, disables period selectors (for editing past metrics) */
+  lockPeriod?: boolean;
 }
 
 /**
@@ -103,15 +109,18 @@ export function SubmitMetricsForm({
   onSuccess,
   className,
   suggestNextMonth = false,
+  defaultAno,
+  defaultMes,
+  lockPeriod = false,
 }: SubmitMetricsFormProps) {
   const currentDate = new Date();
 
-  // If suggestNextMonth is true, default to January 2026
-  const defaultYear = suggestNextMonth ? 2026 : currentDate.getFullYear();
-  const defaultMonth = suggestNextMonth ? 1 : currentDate.getMonth() + 1;
+  // Priority: explicit defaults > suggestNextMonth > current date
+  const initialYear = defaultAno ?? (suggestNextMonth ? 2026 : currentDate.getFullYear());
+  const initialMonth = defaultMes ?? (suggestNextMonth ? 1 : currentDate.getMonth() + 1);
 
-  const [ano, setAno] = useState(defaultYear);
-  const [mes, setMes] = useState(defaultMonth);
+  const [ano, setAno] = useState(initialYear);
+  const [mes, setMes] = useState(initialMonth);
   const [faturamento, setFaturamento] = useState("");
   const [lucro, setLucro] = useState("");
   const [postsFeed, setPostsFeed] = useState("");
