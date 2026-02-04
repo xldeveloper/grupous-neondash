@@ -217,6 +217,30 @@ export const mentoradosRouter = router({
     }),
 
   /**
+   * Update monthly goals (Admin)
+   */
+  updateMonthlyGoals: adminProcedure
+    .input(
+      z.object({
+        mentoradoId: z.number(),
+        ano: z.number(),
+        mes: z.number().min(1).max(12),
+        metaFaturamento: z.number().optional(),
+        metaLeads: z.number().optional(),
+        metaProcedimentos: z.number().optional(),
+        metaPosts: z.number().optional(),
+        metaStories: z.number().optional(),
+      })
+    )
+    .mutation(async ({ input }) => {
+      const { mentoradoId, ano, mes, ...goals } = input;
+      // Import dynamically to avoid circular deps if any (though imports are at top)
+      const { updateMonthlyGoals } = await import("./mentorados");
+      const id = await updateMonthlyGoals(mentoradoId, ano, mes, goals);
+      return { id, success: true };
+    }),
+
+  /**
    * Get previous month's metrics (for comparison placeholders)
    */
   getPreviousMonthMetrics: mentoradoProcedure
@@ -503,7 +527,7 @@ export const mentoradosRouter = router({
       }
 
       // Parallel fetching for performance
-      const [metrics, diagnostico, meetings, notes] = await Promise.all([
+      const [metrics, diagnostico, meetings, notes, mentoradoDetails] = await Promise.all([
         // 1. Fetch Last 12 months metrics
         db
           .select()
@@ -550,6 +574,14 @@ export const mentoradosRouter = router({
           )
           .orderBy(desc(interacoes.createdAt))
           .limit(5),
+
+        // 5. Get Mentorados meta data (for score calculation)
+        db
+          .select()
+          .from(mentorados)
+          .where(eq(mentorados.id, mentoradoId))
+          .limit(1)
+          .then((res) => res[0]),
       ]);
 
       // Calculate Financials
@@ -570,6 +602,15 @@ export const mentoradosRouter = router({
         growthPercent = Math.round(((last - first) / first) * 100);
       }
 
+      // Calculate Score for the latest month
+      let score = 0;
+      if (metrics.length > 0 && mentoradoDetails) {
+        const latestMetric = metrics[0];
+        // Import dynamically to avoid circular deps
+        const { calculateScoreFromMetrics } = await import("./gamificacao");
+        score = calculateScoreFromMetrics(mentoradoDetails, latestMetric);
+      }
+
       return {
         financials: {
           totalRevenue,
@@ -581,6 +622,7 @@ export const mentoradosRouter = router({
         profile: {
           specialty: diagnostico?.specialty || "N/A",
         },
+        score, // Current month score
         meetings,
         notes,
       };

@@ -216,7 +216,14 @@ export async function initializeBadges() {
 
 interface BadgeCheckContext {
   mentoradoId: number;
-  mentorado: { id: number; metaFaturamento: number };
+  mentorado: {
+    id: number;
+    metaFaturamento: number;
+    metaLeads?: number | null;
+    metaProcedimentos?: number | null;
+    metaPosts?: number | null;
+    metaStories?: number | null;
+  };
   metricas: {
     faturamento: number;
     leads: number;
@@ -224,6 +231,11 @@ interface BadgeCheckContext {
     postsFeed: number;
     stories: number;
     createdAt: Date;
+    metaFaturamento?: number | null;
+    metaLeads?: number | null;
+    metaProcedimentos?: number | null;
+    metaPosts?: number | null;
+    metaStories?: number | null;
   };
   metricasAnterior: { faturamento: number } | undefined;
 }
@@ -330,8 +342,10 @@ async function checkBadgeCriteria(
     case "pontualidade":
       return checkPontualidade(ctx.mentoradoId, criterio.meses || 3, criterio.dia || 5);
 
-    case "faturamento_meta":
-      return ctx.metricas.faturamento >= ctx.mentorado.metaFaturamento;
+    case "faturamento_meta": {
+      const meta = ctx.metricas.metaFaturamento ?? ctx.mentorado.metaFaturamento;
+      return ctx.metricas.faturamento >= meta;
+    }
 
     case "crescimento": {
       if (!ctx.metricasAnterior || ctx.metricasAnterior.faturamento <= 0) return false;
@@ -481,22 +495,29 @@ export async function calculateMonthlyRanking(ano: number, mes: number) {
 
     if (!metricas) continue;
 
+    // Determine goals (monthly override or global default)
+    const goalFaturamento = metricas.metaFaturamento ?? m.metaFaturamento;
+    const goalPosts = metricas.metaPosts ?? m.metaPosts ?? 12;
+    const goalStories = metricas.metaStories ?? m.metaStories ?? 60;
+    const goalLeads = metricas.metaLeads ?? m.metaLeads ?? 50;
+    const goalProcedimentos = metricas.metaProcedimentos ?? m.metaProcedimentos ?? 10;
+
     // Calculate score
     let pontuacao = 0;
     let bonus = 0;
 
     // Faturamento score (max 40 points)
-    const faturamentoPercent = Math.min((metricas.faturamento / m.metaFaturamento) * 100, 150);
+    const faturamentoPercent = Math.min((metricas.faturamento / goalFaturamento) * 100, 150);
     pontuacao += Math.round(faturamentoPercent * 0.4);
 
     // Content score (max 20 points)
-    const postsPercent = Math.min((metricas.postsFeed / (m.metaPosts || 12)) * 100, 150);
-    const storiesPercent = Math.min((metricas.stories / (m.metaStories || 60)) * 100, 150);
+    const postsPercent = Math.min((metricas.postsFeed / goalPosts) * 100, 150);
+    const storiesPercent = Math.min((metricas.stories / goalStories) * 100, 150);
     pontuacao += Math.round(((postsPercent + storiesPercent) / 2) * 0.2);
 
     // Operational score (max 20 points)
-    const leadsPercent = Math.min((metricas.leads / (m.metaLeads || 50)) * 100, 150);
-    const procPercent = Math.min((metricas.procedimentos / (m.metaProcedimentos || 10)) * 100, 150);
+    const leadsPercent = Math.min((metricas.leads / goalLeads) * 100, 150);
+    const procPercent = Math.min((metricas.procedimentos / goalProcedimentos) * 100, 150);
     pontuacao += Math.round(((leadsPercent + procPercent) / 2) * 0.2);
 
     // Badges bonus (max 20 points)
@@ -952,4 +973,55 @@ export async function calculateStreak(mentoradoId: number): Promise<{
   const progressPercent = Math.min(100, Math.round((currentStreak / nextMilestone) * 100));
 
   return { currentStreak, longestStreak, nextMilestone, progressPercent };
+}
+
+/**
+ * Calculate score from metrics and goals
+ */
+export function calculateScoreFromMetrics(
+  mentorado: {
+    metaFaturamento: number;
+    metaPosts?: number | null;
+    metaStories?: number | null;
+    metaLeads?: number | null;
+    metaProcedimentos?: number | null;
+  },
+  metricas: {
+    faturamento: number;
+    postsFeed: number;
+    stories: number;
+    leads: number;
+    procedimentos: number;
+    metaFaturamento?: number | null;
+    metaPosts?: number | null;
+    metaStories?: number | null;
+    metaLeads?: number | null;
+    metaProcedimentos?: number | null;
+  }
+) {
+  // Determine goals (monthly override or global default)
+  const goalFaturamento = metricas.metaFaturamento ?? mentorado.metaFaturamento;
+  const goalPosts = metricas.metaPosts ?? mentorado.metaPosts ?? 12;
+  const goalStories = metricas.metaStories ?? mentorado.metaStories ?? 60;
+  const goalLeads = metricas.metaLeads ?? mentorado.metaLeads ?? 50;
+  const goalProcedimentos = metricas.metaProcedimentos ?? mentorado.metaProcedimentos ?? 10;
+
+  // Calculate score
+  let pontuacao = 0;
+
+  // Faturamento score (max 40 points)
+  const faturamentoPercent = Math.min((metricas.faturamento / goalFaturamento) * 100, 150);
+  pontuacao += Math.round(faturamentoPercent * 0.4);
+
+  // Content score (max 20 points)
+  const postsPercent = Math.min((metricas.postsFeed / goalPosts) * 100, 150);
+  const storiesPercent = Math.min((metricas.stories / goalStories) * 100, 150);
+  pontuacao += Math.round(((postsPercent + storiesPercent) / 2) * 0.2);
+
+  // Operational score (max 20 points)
+  const leadsPercent = Math.min((metricas.leads / goalLeads) * 100, 150);
+  const procPercent = Math.min((metricas.procedimentos / goalProcedimentos) * 100, 150);
+  pontuacao += Math.round(((leadsPercent + procPercent) / 2) * 0.2);
+
+  return pontuacao;
 }

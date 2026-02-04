@@ -2,6 +2,7 @@ import {
   Activity,
   Award,
   Calendar,
+  ClipboardList,
   DollarSign,
   LayoutDashboard,
   Medal,
@@ -18,6 +19,8 @@ import { MenteeManagementView } from "@/components/admin/MenteeManagementView";
 import DashboardLayout from "@/components/DashboardLayout";
 import { AchievementsView } from "@/components/dashboard/AchievementsView";
 import { RankingView } from "@/components/dashboard/RankingView";
+import { WeeklyPlanningAdmin } from "@/components/dashboard/WeeklyPlanningAdmin";
+
 import MonthYearFilter from "@/components/MonthYearFilter";
 import { AnimatedCounter } from "@/components/ui/animated-counter";
 import { AnimatedList } from "@/components/ui/animated-list";
@@ -122,6 +125,11 @@ export default function GestaoMentorados() {
                   value: "gestao",
                   label: "Gestão",
                   icon: Users,
+                },
+                {
+                  value: "planejamento",
+                  label: "Planejamento",
+                  icon: ClipboardList,
                 },
               ]}
               className="bg-muted/30 p-1 rounded-2xl border border-white/5 shadow-inner"
@@ -405,6 +413,11 @@ export default function GestaoMentorados() {
                   </TabsContent>
                 </Tabs>
               </motion.div>
+            </FloatingDockTabsContent>
+
+            {/* PLANEJAMENTO TAB */}
+            <FloatingDockTabsContent value="planejamento" className="mt-0">
+              <WeeklyPlanningAdmin />
             </FloatingDockTabsContent>
           </FloatingDockTabs>
         </motion.div>

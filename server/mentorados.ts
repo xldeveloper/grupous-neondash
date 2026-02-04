@@ -176,3 +176,26 @@ export async function upsertMetricaMensalPartial(
     return result[0].id;
   }
 }
+
+/**
+ * Update monthly goals for a mentorado
+ */
+export async function updateMonthlyGoals(
+  mentoradoId: number,
+  ano: number,
+  mes: number,
+  goals: {
+    metaFaturamento?: number;
+    metaLeads?: number;
+    metaProcedimentos?: number;
+    metaPosts?: number;
+    metaStories?: number;
+  }
+) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  // Use upsertMetricaMensalPartial logic but specifically for goals
+  // This ensures we create the record if it doesn't exist
+  return await upsertMetricaMensalPartial(mentoradoId, ano, mes, goals);
+}

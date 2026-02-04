@@ -1,12 +1,13 @@
 import { BadgeCheck, DollarSign, TrendingUp, Wallet } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { trpc } from "@/lib/trpc";
+import { cn } from "@/lib/utils";
 import { AITasksCard } from "./AITasksCard";
 import { FinancialHistoryChart } from "./FinancialHistoryChart";
 import { MeetingHistory } from "./MeetingHistory";
 import { MentorNotes } from "./MentorNotes";
+import { MonthlyGoalsCard } from "./MonthlyGoalsCard";
 import { NewMentoradoWelcome } from "./NewMentoradoWelcome";
 import { RoadmapView } from "./RoadmapView";
 import { UpcomingClassSection } from "./UpcomingClassSection";
@@ -88,18 +89,30 @@ export function MenteeOverview({ mentoradoId, isAdmin, onNavigateToTab }: Mentee
           <h1 className="text-3xl font-bold text-foreground mb-2 tracking-tight">
             {mentorado.nomeCompleto}
           </h1>
-          <p className="text-muted-foreground font-medium flex items-center justify-center md:justify-start gap-2">
-            Especialidade:{" "}
-            <span className="text-foreground bg-muted/50 dark:bg-slate-800/50 px-3 py-1 rounded-full text-sm border border-border dark:border-slate-700">
-              {stats.profile.specialty}
-            </span>
-          </p>
+          <span className="text-foreground bg-muted/50 dark:bg-slate-800/50 px-3 py-1.5 rounded-full text-sm border border-border dark:border-slate-700 font-medium inline-flex items-center gap-1.5">
+            {stats.profile.specialty}
+          </span>
         </div>
 
-        <Badge className="bg-gradient-to-br from-[#D4AF37] to-[#AA8C2C] text-slate-900 px-6 py-2.5 text-sm font-bold border-none shadow-xl flex items-center gap-2 hover:scale-105 transition-transform z-10">
-          <BadgeCheck className="w-5 h-5" />
-          High Performer
-        </Badge>
+        <div className="flex flex-col items-center gap-1 z-10">
+          <div
+            className={cn(
+              "text-4xl font-bold tabular-nums",
+              stats.score >= 80
+                ? "text-emerald-600 dark:text-emerald-400"
+                : stats.score >= 60
+                  ? "text-blue-600 dark:text-blue-400"
+                  : stats.score >= 40
+                    ? "text-amber-600 dark:text-amber-400"
+                    : "text-red-600 dark:text-red-400"
+            )}
+          >
+            {stats.score}
+          </div>
+          <span className="text-xs text-muted-foreground uppercase tracking-wider font-medium">
+            Score
+          </span>
+        </div>
 
         {/* Upcoming Class - Integrated in header */}
         <div className="w-full md:col-span-full mt-4">
@@ -133,6 +146,11 @@ export function MenteeOverview({ mentoradoId, isAdmin, onNavigateToTab }: Mentee
         <div className="space-y-8">
           {/* AI Tasks Section - Placed prominently at the TOP */}
           <AITasksCard mentoradoId={mentorado.id} isAdmin={isAdmin} />
+
+          {/* Monthly Goals (Admin Only) */}
+          {isAdmin && (
+            <MonthlyGoalsCard mentoradoId={mentorado.id} initialData={stats.financials.chartData} />
+          )}
 
           <div className="space-y-4">
             <h2 className="text-primary text-lg font-medium px-1">Principais Estatísticas</h2>
