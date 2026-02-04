@@ -4,7 +4,6 @@ import {
   Calendar,
   DollarSign,
   LayoutDashboard,
-  Link2,
   Medal,
   Target,
   TrendingUp,
@@ -31,6 +30,7 @@ import {
 } from "@/components/ui/floating-dock-tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { fadeIn, slideUp, staggerContainer } from "@/lib/animation-variants";
 import { analiseData } from "@/lib/data";
 import { cn } from "@/lib/utils";
@@ -122,11 +122,6 @@ export default function GestaoMentorados() {
                   value: "gestao",
                   label: "Gestão",
                   icon: Users,
-                },
-                {
-                  value: "acessos",
-                  label: "Acessos",
-                  icon: Link2,
                 },
               ]}
               className="bg-muted/30 p-1 rounded-2xl border border-white/5 shadow-inner"
@@ -397,14 +392,18 @@ export default function GestaoMentorados() {
             {/* GESTÃO TAB */}
             <FloatingDockTabsContent value="gestao" className="mt-0" asChild>
               <motion.div variants={fadeIn}>
-                <MenteeManagementView />
-              </motion.div>
-            </FloatingDockTabsContent>
-
-            {/* ACESSOS TAB */}
-            <FloatingDockTabsContent value="acessos" className="mt-0" asChild>
-              <motion.div variants={fadeIn}>
-                <LinkEmailsView />
+                <Tabs defaultValue="cadastros" className="w-full">
+                  <TabsList className="grid w-[400px] grid-cols-2 mb-6">
+                    <TabsTrigger value="cadastros">Cadastros</TabsTrigger>
+                    <TabsTrigger value="acessos">Acessos</TabsTrigger>
+                  </TabsList>
+                  <TabsContent value="cadastros" className="mt-0">
+                    <MenteeManagementView />
+                  </TabsContent>
+                  <TabsContent value="acessos" className="mt-0">
+                    <LinkEmailsView />
+                  </TabsContent>
+                </Tabs>
               </motion.div>
             </FloatingDockTabsContent>
           </FloatingDockTabs>

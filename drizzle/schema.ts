@@ -181,6 +181,12 @@ export const metricasMensais = pgTable(
     leads: integer("leads").notNull().default(0),
     procedimentos: integer("procedimentos").notNull().default(0),
     observacoes: text("observacoes"),
+    // Monthly Goal Overrides (Optional)
+    metaFaturamento: integer("meta_faturamento"),
+    metaLeads: integer("meta_leads"),
+    metaProcedimentos: integer("meta_procedimentos"),
+    metaPosts: integer("meta_posts"),
+    metaStories: integer("meta_stories"),
     // Instagram Sync Tracking
     instagramSynced: simNaoEnum("instagram_synced").default("nao"),
     instagramSyncDate: timestamp("instagram_sync_date"),

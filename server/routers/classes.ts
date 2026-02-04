@@ -2,8 +2,9 @@ import { TRPCError } from "@trpc/server";
 import { and, desc, eq } from "drizzle-orm";
 import { z } from "zod";
 import { classes, classProgress } from "../../drizzle/schema";
-import { adminProcedure, protectedProcedure, router } from "../_core/trpc";
+import { adminProcedure, protectedProcedure, publicProcedure, router } from "../_core/trpc";
 import { getDb } from "../db";
+import { getUpcomingMentorSessions } from "../services/publicCalendarService";
 
 export const classesRouter = router({
   list: protectedProcedure
@@ -152,4 +153,25 @@ export const classesRouter = router({
         .returning();
       return created;
     }),
+
+  /**
+   * Get upcoming live sessions from the public mentor calendar.
+   * This fetches from the shared public Google Calendar that all mentorados can see.
+   * Uses 5-minute caching to reduce API calls.
+   */
+  getPublicLiveSessions: publicProcedure.query(async () => {
+    const sessions = await getUpcomingMentorSessions();
+
+    // Return in a format compatible with the frontend
+    return sessions.map((session) => ({
+      id: session.id,
+      title: session.title,
+      description: session.description,
+      date: session.start.toISOString(),
+      endDate: session.end.toISOString(),
+      url: session.zoomUrl,
+      location: session.location,
+      type: "live" as const,
+    }));
+  }),
 });

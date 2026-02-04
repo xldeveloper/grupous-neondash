@@ -8,8 +8,8 @@ import { FinancialHistoryChart } from "./FinancialHistoryChart";
 import { MeetingHistory } from "./MeetingHistory";
 import { MentorNotes } from "./MentorNotes";
 import { NewMentoradoWelcome } from "./NewMentoradoWelcome";
-import { NextLiveCard } from "./NextLiveCard";
 import { RoadmapView } from "./RoadmapView";
+import { UpcomingClassSection } from "./UpcomingClassSection";
 
 interface MenteeOverviewProps {
   mentoradoId?: number;
@@ -100,12 +100,11 @@ export function MenteeOverview({ mentoradoId, isAdmin, onNavigateToTab }: Mentee
           <BadgeCheck className="w-5 h-5" />
           High Performer
         </Badge>
-      </div>
 
-      {/* Next Live Session Card */}
-      <div className="w-full">
-        <NextLiveCard isAdmin={isAdmin} />
-        {/* Let's simplify: if isAdmin is passed (true for admin view), or if we can derive it. passed prop is safest. */}
+        {/* Upcoming Class - Integrated in header */}
+        <div className="w-full md:col-span-full mt-4">
+          <UpcomingClassSection isAdmin={isAdmin} />
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
