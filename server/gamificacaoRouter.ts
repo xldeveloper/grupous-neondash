@@ -1,11 +1,12 @@
 import { TRPCError } from "@trpc/server";
 import { eq } from "drizzle-orm";
 import { z } from "zod";
-import { notificacoes } from "../drizzle/schema";
+import { mentorados, notificacoes } from "../drizzle/schema";
 import { adminProcedure, mentoradoProcedure, protectedProcedure, router } from "./_core/trpc";
 import { getDb } from "./db";
 import {
   calculateMonthlyRanking,
+  calculateStreak,
   checkAndAwardBadges,
   checkUnmetGoalsAlerts,
   getAllBadges,
@@ -18,6 +19,7 @@ import {
   sendMetricsReminders,
   updateProgressiveGoals,
 } from "./gamificacao";
+import { notificationService } from "./services/notificationService";
 
 export const gamificacaoRouter = router({
   // Initialize badges in database (admin only, run once)
@@ -136,9 +138,89 @@ export const gamificacaoRouter = router({
       return { success: true };
     }),
 
-  // Admin: Send metrics reminders
+  // Admin: Send metrics reminders (uses legacy function for compatibility)
   sendReminders: adminProcedure.mutation(async () => {
     await sendMetricsReminders();
     return { success: true };
   }),
+
+  /**
+   * Get streak information for a mentorado
+   * @returns currentStreak and longestStreak counts
+   */
+  getStreak: mentoradoProcedure
+    .input(z.object({ mentoradoId: z.number() }))
+    .query(async ({ ctx, input }) => {
+      // Authorization: allow if admin OR requesting own streak
+      if (ctx.user.role !== "admin" && ctx.mentorado.id !== input.mentoradoId) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Você só pode ver seu próprio streak",
+        });
+      }
+
+      return await calculateStreak(input.mentoradoId);
+    }),
+
+  /**
+   * Check and award new badges for a mentorado
+   * Triggers badge checking for the current month
+   * @returns Array of newly awarded badges
+   */
+  checkNewBadges: mentoradoProcedure
+    .input(z.object({ mentoradoId: z.number() }))
+    .mutation(async ({ ctx, input }) => {
+      // Authorization: allow if admin OR checking own badges
+      if (ctx.user.role !== "admin" && ctx.mentorado.id !== input.mentoradoId) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Você só pode verificar suas próprias badges",
+        });
+      }
+
+      const now = new Date();
+      const ano = now.getFullYear();
+      const mes = now.getMonth() + 1;
+
+      const newBadges = await checkAndAwardBadges(input.mentoradoId, ano, mes);
+      return { newBadges };
+    }),
+
+  /**
+   * Admin: Send a reminder notification immediately to a specific mentorado
+   * Creates in-app notification and sends email using notification service
+   */
+  sendReminderNow: adminProcedure
+    .input(z.object({ mentoradoId: z.number() }))
+    .mutation(async ({ input }) => {
+      const db = getDb();
+      const [mentorado] = await db
+        .select()
+        .from(mentorados)
+        .where(eq(mentorados.id, input.mentoradoId));
+
+      if (!mentorado) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Mentorado não encontrado",
+        });
+      }
+
+      const now = new Date();
+      const currentMes = now.getMonth() + 1;
+      const currentAno = now.getFullYear();
+
+      // Use notification service for dual-channel delivery
+      const result = await notificationService.sendMetricsReminder(
+        input.mentoradoId,
+        currentMes,
+        currentAno,
+        "manual"
+      );
+
+      return {
+        success: result.inAppSuccess,
+        emailSent: result.emailSuccess,
+      };
+    }),
 });
