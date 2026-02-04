@@ -15,6 +15,7 @@ import { adminRouter } from "./routers/admin";
 import { authRouter } from "./routers/auth";
 import { calendarRouter } from "./routers/calendar";
 import { classesRouter } from "./routers/classes";
+import { planejamentoRouter } from "./routers/planejamento";
 import { playbookRouter } from "./routers/playbook";
 import { tasksRouter } from "./routers/tasks";
 import { zapiRouter } from "./zapiRouter";
@@ -29,6 +30,7 @@ export const appRouter = router({
   tasks: tasksRouter,
   classes: classesRouter,
   playbook: playbookRouter,
+  planejamento: planejamentoRouter,
   atividades: atividadesRouter,
   interactionTemplates: interactionTemplatesRouter,
   diagnostico: diagnosticoRouter,

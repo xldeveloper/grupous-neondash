@@ -6,7 +6,7 @@ import { TRPCError } from "@trpc/server";
 import { eq } from "drizzle-orm";
 import { z } from "zod";
 import { googleTokens } from "../../drizzle/schema";
-import { protectedProcedure, router } from "../_core/trpc";
+import { protectedProcedure, publicProcedure, router } from "../_core/trpc";
 import { getDb } from "../db";
 import {
   createEvent,
@@ -19,6 +19,7 @@ import {
   revokeToken,
   updateEvent,
 } from "../services/googleCalendarService";
+import { clearICalCache, getNeonCalendarEvents, type ICalEvent } from "../services/icalService";
 
 export const calendarRouter = router({
   /**
@@ -436,4 +437,31 @@ export const calendarRouter = router({
         });
       }
     }),
+
+  /**
+   * Get public Neon calendar events (no auth required)
+   * Fetches from public iCal feed and caches for 5 minutes
+   */
+  getNeonCalendarEvents: publicProcedure.query(async (): Promise<{ events: ICalEvent[] }> => {
+    try {
+      const events = await getNeonCalendarEvents();
+      return { events };
+    } catch {
+      // Return empty array instead of throwing - graceful degradation
+      return { events: [] };
+    }
+  }),
+
+  /**
+   * Force refresh Neon calendar cache
+   */
+  refreshNeonCalendar: protectedProcedure.mutation(async (): Promise<{ success: boolean }> => {
+    clearICalCache();
+    try {
+      await getNeonCalendarEvents();
+      return { success: true };
+    } catch {
+      return { success: false };
+    }
+  }),
 });

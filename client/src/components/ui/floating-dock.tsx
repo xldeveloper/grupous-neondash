@@ -66,7 +66,7 @@ function DockItem({
               "relative flex items-center justify-center rounded-2xl transition-colors duration-200",
               "hover:bg-white/10",
               item.isActive
-                ? "bg-white/15 ring-2 ring-neon-purple/50 shadow-[0_0_20px_rgba(139,92,246,0.3)]"
+                ? "bg-white/15 ring-2 ring-primary/50 shadow-[0_0_20px_rgba(212,175,55,0.3)]"
                 : "bg-white/5"
             )}
           >
@@ -74,7 +74,7 @@ function DockItem({
             {item.isActive && (
               <motion.div
                 layoutId="activeIndicator"
-                className="absolute inset-0 rounded-2xl bg-gradient-to-br from-neon-purple/20 to-transparent"
+                className="absolute inset-0 rounded-2xl bg-gradient-to-br from-primary/20 to-transparent"
                 transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
               />
             )}
@@ -89,7 +89,7 @@ function DockItem({
               <motion.div
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
-                className="absolute -bottom-1 w-1.5 h-1.5 rounded-full bg-neon-purple"
+                className="absolute -bottom-1 w-1.5 h-1.5 rounded-full bg-primary"
               />
             )}
           </motion.button>
@@ -199,15 +199,13 @@ export function FloatingDock({ items, activeValue, className, maxVisible = 8 }: 
                     className={cn(
                       "flex items-center gap-3 px-3 py-2 rounded-lg text-left transition-colors",
                       item.isActive
-                        ? "bg-neon-purple/20 text-neon-purple-light"
+                        ? "bg-primary/20 text-primary"
                         : "hover:bg-white/5 text-white/80"
                     )}
                   >
                     <div className="h-8 w-8 shrink-0">{item.icon}</div>
                     <span className="text-sm truncate max-w-[200px]">{item.title}</span>
-                    {item.isActive && (
-                      <div className="ml-auto w-2 h-2 rounded-full bg-neon-purple" />
-                    )}
+                    {item.isActive && <div className="ml-auto w-2 h-2 rounded-full bg-primary" />}
                   </button>
                 ))}
               </div>

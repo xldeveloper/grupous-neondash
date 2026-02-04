@@ -41,8 +41,8 @@ export const DEFAULT_COLUMNS = [
   {
     id: "qualificado",
     title: "Qualificado",
-    color: "bg-purple-500",
-    border: "border-purple-500/20",
+    color: "bg-teal-500",
+    border: "border-teal-500/20",
   },
   {
     id: "proposta",

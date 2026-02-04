@@ -48,11 +48,11 @@ export function NeonCRM({ mentoradoId }: { mentoradoId?: number }) {
           </div>
         </NeonCard>
 
-        <NeonCard className="p-4 border-purple-500/20 bg-card hover:border-purple-500/50 transition-colors">
+        <NeonCard className="p-4 border-teal-500/20 bg-card hover:border-teal-500/50 transition-colors">
           <div className="flex flex-col">
             <span className="text-xs text-muted-foreground font-mono uppercase">Conversão</span>
             <div className="flex items-center gap-2 mt-1">
-              <TrendingUp className="w-4 h-4 text-purple-500" />
+              <TrendingUp className="w-4 h-4 text-teal-500" />
               <span className="text-2xl font-bold text-foreground">
                 {stats?.taxaConversao?.toFixed(1) || 0}%
               </span>

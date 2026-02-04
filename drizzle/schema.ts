@@ -181,6 +181,12 @@ export const metricasMensais = pgTable(
     leads: integer("leads").notNull().default(0),
     procedimentos: integer("procedimentos").notNull().default(0),
     observacoes: text("observacoes"),
+    // Monthly Goal Overrides (Optional)
+    metaFaturamento: integer("meta_faturamento"),
+    metaLeads: integer("meta_leads"),
+    metaProcedimentos: integer("meta_procedimentos"),
+    metaPosts: integer("meta_posts"),
+    metaStories: integer("meta_stories"),
     // Instagram Sync Tracking
     instagramSynced: simNaoEnum("instagram_synced").default("nao"),
     instagramSyncDate: timestamp("instagram_sync_date"),
@@ -969,3 +975,72 @@ export const callNotes = pgTable(
 
 export type CallNote = typeof callNotes.$inferSelect;
 export type InsertCallNote = typeof callNotes.$inferInsert;
+
+// ═══════════════════════════════════════════════════════════════════════════
+// WEEKLY PLANNING TABLES
+// ═══════════════════════════════════════════════════════════════════════════
+
+/**
+ * Weekly Plans - Stores weekly planning content created by mentors
+ */
+export const weeklyPlans = pgTable(
+  "weekly_plans",
+  {
+    id: serial("id").primaryKey(),
+    mentoradoId: integer("mentorado_id")
+      .notNull()
+      .references(() => mentorados.id, { onDelete: "cascade" }),
+    semana: integer("semana").notNull(), // Week number: 1, 2, 3, 4
+    ano: integer("ano").notNull(),
+    mes: integer("mes").notNull(),
+    titulo: varchar("titulo", { length: 255 }).notNull(),
+    conteudo: text("conteudo").notNull(), // Raw text from mentor
+    ativo: simNaoEnum("ativo").default("sim").notNull(),
+    createdBy: integer("created_by").references(() => users.id),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().notNull(),
+  },
+  (table) => [
+    uniqueIndex("weekly_plans_mentorado_semana_idx").on(
+      table.mentoradoId,
+      table.ano,
+      table.mes,
+      table.semana
+    ),
+    index("weekly_plans_mentorado_idx").on(table.mentoradoId),
+    index("weekly_plans_ativo_idx").on(table.mentoradoId, table.ativo),
+  ]
+);
+
+export type WeeklyPlan = typeof weeklyPlans.$inferSelect;
+export type InsertWeeklyPlan = typeof weeklyPlans.$inferInsert;
+
+/**
+ * Weekly Plan Progress - Tracks step completion per mentorado
+ */
+export const weeklyPlanProgress = pgTable(
+  "weekly_plan_progress",
+  {
+    id: serial("id").primaryKey(),
+    planId: integer("plan_id")
+      .notNull()
+      .references(() => weeklyPlans.id, { onDelete: "cascade" }),
+    mentoradoId: integer("mentorado_id")
+      .notNull()
+      .references(() => mentorados.id, { onDelete: "cascade" }),
+    stepIndex: integer("step_index").notNull(), // Line number in content
+    completed: simNaoEnum("completed").default("nao").notNull(),
+    notes: text("notes"),
+    completedAt: timestamp("completed_at"),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().notNull(),
+  },
+  (table) => [
+    uniqueIndex("weekly_progress_unique_idx").on(table.planId, table.mentoradoId, table.stepIndex),
+    index("weekly_progress_plan_idx").on(table.planId),
+    index("weekly_progress_mentorado_idx").on(table.mentoradoId),
+  ]
+);
+
+export type WeeklyPlanProgress = typeof weeklyPlanProgress.$inferSelect;
+export type InsertWeeklyPlanProgress = typeof weeklyPlanProgress.$inferInsert;

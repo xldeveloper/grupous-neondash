@@ -31,7 +31,7 @@ const tipoConfig: Record<
   },
   ranking: {
     icon: Trophy,
-    color: "text-purple-500 bg-purple-50",
+    color: "text-emerald-500 bg-emerald-50",
     label: "Ranking",
   },
 };

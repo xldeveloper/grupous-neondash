@@ -123,7 +123,7 @@ export function RankingView({ selectedMonth, selectedYear }: RankingViewProps) {
                       <span className="text-sm text-muted-foreground ml-1">pts</span>
                     </div>
                     {item.ranking.pontosBonus > 0 && (
-                      <p className="text-xs text-purple-600 mt-1 font-medium bg-purple-100 dark:bg-purple-900/20 inline-block px-2 py-0.5 rounded-full">
+                      <p className="text-xs text-emerald-600 mt-1 font-medium bg-emerald-100 dark:bg-emerald-900/20 inline-block px-2 py-0.5 rounded-full">
                         +{item.ranking.pontosBonus} bônus
                       </p>
                     )}
@@ -188,7 +188,7 @@ export function RankingView({ selectedMonth, selectedYear }: RankingViewProps) {
                           <span className="text-sm text-muted-foreground ml-1">pts</span>
                         </div>
                         {item.ranking.pontosBonus > 0 && (
-                          <div className="flex items-center justify-end gap-1 text-xs text-purple-600">
+                          <div className="flex items-center justify-end gap-1 text-xs text-emerald-600">
                             <TrendingUp className="w-3 h-3" />+{item.ranking.pontosBonus} bônus
                           </div>
                         )}

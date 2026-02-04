@@ -27,7 +27,7 @@ export function ClassList({ mentoradoId }: { mentoradoId?: number }) {
   return (
     <div className="h-full flex flex-col space-y-4">
       <div className="flex items-center justify-between">
-        <h2 className="text-xl font-bold font-mono text-purple-400 flex items-center gap-2">
+        <h2 className="text-xl font-bold font-mono text-primary flex items-center gap-2">
           <Video className="w-5 h-5" />
           AULAS E ENCONTROS [DBE]
         </h2>
@@ -40,7 +40,7 @@ export function ClassList({ mentoradoId }: { mentoradoId?: number }) {
         {/* Progress Bar */}
         <div className="w-full h-1 bg-muted rounded-full mb-6 overflow-hidden">
           <div
-            className="h-full bg-gradient-to-r from-purple-500 to-neon-blue transition-all duration-1000"
+            className="h-full bg-gradient-to-r from-primary to-cyan-500 transition-all duration-1000"
             style={{ width: `${progress}%` }}
           />
         </div>
@@ -65,7 +65,7 @@ export function ClassList({ mentoradoId }: { mentoradoId?: number }) {
                         item.type === "aula"
                           ? "bg-blue-500/10 text-blue-400"
                           : item.type === "encontro"
-                            ? "bg-purple-500/10 text-purple-400"
+                            ? "bg-teal-500/10 text-teal-400"
                             : "bg-emerald-500/10 text-emerald-400"
                       )}
                     >
@@ -102,7 +102,7 @@ export function ClassList({ mentoradoId }: { mentoradoId?: number }) {
                     "flex-shrink-0 h-8 self-center",
                     item.watched
                       ? "text-emerald-500 hover:text-emerald-500 hover:bg-transparent cursor-default"
-                      : "text-slate-500 hover:text-purple-400 hover:bg-purple-950/20"
+                      : "text-slate-500 hover:text-primary hover:bg-primary/10"
                   )}
                 >
                   {item.watched ? (

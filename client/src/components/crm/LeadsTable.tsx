@@ -104,7 +104,7 @@ export function LeadsTable({
       case "primeiro_contato":
         return "bg-orange-400 hover:bg-orange-500";
       case "qualificado":
-        return "bg-purple-500 hover:bg-purple-600";
+        return "bg-teal-500 hover:bg-teal-600";
       case "proposta":
         return "bg-orange-600 hover:bg-orange-700";
       case "negociacao":

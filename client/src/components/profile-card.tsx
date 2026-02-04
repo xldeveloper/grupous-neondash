@@ -74,7 +74,7 @@ export function ProfileCard({
         <div className="pt-4 pb-4">
           <div className="flex justify-between items-start">
             <div>
-              <h3 className="font-bold text-2xl tracking-tight text-foreground group-hover:text-neon-purple transition-colors">
+              <h3 className="font-bold text-2xl tracking-tight text-foreground group-hover:text-primary transition-colors">
                 {name}
               </h3>
               <p className="text-sm font-medium text-muted-foreground flex items-center gap-1 mt-1">

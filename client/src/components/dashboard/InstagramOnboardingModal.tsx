@@ -119,7 +119,7 @@ export function InstagramOnboardingModal({
                 <Button
                   onClick={handleConnect}
                   disabled={isConnecting || !mentoradoId}
-                  className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
+                  className="bg-gradient-to-r from-pink-600 to-rose-600 hover:from-pink-700 hover:to-rose-700"
                 >
                   {isConnecting ? (
                     <>

@@ -2,9 +2,9 @@ import {
   Activity,
   Award,
   Calendar,
+  ClipboardList,
   DollarSign,
   LayoutDashboard,
-  Link2,
   Medal,
   Target,
   TrendingUp,
@@ -18,7 +18,10 @@ import { LinkEmailsView } from "@/components/admin/LinkEmailsView";
 import { MenteeManagementView } from "@/components/admin/MenteeManagementView";
 import DashboardLayout from "@/components/DashboardLayout";
 import { AchievementsView } from "@/components/dashboard/AchievementsView";
+import { MonthlyGoalsAdmin } from "@/components/dashboard/MonthlyGoalsAdmin";
 import { RankingView } from "@/components/dashboard/RankingView";
+import { WeeklyPlanningAdmin } from "@/components/dashboard/WeeklyPlanningAdmin";
+
 import MonthYearFilter from "@/components/MonthYearFilter";
 import { AnimatedCounter } from "@/components/ui/animated-counter";
 import { AnimatedList } from "@/components/ui/animated-list";
@@ -31,6 +34,7 @@ import {
 } from "@/components/ui/floating-dock-tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { fadeIn, slideUp, staggerContainer } from "@/lib/animation-variants";
 import { analiseData } from "@/lib/data";
 import { cn } from "@/lib/utils";
@@ -124,9 +128,9 @@ export default function GestaoMentorados() {
                   icon: Users,
                 },
                 {
-                  value: "acessos",
-                  label: "Acessos",
-                  icon: Link2,
+                  value: "planejamento",
+                  label: "Planejamento",
+                  icon: ClipboardList,
                 },
               ]}
               className="bg-muted/30 p-1 rounded-2xl border border-white/5 shadow-inner"
@@ -397,15 +401,25 @@ export default function GestaoMentorados() {
             {/* GESTÃO TAB */}
             <FloatingDockTabsContent value="gestao" className="mt-0" asChild>
               <motion.div variants={fadeIn}>
-                <MenteeManagementView />
+                <Tabs defaultValue="cadastros" className="w-full">
+                  <TabsList className="grid w-[400px] grid-cols-2 mb-6">
+                    <TabsTrigger value="cadastros">Cadastros</TabsTrigger>
+                    <TabsTrigger value="acessos">Acessos</TabsTrigger>
+                  </TabsList>
+                  <TabsContent value="cadastros" className="mt-0">
+                    <MenteeManagementView />
+                  </TabsContent>
+                  <TabsContent value="acessos" className="mt-0">
+                    <LinkEmailsView />
+                  </TabsContent>
+                </Tabs>
               </motion.div>
             </FloatingDockTabsContent>
 
-            {/* ACESSOS TAB */}
-            <FloatingDockTabsContent value="acessos" className="mt-0" asChild>
-              <motion.div variants={fadeIn}>
-                <LinkEmailsView />
-              </motion.div>
+            {/* PLANEJAMENTO TAB */}
+            <FloatingDockTabsContent value="planejamento" className="mt-0">
+              <MonthlyGoalsAdmin />
+              <WeeklyPlanningAdmin />
             </FloatingDockTabsContent>
           </FloatingDockTabs>
         </motion.div>

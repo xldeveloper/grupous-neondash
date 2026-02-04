@@ -196,8 +196,7 @@ export function GamificationSidebar({ mentoradoId, className }: GamificationSide
                           earned.badge.cor === "green" &&
                             "bg-green-500/20 ring-1 ring-green-500/50",
                           earned.badge.cor === "blue" && "bg-blue-500/20 ring-1 ring-blue-500/50",
-                          earned.badge.cor === "purple" &&
-                            "bg-purple-500/20 ring-1 ring-purple-500/50"
+                          earned.badge.cor === "purple" && "bg-teal-500/20 ring-1 ring-teal-500/50"
                         )}
                       >
                         <BadgeIcon code={earned.badge.codigo} size={20} />

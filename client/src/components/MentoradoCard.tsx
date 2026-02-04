@@ -42,7 +42,7 @@ export default function MentoradoCard({ nome, data, rank }: MentoradoCardProps) 
     <BentoCard
       className={cn(
         "h-full relative overflow-hidden",
-        isExpanded ? "ring-2 ring-neon-purple/20 md:col-span-2 md:row-span-2" : ""
+        isExpanded ? "ring-2 ring-primary/20 md:col-span-2 md:row-span-2" : ""
       )}
       onClick={() => setIsExpanded(!isExpanded)}
     >
@@ -210,8 +210,8 @@ export default function MentoradoCard({ nome, data, rank }: MentoradoCardProps) 
                 </div>
 
                 {data.feedback && (
-                  <div className="space-y-3 mt-4 bg-neon-purple/5 p-4 rounded-xl border border-neon-purple/10">
-                    <div className="flex items-center gap-2 text-neon-purple font-bold text-sm">
+                  <div className="space-y-3 mt-4 bg-primary/5 p-4 rounded-xl border border-primary/10">
+                    <div className="flex items-center gap-2 text-primary font-bold text-sm">
                       <Target className="w-4 h-4" /> Plano de Ação Janeiro
                     </div>
 
@@ -230,7 +230,7 @@ export default function MentoradoCard({ nome, data, rank }: MentoradoCardProps) 
                           Foco Principal
                         </p>
                         <div className="flex items-start gap-2">
-                          <ArrowRight className="w-4 h-4 text-neon-purple mt-0.5 flex-shrink-0" />
+                          <ArrowRight className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
                           <p className="text-sm font-medium text-slate-900 dark:text-slate-100">
                             {data.feedback.foco_janeiro}
                           </p>
@@ -255,7 +255,7 @@ export default function MentoradoCard({ nome, data, rank }: MentoradoCardProps) 
       </BentoCardContent>
 
       <BentoCardFooter className="flex justify-center p-0 border-t-0 mt-0">
-        <div className="h-1 w-8 bg-slate-200 rounded-full group-hover:bg-neon-purple/50 transition-colors dark:bg-slate-700" />
+        <div className="h-1 w-8 bg-slate-200 rounded-full group-hover:bg-primary/50 transition-colors dark:bg-slate-700" />
       </BentoCardFooter>
     </BentoCard>
   );

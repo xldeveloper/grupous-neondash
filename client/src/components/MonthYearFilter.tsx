@@ -40,7 +40,7 @@ export default function MonthYearFilter({
             !date && "text-muted-foreground"
           )}
         >
-          <CalendarIcon className="mr-2 h-4 w-4 text-neon-purple" />
+          <CalendarIcon className="mr-2 h-4 w-4 text-primary" />
           {date ? (
             <span className="capitalize">{format(date, "MMMM / yyyy", { locale: ptBR })}</span>
           ) : (
@@ -57,7 +57,7 @@ export default function MonthYearFilter({
           locale={ptBR}
           classNames={{
             day_selected:
-              "bg-neon-purple text-primary-foreground hover:bg-neon-purple hover:text-primary-foreground focus:bg-neon-purple focus:text-primary-foreground",
+              "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground",
           }}
         />
       </PopoverContent>

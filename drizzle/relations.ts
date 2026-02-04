@@ -15,6 +15,8 @@ import {
   notificacoes,
   rankingMensal,
   users,
+  weeklyPlanProgress,
+  weeklyPlans,
   whatsappMessages,
 } from "./schema";
 
@@ -51,6 +53,9 @@ export const mentoradosRelations = relations(mentorados, ({ one, many }) => ({
   instagramSyncLogs: many(instagramSyncLog),
   // Call Notes
   callNotes: many(callNotes),
+  // Weekly Planning
+  weeklyPlans: many(weeklyPlans),
+  weeklyPlanProgress: many(weeklyPlanProgress),
 }));
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -213,6 +218,33 @@ export const instagramSyncLogRelations = relations(instagramSyncLog, ({ one }) =
 export const callNotesRelations = relations(callNotes, ({ one }) => ({
   mentorado: one(mentorados, {
     fields: [callNotes.mentoradoId],
+    references: [mentorados.id],
+  }),
+}));
+
+// ═══════════════════════════════════════════════════════════════════════════
+// WEEKLY PLANNING RELATIONS
+// ═══════════════════════════════════════════════════════════════════════════
+
+export const weeklyPlansRelations = relations(weeklyPlans, ({ one, many }) => ({
+  mentorado: one(mentorados, {
+    fields: [weeklyPlans.mentoradoId],
+    references: [mentorados.id],
+  }),
+  createdByUser: one(users, {
+    fields: [weeklyPlans.createdBy],
+    references: [users.id],
+  }),
+  progress: many(weeklyPlanProgress),
+}));
+
+export const weeklyPlanProgressRelations = relations(weeklyPlanProgress, ({ one }) => ({
+  plan: one(weeklyPlans, {
+    fields: [weeklyPlanProgress.planId],
+    references: [weeklyPlans.id],
+  }),
+  mentorado: one(mentorados, {
+    fields: [weeklyPlanProgress.mentoradoId],
     references: [mentorados.id],
   }),
 }));
