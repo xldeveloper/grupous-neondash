@@ -1,4 +1,4 @@
-import { BadgeCheck, DollarSign, TrendingUp, Wallet } from "lucide-react";
+import { BadgeCheck, DollarSign, TrendingUp, Trophy, Wallet } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
 import { trpc } from "@/lib/trpc";
@@ -69,53 +69,89 @@ export function MenteeOverview({ mentoradoId, isAdmin, onNavigateToTab }: Mentee
 
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
-      {/* Header Profile Section */}
-      <div className="flex flex-col md:flex-row items-center gap-6 p-6 rounded-2xl bg-gradient-to-r from-primary/10 to-primary/5 dark:from-slate-900 dark:to-slate-800 border border-border dark:border-slate-700 shadow-xl relative overflow-hidden">
-        <div className="absolute top-0 right-0 p-4 opacity-10">
-          <BadgeCheck className="w-32 h-32 text-[#D4AF37]" />
+      {/* Header Profile Section - Horizontal Layout */}
+      <div className="p-5 rounded-2xl bg-gradient-to-r from-primary/10 to-primary/5 dark:from-slate-900 dark:to-slate-800 border border-border dark:border-slate-700 shadow-xl relative overflow-hidden">
+        <div className="absolute top-0 right-0 p-4 opacity-5">
+          <BadgeCheck className="w-40 h-40 text-[#D4AF37]" />
         </div>
 
-        <div className="relative group">
-          <div className="absolute inset-0 rounded-full bg-gradient-to-r from-[#D4AF37] to-[#F2D06B] blur-sm opacity-50 group-hover:opacity-100 transition-opacity duration-500"></div>
-          <Avatar className="w-24 h-24 border-2 border-[#D4AF37] relative z-10 shadow-2xl">
-            <AvatarImage src={mentorado.fotoUrl || undefined} className="object-cover" />
-            <AvatarFallback className="text-2xl font-bold bg-muted dark:bg-slate-800 text-primary">
-              {mentorado.nomeCompleto.substring(0, 2).toUpperCase()}
-            </AvatarFallback>
-          </Avatar>
-        </div>
-
-        <div className="flex-1 text-center md:text-left z-10">
-          <h1 className="text-3xl font-bold text-foreground mb-2 tracking-tight">
-            {mentorado.nomeCompleto}
-          </h1>
-          <span className="text-foreground bg-muted/50 dark:bg-slate-800/50 px-3 py-1.5 rounded-full text-sm border border-border dark:border-slate-700 font-medium inline-flex items-center gap-1.5">
-            {stats.profile.specialty}
-          </span>
-        </div>
-
-        <div className="flex flex-col items-center gap-1 z-10">
-          <div
-            className={cn(
-              "text-4xl font-bold tabular-nums",
-              stats.score >= 80
-                ? "text-emerald-600 dark:text-emerald-400"
-                : stats.score >= 60
-                  ? "text-blue-600 dark:text-blue-400"
-                  : stats.score >= 40
-                    ? "text-amber-600 dark:text-amber-400"
-                    : "text-red-600 dark:text-red-400"
-            )}
-          >
-            {stats.score}
+        {/* Top Row: Avatar + Name/Specialty + Score */}
+        <div className="flex items-center gap-4 relative z-10">
+          {/* Avatar */}
+          <div className="relative group flex-shrink-0">
+            <div className="absolute inset-0 rounded-full bg-gradient-to-r from-[#D4AF37] to-[#F2D06B] blur-sm opacity-50 group-hover:opacity-100 transition-opacity duration-500" />
+            <Avatar className="w-16 h-16 border-2 border-[#D4AF37] relative z-10 shadow-xl">
+              <AvatarImage src={mentorado.fotoUrl || undefined} className="object-cover" />
+              <AvatarFallback className="text-lg font-bold bg-muted dark:bg-slate-800 text-primary">
+                {mentorado.nomeCompleto.substring(0, 2).toUpperCase()}
+              </AvatarFallback>
+            </Avatar>
           </div>
-          <span className="text-xs text-muted-foreground uppercase tracking-wider font-medium">
-            Score
-          </span>
+
+          {/* Name - Specialty */}
+          <div className="flex-1 min-w-0">
+            <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
+              <h1 className="text-2xl font-bold text-foreground tracking-tight">
+                {mentorado.nomeCompleto}
+              </h1>
+              <span className="text-muted-foreground font-medium">—</span>
+              <span className="text-sm text-muted-foreground font-medium">
+                {stats.profile.specialty}
+              </span>
+            </div>
+          </div>
+
+          {/* Score Badge - Elaborated */}
+          <div className="flex-shrink-0">
+            <div
+              className={cn(
+                "flex items-center gap-3 px-5 py-2.5 rounded-xl border-2 shadow-lg transition-all hover:scale-105",
+                stats.score >= 80
+                  ? "bg-emerald-500/10 border-emerald-500/40 dark:bg-emerald-500/20"
+                  : stats.score >= 60
+                    ? "bg-blue-500/10 border-blue-500/40 dark:bg-blue-500/20"
+                    : stats.score >= 40
+                      ? "bg-amber-500/10 border-amber-500/40 dark:bg-amber-500/20"
+                      : "bg-red-500/10 border-red-500/40 dark:bg-red-500/20"
+              )}
+            >
+              <Trophy
+                className={cn(
+                  "w-5 h-5",
+                  stats.score >= 80
+                    ? "text-emerald-500"
+                    : stats.score >= 60
+                      ? "text-blue-500"
+                      : stats.score >= 40
+                        ? "text-amber-500"
+                        : "text-red-500"
+                )}
+              />
+              <div className="flex flex-col items-center">
+                <span
+                  className={cn(
+                    "text-2xl font-bold tabular-nums leading-none",
+                    stats.score >= 80
+                      ? "text-emerald-600 dark:text-emerald-400"
+                      : stats.score >= 60
+                        ? "text-blue-600 dark:text-blue-400"
+                        : stats.score >= 40
+                          ? "text-amber-600 dark:text-amber-400"
+                          : "text-red-600 dark:text-red-400"
+                  )}
+                >
+                  {stats.score}
+                </span>
+                <span className="text-[10px] text-muted-foreground uppercase tracking-wider font-semibold">
+                  Score
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
 
-        {/* Upcoming Class - Integrated in header */}
-        <div className="w-full md:col-span-full mt-4">
+        {/* Bottom Row: Dual Events */}
+        <div className="mt-5 pt-4 border-t border-border/50">
           <UpcomingClassSection isAdmin={isAdmin} />
         </div>
       </div>

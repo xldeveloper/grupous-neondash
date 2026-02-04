@@ -61,14 +61,12 @@ export function PlaybookView({ turma }: PlaybookViewProps) {
                 <span className="text-gray-400">
                   {completedItems} de {totalItems} concluídos
                 </span>
-                <span className="text-neon-purple font-bold">
-                  {Math.round(progressPercentage)}%
-                </span>
+                <span className="text-primary font-bold">{Math.round(progressPercentage)}%</span>
               </div>
               <Progress
                 value={progressPercentage}
                 className="h-2 bg-white/10"
-                indicatorClassName="bg-gradient-to-r from-neon-purple to-neon-blue"
+                indicatorClassName="bg-gradient-to-r from-primary to-cyan-500"
               />
             </div>
           </CardContent>
@@ -147,7 +145,7 @@ export function PlaybookView({ turma }: PlaybookViewProps) {
                               completed: !!checked,
                             });
                           }}
-                          className="mt-1 border-white/20 data-[state=checked]:bg-neon-purple data-[state=checked]:border-neon-purple"
+                          className="mt-1 border-white/20 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
                         />
 
                         <div className="flex-1 space-y-1">

@@ -35,7 +35,7 @@ export function BadgeIcon({ code, className, size = 24 }: BadgeIconProps) {
     // Faturamento
     meta_atingida: { icon: Target, color: "text-red-500" },
     crescimento_25: { icon: TrendingUp, color: "text-green-500" },
-    crescimento_50: { icon: Rocket, color: "text-purple-500" },
+    crescimento_50: { icon: Rocket, color: "text-teal-500" },
     faturamento_6_digitos: { icon: CircleDollarSign, color: "text-cyan-500" }, // Changed from Diamond to CircleDollar for clarity
 
     // Ranking
@@ -45,7 +45,7 @@ export function BadgeIcon({ code, className, size = 24 }: BadgeIconProps) {
 
     // Operacional
     gerador_leads: { icon: Magnet, color: "text-pink-500" },
-    conversao_master: { icon: Sparkles, color: "text-violet-500" },
+    conversao_master: { icon: Sparkles, color: "text-primary" },
 
     // Especial
     evolucao_completa: { icon: GraduationCap, color: "text-blue-600" },

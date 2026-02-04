@@ -189,6 +189,94 @@ export const planejamentoRouter = router({
     }),
 
   /**
+   * Create or update weekly plan for ALL mentorados (admin only)
+   */
+  upsertAll: protectedProcedure
+    .input(
+      z.object({
+        semana: z.number().min(1).max(5),
+        ano: z.number(),
+        mes: z.number().min(1).max(12),
+        titulo: z.string().min(1).max(255),
+        conteudo: z.string().min(1),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const db = getDb();
+
+      if (ctx.user?.role !== "admin") {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Apenas admins podem criar planejamentos.",
+        });
+      }
+
+      // Get all mentorados
+      const { mentorados } = await import("../../drizzle/schema");
+      const allMentorados = await db.select({ id: mentorados.id }).from(mentorados);
+
+      const results: Array<{ mentoradoId: number; success: boolean }> = [];
+
+      for (const m of allMentorados) {
+        try {
+          // Check if plan exists for this week
+          const [existing] = await db
+            .select()
+            .from(weeklyPlans)
+            .where(
+              and(
+                eq(weeklyPlans.mentoradoId, m.id),
+                eq(weeklyPlans.ano, input.ano),
+                eq(weeklyPlans.mes, input.mes),
+                eq(weeklyPlans.semana, input.semana)
+              )
+            )
+            .limit(1);
+
+          if (existing) {
+            // Update existing
+            await db
+              .update(weeklyPlans)
+              .set({
+                titulo: input.titulo,
+                conteudo: input.conteudo,
+                updatedAt: new Date(),
+              })
+              .where(eq(weeklyPlans.id, existing.id));
+          } else {
+            // Deactivate previous plans for this mentorado
+            await db
+              .update(weeklyPlans)
+              .set({ ativo: "nao", updatedAt: new Date() })
+              .where(eq(weeklyPlans.mentoradoId, m.id));
+
+            // Create new plan
+            await db.insert(weeklyPlans).values({
+              mentoradoId: m.id,
+              semana: input.semana,
+              ano: input.ano,
+              mes: input.mes,
+              titulo: input.titulo,
+              conteudo: input.conteudo,
+              ativo: "sim",
+              createdBy: ctx.user.id,
+            });
+          }
+
+          results.push({ mentoradoId: m.id, success: true });
+        } catch {
+          results.push({ mentoradoId: m.id, success: false });
+        }
+      }
+
+      return {
+        total: allMentorados.length,
+        success: results.filter((r) => r.success).length,
+        failed: results.filter((r) => !r.success).length,
+      };
+    }),
+
+  /**
    * Toggle step completion
    */
   toggleStep: protectedProcedure

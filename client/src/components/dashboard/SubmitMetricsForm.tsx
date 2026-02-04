@@ -531,7 +531,7 @@ export function SubmitMetricsForm({
 
       <Button
         type="submit"
-        className="w-full bg-neon-purple hover:bg-neon-purple/90"
+        className="w-full bg-primary hover:bg-primary/90"
         disabled={submitMutation.isPending}
       >
         {submitMutation.isPending ? (

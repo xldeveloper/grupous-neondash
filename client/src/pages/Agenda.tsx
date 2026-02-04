@@ -7,6 +7,7 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 import withDragAndDrop, {
   type EventInteractionArgs,
 } from "react-big-calendar/lib/addons/dragAndDrop";
+import { NeonWeeklyCalendar } from "@/components/agenda/NeonWeeklyCalendar";
 import { NextPatientBanner } from "@/components/agenda/NextPatientBanner";
 
 import { Button } from "@/components/ui/button";
@@ -31,6 +32,7 @@ interface CalendarEvent extends Event {
   allDay: boolean;
   location?: string;
   htmlLink?: string;
+  isNeonEvent?: boolean; // Flag to differentiate Neon events
 }
 
 // Custom styling for dark theme
@@ -56,6 +58,7 @@ export function Agenda() {
   const eventsQuery = trpc.calendar.getEvents.useQuery(undefined, {
     enabled: statusQuery.data?.connected,
   });
+  const neonEventsQuery = trpc.calendar.getNeonCalendarEvents.useQuery();
   const disconnectMutation = trpc.calendar.disconnect.useMutation({
     onSuccess: () => {
       statusQuery.refetch();
@@ -127,10 +130,42 @@ export function Agenda() {
         allDay: event.allDay,
         location: event.location,
         htmlLink: event.htmlLink,
+        isNeonEvent: false,
       }));
       setMyEvents(formattedEvents);
     }
   }, [eventsQuery.data]);
+
+  // Merge Neon events with personal events
+  const allEvents = React.useMemo(() => {
+    const neonEvents: CalendarEvent[] = (neonEventsQuery.data?.events || []).map((event) => ({
+      id: `neon-${event.id}`,
+      title: `🌟 ${event.title}`,
+      description: event.description || undefined,
+      start: new Date(event.start),
+      end: new Date(event.end),
+      allDay: event.allDay,
+      location: event.location || undefined,
+      htmlLink: event.url || undefined,
+      isNeonEvent: true,
+    }));
+    return [...myEvents, ...neonEvents];
+  }, [myEvents, neonEventsQuery.data?.events]);
+
+  // Style getter for differentiating event sources
+  const eventPropGetter = React.useCallback((event: CalendarEvent) => {
+    if (event.isNeonEvent) {
+      return {
+        style: {
+          backgroundColor: "hsl(39 44% 65%)", // Gold
+          borderLeft: "3px solid hsl(39 60% 50%)",
+          color: "hsl(211 49% 10%)", // Navy text
+          fontWeight: 600,
+        },
+      };
+    }
+    return {};
+  }, []);
 
   const onEventResize = (args: EventInteractionArgs<CalendarEvent>) => {
     const { event, start, end } = args;
@@ -300,6 +335,9 @@ export function Agenda() {
         </div>
 
         <div className="space-y-6">
+          {/* Neon Weekly Calendar */}
+          <NeonWeeklyCalendar />
+
           {nextPatient && <NextPatientBanner {...nextPatient} />}
 
           <div className="bg-card border border-border rounded-xl p-4 lg:p-6 shadow-lg">
@@ -308,15 +346,16 @@ export function Agenda() {
             ) : (
               <DnDCalendar
                 localizer={localizer}
-                events={myEvents}
+                events={allEvents}
                 startAccessor="start"
                 endAccessor="end"
                 onEventDrop={onEventDrop}
                 onEventResize={onEventResize}
                 onSelectSlot={handleSelectSlot}
                 selectable={true}
-                draggableAccessor={() => true}
+                draggableAccessor={(event) => !event.isNeonEvent}
                 resizable
+                eventPropGetter={eventPropGetter}
                 {...calendarStyles}
                 messages={{
                   today: "Hoje",

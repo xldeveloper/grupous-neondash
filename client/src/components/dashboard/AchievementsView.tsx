@@ -52,7 +52,7 @@ const colorMap: Record<string, string> = {
   gold: "from-yellow-400 to-amber-500 text-yellow-900",
   silver: "from-gray-300 to-gray-400 text-gray-800",
   bronze: "from-orange-400 to-orange-600 text-orange-900",
-  purple: "from-purple-400 to-purple-600 text-purple-100",
+  purple: "from-teal-400 to-teal-600 text-teal-100",
   blue: "from-blue-400 to-blue-600 text-blue-100",
   green: "from-green-400 to-green-600 text-green-100",
   orange: "from-orange-400 to-orange-600 text-orange-100",
@@ -144,15 +144,15 @@ export function AchievementsView() {
 
             <BentoCard
               delay={0.1}
-              className="border-none shadow-sm bg-gradient-to-br from-purple-50 to-violet-50 dark:from-violet-950/30 dark:to-purple-950/30"
+              className="border-none shadow-sm bg-gradient-to-br from-teal-50 to-cyan-50 dark:from-cyan-950/30 dark:to-teal-950/30"
             >
               <BentoCardHeader className="pb-2">
-                <div className="text-sm font-medium text-purple-700 dark:text-purple-400 uppercase tracking-wider">
+                <div className="text-sm font-medium text-teal-700 dark:text-teal-400 uppercase tracking-wider">
                   Pontos Totais
                 </div>
               </BentoCardHeader>
               <BentoCardContent>
-                <div className="text-4xl font-bold text-purple-900 dark:text-purple-100">
+                <div className="text-4xl font-bold text-teal-900 dark:text-teal-100">
                   {totalPontos}
                 </div>
               </BentoCardContent>

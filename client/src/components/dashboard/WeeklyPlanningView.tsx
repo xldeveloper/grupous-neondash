@@ -32,7 +32,7 @@ const CATEGORY_COLORS: Record<string, { bg: string; text: string; icon: string }
   G: { bg: "bg-blue-500/10", text: "text-blue-500", icon: "📊" },
   R: { bg: "bg-pink-500/10", text: "text-pink-500", icon: "💬" },
   V: { bg: "bg-emerald-500/10", text: "text-emerald-500", icon: "💰" },
-  M: { bg: "bg-purple-500/10", text: "text-purple-500", icon: "🧠" },
+  M: { bg: "bg-teal-500/10", text: "text-teal-500", icon: "🧠" },
 };
 
 function parseContent(content: string): ParsedStep[] {

@@ -90,7 +90,7 @@ function parseContentForPreview(content: string) {
 
 export function WeeklyPlanningAdmin() {
   const now = new Date();
-  const [selectedMentoradoId, setSelectedMentoradoId] = useState<number | null>(null);
+  const [selectedMentoradoId, setSelectedMentoradoId] = useState<number | "all" | null>(null);
   const [ano, setAno] = useState(now.getFullYear());
   const [mes, setMes] = useState(now.getMonth() + 1);
   const [semana, setSemana] = useState(getWeekOfMonth(now));
@@ -100,11 +100,15 @@ export function WeeklyPlanningAdmin() {
   const { data: mentorados, isLoading: isLoadingMentorados } = trpc.mentorados.list.useQuery();
 
   const { data: existingPlan, isLoading: isLoadingPlan } = trpc.planejamento.list.useQuery(
-    { mentoradoId: selectedMentoradoId ?? undefined, limit: 50 },
-    { enabled: !!selectedMentoradoId }
+    {
+      mentoradoId: typeof selectedMentoradoId === "number" ? selectedMentoradoId : undefined,
+      limit: 50,
+    },
+    { enabled: typeof selectedMentoradoId === "number" }
   );
 
   const upsertMutation = trpc.planejamento.upsert.useMutation();
+  const upsertAllMutation = trpc.planejamento.upsertAll.useMutation();
 
   // Auto-load existing plan when mentorado/week changes
   const currentPlan = useMemo(() => {
@@ -126,19 +130,37 @@ export function WeeklyPlanningAdmin() {
   const handleSave = async () => {
     if (!selectedMentoradoId || !titulo.trim() || !conteudo.trim()) return;
 
-    await upsertMutation.mutateAsync({
-      mentoradoId: selectedMentoradoId,
-      semana,
-      ano,
-      mes,
-      titulo: titulo.trim(),
-      conteudo: conteudo.trim(),
-    });
+    if (selectedMentoradoId === "all") {
+      // Bulk create for all mentorados
+      await upsertAllMutation.mutateAsync({
+        semana,
+        ano,
+        mes,
+        titulo: titulo.trim(),
+        conteudo: conteudo.trim(),
+      });
+    } else {
+      await upsertMutation.mutateAsync({
+        mentoradoId: selectedMentoradoId,
+        semana,
+        ano,
+        mes,
+        titulo: titulo.trim(),
+        conteudo: conteudo.trim(),
+      });
+    }
   };
 
   const previewSteps = useMemo(() => parseContentForPreview(conteudo), [conteudo]);
 
-  const selectedMentorado = mentorados?.find((m) => m.id === selectedMentoradoId);
+  const selectedMentorado =
+    selectedMentoradoId === "all"
+      ? { nomeCompleto: "Todos os Mentorados" }
+      : mentorados?.find((m) => m.id === selectedMentoradoId);
+
+  const isPending = upsertMutation.isPending || upsertAllMutation.isPending;
+  const isSuccess = upsertMutation.isSuccess || upsertAllMutation.isSuccess;
+  const isError = upsertMutation.isError || upsertAllMutation.isError;
 
   return (
     <motion.div
@@ -172,12 +194,15 @@ export function WeeklyPlanningAdmin() {
             ) : (
               <Select
                 value={selectedMentoradoId?.toString() ?? ""}
-                onValueChange={(v) => setSelectedMentoradoId(Number(v))}
+                onValueChange={(v) => setSelectedMentoradoId(v === "all" ? "all" : Number(v))}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Escolha um mentorado..." />
                 </SelectTrigger>
                 <SelectContent>
+                  <SelectItem value="all" className="font-semibold text-primary">
+                    ✨ Todos os Mentorados
+                  </SelectItem>
                   {mentorados?.map((m) => (
                     <SelectItem key={m.id} value={m.id.toString()}>
                       {m.nomeCompleto}
@@ -275,34 +300,34 @@ DIA 2
           {/* Save Button */}
           <Button
             onClick={handleSave}
-            disabled={
-              !selectedMentoradoId || !titulo.trim() || !conteudo.trim() || upsertMutation.isPending
-            }
+            disabled={!selectedMentoradoId || !titulo.trim() || !conteudo.trim() || isPending}
             className="w-full"
             size="lg"
           >
-            {upsertMutation.isPending ? (
+            {isPending ? (
               "Salvando..."
             ) : (
               <>
                 <Save className="w-4 h-4 mr-2" />
-                Salvar Planejamento
+                {selectedMentoradoId === "all" ? "Salvar para Todos" : "Salvar Planejamento"}
               </>
             )}
           </Button>
 
-          {upsertMutation.isSuccess && (
+          {isSuccess && (
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               className="flex items-center gap-2 text-green-500 text-sm"
             >
               <CheckCircle className="w-4 h-4" />
-              Planejamento salvo com sucesso!
+              {selectedMentoradoId === "all"
+                ? `Planejamento enviado para ${mentorados?.length ?? 0} mentorados!`
+                : "Planejamento salvo com sucesso!"}
             </motion.div>
           )}
 
-          {upsertMutation.isError && (
+          {isError && (
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}

@@ -78,12 +78,12 @@ export const BentoCardHeader = ({
     <div className={cn("flex items-start justify-between", className)}>
       <div className="flex gap-3 items-center">
         {icon && (
-          <div className="flex items-center justify-center w-10 h-10 rounded-full bg-slate-100 text-slate-500 group-hover/bento:text-neon-purple group-hover/bento:bg-neon-purple/10 transition-colors duration-200">
+          <div className="flex items-center justify-center w-10 h-10 rounded-full bg-slate-100 text-slate-500 group-hover/bento:text-primary group-hover/bento:bg-primary/10 transition-colors duration-200">
             {icon}
           </div>
         )}
         <div>
-          <div className="font-bold text-slate-800 dark:text-slate-100 text-lg group-hover/bento:text-neon-purple transition-colors duration-200">
+          <div className="font-bold text-slate-800 dark:text-slate-100 text-lg group-hover/bento:text-primary transition-colors duration-200">
             {title}
           </div>
           {subtitle && (
