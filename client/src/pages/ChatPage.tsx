@@ -8,6 +8,7 @@ import {
   Bot,
   Loader2,
   MessageCircle,
+  Pencil,
   Plus,
   RefreshCw,
   Search,
@@ -96,6 +97,34 @@ export function ChatPage() {
       refetchConversations();
     },
   });
+
+  // Edit contact state and mutation
+  const [editContactOpen, setEditContactOpen] = useState(false);
+  const [editContactName, setEditContactName] = useState("");
+  const [editContactNotes, setEditContactNotes] = useState("");
+
+  const upsertContactMutation = trpc.zapi.upsertContact.useMutation({
+    onSuccess: () => {
+      setEditContactOpen(false);
+      refetchConversations();
+    },
+  });
+
+  // Open edit contact dialog with current values
+  const openEditContact = () => {
+    setEditContactName(selectedConversation?.name ?? "");
+    setEditContactNotes("");
+    setEditContactOpen(true);
+  };
+
+  const handleSaveContact = () => {
+    if (!selectedPhone || !editContactName.trim()) return;
+    upsertContactMutation.mutate({
+      phone: selectedPhone,
+      name: editContactName.trim(),
+      notes: editContactNotes.trim() || undefined,
+    });
+  };
 
   // Filter conversations by search
   const filteredConversations =
@@ -384,6 +413,66 @@ export function ChatPage() {
                         AI Ativo
                       </Badge>
                     )}
+                    {/* Edit Contact Button */}
+                    <Dialog open={editContactOpen} onOpenChange={setEditContactOpen}>
+                      <DialogTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={openEditContact}
+                          className="text-slate-400 hover:text-slate-100"
+                        >
+                          <Pencil className="w-4 h-4" />
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent>
+                        <DialogHeader>
+                          <DialogTitle>Editar Contato</DialogTitle>
+                          <DialogDescription>
+                            Adicione um nome para identificar este contato.
+                          </DialogDescription>
+                        </DialogHeader>
+                        <div className="space-y-4 py-4">
+                          <div className="space-y-2">
+                            <Label>Telefone</Label>
+                            <Input value={selectedPhone ?? ""} disabled />
+                          </div>
+                          <div className="space-y-2">
+                            <Label htmlFor="contactName">Nome*</Label>
+                            <Input
+                              id="contactName"
+                              placeholder="Nome do contato"
+                              value={editContactName}
+                              onChange={(e) => setEditContactName(e.target.value)}
+                            />
+                          </div>
+                          <div className="space-y-2">
+                            <Label htmlFor="contactNotes">Observações</Label>
+                            <Textarea
+                              id="contactNotes"
+                              placeholder="Notas sobre o contato..."
+                              value={editContactNotes}
+                              onChange={(e) => setEditContactNotes(e.target.value)}
+                              rows={3}
+                            />
+                          </div>
+                        </div>
+                        <DialogFooter>
+                          <Button variant="outline" onClick={() => setEditContactOpen(false)}>
+                            Cancelar
+                          </Button>
+                          <Button
+                            onClick={handleSaveContact}
+                            disabled={!editContactName.trim() || upsertContactMutation.isPending}
+                          >
+                            {upsertContactMutation.isPending ? (
+                              <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                            ) : null}
+                            Salvar
+                          </Button>
+                        </DialogFooter>
+                      </DialogContent>
+                    </Dialog>
                     <Button
                       variant="ghost"
                       size="icon"

@@ -854,6 +854,32 @@ export type WhatsappMessage = typeof whatsappMessages.$inferSelect;
 export type InsertWhatsappMessage = typeof whatsappMessages.$inferInsert;
 
 /**
+ * WhatsApp Contacts - Contact list for conversations not linked to CRM leads
+ * Stores contact names and notes per mentorado
+ */
+export const whatsappContacts = pgTable(
+  "whatsapp_contacts",
+  {
+    id: serial("id").primaryKey(),
+    mentoradoId: integer("mentorado_id")
+      .notNull()
+      .references(() => mentorados.id, { onDelete: "cascade" }),
+    phone: varchar("phone", { length: 20 }).notNull(),
+    name: varchar("name", { length: 255 }),
+    notes: text("notes"),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().notNull(),
+  },
+  (table) => [
+    uniqueIndex("whatsapp_contacts_phone_mentorado_idx").on(table.mentoradoId, table.phone),
+    index("whatsapp_contacts_mentorado_idx").on(table.mentoradoId),
+  ]
+);
+
+export type WhatsappContact = typeof whatsappContacts.$inferSelect;
+export type InsertWhatsappContact = typeof whatsappContacts.$inferInsert;
+
+/**
  * AI Agent Config - Configuration for AI SDR per mentorado
  */
 export const aiAgentConfig = pgTable(

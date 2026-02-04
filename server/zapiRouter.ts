@@ -4,7 +4,7 @@
  */
 import { and, desc, eq, isNull } from "drizzle-orm";
 import { z } from "zod";
-import { leads, mentorados, whatsappMessages } from "../drizzle/schema";
+import { leads, mentorados, whatsappContacts, whatsappMessages } from "../drizzle/schema";
 import { protectedProcedure, router } from "./_core/trpc";
 import { getDb } from "./db";
 import { encrypt, safeDecrypt } from "./services/crypto";
@@ -445,6 +445,23 @@ export const zapiRouter = router({
       }
     }
 
+    // Step 6: Check whatsappContacts for conversations still without names
+    const allContacts = await db
+      .select()
+      .from(whatsappContacts)
+      .where(eq(whatsappContacts.mentoradoId, mentorado.id));
+
+    for (const [normalizedPhone, conv] of conversationMap.entries()) {
+      if (!conv.name) {
+        const matchedContact = allContacts.find((contact) =>
+          zapiService.phonesMatch(contact.phone, normalizedPhone)
+        );
+        if (matchedContact?.name) {
+          conv.name = matchedContact.name;
+        }
+      }
+    }
+
     // Return as sorted array (most recent first)
     return Array.from(conversationMap.values()).sort((a, b) => {
       const aTime = a.lastMessageAt ? new Date(a.lastMessageAt).getTime() : 0;
@@ -499,6 +516,125 @@ export const zapiRouter = router({
         .limit(input.limit);
 
       return messages.reverse(); // Return in chronological order
+    }),
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // WHATSAPP CONTACTS MANAGEMENT
+  // For managing contact names and notes for conversations
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  /**
+   * Get a contact by phone number
+   */
+  getContact: protectedProcedure
+    .input(z.object({ phone: z.string().min(1) }))
+    .query(async ({ ctx, input }) => {
+      const mentorado = await getMentoradoWithZapi(ctx.user.id);
+      if (!mentorado) {
+        return null;
+      }
+
+      const db = getDb();
+      const normalizedPhone = zapiService.normalizePhoneNumber(input.phone);
+
+      const [contact] = await db
+        .select()
+        .from(whatsappContacts)
+        .where(
+          and(
+            eq(whatsappContacts.mentoradoId, mentorado.id),
+            eq(whatsappContacts.phone, normalizedPhone)
+          )
+        )
+        .limit(1);
+
+      return contact ?? null;
+    }),
+
+  /**
+   * Create or update a contact
+   */
+  upsertContact: protectedProcedure
+    .input(
+      z.object({
+        phone: z.string().min(1),
+        name: z.string().min(1).max(255),
+        notes: z.string().optional(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const mentorado = await getMentoradoWithZapi(ctx.user.id);
+      if (!mentorado) {
+        throw new Error("Mentorado não encontrado");
+      }
+
+      const db = getDb();
+      const normalizedPhone = zapiService.normalizePhoneNumber(input.phone);
+
+      // Check if contact exists
+      const [existing] = await db
+        .select()
+        .from(whatsappContacts)
+        .where(
+          and(
+            eq(whatsappContacts.mentoradoId, mentorado.id),
+            eq(whatsappContacts.phone, normalizedPhone)
+          )
+        )
+        .limit(1);
+
+      if (existing) {
+        // Update
+        const [updated] = await db
+          .update(whatsappContacts)
+          .set({
+            name: input.name,
+            notes: input.notes,
+            updatedAt: new Date(),
+          })
+          .where(eq(whatsappContacts.id, existing.id))
+          .returning();
+        return { success: true, contact: updated, action: "updated" as const };
+      }
+
+      // Insert
+      const [created] = await db
+        .insert(whatsappContacts)
+        .values({
+          mentoradoId: mentorado.id,
+          phone: normalizedPhone,
+          name: input.name,
+          notes: input.notes,
+        })
+        .returning();
+
+      return { success: true, contact: created, action: "created" as const };
+    }),
+
+  /**
+   * Delete a contact
+   */
+  deleteContact: protectedProcedure
+    .input(z.object({ phone: z.string().min(1) }))
+    .mutation(async ({ ctx, input }) => {
+      const mentorado = await getMentoradoWithZapi(ctx.user.id);
+      if (!mentorado) {
+        throw new Error("Mentorado não encontrado");
+      }
+
+      const db = getDb();
+      const normalizedPhone = zapiService.normalizePhoneNumber(input.phone);
+
+      await db
+        .delete(whatsappContacts)
+        .where(
+          and(
+            eq(whatsappContacts.mentoradoId, mentorado.id),
+            eq(whatsappContacts.phone, normalizedPhone)
+          )
+        );
+
+      return { success: true };
     }),
 
   // ═══════════════════════════════════════════════════════════════════════════
