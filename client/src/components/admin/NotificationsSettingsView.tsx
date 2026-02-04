@@ -1,53 +1,35 @@
 import { Bell, Check, Mail, MessageSquare, Save, Settings } from "lucide-react";
 import { motion } from "motion/react";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useToast } from "@/hooks/use-toast";
 import { fadeIn, slideUp, staggerContainer } from "@/lib/animation-variants";
 import { trpc } from "@/lib/trpc";
 
 // ═══════════════════════════════════════════════════════════════════════════
-// TYPES
-// ═══════════════════════════════════════════════════════════════════════════
-
-interface NotificationSettings {
-  id: number;
-  reminderDays: number[];
-  metricsRemindersEnabled: boolean;
-  badgeNotificationsEnabled: boolean;
-  rankingNotificationsEnabled: boolean;
-  emailTemplates: Record<string, { subject?: string; body?: string }>;
-  inAppTemplates: Record<string, { title?: string; message?: string }>;
-  updatedAt: Date;
-}
 
 // ═══════════════════════════════════════════════════════════════════════════
 // COMPONENT
 // ═══════════════════════════════════════════════════════════════════════════
 
 export function NotificationsSettingsView() {
-  const { toast } = useToast();
-
   // Query settings
   const settingsQuery = trpc.notifications.getSettings.useQuery();
   const updateMutation = trpc.notifications.updateSettings.useMutation({
     onSuccess: () => {
-      toast({
-        title: "Configurações salvas",
+      toast.success("Configurações salvas", {
         description: "As configurações de notificação foram atualizadas.",
       });
       settingsQuery.refetch();
     },
     onError: (error) => {
-      toast({
-        title: "Erro ao salvar",
+      toast.error("Erro ao salvar", {
         description: error.message,
-        variant: "destructive",
       });
     },
   });
