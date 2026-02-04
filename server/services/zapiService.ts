@@ -51,6 +51,19 @@ export interface ZApiWebhookPayload {
 }
 
 /**
+ * Z-API Chat response from get-chats endpoint
+ */
+export interface ZApiChat {
+  phone: string;
+  name: string | null;
+  unread: string;
+  lastMessageTime: string;
+  isMuted: string;
+  isMarkedSpam: boolean;
+  profileThumbnail: string | null;
+}
+
+/**
  * Build headers for Z-API requests
  * Note: Authentication is done via URL path (token in URL).
  * Client-Token header is required when "Account Security Token" is enabled in Z-API dashboard.
@@ -147,6 +160,21 @@ export async function disconnect(credentials: ZApiCredentials): Promise<boolean>
     return true;
   } catch {
     return false;
+  }
+}
+
+/**
+ * Get all active chats from WhatsApp
+ * Fetches conversations with metadata like name, unread count, and last message time
+ */
+export async function getChats(credentials: ZApiCredentials): Promise<ZApiChat[]> {
+  try {
+    const response = await zapiRequest<ZApiChat[]>(credentials, "chats");
+    // Filter out group chats (groups have @g.us suffix)
+    return response.filter((chat) => !chat.phone.includes("@g.us"));
+  } catch {
+    // Return empty array on failure to allow fallback to local data
+    return [];
   }
 }
 
@@ -334,6 +362,7 @@ export const zapiService = {
   getConnectionStatus,
   disconnect,
   sendTextMessage,
+  getChats,
 
   // Phone utilities
   normalizePhoneNumber,

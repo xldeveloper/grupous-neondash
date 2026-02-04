@@ -16,6 +16,7 @@ import { adminRouter } from "./routers/admin";
 import { authRouter } from "./routers/auth";
 import { calendarRouter } from "./routers/calendar";
 import { classesRouter } from "./routers/classes";
+import { mentorRouter } from "./routers/mentor";
 import { planejamentoRouter } from "./routers/planejamento";
 import { playbookRouter } from "./routers/playbook";
 import { tasksRouter } from "./routers/tasks";
@@ -43,6 +44,7 @@ export const appRouter = router({
   instagram: instagramRouter,
   admin: adminRouter,
   notifications: notificationsRouter,
+  mentor: mentorRouter,
 });
 
 export type AppRouter = typeof appRouter;

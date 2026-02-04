@@ -360,7 +360,8 @@ export const zapiRouter = router({
   /**
    * Get all conversations (unique phone numbers with last message)
    * For the Chat page inbox view
-   * Auto-links orphan messages to leads using phone matching
+   * Primary: Z-API get-chats for real-time WhatsApp data
+   * Fallback: Local database messages if disconnected
    */
   getAllConversations: protectedProcedure.query(async ({ ctx }) => {
     const mentorado = await getMentoradoWithZapi(ctx.user.id);
@@ -369,21 +370,77 @@ export const zapiRouter = router({
     }
 
     const db = getDb();
+    const credentials = buildCredentials(mentorado);
 
-    // Step 1: Auto-link orphan messages to existing leads
+    // Get saved contacts for custom names
+    const savedContacts = await db
+      .select()
+      .from(whatsappContacts)
+      .where(eq(whatsappContacts.mentoradoId, mentorado.id));
+
+    // Get all leads for name matching
+    const allLeads = await db.select().from(leads).where(eq(leads.mentoradoId, mentorado.id));
+
+    // ===== TRY Z-API FIRST =====
+    if (credentials) {
+      const zapiChats = await zapiService.getChats(credentials);
+      if (zapiChats.length > 0) {
+        // Map Z-API chats to our format
+        return zapiChats.map((chat) => {
+          const normalizedPhone = zapiService.normalizePhoneNumber(chat.phone);
+
+          // Priority: 1) Saved contact name, 2) Lead name, 3) Z-API name
+          let name: string | null = null;
+
+          // Check saved contacts first
+          const savedContact = savedContacts.find((c) =>
+            zapiService.phonesMatch(c.phone, normalizedPhone)
+          );
+          if (savedContact?.name) {
+            name = savedContact.name;
+          }
+
+          // Check leads if no saved contact name
+          if (!name) {
+            const matchedLead = allLeads.find(
+              (lead) => lead.telefone && zapiService.phonesMatch(lead.telefone, normalizedPhone)
+            );
+            if (matchedLead) {
+              name = matchedLead.nome;
+            }
+          }
+
+          // Use Z-API name as fallback
+          if (!name && chat.name) {
+            name = chat.name;
+          }
+
+          return {
+            phone: chat.phone,
+            name,
+            leadId:
+              allLeads.find(
+                (l) => l.telefone && zapiService.phonesMatch(l.telefone, normalizedPhone)
+              )?.id ?? null,
+            lastMessage: null, // Z-API doesn't return message content in get-chats
+            lastMessageAt: chat.lastMessageTime ? new Date(chat.lastMessageTime) : null,
+            unreadCount: Number.parseInt(chat.unread, 10) || 0,
+            profileThumbnail: chat.profileThumbnail,
+          };
+        });
+      }
+    }
+
+    // ===== FALLBACK TO LOCAL DATABASE =====
     await linkOrphanMessages(mentorado.id);
 
-    // Step 2: Get all messages grouped by phone
     const allMessages = await db
       .select()
       .from(whatsappMessages)
       .where(eq(whatsappMessages.mentoradoId, mentorado.id))
       .orderBy(desc(whatsappMessages.createdAt));
 
-    // Step 3: Get all leads for proactive matching
-    const allLeads = await db.select().from(leads).where(eq(leads.mentoradoId, mentorado.id));
-
-    // Group by NORMALIZED phone to merge duplicates with different formats
+    // Group by normalized phone
     const conversationMap = new Map<
       string,
       {
@@ -393,39 +450,46 @@ export const zapiRouter = router({
         lastMessage: string | null;
         lastMessageAt: Date | string | null;
         unreadCount: number;
+        profileThumbnail: string | null;
       }
     >();
 
     for (const msg of allMessages) {
-      // Normalize phone for grouping (merges +5562... with 62...)
       const normalizedPhone = zapiService.normalizePhoneNumber(msg.phone);
 
       if (!conversationMap.has(normalizedPhone)) {
-        // First occurrence = latest message for this phone
         conversationMap.set(normalizedPhone, {
-          phone: msg.phone, // Keep original for display
-          name: null, // Will be populated from lead if exists
+          phone: msg.phone,
+          name: null,
           leadId: msg.leadId,
           lastMessage: msg.content,
           lastMessageAt: msg.createdAt,
           unreadCount: 0,
+          profileThumbnail: null,
         });
       }
-      // Count inbound messages as unread
       const conv = conversationMap.get(normalizedPhone)!;
       if (msg.direction === "inbound") {
         conv.unreadCount += 1;
       }
-      // Keep first leadId found
       if (!conv.leadId && msg.leadId) {
         conv.leadId = msg.leadId;
       }
     }
 
-    // Step 4: Proactively match leads for conversations without leadId
+    // Enrich with names
     for (const [normalizedPhone, conv] of conversationMap.entries()) {
+      // Check saved contacts
+      const savedContact = savedContacts.find((c) =>
+        zapiService.phonesMatch(c.phone, normalizedPhone)
+      );
+      if (savedContact?.name) {
+        conv.name = savedContact.name;
+        continue;
+      }
+
+      // Check leads
       if (!conv.leadId) {
-        // Try to find a lead with matching phone
         const matchedLead = allLeads.find(
           (lead) => lead.telefone && zapiService.phonesMatch(lead.telefone, normalizedPhone)
         );
@@ -433,36 +497,14 @@ export const zapiRouter = router({
           conv.leadId = matchedLead.id;
           conv.name = matchedLead.nome;
         }
-      }
-    }
-
-    // Step 5: Get lead names for conversations with leadId
-    for (const lead of allLeads) {
-      for (const conv of conversationMap.values()) {
-        if (conv.leadId === lead.id && !conv.name) {
+      } else {
+        const lead = allLeads.find((l) => l.id === conv.leadId);
+        if (lead) {
           conv.name = lead.nome;
         }
       }
     }
 
-    // Step 6: Check whatsappContacts for conversations still without names
-    const allContacts = await db
-      .select()
-      .from(whatsappContacts)
-      .where(eq(whatsappContacts.mentoradoId, mentorado.id));
-
-    for (const [normalizedPhone, conv] of conversationMap.entries()) {
-      if (!conv.name) {
-        const matchedContact = allContacts.find((contact) =>
-          zapiService.phonesMatch(contact.phone, normalizedPhone)
-        );
-        if (matchedContact?.name) {
-          conv.name = matchedContact.name;
-        }
-      }
-    }
-
-    // Return as sorted array (most recent first)
     return Array.from(conversationMap.values()).sort((a, b) => {
       const aTime = a.lastMessageAt ? new Date(a.lastMessageAt).getTime() : 0;
       const bTime = b.lastMessageAt ? new Date(b.lastMessageAt).getTime() : 0;
@@ -488,6 +530,72 @@ export const zapiRouter = router({
         linkedCount > 0
           ? `${linkedCount} mensagem(ns) vinculada(s) a contatos do CRM`
           : "Nenhuma mensagem nova para vincular",
+    };
+  }),
+
+  /**
+   * Sync conversations from WhatsApp via Z-API
+   * Saves contact names to whatsappContacts table for offline access
+   */
+  syncConversations: protectedProcedure.mutation(async ({ ctx }) => {
+    const mentorado = await getMentoradoWithZapi(ctx.user.id);
+    if (!mentorado) {
+      return { success: false, syncedCount: 0, message: "Mentorado não encontrado" };
+    }
+
+    const credentials = buildCredentials(mentorado);
+    if (!credentials) {
+      return { success: false, syncedCount: 0, message: "Z-API não configurado" };
+    }
+
+    const zapiChats = await zapiService.getChats(credentials);
+    if (zapiChats.length === 0) {
+      return { success: false, syncedCount: 0, message: "WhatsApp desconectado ou sem conversas" };
+    }
+
+    const db = getDb();
+    let syncedCount = 0;
+
+    // Upsert contacts from Z-API
+    for (const chat of zapiChats) {
+      if (!chat.name) continue; // Skip if no name from Z-API
+
+      const normalizedPhone = zapiService.normalizePhoneNumber(chat.phone);
+
+      // Check if contact exists
+      const [existing] = await db
+        .select()
+        .from(whatsappContacts)
+        .where(
+          and(
+            eq(whatsappContacts.mentoradoId, mentorado.id),
+            eq(whatsappContacts.phone, normalizedPhone)
+          )
+        )
+        .limit(1);
+
+      if (!existing) {
+        // Insert new contact
+        await db.insert(whatsappContacts).values({
+          mentoradoId: mentorado.id,
+          phone: normalizedPhone,
+          name: chat.name,
+        });
+        syncedCount++;
+      } else if (!existing.name && chat.name) {
+        // Update only if local name is empty
+        await db
+          .update(whatsappContacts)
+          .set({ name: chat.name, updatedAt: new Date() })
+          .where(eq(whatsappContacts.id, existing.id));
+        syncedCount++;
+      }
+    }
+
+    return {
+      success: true,
+      syncedCount,
+      message: `${zapiChats.length} conversas encontradas, ${syncedCount} contatos sincronizados`,
     };
   }),
 
