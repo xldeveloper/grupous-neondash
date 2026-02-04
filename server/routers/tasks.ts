@@ -24,7 +24,10 @@ export const tasksRouter = router({
       let targetMentoradoId = ctx.mentorado?.id;
 
       if (input?.mentoradoId) {
-        if (ctx.user?.role !== "admin") {
+        const isOwnId = input.mentoradoId === ctx.mentorado?.id;
+        const isAdmin = ctx.user?.role === "admin";
+
+        if (!isOwnId && !isAdmin) {
           throw new TRPCError({
             code: "FORBIDDEN",
             message: "Apenas admins podem visualizar tarefas de outros.",
@@ -79,7 +82,10 @@ export const tasksRouter = router({
       let targetMentoradoId = ctx.mentorado?.id;
 
       if (input.mentoradoId) {
-        if (ctx.user?.role !== "admin") {
+        const isOwnId = input.mentoradoId === ctx.mentorado?.id;
+        const isAdmin = ctx.user?.role === "admin";
+
+        if (!isOwnId && !isAdmin) {
           throw new TRPCError({
             code: "FORBIDDEN",
             message: "Apenas admins podem criar tarefas para outros.",
@@ -177,7 +183,10 @@ export const tasksRouter = router({
       let targetMentoradoId = ctx.mentorado?.id;
 
       if (input.mentoradoId) {
-        if (ctx.user?.role !== "admin") {
+        const isOwnId = input.mentoradoId === ctx.mentorado?.id;
+        const isAdmin = ctx.user?.role === "admin";
+
+        if (!isOwnId && !isAdmin) {
           throw new TRPCError({
             code: "FORBIDDEN",
             message: "Apenas admins podem gerar tarefas para outros.",

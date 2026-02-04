@@ -12,6 +12,7 @@ import {
 } from "../drizzle/schema";
 import { getDb } from "./db";
 import { sendEmail } from "./emailService";
+import { notificationService } from "./services/notificationService";
 
 // Badge definitions with criteria - 15 badges aligned with Core Flows spec
 export const BADGES_CONFIG = [
@@ -419,13 +420,14 @@ export async function checkAndAwardBadges(mentoradoId: number, ano: number, mes:
       });
       newBadges.push(badge);
 
-      // Create notification
-      await db.insert(notificacoes).values({
+      // Send dual-channel notification (in-app + email)
+      await notificationService.sendBadgeUnlocked(
         mentoradoId,
-        tipo: "conquista",
-        titulo: `Nova conquista: ${badge.nome}!`,
-        mensagem: badge.descricao,
-      });
+        badge.nome,
+        badge.descricao,
+        badge.icone,
+        badge.pontos
+      );
     }
   }
 

@@ -11,6 +11,7 @@ import { and, desc, eq, gte } from "drizzle-orm";
 import { instagramSyncLog } from "../../drizzle/schema";
 import { getDb } from "../db";
 import { syncAllMentorados } from "../services/instagramService";
+import { notificationService } from "../services/notificationService";
 import { ENV } from "./env";
 import { createLogger, type Logger } from "./logger";
 
@@ -328,8 +329,63 @@ export async function initSchedulers(): Promise<void> {
     logger
   );
 
+  // Schedule monthly metrics reminders
+  // Day 1 at 8:00 AM - First reminder of the month
+  scheduleMonthly(
+    "metrics_reminder_day1",
+    1, // Day 1
+    8, // Hour (8 AM)
+    0, // Minute
+    async () => {
+      await notificationService.sendAllReminders("day_1");
+    },
+    logger
+  );
+
+  // Day 3 at 9:00 AM - Gentle nudge
+  scheduleMonthly(
+    "metrics_reminder_day3",
+    3, // Day 3
+    9, // Hour (9 AM)
+    0, // Minute
+    async () => {
+      await notificationService.sendAllReminders("day_3");
+    },
+    logger
+  );
+
+  // Day 6 at 10:00 AM - Urgency reminder
+  scheduleMonthly(
+    "metrics_reminder_day6",
+    6, // Day 6
+    10, // Hour (10 AM)
+    0, // Minute
+    async () => {
+      await notificationService.sendAllReminders("day_6");
+    },
+    logger
+  );
+
+  // Day 11 at 8:00 AM - Final reminder (last day to maintain streak)
+  scheduleMonthly(
+    "metrics_reminder_day11",
+    11, // Day 11
+    8, // Hour (8 AM)
+    0, // Minute
+    async () => {
+      await notificationService.sendAllReminders("day_11");
+    },
+    logger
+  );
+
   logger.info("scheduler_init_complete", {
-    scheduledTasks: ["instagram_sync @ 06:00 daily"],
+    scheduledTasks: [
+      "instagram_sync @ 06:00 daily",
+      "metrics_reminder_day1 @ 08:00 monthly",
+      "metrics_reminder_day3 @ 09:00 monthly",
+      "metrics_reminder_day6 @ 10:00 monthly",
+      "metrics_reminder_day11 @ 08:00 monthly",
+    ],
   });
 }
 

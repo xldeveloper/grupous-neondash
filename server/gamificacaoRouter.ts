@@ -4,7 +4,6 @@ import { z } from "zod";
 import { mentorados, notificacoes } from "../drizzle/schema";
 import { adminProcedure, mentoradoProcedure, protectedProcedure, router } from "./_core/trpc";
 import { getDb } from "./db";
-import { sendEmail } from "./emailService";
 import {
   calculateMonthlyRanking,
   calculateStreak,
@@ -20,6 +19,7 @@ import {
   sendMetricsReminders,
   updateProgressiveGoals,
 } from "./gamificacao";
+import { notificationService } from "./services/notificationService";
 
 export const gamificacaoRouter = router({
   // Initialize badges in database (admin only, run once)
@@ -138,7 +138,7 @@ export const gamificacaoRouter = router({
       return { success: true };
     }),
 
-  // Admin: Send metrics reminders
+  // Admin: Send metrics reminders (uses legacy function for compatibility)
   sendReminders: adminProcedure.mutation(async () => {
     await sendMetricsReminders();
     return { success: true };
@@ -188,7 +188,7 @@ export const gamificacaoRouter = router({
 
   /**
    * Admin: Send a reminder notification immediately to a specific mentorado
-   * Creates in-app notification and sends email
+   * Creates in-app notification and sends email using notification service
    */
   sendReminderNow: adminProcedure
     .input(z.object({ mentoradoId: z.number() }))
@@ -207,26 +207,20 @@ export const gamificacaoRouter = router({
       }
 
       const now = new Date();
-      const mesAnterior = now.getMonth() === 0 ? 12 : now.getMonth();
-      const anoAnterior = now.getMonth() === 0 ? now.getFullYear() - 1 : now.getFullYear();
+      const currentMes = now.getMonth() + 1;
+      const currentAno = now.getFullYear();
 
-      // Create notification
-      await db.insert(notificacoes).values({
-        mentoradoId: input.mentoradoId,
-        tipo: "lembrete_metricas",
-        titulo: "Lembrete: Envie suas métricas!",
-        mensagem: `Não se esqueça de enviar suas métricas de ${mesAnterior}/${anoAnterior}.`,
-      });
+      // Use notification service for dual-channel delivery
+      const result = await notificationService.sendMetricsReminder(
+        input.mentoradoId,
+        currentMes,
+        currentAno,
+        "manual"
+      );
 
-      // Send email if available
-      if (mentorado.email) {
-        await sendEmail({
-          to: mentorado.email,
-          subject: "Lembrete: Envie suas métricas mensais",
-          body: `Olá ${mentorado.nomeCompleto.split(" ")[0]},\n\nNão se esqueça de enviar suas métricas de ${mesAnterior}/${anoAnterior}.\n\nAcesse o dashboard para registrar seu desempenho.\n\nAbraços,\nEquipe Neon`,
-        });
-      }
-
-      return { success: true };
+      return {
+        success: result.inAppSuccess,
+        emailSent: result.emailSuccess,
+      };
     }),
 });
