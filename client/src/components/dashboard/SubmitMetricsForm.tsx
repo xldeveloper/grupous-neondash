@@ -360,38 +360,40 @@ export function SubmitMetricsForm({
         </Alert>
       )}
 
-      {/* Período */}
-      <div className="grid grid-cols-2 gap-4">
-        <div className="space-y-2">
-          <Label htmlFor="ano">Ano</Label>
-          <Select value={ano.toString()} onValueChange={(v) => setAno(parseInt(v, 10))}>
-            <SelectTrigger id="ano">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="2024">2024</SelectItem>
-              <SelectItem value="2025">2025</SelectItem>
-              <SelectItem value="2026">2026</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+      {/* Período - hidden when editing past metrics */}
+      {!lockPeriod && (
+        <div className="grid grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <Label htmlFor="ano">Ano</Label>
+            <Select value={ano.toString()} onValueChange={(v) => setAno(parseInt(v, 10))}>
+              <SelectTrigger id="ano">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="2024">2024</SelectItem>
+                <SelectItem value="2025">2025</SelectItem>
+                <SelectItem value="2026">2026</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="mes">Mês</Label>
-          <Select value={mes.toString()} onValueChange={(v) => setMes(parseInt(v, 10))}>
-            <SelectTrigger id="mes">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {Array.from({ length: 12 }, (_, i) => i + 1).map((m) => (
-                <SelectItem key={m} value={m.toString()}>
-                  {getMesNome(m)}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <div className="space-y-2">
+            <Label htmlFor="mes">Mês</Label>
+            <Select value={mes.toString()} onValueChange={(v) => setMes(parseInt(v, 10))}>
+              <SelectTrigger id="mes">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {Array.from({ length: 12 }, (_, i) => i + 1).map((m) => (
+                  <SelectItem key={m} value={m.toString()}>
+                    {getMesNome(m)}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Financeiro */}
       <div className="space-y-4">
