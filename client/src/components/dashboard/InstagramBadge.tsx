@@ -33,8 +33,8 @@ export function InstagramBadge({ count, syncedAt, type, className }: InstagramBa
           <div
             className={cn(
               "inline-flex items-center gap-1.5 px-2 py-1 rounded-md",
-              "bg-gradient-to-r from-purple-500/10 to-pink-500/10",
-              "border border-purple-500/20 text-xs text-purple-600 dark:text-purple-400",
+              "bg-gradient-to-r from-pink-500/10 to-rose-500/10",
+              "border border-pink-500/20 text-xs text-pink-600 dark:text-pink-400",
               "animate-in fade-in duration-300",
               className
             )}

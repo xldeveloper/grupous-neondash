@@ -121,7 +121,7 @@ export default function DiagnosticoPage() {
   return (
     <div className="container mx-auto max-w-4xl py-8 space-y-8 animate-in fade-in duration-500">
       <div className="space-y-2">
-        <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
+        <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-primary to-teal-600 bg-clip-text text-transparent">
           Diagnóstico Inicial
         </h1>
         <p className="text-muted-foreground">
@@ -303,7 +303,7 @@ export default function DiagnosticoPage() {
           </Card>
 
           {/* SEÇÃO 4 */}
-          <Card className="border-l-4 border-l-purple-500 shadow-md">
+          <Card className="border-l-4 border-l-teal-500 shadow-md">
             <CardHeader>
               <CardTitle className="text-xl">4. Objetivos e Sonhos</CardTitle>
               <CardDescription>Onde queremos chegar.</CardDescription>

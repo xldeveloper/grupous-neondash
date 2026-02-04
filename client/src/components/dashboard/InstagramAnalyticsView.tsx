@@ -151,12 +151,12 @@ export function InstagramAnalyticsView({ mentoradoId }: InstagramAnalyticsViewPr
             {/* Stories Card */}
             <motion.div variants={slideUp}>
               <Card className="relative overflow-hidden border-none bg-gradient-to-br from-card to-card/50 shadow-lg ring-1 ring-white/10">
-                <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 via-transparent to-transparent opacity-50" />
-                <div className="absolute -right-4 -top-4 h-24 w-24 rounded-full bg-purple-500/10 blur-2xl" />
+                <div className="absolute inset-0 bg-gradient-to-br from-teal-500/5 via-transparent to-transparent opacity-50" />
+                <div className="absolute -right-4 -top-4 h-24 w-24 rounded-full bg-teal-500/10 blur-2xl" />
 
                 <CardHeader className="relative pb-2">
                   <CardTitle className="flex items-center gap-2 text-sm font-medium text-muted-foreground uppercase tracking-wider">
-                    <Film className="w-4 h-4 text-purple-500" />
+                    <Film className="w-4 h-4 text-teal-500" />
                     Stories
                   </CardTitle>
                 </CardHeader>
@@ -230,8 +230,8 @@ export function InstagramAnalyticsView({ mentoradoId }: InstagramAnalyticsViewPr
                           <stop offset="95%" stopColor="#ec4899" stopOpacity={0} />
                         </linearGradient>
                         <linearGradient id="colorStories" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="#a855f7" stopOpacity={0.3} />
-                          <stop offset="95%" stopColor="#a855f7" stopOpacity={0} />
+                          <stop offset="5%" stopColor="#14b8a6" stopOpacity={0.3} />
+                          <stop offset="95%" stopColor="#14b8a6" stopOpacity={0} />
                         </linearGradient>
                       </defs>
                       <CartesianGrid
@@ -278,7 +278,7 @@ export function InstagramAnalyticsView({ mentoradoId }: InstagramAnalyticsViewPr
                         type="monotone"
                         dataKey="stories"
                         name="Stories"
-                        stroke="#a855f7"
+                        stroke="#14b8a6"
                         fillOpacity={1}
                         fill="url(#colorStories)"
                         strokeWidth={2}

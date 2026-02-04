@@ -61,7 +61,7 @@ export function AccountDeletion() {
     <div className="min-h-screen bg-gradient-to-br from-background to-muted/30 flex items-center justify-center p-4">
       <Card className="w-full max-w-lg shadow-lg">
         <CardHeader className="text-center space-y-2">
-          <div className="mx-auto w-16 h-16 rounded-full bg-gradient-to-br from-pink-500 via-purple-500 to-orange-500 flex items-center justify-center mb-4">
+          <div className="mx-auto w-16 h-16 rounded-full bg-gradient-to-br from-pink-500 via-rose-500 to-orange-500 flex items-center justify-center mb-4">
             <Instagram className="w-8 h-8 text-white" />
           </div>
           <CardTitle className="text-2xl">Exclusão de Dados do Instagram</CardTitle>

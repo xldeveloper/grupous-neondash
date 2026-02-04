@@ -45,7 +45,7 @@ export function SettingsPage() {
         {/* AI Agent Section */}
         <section className="space-y-4">
           <div className="flex items-center gap-2">
-            <Sparkles className="w-5 h-5 text-purple-600" />
+            <Sparkles className="w-5 h-5 text-teal-600" />
             <h2 className="text-xl font-semibold">Agente IA (SDR)</h2>
           </div>
           <p className="text-sm text-muted-foreground">

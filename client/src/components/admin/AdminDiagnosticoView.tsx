@@ -37,9 +37,9 @@ export function AdminDiagnosticoView({ mentoradoId }: { mentoradoId: number }) {
 
   return (
     <div className="space-y-6">
-      <Card className="border-neon-purple/20 bg-neon-purple/5">
+      <Card className="border-primary/20 bg-primary/5">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-neon-purple-light">
+          <CardTitle className="flex items-center gap-2 text-primary">
             <CheckCircle2 className="w-5 h-5" />
             Sobre o Momento Atual Profissional
           </CardTitle>

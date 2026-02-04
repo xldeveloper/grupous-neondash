@@ -141,13 +141,13 @@ export function AIAgentSettingsCard(_props: AIAgentSettingsCardProps) {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <motion.div
-              className="p-2 rounded-lg bg-purple-500/10 text-purple-600"
+              className="p-2 rounded-lg bg-teal-500/10 text-teal-600"
               animate={
                 enabled
                   ? {
                       boxShadow: [
-                        "0 0 0 0 rgba(168, 85, 247, 0.4)",
-                        "0 0 0 10px rgba(168, 85, 247, 0)",
+                        "0 0 0 0 rgba(20, 184, 166, 0.4)",
+                        "0 0 0 10px rgba(20, 184, 166, 0)",
                       ],
                     }
                   : {}
@@ -174,15 +174,13 @@ export function AIAgentSettingsCard(_props: AIAgentSettingsCardProps) {
         <div
           className={`flex items-center gap-2 p-3 rounded-lg ${
             enabled
-              ? "bg-purple-50 dark:bg-purple-950/20 border border-purple-200 dark:border-purple-900"
+              ? "bg-teal-50 dark:bg-teal-950/20 border border-teal-200 dark:border-teal-900"
               : "bg-muted"
           }`}
         >
-          <Sparkles
-            className={`w-4 h-4 ${enabled ? "text-purple-600" : "text-muted-foreground"}`}
-          />
+          <Sparkles className={`w-4 h-4 ${enabled ? "text-teal-600" : "text-muted-foreground"}`} />
           <span
-            className={`text-sm ${enabled ? "text-purple-700 dark:text-purple-400" : "text-muted-foreground"}`}
+            className={`text-sm ${enabled ? "text-teal-700 dark:text-teal-400" : "text-muted-foreground"}`}
           >
             {enabled
               ? "Agente ativo e respondendo automaticamente"
