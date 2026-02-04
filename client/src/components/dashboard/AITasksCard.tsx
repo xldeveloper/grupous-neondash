@@ -48,15 +48,44 @@ export function AITasksCard({ mentoradoId, isAdmin }: AITasksCardProps) {
 
   const generateMutation = trpc.tasks.generateFromAI.useMutation({
     onSuccess: (data) => {
-      toast.success("Plano Tático Gerado!", {
+      toast.success("Plano Tático Gerado! ✨", {
         description: `${data.count} novas missões foram adicionadas ao seu painel.`,
+        duration: 5000,
       });
       refetch();
       setActiveTab("ai");
     },
     onError: (err) => {
-      toast.error("Erro ao gerar plano", {
-        description: err.message,
+      // Map error codes to user-friendly messages
+      let title = "Erro ao gerar plano";
+      let description = err.message;
+
+      // Check for specific error patterns
+      const errorMessage = err.message?.toLowerCase() || "";
+
+      if (errorMessage.includes("timeout") || errorMessage.includes("demorou")) {
+        title = "⏱️ Tempo Excedido";
+        description = "A IA demorou muito para responder. Tente novamente em alguns segundos.";
+      } else if (errorMessage.includes("configuração") || errorMessage.includes("administrador")) {
+        title = "⚙️ Configuração Pendente";
+        description = "A integração com a IA ainda não foi configurada. Contate o administrador.";
+      } else if (errorMessage.includes("rate limit") || errorMessage.includes("limite")) {
+        title = "🚦 Limite de Requisições";
+        description = "Muitas requisições enviadas. Aguarde um momento e tente novamente.";
+      } else if (errorMessage.includes("conexão") || errorMessage.includes("network")) {
+        title = "📡 Erro de Conexão";
+        description = "Verifique sua conexão com a internet e tente novamente.";
+      } else if (errorMessage.includes("indisponível") || errorMessage.includes("unavailable")) {
+        title = "🔧 Serviço Temporariamente Indisponível";
+        description = "O serviço de IA está em manutenção. Tente novamente em alguns minutos.";
+      } else if (errorMessage.includes("model") || errorMessage.includes("não encontrado")) {
+        title = "🤖 Modelo de IA Indisponível";
+        description = "O modelo de IA não foi encontrado. Contate o administrador.";
+      }
+
+      toast.error(title, {
+        description,
+        duration: 6000,
       });
     },
   });

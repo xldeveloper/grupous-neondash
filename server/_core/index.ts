@@ -224,6 +224,8 @@ async function startServer() {
   const port = await findAvailablePort(preferredPort);
 
   server.listen(port, () => {
+    console.log(`[server] Server listening on http://localhost:${port}`);
+
     // Initialize background schedulers AFTER server is ready (fire-and-forget)
     // This prevents catch-up sync from blocking server startup
     initSchedulers().catch((error) => {

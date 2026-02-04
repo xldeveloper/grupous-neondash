@@ -1,4 +1,13 @@
 import { ENV } from "./env";
+import { createLogger } from "./logger";
+
+const logger = createLogger({ service: "llm" });
+
+/**
+ * ============================================
+ * TYPES AND INTERFACES
+ * ============================================
+ */
 
 export type Role = "system" | "user" | "assistant" | "tool" | "function";
 
@@ -63,6 +72,8 @@ export type InvokeParams = {
   output_schema?: OutputSchema;
   responseFormat?: ResponseFormat;
   response_format?: ResponseFormat;
+  /** Override the default model for this specific invocation */
+  model?: string;
 };
 
 export type ToolCall = {
@@ -107,6 +118,44 @@ export type ResponseFormat =
   | { type: "json_object" }
   | { type: "json_schema"; json_schema: JsonSchema };
 
+export type LLMError = {
+  code: string;
+  message: string;
+  status: number;
+  details?: unknown;
+};
+
+/**
+ * ============================================
+ * CONSTANTS AND CONFIGURATION
+ * ============================================
+ */
+
+/** Default Gemini 3 Flash model - latest model from Google as of Dec 2025 */
+const DEFAULT_GEMINI_MODEL = "gemini-3-flash-preview";
+
+/** Default Z.AI GLM 4.7 Flash model fallback */
+const DEFAULT_ZAI_MODEL = "glm-4.7-flash";
+
+/** Gemini OpenAI-compatible API endpoint */
+const GEMINI_API_ENDPOINT =
+  "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions";
+
+/** Z.AI OpenAI-compatible API endpoint */
+const ZAI_API_ENDPOINT = "https://open.bigmodel.cn/api/paas/v4/chat/completions";
+
+/** Request timeout in milliseconds (2 minutes) */
+const REQUEST_TIMEOUT_MS = 120000;
+
+/** Maximum tokens for response */
+const MAX_TOKENS = 32768;
+
+/**
+ * ============================================
+ * HELPER FUNCTIONS
+ * ============================================
+ */
+
 const ensureArray = (value: MessageContent | MessageContent[]): MessageContent[] =>
   Array.isArray(value) ? value : [value];
 
@@ -127,7 +176,7 @@ const normalizeContentPart = (part: MessageContent): TextContent | ImageContent 
     return part;
   }
 
-  throw new Error("Unsupported message content part");
+  throw new Error(`Unsupported message content part: ${JSON.stringify(part)}`);
 };
 
 const normalizeMessage = (message: Message) => {
@@ -201,22 +250,52 @@ const normalizeToolChoice = (
   return toolChoice;
 };
 
-const resolveApiUrl = () => {
+const resolveApiUrl = (): string => {
   // Check for GEMINI_API_KEY first for Google's OpenAI-compatible endpoint
   if (ENV.geminiApiKey) {
-    return "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions";
+    logger.info("using_gemini_endpoint");
+    return GEMINI_API_ENDPOINT;
   }
 
   if (!ENV.llmApiUrl || ENV.llmApiUrl.trim().length === 0) {
-    throw new Error("LLM configuration missing. Set GEMINI_API_KEY or LLM_API_URL.");
+    // Use Z.AI endpoint as default fallback
+    logger.info("using_zai_endpoint", { endpoint: ZAI_API_ENDPOINT });
+    return ZAI_API_ENDPOINT;
   }
+
+  logger.info("using_custom_endpoint", { endpoint: ENV.llmApiUrl });
   return `${ENV.llmApiUrl.replace(/\/$/, "")}/v1/chat/completions`;
 };
 
-const assertApiKey = () => {
-  if (!ENV.llmApiKey && !ENV.geminiApiKey) {
-    throw new Error("API Key missing. Configure GEMINI_API_KEY or LLM_API_KEY.");
+const getApiKey = (): string => {
+  const apiKey = ENV.geminiApiKey || ENV.llmApiKey;
+  if (!apiKey) {
+    throw new LLMConfigurationError(
+      "API Key missing. Configure GEMINI_API_KEY or LLM_API_KEY.",
+      "API_KEY_MISSING"
+    );
   }
+  return apiKey;
+};
+
+const resolveModel = (requestedModel?: string): string => {
+  // If a specific model is requested, use it
+  if (requestedModel) {
+    logger.info("using_requested_model", { model: requestedModel });
+    return requestedModel;
+  }
+
+  // Determine model based on available config
+  const isGemini = !!ENV.geminiApiKey;
+
+  if (isGemini) {
+    logger.info("using_default_gemini_model", { model: DEFAULT_GEMINI_MODEL });
+    return DEFAULT_GEMINI_MODEL;
+  }
+
+  const model = ENV.llmModel || DEFAULT_ZAI_MODEL;
+  logger.info("using_zai_model", { model });
+  return model;
 };
 
 const normalizeResponseFormat = ({
@@ -259,70 +338,349 @@ const normalizeResponseFormat = ({
   };
 };
 
-// ... inside invokeLLM ...
-export async function invokeLLM(params: InvokeParams): Promise<InvokeResult> {
-  assertApiKey();
+/**
+ * ============================================
+ * CUSTOM ERROR CLASSES
+ * ============================================
+ */
 
-  const {
-    messages,
-    tools,
-    toolChoice,
-    tool_choice,
-    outputSchema,
-    output_schema,
-    responseFormat,
-    response_format,
-  } = params;
-  // Determine model based on available config
-  const isGemini = !!ENV.geminiApiKey;
-  const model = isGemini ? "gemini-3-flash-preview" : ENV.llmModel || "gpt-4o";
+class LLMConfigurationError extends Error {
+  code: string;
 
-  const payload: Record<string, unknown> = {
-    model,
-    messages: messages.map(normalizeMessage),
-  };
-
-  // ... rest of payload construction ...
-
-  if (tools && tools.length > 0) {
-    payload.tools = tools;
+  constructor(message: string, code: string) {
+    super(message);
+    this.name = "LLMConfigurationError";
+    this.code = code;
   }
-
-  const normalizedToolChoice = normalizeToolChoice(toolChoice || tool_choice, tools);
-  if (normalizedToolChoice) {
-    payload.tool_choice = normalizedToolChoice;
-  }
-
-  // Gemini via OpenAI compat might have different max tokens limits, but keeping high for now
-  payload.max_tokens = 32768;
-
-  const normalizedResponseFormat = normalizeResponseFormat({
-    responseFormat,
-    response_format,
-    outputSchema,
-    output_schema,
-  });
-
-  if (normalizedResponseFormat) {
-    payload.response_format = normalizedResponseFormat;
-  }
-
-  const apiUrl = resolveApiUrl();
-  const apiKey = ENV.geminiApiKey || ENV.llmApiKey;
-
-  const response = await fetch(apiUrl, {
-    method: "POST",
-    headers: {
-      "content-type": "application/json",
-      authorization: `Bearer ${apiKey}`,
-    },
-    body: JSON.stringify(payload),
-  });
-
-  if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(`LLM invoke failed: ${response.status} ${response.statusText} – ${errorText}`);
-  }
-
-  return (await response.json()) as InvokeResult;
 }
+
+class LLMInvocationError extends Error {
+  code: string;
+  status: number;
+  details?: unknown;
+
+  constructor(message: string, code: string, status: number, details?: unknown) {
+    super(message);
+    this.name = "LLMInvocationError";
+    this.code = code;
+    this.status = status;
+    this.details = details;
+  }
+}
+
+/**
+ * ============================================
+ * MAIN INVOKE FUNCTION
+ * ============================================
+ */
+
+export async function invokeLLM(params: InvokeParams): Promise<InvokeResult> {
+  const startTime = Date.now();
+  const requestId = `llm-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+
+  logger.info("invocation_started", { requestId });
+
+  try {
+    // Validate and get API key
+    const apiKey = getApiKey();
+
+    // Destructure parameters
+    const {
+      messages,
+      tools,
+      toolChoice,
+      tool_choice,
+      outputSchema,
+      output_schema,
+      responseFormat,
+      response_format,
+      maxTokens,
+      max_tokens,
+      model: requestedModel,
+    } = params;
+
+    // Validate messages
+    if (!messages || messages.length === 0) {
+      throw new LLMConfigurationError("At least one message is required", "MESSAGES_EMPTY");
+    }
+
+    // Resolve model
+    const model = resolveModel(requestedModel);
+
+    // Build payload
+    const payload: Record<string, unknown> = {
+      model,
+      messages: messages.map(normalizeMessage),
+    };
+
+    // Add tools if provided
+    if (tools && tools.length > 0) {
+      payload.tools = tools;
+      logger.info("tools_configured", { requestId, toolCount: tools.length });
+    }
+
+    // Add tool choice if provided
+    const normalizedToolChoice = normalizeToolChoice(toolChoice || tool_choice, tools);
+    if (normalizedToolChoice) {
+      payload.tool_choice = normalizedToolChoice;
+    }
+
+    // Set max tokens
+    payload.max_tokens = maxTokens || max_tokens || MAX_TOKENS;
+
+    // Add response format if provided
+    const normalizedResponseFormat = normalizeResponseFormat({
+      responseFormat,
+      response_format,
+      outputSchema,
+      output_schema,
+    });
+
+    if (normalizedResponseFormat) {
+      payload.response_format = normalizedResponseFormat;
+      logger.info("response_format_set", { requestId, type: normalizedResponseFormat.type });
+    }
+
+    // Resolve API URL
+    const apiUrl = resolveApiUrl();
+
+    logger.info("sending_request", { requestId, apiUrl, model, messageCount: messages.length });
+
+    // Create AbortController for timeout
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => {
+      controller.abort();
+      logger.error("request_timeout", { requestId, timeoutMs: REQUEST_TIMEOUT_MS });
+    }, REQUEST_TIMEOUT_MS);
+
+    // Make the request
+    let response: Response;
+    try {
+      response = await fetch(apiUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${apiKey}`,
+          "X-Request-ID": requestId,
+        },
+        body: JSON.stringify(payload),
+        signal: controller.signal,
+      });
+    } catch (fetchError) {
+      clearTimeout(timeoutId);
+
+      if (fetchError instanceof Error && fetchError.name === "AbortError") {
+        throw new LLMInvocationError(
+          `Request timed out after ${REQUEST_TIMEOUT_MS}ms`,
+          "TIMEOUT",
+          408,
+          { requestId, timeout: REQUEST_TIMEOUT_MS }
+        );
+      }
+
+      throw new LLMInvocationError(
+        `Network error: ${fetchError instanceof Error ? fetchError.message : "Unknown error"}`,
+        "NETWORK_ERROR",
+        0,
+        { requestId, originalError: fetchError }
+      );
+    }
+
+    clearTimeout(timeoutId);
+
+    // Handle non-OK responses
+    if (!response.ok) {
+      let errorData: unknown;
+      let errorText = "";
+
+      try {
+        errorText = await response.text();
+        errorData = JSON.parse(errorText);
+      } catch {
+        errorData = { raw: errorText };
+      }
+
+      const statusCode = response.status;
+      const statusText = response.statusText;
+
+      logger.error("request_failed", {
+        requestId,
+        status: statusCode,
+        statusText,
+        error: errorData,
+      });
+
+      // Map common error codes
+      let errorCode = "UNKNOWN_ERROR";
+      let errorMessage = `LLM invoke failed: ${statusCode} ${statusText}`;
+
+      switch (statusCode) {
+        case 400:
+          errorCode = "BAD_REQUEST";
+          errorMessage = "Invalid request format or parameters";
+          break;
+        case 401:
+          errorCode = "UNAUTHORIZED";
+          errorMessage = "Invalid API key or authentication failed";
+          break;
+        case 403:
+          errorCode = "FORBIDDEN";
+          errorMessage = "API key does not have permission for this operation";
+          break;
+        case 404:
+          errorCode = "MODEL_NOT_FOUND";
+          errorMessage = `Model '${model}' not found. Please verify the model name.`;
+          break;
+        case 429:
+          errorCode = "RATE_LIMITED";
+          errorMessage = "Rate limit exceeded. Please try again later.";
+          break;
+        case 500:
+        case 502:
+        case 503:
+        case 504:
+          errorCode = "SERVER_ERROR";
+          errorMessage = "LLM service temporarily unavailable";
+          break;
+      }
+
+      throw new LLMInvocationError(errorMessage, errorCode, statusCode, {
+        requestId,
+        response: errorData,
+        model,
+      });
+    }
+
+    // Parse successful response
+    const result = (await response.json()) as InvokeResult;
+
+    const duration = Date.now() - startTime;
+
+    logger.info("request_completed", {
+      requestId,
+      durationMs: duration,
+      model: result.model,
+      tokens: result.usage,
+      choiceCount: result.choices.length,
+    });
+
+    return result;
+  } catch (error) {
+    const duration = Date.now() - startTime;
+
+    if (error instanceof LLMConfigurationError || error instanceof LLMInvocationError) {
+      logger.error("llm_error", {
+        requestId,
+        durationMs: duration,
+        code: error.code,
+        message: error.message,
+        status: (error as LLMInvocationError).status,
+      });
+      throw error;
+    }
+
+    // Wrap unknown errors
+    logger.error("unexpected_error", { requestId, durationMs: duration, error });
+    throw new LLMInvocationError(
+      `Unexpected error: ${error instanceof Error ? error.message : "Unknown error"}`,
+      "UNEXPECTED_ERROR",
+      0,
+      { requestId, originalError: error }
+    );
+  }
+}
+
+/**
+ * ============================================
+ * UTILITY FUNCTIONS
+ * ============================================
+ */
+
+/**
+ * Validates that the LLM is properly configured
+ * Returns detailed configuration status
+ */
+export function validateLLMConfig(): {
+  isValid: boolean;
+  provider: "gemini" | "openai" | "none";
+  model: string;
+  errors: string[];
+} {
+  const errors: string[] = [];
+  let provider: "gemini" | "openai" | "none" = "none";
+  let model = "";
+
+  if (ENV.geminiApiKey) {
+    provider = "gemini";
+    model = DEFAULT_GEMINI_MODEL;
+
+    if (ENV.geminiApiKey.length < 10) {
+      errors.push("GEMINI_API_KEY appears to be invalid (too short)");
+    }
+  } else if (ENV.llmApiKey) {
+    provider = "zai" as "gemini" | "openai" | "none";
+    model = ENV.llmModel || DEFAULT_ZAI_MODEL;
+
+    if (ENV.llmApiKey.length < 10) {
+      errors.push("LLM_API_KEY appears to be invalid (too short)");
+    }
+  } else {
+    errors.push("No API key configured. Set GEMINI_API_KEY or LLM_API_KEY");
+  }
+
+  return {
+    isValid: errors.length === 0,
+    provider,
+    model,
+    errors,
+  };
+}
+
+/**
+ * Test function to verify LLM connectivity
+ */
+export async function testLLMConnection(): Promise<{
+  success: boolean;
+  message: string;
+  details?: unknown;
+}> {
+  try {
+    const config = validateLLMConfig();
+
+    if (!config.isValid) {
+      return {
+        success: false,
+        message: `Configuration error: ${config.errors.join(", ")}`,
+        details: config,
+      };
+    }
+
+    const result = await invokeLLM({
+      messages: [
+        { role: "system", content: "You are a helpful assistant." },
+        { role: "user", content: "Say 'OK' if you can hear me." },
+      ],
+      maxTokens: 10,
+    });
+
+    const content = result.choices[0]?.message?.content;
+
+    return {
+      success: true,
+      message: `LLM connection successful. Response: ${content}`,
+      details: {
+        model: result.model,
+        usage: result.usage,
+      },
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: error instanceof Error ? error.message : "Unknown error",
+      details: error,
+    };
+  }
+}
+
+// Export error classes for external use
+export { LLMConfigurationError, LLMInvocationError };

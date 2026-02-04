@@ -210,10 +210,172 @@ export async function initializeBadges() {
   }
 }
 
+// ════════════════════════════════════════════════════════════════════════════
+// BADGE CRITERIA CHECKERS (extracted for reduced complexity)
+// ════════════════════════════════════════════════════════════════════════════
+
+interface BadgeCheckContext {
+  mentoradoId: number;
+  mentorado: { id: number; metaFaturamento: number };
+  metricas: {
+    faturamento: number;
+    leads: number;
+    procedimentos: number;
+    postsFeed: number;
+    stories: number;
+    createdAt: Date;
+  };
+  metricasAnterior: { faturamento: number } | undefined;
+}
+
+async function checkPrimeiroRegistro(mentoradoId: number): Promise<boolean> {
+  const db = getDb();
+  const [countResult] = await db
+    .select({ count: sql<number>`count(*)` })
+    .from(metricasMensais)
+    .where(eq(metricasMensais.mentoradoId, mentoradoId));
+  return (countResult?.count ?? 0) === 1;
+}
+
+async function checkPontualidade(
+  mentoradoId: number,
+  monthsToCheck: number,
+  targetDay: number
+): Promise<boolean> {
+  const db = getDb();
+  const recentMetrics = await db
+    .select()
+    .from(metricasMensais)
+    .where(eq(metricasMensais.mentoradoId, mentoradoId))
+    .orderBy(desc(metricasMensais.ano), desc(metricasMensais.mes))
+    .limit(monthsToCheck);
+
+  if (recentMetrics.length < monthsToCheck) return false;
+  return recentMetrics.every((m) => new Date(m.createdAt).getDate() <= targetDay);
+}
+
+async function checkAcimaMedia(mentoradoId: number, monthsRequired: number): Promise<boolean> {
+  const db = getDb();
+  const recentMetrics = await db
+    .select()
+    .from(metricasMensais)
+    .where(eq(metricasMensais.mentoradoId, mentoradoId))
+    .orderBy(desc(metricasMensais.ano), desc(metricasMensais.mes))
+    .limit(monthsRequired);
+
+  if (recentMetrics.length < monthsRequired) return false;
+
+  // Fetch all averages in one query (optimized from N+1 to 2 queries)
+  const periods = recentMetrics.map((m) => ({ ano: m.ano, mes: m.mes }));
+  const avgResults = await db
+    .select({
+      ano: metricasMensais.ano,
+      mes: metricasMensais.mes,
+      avg: sql<number>`avg(faturamento)`,
+    })
+    .from(metricasMensais)
+    .where(
+      sql`(${metricasMensais.ano}, ${metricasMensais.mes}) IN (${sql.join(
+        periods.map((p) => sql`(${p.ano}, ${p.mes})`),
+        sql`, `
+      )})`
+    )
+    .groupBy(metricasMensais.ano, metricasMensais.mes);
+
+  const avgMap = new Map(avgResults.map((r) => [`${r.ano}-${r.mes}`, r.avg ?? 0]));
+
+  for (const m of recentMetrics) {
+    const turmaAverage = avgMap.get(`${m.ano}-${m.mes}`) ?? 0;
+    if (m.faturamento <= turmaAverage) return false;
+  }
+  return true;
+}
+
+async function checkPlaybookCompleto(mentoradoId: number): Promise<boolean> {
+  const db = getDb();
+  const [totalItems] = await db.select({ count: sql<number>`count(*)` }).from(playbookItems);
+  const [completedItems] = await db
+    .select({ count: sql<number>`count(*)` })
+    .from(playbookProgress)
+    .where(eq(playbookProgress.mentoradoId, mentoradoId));
+
+  const total = totalItems?.count ?? 0;
+  const completed = completedItems?.count ?? 0;
+  return total > 0 && completed >= total;
+}
+
+async function checkMesesMentoria(mentoradoId: number, requiredMonths: number): Promise<boolean> {
+  const db = getDb();
+  const [monthsCount] = await db
+    .select({ count: sql<number>`count(*)` })
+    .from(metricasMensais)
+    .where(eq(metricasMensais.mentoradoId, mentoradoId));
+  return (monthsCount?.count ?? 0) >= requiredMonths;
+}
+
+// Evaluate a single badge criterion
+async function checkBadgeCriteria(
+  criterio: { tipo: string; meses?: number; dia?: number; valor?: number; percentual?: number },
+  ctx: BadgeCheckContext
+): Promise<boolean> {
+  switch (criterio.tipo) {
+    case "primeiro_registro":
+      return checkPrimeiroRegistro(ctx.mentoradoId);
+
+    case "streak_consecutivo": {
+      const streak = await calculateStreak(ctx.mentoradoId);
+      return streak.currentStreak >= (criterio.meses ?? 0);
+    }
+
+    case "pontualidade":
+      return checkPontualidade(ctx.mentoradoId, criterio.meses || 3, criterio.dia || 5);
+
+    case "faturamento_meta":
+      return ctx.metricas.faturamento >= ctx.mentorado.metaFaturamento;
+
+    case "crescimento": {
+      if (!ctx.metricasAnterior || ctx.metricasAnterior.faturamento <= 0) return false;
+      const crescimento =
+        ((ctx.metricas.faturamento - ctx.metricasAnterior.faturamento) /
+          ctx.metricasAnterior.faturamento) *
+        100;
+      const threshold = criterio.percentual ?? criterio.valor ?? 0;
+      return crescimento >= threshold;
+    }
+
+    case "faturamento_minimo":
+      return ctx.metricas.faturamento >= (criterio.valor ?? 0);
+
+    case "ranking_top":
+      // Ranking badges are awarded in calculateMonthlyRanking function
+      return false;
+
+    case "acima_media":
+      return checkAcimaMedia(ctx.mentoradoId, criterio.meses || 3);
+
+    case "leads_minimo":
+      return ctx.metricas.leads >= (criterio.valor ?? 0);
+
+    case "conversao": {
+      if (ctx.metricas.leads <= 0) return false;
+      const conversionRate = (ctx.metricas.procedimentos / ctx.metricas.leads) * 100;
+      return conversionRate > (criterio.percentual ?? 20);
+    }
+
+    case "playbook_completo":
+      return checkPlaybookCompleto(ctx.mentoradoId);
+
+    case "meses_mentoria":
+      return checkMesesMentoria(ctx.mentoradoId, criterio.valor ?? 6);
+
+    default:
+      return false;
+  }
+}
+
 // Check and award badges for a mentorado
 export async function checkAndAwardBadges(mentoradoId: number, ano: number, mes: number) {
-  const db = await getDb();
-  if (!db) return [];
+  const db = getDb();
 
   const [mentorado] = await db.select().from(mentorados).where(eq(mentorados.id, mentoradoId));
   if (!mentorado) return [];
@@ -260,156 +422,13 @@ export async function checkAndAwardBadges(mentoradoId: number, ano: number, mes:
   const earnedBadgeIds = new Set(earnedBadges.map((b: { badgeId: number }) => b.badgeId));
   const newBadges: typeof allBadges = [];
 
+  const ctx: BadgeCheckContext = { mentoradoId, mentorado, metricas, metricasAnterior };
+
   for (const badge of allBadges) {
     if (earnedBadgeIds.has(badge.id)) continue;
 
     const criterio = JSON.parse(badge.criterio);
-    let earned = false;
-
-    switch (criterio.tipo) {
-      // ============================================
-      // CONSISTÊNCIA BADGES
-      // ============================================
-      case "primeiro_registro": {
-        // Count total metrics for this mentorado
-        const [countResult] = await db
-          .select({ count: sql<number>`count(*)` })
-          .from(metricasMensais)
-          .where(eq(metricasMensais.mentoradoId, mentoradoId));
-        earned = (countResult?.count ?? 0) === 1;
-        break;
-      }
-
-      case "streak_consecutivo": {
-        const streak = await calculateStreak(mentoradoId);
-        earned = streak.currentStreak >= criterio.meses;
-        break;
-      }
-
-      case "pontualidade": {
-        // Check last N months for early registration (by day 5)
-        const monthsToCheck = criterio.meses || 3;
-        const targetDay = criterio.dia || 5;
-        const recentMetrics = await db
-          .select()
-          .from(metricasMensais)
-          .where(eq(metricasMensais.mentoradoId, mentoradoId))
-          .orderBy(desc(metricasMensais.ano), desc(metricasMensais.mes))
-          .limit(monthsToCheck);
-
-        if (recentMetrics.length >= monthsToCheck) {
-          earned = recentMetrics.every((m) => {
-            const day = new Date(m.createdAt).getDate();
-            return day <= targetDay;
-          });
-        }
-        break;
-      }
-
-      // ============================================
-      // FATURAMENTO BADGES
-      // ============================================
-      case "faturamento_meta":
-        earned = metricas.faturamento >= mentorado.metaFaturamento;
-        break;
-
-      case "crescimento": {
-        if (metricasAnterior && metricasAnterior.faturamento > 0) {
-          const crescimento =
-            ((metricas.faturamento - metricasAnterior.faturamento) / metricasAnterior.faturamento) *
-            100;
-          // Support both 'valor' (old) and 'percentual' (new) for backwards compatibility
-          const threshold = criterio.percentual ?? criterio.valor ?? 0;
-          earned = crescimento >= threshold;
-        }
-        break;
-      }
-
-      case "faturamento_minimo":
-        earned = metricas.faturamento >= criterio.valor;
-        break;
-
-      // ============================================
-      // RANKING BADGES (handled in calculateMonthlyRanking)
-      // ============================================
-      case "ranking_top":
-        // Ranking badges are awarded in calculateMonthlyRanking function
-        // Skip here to avoid duplicate logic
-        break;
-
-      case "acima_media": {
-        // Check if faturamento is above turma average for N consecutive months
-        const monthsRequired = criterio.meses || 3;
-        const recentMetrics = await db
-          .select()
-          .from(metricasMensais)
-          .where(eq(metricasMensais.mentoradoId, mentoradoId))
-          .orderBy(desc(metricasMensais.ano), desc(metricasMensais.mes))
-          .limit(monthsRequired);
-
-        if (recentMetrics.length >= monthsRequired) {
-          let allAboveAverage = true;
-          for (const m of recentMetrics) {
-            // Get average faturamento of all active mentorados for this month
-            const [avgResult] = await db
-              .select({ avg: sql<number>`avg(faturamento)` })
-              .from(metricasMensais)
-              .where(and(eq(metricasMensais.ano, m.ano), eq(metricasMensais.mes, m.mes)));
-            const turmaAverage = avgResult?.avg ?? 0;
-            if (m.faturamento <= turmaAverage) {
-              allAboveAverage = false;
-              break;
-            }
-          }
-          earned = allAboveAverage;
-        }
-        break;
-      }
-
-      // ============================================
-      // OPERACIONAL BADGES
-      // ============================================
-      case "leads_minimo":
-        earned = metricas.leads >= criterio.valor;
-        break;
-
-      case "conversao": {
-        // Calculate conversion rate: (procedimentos / leads) * 100
-        if (metricas.leads > 0) {
-          const conversionRate = (metricas.procedimentos / metricas.leads) * 100;
-          earned = conversionRate > (criterio.percentual ?? 20);
-        }
-        break;
-      }
-
-      // ============================================
-      // ESPECIAL BADGES
-      // ============================================
-      case "playbook_completo": {
-        // Count total playbook items vs completed items for this mentorado
-        const [totalItems] = await db.select({ count: sql<number>`count(*)` }).from(playbookItems);
-
-        const [completedItems] = await db
-          .select({ count: sql<number>`count(*)` })
-          .from(playbookProgress)
-          .where(eq(playbookProgress.mentoradoId, mentoradoId));
-
-        const total = totalItems?.count ?? 0;
-        const completed = completedItems?.count ?? 0;
-        earned = total > 0 && completed >= total;
-        break;
-      }
-
-      case "meses_mentoria": {
-        // Count total months with metrics registered
-        const [monthsCount] = await db
-          .select({ count: sql<number>`count(*)` })
-          .from(metricasMensais)
-          .where(eq(metricasMensais.mentoradoId, mentoradoId));
-        earned = (monthsCount?.count ?? 0) >= (criterio.valor ?? 6);
-        break;
-      }
-    }
+    const earned = await checkBadgeCriteria(criterio, ctx);
 
     if (earned) {
       await db.insert(mentoradoBadges).values({
