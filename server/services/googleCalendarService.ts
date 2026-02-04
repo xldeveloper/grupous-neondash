@@ -245,16 +245,19 @@ export async function updateEvent(
   if (event.description !== undefined) resource.description = event.description;
   if (event.location !== undefined) resource.location = event.location;
 
+  // Determine if we're updating as all-day (default to false if not specified)
+  const isAllDay = event.allDay === true;
+
   if (event.start) {
-    resource.start = event.allDay
+    resource.start = isAllDay
       ? { date: event.start.toISOString().split("T")[0] }
-      : { dateTime: event.start.toISOString() };
+      : { dateTime: event.start.toISOString(), timeZone: "America/Sao_Paulo" };
   }
 
   if (event.end) {
-    resource.end = event.allDay
+    resource.end = isAllDay
       ? { date: event.end.toISOString().split("T")[0] }
-      : { dateTime: event.end.toISOString() };
+      : { dateTime: event.end.toISOString(), timeZone: "America/Sao_Paulo" };
   }
 
   const response = await fetch(
