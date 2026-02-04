@@ -7,6 +7,19 @@
 
 const ZAPI_BASE_URL = "https://api.z-api.io";
 
+// Simple logger for Z-API service (silent in production, logs in development)
+const noop = (): void => undefined;
+const logger = {
+  info: noop as (msg: string, ...args: unknown[]) => void,
+  error: noop as (msg: string, ...args: unknown[]) => void,
+};
+if (process.env.NODE_ENV !== "production") {
+  // biome-ignore lint/suspicious/noConsole: development logging only
+  logger.info = (msg, ...a) => console.info(`[Z-API] ${msg}`, ...a);
+  // biome-ignore lint/suspicious/noConsole: development logging only
+  logger.error = (msg, ...a) => console.error(`[Z-API] ${msg}`, ...a);
+}
+
 export interface ZApiCredentials {
   instanceId: string;
   token: string;
@@ -166,13 +179,19 @@ export async function disconnect(credentials: ZApiCredentials): Promise<boolean>
 /**
  * Get all active chats from WhatsApp
  * Fetches conversations with metadata like name, unread count, and last message time
+ * Endpoint: /chats per Z-API docs
  */
 export async function getChats(credentials: ZApiCredentials): Promise<ZApiChat[]> {
   try {
+    logger.info("Calling chats endpoint...");
     const response = await zapiRequest<ZApiChat[]>(credentials, "chats");
+    logger.info(`chats returned ${response?.length ?? 0} chats`);
     // Filter out group chats (groups have @g.us suffix)
-    return response.filter((chat) => !chat.phone.includes("@g.us"));
-  } catch {
+    const filtered = response.filter((chat) => !chat.phone.includes("@g.us"));
+    logger.info(`After filtering groups: ${filtered.length} individual chats`);
+    return filtered;
+  } catch (error) {
+    logger.error("get-chats failed:", error);
     // Return empty array on failure to allow fallback to local data
     return [];
   }
