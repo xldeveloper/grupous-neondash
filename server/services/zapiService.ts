@@ -183,15 +183,24 @@ export async function disconnect(credentials: ZApiCredentials): Promise<boolean>
  */
 export async function getChats(credentials: ZApiCredentials): Promise<ZApiChat[]> {
   try {
-    logger.info("Calling chats endpoint...");
+    logger.info("[Z-API getChats] Calling /chats endpoint...");
     const response = await zapiRequest<ZApiChat[]>(credentials, "chats");
-    logger.info(`chats returned ${response?.length ?? 0} chats`);
+
+    // Debug: Log raw response count and first few items
+    logger.info(`[Z-API getChats] Raw response: ${response?.length ?? 0} total chats`);
+    if (response && response.length > 0) {
+      logger.info(
+        `[Z-API getChats] Sample chats: ${JSON.stringify(response.slice(0, 3).map((c) => ({ phone: c.phone, name: c.name, isGroup: c.phone.includes("@g.us") })))}`
+      );
+    }
+
     // Filter out group chats (groups have @g.us suffix)
     const filtered = response.filter((chat) => !chat.phone.includes("@g.us"));
-    logger.info(`After filtering groups: ${filtered.length} individual chats`);
+    logger.info(`[Z-API getChats] After filtering groups: ${filtered.length} individual chats`);
+
     return filtered;
   } catch (error) {
-    logger.error("get-chats failed:", error);
+    logger.error("[Z-API getChats] Failed:", error);
     // Return empty array on failure to allow fallback to local data
     return [];
   }

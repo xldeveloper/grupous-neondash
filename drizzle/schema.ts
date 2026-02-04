@@ -79,6 +79,7 @@ export const temperaturaLeadEnum = pgEnum("temperatura_lead", ["frio", "morno", 
 export const messageDirectionEnum = pgEnum("message_direction", ["inbound", "outbound"]);
 export const messageStatusEnum = pgEnum("message_status", ["pending", "sent", "delivered", "read", "failed"]);
 export const zapiInstanceStatusEnum = pgEnum("zapi_instance_status", ["trial", "active", "suspended", "canceled"]);
+export const actionItemStatusEnum = pgEnum("action_item_status", ["pending", "completed"]);
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TABLES
@@ -1070,6 +1071,65 @@ export const weeklyPlanProgress = pgTable(
 
 export type WeeklyPlanProgress = typeof weeklyPlanProgress.$inferSelect;
 export type InsertWeeklyPlanProgress = typeof weeklyPlanProgress.$inferInsert;
+
+// ═══════════════════════════════════════════════════════════════════════════
+// MENTORSHIP PLANNING TABLES
+// ═══════════════════════════════════════════════════════════════════════════
+
+/**
+ * Mentorship Sessions - Individual mentor-mentee session tracking
+ */
+export const mentorshipSessions = pgTable(
+  "mentorship_sessions",
+  {
+    id: serial("id").primaryKey(),
+    mentorId: integer("mentor_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    mentoradoId: integer("mentorado_id")
+      .notNull()
+      .references(() => mentorados.id, { onDelete: "cascade" }),
+    sessionDate: timestamp("session_date").defaultNow().notNull(),
+    title: varchar("title", { length: 255 }).notNull(),
+    summary: text("summary").notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().notNull(),
+  },
+  (table) => [
+    index("mentorship_sessions_mentor_idx").on(table.mentorId),
+    index("mentorship_sessions_mentorado_idx").on(table.mentoradoId),
+    index("mentorship_sessions_date_idx").on(table.sessionDate),
+  ]
+);
+
+export type MentorshipSession = typeof mentorshipSessions.$inferSelect;
+export type InsertMentorshipSession = typeof mentorshipSessions.$inferInsert;
+
+/**
+ * Mentorship Action Items - Trackable tasks from mentorship sessions
+ */
+export const mentorshipActionItems = pgTable(
+  "mentorship_action_items",
+  {
+    id: serial("id").primaryKey(),
+    sessionId: integer("session_id")
+      .notNull()
+      .references(() => mentorshipSessions.id, { onDelete: "cascade" }),
+    description: text("description").notNull(),
+    status: actionItemStatusEnum("status").default("pending").notNull(),
+    dueDate: date("due_date"),
+    completedAt: timestamp("completed_at"),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().notNull(),
+  },
+  (table) => [
+    index("mentorship_action_items_session_idx").on(table.sessionId),
+    index("mentorship_action_items_status_idx").on(table.status),
+  ]
+);
+
+export type MentorshipActionItem = typeof mentorshipActionItems.$inferSelect;
+export type InsertMentorshipActionItem = typeof mentorshipActionItems.$inferInsert;
 
 // ═══════════════════════════════════════════════════════════════════════════
 // NOTIFICATION SETTINGS
