@@ -6,31 +6,31 @@ import { cn } from "@/lib/utils";
 const MILESTONES = [
   {
     icon: Users,
-    title: "Início da Mentoria",
-    date: "Fev 2023",
+    title: "Mentorship Start",
+    date: "Feb 2023",
     status: "completed",
   },
   {
     icon: Building,
-    title: "Primeira Clínica Inaugurada",
-    date: "Mai 2023",
+    title: "First Clinic Opened",
+    date: "May 2023",
     status: "completed",
   },
   {
     icon: Trophy, // Money icon in image, using Trophy for achievement
-    title: "Primeiros 100k de Receita",
-    date: "Set 2023",
+    title: "First 100k in Revenue",
+    date: "Sep 2023",
     status: "completed",
   },
   {
     icon: Users,
-    title: "Contratação de Primeira Secretária",
-    date: "Dez 2023",
+    title: "First Secretary Hired",
+    date: "Dec 2023",
     status: "completed",
   },
   {
     icon: MonitorPlay,
-    title: "Lançamento de Curso Online",
+    title: "Online Course Launch",
     date: "Mar 2024",
     status: "completed",
   },

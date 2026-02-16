@@ -55,20 +55,20 @@ export function LeadsTable({
 
   const bulkUpdateStatus = trpc.leads.bulkUpdateStatus.useMutation({
     onSuccess: (data) => {
-      toast.success(`${data.count} leads atualizados com sucesso`);
+      toast.success(`${data.count} leads updated successfully`);
       utils.leads.list.invalidate();
       setSelectedIds([]);
     },
-    onError: (err) => toast.error(`Erro ao atualizar: ${err.message}`),
+    onError: (err) => toast.error(`Error updating: ${err.message}`),
   });
 
   const bulkDelete = trpc.leads.bulkDelete.useMutation({
     onSuccess: (data) => {
-      toast.success(`${data.count} leads removidos com sucesso`);
+      toast.success(`${data.count} leads removed successfully`);
       utils.leads.list.invalidate();
       setSelectedIds([]);
     },
-    onError: (err) => toast.error(`Erro ao deletar: ${err.message}`),
+    onError: (err) => toast.error(`Error deleting: ${err.message}`),
   });
 
   const handleSelectAll = (checked: boolean) => {
@@ -92,7 +92,7 @@ export function LeadsTable({
   };
 
   const executeBulkDelete = () => {
-    if (confirm(`Tem certeza que deseja deletar ${selectedIds.length} leads?`)) {
+    if (confirm(`Are you sure you want to delete ${selectedIds.length} leads?`)) {
       bulkDelete.mutate({ ids: selectedIds });
     }
   };
@@ -119,13 +119,13 @@ export function LeadsTable({
   };
 
   const statusLabels: Record<string, string> = {
-    novo: "Novo",
-    primeiro_contato: "Primeiro Contato",
-    qualificado: "Qualificado",
-    proposta: "Proposta",
-    negociacao: "Negociação",
-    fechado: "Fechado",
-    perdido: "Perdido",
+    novo: "New",
+    primeiro_contato: "First Contact",
+    qualificado: "Qualified",
+    proposta: "Proposal",
+    negociacao: "Negotiation",
+    fechado: "Closed",
+    perdido: "Lost",
   };
 
   if (isLoading) {
@@ -144,9 +144,9 @@ export function LeadsTable({
         <div className="bg-primary/20 p-4 rounded-full mb-4">
           <MoreHorizontal className="h-8 w-8 text-primary" />
         </div>
-        <h3 className="text-lg font-medium">Nenhum lead encontrado</h3>
+        <h3 className="text-lg font-medium">No leads found</h3>
         <p className="text-sm text-muted-foreground mt-1 max-w-sm">
-          Tente ajustar os filtros ou crie um novo lead para começar a acompanhar seu pipeline.
+          Try adjusting the filters or create a new lead to start tracking your pipeline.
         </p>
       </div>
     );
@@ -166,13 +166,13 @@ export function LeadsTable({
                   />
                 </TableHead>
               )}
-              <TableHead>Nome</TableHead>
+              <TableHead>Name</TableHead>
               <TableHead>Email</TableHead>
-              <TableHead>Telefone</TableHead>
-              <TableHead>Origem</TableHead>
+              <TableHead>Phone</TableHead>
+              <TableHead>Source</TableHead>
               <TableHead>Status</TableHead>
-              <TableHead>Valor</TableHead>
-              <TableHead>Atualizado</TableHead>
+              <TableHead>Value</TableHead>
+              <TableHead>Updated</TableHead>
               {!isReadOnly && <TableHead className="w-[50px]"></TableHead>}
             </TableRow>
           </TableHeader>
@@ -242,15 +242,15 @@ export function LeadsTable({
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
-                        <DropdownMenuLabel>Ações</DropdownMenuLabel>
+                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
                         <DropdownMenuItem onClick={() => onLeadClick(lead.id)}>
-                          Ver detalhes
+                          View details
                         </DropdownMenuItem>
                         <DropdownMenuItem onClick={() => navigator.clipboard.writeText(lead.email)}>
-                          Copiar email
+                          Copy email
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem className="text-red-600">Deletar lead</DropdownMenuItem>
+                        <DropdownMenuItem className="text-red-600">Delete lead</DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </TableCell>
@@ -268,10 +268,10 @@ export function LeadsTable({
           onClick={() => onPageChange(page - 1)}
           disabled={page <= 1}
         >
-          Anterior
+          Previous
         </Button>
         <div className="text-sm text-muted-foreground">
-          Página {page} de {data.totalPages}
+          Page {page} of {data.totalPages}
         </div>
         <Button
           variant="outline"
@@ -279,14 +279,14 @@ export function LeadsTable({
           onClick={() => onPageChange(page + 1)}
           disabled={page >= data.totalPages}
         >
-          Próximo
+          Next
         </Button>
       </div>
 
       {selectedIds.length > 0 && !isReadOnly && (
         <div className="fixed bottom-6 left-1/2 -translate-x-1/2 bg-popover border shadow-2xl rounded-xl p-2 flex items-center gap-2 animate-in slide-in-from-bottom-5 fade-in z-50">
           <div className="bg-primary/10 text-primary px-3 py-1.5 rounded-md text-sm font-medium mr-2">
-            {selectedIds.length} selecionados
+            {selectedIds.length} selected
           </div>
 
           <DropdownMenu>
@@ -297,7 +297,7 @@ export function LeadsTable({
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-              <DropdownMenuLabel>Mudar Status para...</DropdownMenuLabel>
+              <DropdownMenuLabel>Change Status to...</DropdownMenuLabel>
               <DropdownMenuSeparator />
               {Object.entries(statusLabels).map(([key, label]) => (
                 <DropdownMenuItem key={key} onClick={() => executeBulkStatus(key)}>
@@ -309,7 +309,7 @@ export function LeadsTable({
 
           <Button variant="destructive" size="sm" className="gap-2" onClick={executeBulkDelete}>
             <Trash2 className="h-4 w-4" />
-            Deletar
+            Delete
           </Button>
 
           <Button variant="ghost" size="icon" onClick={() => setSelectedIds([])} className="ml-2">

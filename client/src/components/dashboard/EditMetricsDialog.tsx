@@ -19,18 +19,18 @@ interface EditMetricsDialogProps {
 }
 
 const MESES = [
-  "Janeiro",
-  "Fevereiro",
-  "Março",
-  "Abril",
-  "Maio",
-  "Junho",
-  "Julho",
-  "Agosto",
-  "Setembro",
-  "Outubro",
-  "Novembro",
-  "Dezembro",
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
 ];
 
 /**
@@ -49,7 +49,7 @@ export function EditMetricsDialog({ ano, mes, trigger }: EditMetricsDialogProps)
             variant="ghost"
             size="icon"
             className="h-8 w-8 hover:bg-primary/10 cursor-pointer"
-            aria-label={`Editar métricas de ${mesNome}/${ano}`}
+            aria-label={`Edit metrics for ${mesNome}/${ano}`}
           >
             <Pencil className="h-4 w-4 text-muted-foreground" />
           </Button>
@@ -57,9 +57,9 @@ export function EditMetricsDialog({ ano, mes, trigger }: EditMetricsDialogProps)
       </DialogTrigger>
       <DialogContent className="sm:max-w-lg max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Editar Métricas</DialogTitle>
+          <DialogTitle>Edit Metrics</DialogTitle>
           <DialogDescription>
-            Editando métricas de {mesNome}/{ano}
+            Editing metrics for {mesNome}/{ano}
           </DialogDescription>
         </DialogHeader>
 
@@ -85,7 +85,7 @@ function EditableMetricsForm({
   return (
     <div className="space-y-4">
       <div className="rounded-md bg-muted/50 p-3 text-sm text-muted-foreground">
-        <strong>Período:</strong> {MESES[mes - 1]}/{ano}
+        <strong>Period:</strong> {MESES[mes - 1]}/{ano}
       </div>
       <SubmitMetricsForm
         onSuccess={onSuccess}

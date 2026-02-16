@@ -51,7 +51,7 @@ export const gamificacaoRouter = router({
       if (ctx.mentorado.id !== input.mentoradoId) {
         throw new TRPCError({
           code: "FORBIDDEN",
-          message: "Acesso negado: você só pode ver suas próprias badges",
+          message: "Access denied: you can only view your own badges",
         });
       }
 
@@ -93,7 +93,7 @@ export const gamificacaoRouter = router({
       if (!notificacao) {
         throw new TRPCError({
           code: "NOT_FOUND",
-          message: "Notificação não encontrada",
+          message: "Notification not found",
         });
       }
 
@@ -101,7 +101,7 @@ export const gamificacaoRouter = router({
       if (notificacao.mentoradoId !== ctx.mentorado.id) {
         throw new TRPCError({
           code: "FORBIDDEN",
-          message: "Esta notificação não pertence a você",
+          message: "This notification does not belong to you",
         });
       }
 
@@ -155,7 +155,7 @@ export const gamificacaoRouter = router({
       if (ctx.user.role !== "admin" && ctx.mentorado.id !== input.mentoradoId) {
         throw new TRPCError({
           code: "FORBIDDEN",
-          message: "Você só pode ver seu próprio streak",
+          message: "You can only view your own streak",
         });
       }
 
@@ -179,7 +179,7 @@ export const gamificacaoRouter = router({
       if (ctx.user.role !== "admin" && ctx.mentorado.id !== input.mentoradoId) {
         throw new TRPCError({
           code: "FORBIDDEN",
-          message: "Você só pode verificar suas próprias badges",
+          message: "You can only check your own badges",
         });
       }
 
@@ -207,7 +207,7 @@ export const gamificacaoRouter = router({
       if (!mentorado) {
         throw new TRPCError({
           code: "NOT_FOUND",
-          message: "Mentorado não encontrado",
+          message: "Mentee not found",
         });
       }
 

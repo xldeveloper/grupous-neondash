@@ -12,17 +12,17 @@ export function EmptyFilterResult({ onClearFilters }: EmptyFilterResultProps) {
         <SearchX className="w-8 h-8 text-slate-500" />
       </div>
       <h3 className="text-lg font-semibold text-slate-300 font-mono mb-2">
-        Nenhuma tarefa encontrada
+        No tasks found
       </h3>
       <p className="text-sm text-slate-500 font-mono mb-4 max-w-xs">
-        Não encontramos tarefas com os filtros aplicados. Tente ajustar seus critérios de busca.
+        No tasks found with the applied filters. Try adjusting your search criteria.
       </p>
       <Button
         variant="outline"
         onClick={onClearFilters}
         className="font-mono border-primary/50 text-primary hover:bg-primary/10"
       >
-        Limpar filtros
+        Clear filters
       </Button>
     </div>
   );

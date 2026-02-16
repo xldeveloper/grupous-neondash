@@ -5,7 +5,7 @@
  */
 
 import { formatDistanceToNow } from "date-fns";
-import { ptBR } from "date-fns/locale";
+import { enUS } from "date-fns/locale";
 import { Calendar, Clock, Edit2, ExternalLink, Video } from "lucide-react";
 import { useState } from "react";
 
@@ -45,17 +45,17 @@ function EventCard({
   // Format relative time
   const relativeTime = formatDistanceToNow(new Date(session.date), {
     addSuffix: true,
-    locale: ptBR,
+    locale: enUS,
   });
 
   // Format date and time
-  const formattedDate = new Date(session.date).toLocaleDateString("pt-BR", {
+  const formattedDate = new Date(session.date).toLocaleDateString("en-US", {
     weekday: "short",
     day: "2-digit",
     month: "short",
   });
 
-  const formattedTime = new Date(session.date).toLocaleTimeString("pt-BR", {
+  const formattedTime = new Date(session.date).toLocaleTimeString("en-US", {
     hour: "2-digit",
     minute: "2-digit",
   });
@@ -109,7 +109,7 @@ function EventCard({
             isLive ? "bg-red-500/20 text-red-400" : "bg-primary/10 text-primary"
           )}
         >
-          {isLive ? "AO VIVO" : relativeTime}
+          {isLive ? "LIVE" : relativeTime}
         </span>
       </div>
 
@@ -127,7 +127,7 @@ function EventCard({
         >
           <a href={session.url} target="_blank" rel="noopener noreferrer">
             <ExternalLink className="w-3.5 h-3.5 mr-1" />
-            {isLive ? "Entrar" : "Acessar"}
+            {isLive ? "Join" : "Access"}
           </a>
         </Button>
       )}
@@ -175,7 +175,7 @@ export function UpcomingClassSection({ isAdmin = false }: UpcomingClassSectionPr
     <div className="space-y-3">
       <div className="flex items-center justify-between">
         <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
-          Próximas Aulas
+          Upcoming Classes
         </h3>
         {isAdmin && (
           <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
@@ -186,17 +186,17 @@ export function UpcomingClassSection({ isAdmin = false }: UpcomingClassSectionPr
                 className="h-7 px-2 text-muted-foreground hover:text-foreground"
               >
                 <Edit2 className="w-3.5 h-3.5 mr-1" />
-                Editar
+                Edit
               </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-md">
               <DialogHeader>
-                <DialogTitle>Calendário Público</DialogTitle>
+                <DialogTitle>Public Calendar</DialogTitle>
               </DialogHeader>
               <div className="space-y-4 py-4">
                 <p className="text-sm text-muted-foreground">
-                  As aulas são sincronizadas automaticamente do Google Calendar público. Para
-                  editar, acesse o calendário diretamente.
+                  Classes are automatically synced from the public Google Calendar. To
+                  edit, access the calendar directly.
                 </p>
                 <Button asChild className="w-full">
                   <a
@@ -205,7 +205,7 @@ export function UpcomingClassSection({ isAdmin = false }: UpcomingClassSectionPr
                     rel="noopener noreferrer"
                   >
                     <ExternalLink className="w-4 h-4 mr-2" />
-                    Abrir Google Calendar
+                    Open Google Calendar
                   </a>
                 </Button>
               </div>
@@ -221,14 +221,14 @@ export function UpcomingClassSection({ isAdmin = false }: UpcomingClassSectionPr
             <EventCard session={secondSession} isLive={isSessionLive(secondSession)} />
           ) : (
             <div className="flex items-center justify-center p-3 rounded-xl border border-dashed border-border/30 text-sm text-muted-foreground">
-              Nenhum outro evento agendado
+              No other scheduled events
             </div>
           )}
         </div>
       ) : (
         <div className="p-4 rounded-xl border border-dashed border-border/40 text-center">
           <p className="text-sm text-muted-foreground">
-            {isAdmin ? "Configure as próximas aulas no calendário" : "Nenhuma aula agendada"}
+            {isAdmin ? "Set up upcoming classes in the calendar" : "No classes scheduled"}
           </p>
         </div>
       )}

@@ -16,13 +16,13 @@ export default function CoachSettings() {
 
   const { mutate: saveSetting, isPending: isSaving } = trpc.admin.updateSetting.useMutation({
     onSuccess: () => {
-      toast.success("Prompt atualizado com sucesso!", {
-        description: "O Neon Coach usará essas novas instruções na próxima geração.",
+      toast.success("Prompt updated successfully!", {
+        description: "The Neon Coach will use these new instructions on the next generation.",
       });
       utils.admin.getSetting.invalidate({ key: "neon_coach_prompt" });
     },
     onError: () => {
-      toast.error("Erro ao salvar prompt.");
+      toast.error("Error saving prompt.");
     },
   });
 
@@ -36,7 +36,7 @@ export default function CoachSettings() {
     saveSetting({
       key: "neon_coach_prompt",
       value: prompt,
-      description: "Prompt mestre do Neon Coach (Business Intelligence)",
+      description: "Neon Coach master prompt (Business Intelligence)",
     });
   };
 
@@ -52,10 +52,10 @@ export default function CoachSettings() {
     <div className="container mx-auto max-w-4xl space-y-8 p-8">
       <div>
         <h1 className="text-3xl font-bold tracking-tight text-white mb-2">
-          Configurações do Neon Coach
+          Neon Coach Settings
         </h1>
         <p className="text-gray-400">
-          Gerencie a inteligência e comportamento do assistente de IA.
+          Manage the intelligence and behavior of the AI assistant.
         </p>
       </div>
 
@@ -63,8 +63,8 @@ export default function CoachSettings() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">🧠 Master Prompt</CardTitle>
           <CardDescription>
-            Estas instruções definem a personalidade, regras e formato de resposta do Coach.
-            Alterações aqui afetam todas as novas gerações de tarefas.
+            These instructions define the Coach's personality, rules, and response format.
+            Changes here affect all new task generations.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -72,7 +72,7 @@ export default function CoachSettings() {
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
             className="min-h-[400px] font-mono text-sm leading-relaxed bg-black/60 border-white/10"
-            placeholder="Digite o prompt do sistema aqui..."
+            placeholder="Enter the system prompt here..."
           />
 
           <div className="flex justify-end gap-4">
@@ -83,7 +83,7 @@ export default function CoachSettings() {
               variant="outline"
               disabled={isSaving}
             >
-              Cancelar
+              Cancel
             </Button>
             <Button
               onClick={handleSave}
@@ -93,12 +93,12 @@ export default function CoachSettings() {
               {isSaving ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Salvando...
+                  Saving...
                 </>
               ) : (
                 <>
                   <Save className="mr-2 h-4 w-4" />
-                  Salvar Alterações
+                  Save Changes
                 </>
               )}
             </Button>
@@ -107,16 +107,16 @@ export default function CoachSettings() {
       </Card>
 
       <div className="rounded-lg bg-blue-900/20 p-4 border border-blue-500/30">
-        <h4 className="font-semibold text-blue-400 mb-2">Dica de Engenharia de Prompt</h4>
+        <h4 className="font-semibold text-blue-400 mb-2">Prompt Engineering Tip</h4>
         <ul className="list-disc list-inside text-sm text-gray-300 space-y-1">
           <li>
-            Defina claramente a <strong>Persona</strong> (Ex: "Você é um especialista em...")
+            Clearly define the <strong>Persona</strong> (e.g., "You are a specialist in...")
           </li>
           <li>
-            Especifique o <strong>Formato de Saída</strong> JSON explicitamente.
+            Specify the <strong>Output Format</strong> JSON explicitly.
           </li>
-          <li>Use exemplos ("Few-Shot Prompting") para guiar o modelo.</li>
-          <li>Mantenha as regras numeradas para o modelo seguir passo-a-passo.</li>
+          <li>Use examples ("Few-Shot Prompting") to guide the model.</li>
+          <li>Keep the rules numbered for the model to follow step-by-step.</li>
         </ul>
       </div>
     </div>

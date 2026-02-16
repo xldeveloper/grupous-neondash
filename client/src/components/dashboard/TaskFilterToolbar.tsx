@@ -25,19 +25,19 @@ interface TaskFilterToolbarProps {
 }
 
 const CATEGORIES = [
-  { value: "", label: "Todas" },
-  { value: "geral", label: "Geral" },
-  { value: "aula", label: "Aula" },
+  { value: "", label: "All" },
+  { value: "geral", label: "General" },
+  { value: "aula", label: "Class" },
   { value: "crm", label: "CRM" },
-  { value: "financeiro", label: "Financeiro" },
-  { value: "atividade", label: "Atividade" },
+  { value: "financeiro", label: "Financial" },
+  { value: "atividade", label: "Activity" },
 ] as const;
 
 const PRIORITIES = [
-  { value: "", label: "Todas", color: "" },
-  { value: "alta", label: "Alta", color: "text-amber-400" },
-  { value: "media", label: "Média", color: "text-blue-400" },
-  { value: "baixa", label: "Baixa", color: "text-slate-400" },
+  { value: "", label: "All", color: "" },
+  { value: "alta", label: "High", color: "text-amber-400" },
+  { value: "media", label: "Medium", color: "text-blue-400" },
+  { value: "baixa", label: "Low", color: "text-slate-400" },
 ] as const;
 
 export function TaskFilterToolbar({ filters, onFiltersChange, className }: TaskFilterToolbarProps) {
@@ -70,7 +70,7 @@ export function TaskFilterToolbar({ filters, onFiltersChange, className }: TaskF
           <Input
             value={searchValue}
             onChange={(e) => setSearchValue(e.target.value)}
-            placeholder="Buscar tarefas..."
+            placeholder="Search tasks..."
             className="pl-9 bg-background border-input focus:border-primary font-mono text-sm"
           />
         </div>
@@ -84,7 +84,7 @@ export function TaskFilterToolbar({ filters, onFiltersChange, className }: TaskF
         >
           <SelectTrigger className="w-full sm:w-[140px] bg-background border-input font-mono text-sm">
             <SlidersHorizontal className="w-4 h-4 mr-2 text-muted-foreground" />
-            <SelectValue placeholder="Categoria" />
+            <SelectValue placeholder="Category" />
           </SelectTrigger>
           <SelectContent>
             {CATEGORIES.map((cat) => (
@@ -103,7 +103,7 @@ export function TaskFilterToolbar({ filters, onFiltersChange, className }: TaskF
           }
         >
           <SelectTrigger className="w-full sm:w-[140px] bg-background border-input font-mono text-sm">
-            <SelectValue placeholder="Prioridade" />
+            <SelectValue placeholder="Priority" />
           </SelectTrigger>
           <SelectContent>
             {PRIORITIES.map((pri) => (
@@ -118,11 +118,11 @@ export function TaskFilterToolbar({ filters, onFiltersChange, className }: TaskF
       {/* Active Filters Display */}
       {hasActiveFilters && (
         <div className="flex items-center gap-2 flex-wrap">
-          <span className="text-xs text-muted-foreground font-mono">Filtros:</span>
+          <span className="text-xs text-muted-foreground font-mono">Filters:</span>
 
           {filters.search && (
             <Badge variant="outline" className="border-primary/50 text-primary text-xs font-mono">
-              Busca: "{filters.search}"
+              Search: "{filters.search}"
             </Badge>
           )}
 
@@ -155,7 +155,7 @@ export function TaskFilterToolbar({ filters, onFiltersChange, className }: TaskF
             onClick={clearFilters}
             className="h-6 px-2 text-xs text-muted-foreground hover:text-foreground font-mono"
           >
-            Limpar
+            Clear
           </Button>
         </div>
       )}

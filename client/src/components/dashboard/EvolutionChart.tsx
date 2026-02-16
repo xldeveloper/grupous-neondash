@@ -24,7 +24,7 @@ export function EvolutionChart({ mentoradoId }: EvolutionChartProps) {
     return (
       <Card className="col-span-4">
         <CardHeader>
-          <CardTitle>Evolução Financeira</CardTitle>
+          <CardTitle>Financial Evolution</CardTitle>
         </CardHeader>
         <CardContent className="pl-2">
           <Skeleton className="h-[350px] w-full" />
@@ -37,11 +37,11 @@ export function EvolutionChart({ mentoradoId }: EvolutionChartProps) {
     return (
       <Card className="col-span-4">
         <CardHeader>
-          <CardTitle>Evolução Financeira</CardTitle>
+          <CardTitle>Financial Evolution</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex h-[350px] items-center justify-center text-muted-foreground">
-            Nenhum dado disponível para o período.
+            No data available for the period.
           </div>
         </CardContent>
       </Card>
@@ -51,15 +51,15 @@ export function EvolutionChart({ mentoradoId }: EvolutionChartProps) {
   // Format data for chart
   const validData = evolutionData.map((item) => ({
     name: `${item.mes}/${item.ano}`,
-    Faturamento: item.faturamento,
-    Lucro: item.lucro,
+    Revenue: item.faturamento,
+    Profit: item.lucro,
     Leads: item.leads,
   }));
 
   return (
     <Card className="col-span-4">
       <CardHeader>
-        <CardTitle>Evolução de Performance</CardTitle>
+        <CardTitle>Performance Evolution</CardTitle>
       </CardHeader>
       <CardContent className="pl-2">
         <ResponsiveContainer width="100%" height={350}>
@@ -91,7 +91,7 @@ export function EvolutionChart({ mentoradoId }: EvolutionChartProps) {
             <Legend />
             <Line
               type="monotone"
-              dataKey="Faturamento"
+              dataKey="Revenue"
               stroke="var(--color-neon-blue)"
               strokeWidth={2}
               dot={{ r: 4 }}
@@ -99,7 +99,7 @@ export function EvolutionChart({ mentoradoId }: EvolutionChartProps) {
             />
             <Line
               type="monotone"
-              dataKey="Lucro"
+              dataKey="Profit"
               stroke="var(--color-neon-gold)"
               strokeWidth={2}
               dot={{ r: 4 }}

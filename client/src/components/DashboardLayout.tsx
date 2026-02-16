@@ -54,14 +54,14 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   }
 
   const navItems = [
-    { href: "/meu-dashboard", label: "Meu Dashboard", icon: BarChart3 },
-    { href: "/agenda", label: "Agenda", icon: CalendarRange },
+    { href: "/meu-dashboard", label: "My Dashboard", icon: BarChart3 },
+    { href: "/agenda", label: "Calendar", icon: CalendarRange },
     { href: "/crm/leads", label: "CRM", icon: BriefcaseBusiness },
 
-    { href: "/configuracoes", label: "Configurações", icon: Settings2 },
+    { href: "/configuracoes", label: "Settings", icon: Settings2 },
     {
       href: "/admin/mentorados",
-      label: "Painel Administrativo",
+      label: "Admin Panel",
       icon: UsersRound,
       adminOnly: true,
     },
@@ -117,7 +117,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 size="icon-sm"
                 onClick={toggleTheme}
                 className="h-7 w-7 flex-shrink-0"
-                aria-label={theme === "light" ? "Ativar modo escuro" : "Ativar modo claro"}
+                aria-label={theme === "light" ? "Enable dark mode" : "Enable light mode"}
               >
                 {theme === "light" ? (
                   <Moon className="h-4 w-4 text-muted-foreground" />
@@ -132,7 +132,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                   className="text-sm text-muted-foreground whitespace-pre cursor-pointer"
                   onClick={toggleTheme}
                 >
-                  {theme === "light" ? "Modo Escuro" : "Modo Claro"}
+                  {theme === "light" ? "Dark Mode" : "Light Mode"}
                 </motion.span>
               )}
             </div>
@@ -146,7 +146,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                   animate={{ opacity: 1 }}
                   className="text-sm text-muted-foreground whitespace-pre overflow-hidden text-ellipsis"
                 >
-                  {user.name || "Minha Conta"}
+                  {user.name || "My Account"}
                 </motion.div>
               )}
             </div>

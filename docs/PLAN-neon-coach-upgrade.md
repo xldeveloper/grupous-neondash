@@ -55,7 +55,7 @@
 
 #### [MODIFY] [client/src/components/dashboard/AITasksCard.tsx](file:///home/mauricio/neondash/client/src/components/dashboard/AITasksCard.tsx)
 - **Action:** Update task filtering logic.
-- **Action:** Add Tabs: "Todos" (Hybrid), "AI Coach", "Manuais".
+- **Action:** Add Tabs: "All" (Hybrid), "AI Coach", "Manual".
 - **Action:** Update mutation trigger to use new backend logic.
 
 ---
@@ -116,10 +116,10 @@
 - `bun db:push` - Schema sync.
 
 ### Manual Verification
-1. **AI Check:** Trigger "Gerar Missões". Verify it works with Gemini Key.
+1. **AI Check:** Trigger "Generate Missions". Verify it works with Gemini Key.
 2. **Context Check:** Verify AI references diagnostic data (e.g., specific pain points).
 3. **Admin Check:** Go to Admin -> Coach Settings. Update Prompt. Generate tasks again. Verify prompt change effect.
-4. **Hybrid View:** Create a manual task. Generate AI task. Toggle "Todos" tab to see both.
+4. **Hybrid View:** Create a manual task. Generate AI task. Toggle "All" tab to see both.
 
 ---
 

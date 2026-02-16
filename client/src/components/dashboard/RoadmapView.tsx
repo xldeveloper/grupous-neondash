@@ -37,7 +37,7 @@ export function RoadmapView({ mentoradoId }: RoadmapViewProps) {
       {/* Header */}
       <div className="relative z-10 mb-20 text-center md:text-left">
         <h2 className="text-2xl md:text-3xl font-bold text-white mb-2 tracking-tight">
-          Jornada NEON: Seu Caminho para o Sucesso
+          NEON Journey: Your Path to Success
         </h2>
         <div className="h-1.5 w-32 bg-gradient-to-r from-[#D4AF37] to-[#F2D06B] rounded-full shadow-[0_0_10px_rgba(212,175,55,0.5)] mx-auto md:mx-0" />
       </div>
@@ -120,8 +120,8 @@ export function RoadmapView({ mentoradoId }: RoadmapViewProps) {
       <div className="w-full mt-12 bg-slate-900/50 p-6 rounded-2xl border border-slate-800 backdrop-blur-sm max-w-4xl mx-auto">
         <div className="flex justify-between text-sm font-semibold mb-3">
           <span className="text-slate-300 uppercase tracking-wider">
-            Progresso Geral: {roadmap.modules.filter((m) => m.status === "completed").length}/
-            {roadmap.modules.length} Módulos ({totalProgress}%)
+            Overall Progress: {roadmap.modules.filter((m) => m.status === "completed").length}/
+            {roadmap.modules.length} Modules ({totalProgress}%)
           </span>
           <span className="text-[#D4AF37]">{totalProgress}%</span>
         </div>
@@ -223,7 +223,7 @@ function RoadmapNode({ module, locked, active, completed, index }: RoadmapNodePr
                   active ? "text-[#D4AF37]" : "text-slate-500"
                 )}
               >
-                Módulo {module.order}
+                Module {module.order}
               </span>
               {active && (
                 <span className="text-[9px] font-bold text-[#D4AF37] bg-[#D4AF37]/10 px-1.5 py-0.5 rounded-full border border-[#D4AF37]/20">
@@ -255,12 +255,12 @@ function RoadmapNode({ module, locked, active, completed, index }: RoadmapNodePr
               )}
             >
               {locked
-                ? "Bloqueado"
+                ? "Locked"
                 : active
-                  ? "Em andamento"
+                  ? "In progress"
                   : completed
-                    ? "Concluído"
-                    : "Disponível"}
+                    ? "Completed"
+                    : "Available"}
             </p>
           </div>
 

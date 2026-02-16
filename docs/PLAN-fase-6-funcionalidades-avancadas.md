@@ -1,26 +1,26 @@
-# Fase 6 - Funcionalidades Avançadas
+# Phase 6 - Advanced Features
 
 ## Metadata
 
-| Campo              | Valor                                                                 |
+| Field              | Value                                                                 |
 | ------------------ | --------------------------------------------------------------------- |
 | **Complexity**     | L6 — Multi-file feature with external API integration                 |
-| **Estimated Time** | ~12 horas                                                             |
-| **Parallel Safe**  | Parcialmente (GPU-43 e GPU-18 são independentes)                      |
+| **Estimated Time** | ~12 hours                                                             |
+| **Parallel Safe**  | Partially (GPU-43 and GPU-18 are independent)                         |
 | **Mode**           | CONSERVATIVE (plan only)                                              |
 | **Issues**         | GPU-43, GPU-18                                                        |
-| **Dependencies**   | Fase 1 (Estilos) e Fase 2 (Componentes UI) concluídas para GPU-43    |
+| **Dependencies**   | Phase 1 (Styles) and Phase 2 (UI Components) completed for GPU-43    |
 | **Validated**      | 2026-01-31 — Codebase verified, 87% accuracy                          |
 
 ---
 
 ## Objective
 
-**Task:** Aprimorar a produtividade e gestão do mentorado com ferramentas robustas de organização e planejamento.
+**Task:** Enhance mentee productivity and management with robust organization and planning tools.
 
 **Context:** NeonDash (React 19 + Vite + tRPC + Drizzle + Neon PostgreSQL + Clerk + shadcn/ui)
 
-**Why This Matters:** Produtividade é essencial para mentorados. TaskBoard atual é básico; integração com Google Calendar centraliza gestão de tempo.
+**Why This Matters:** Productivity is essential for mentees. The current TaskBoard is basic; Google Calendar integration centralizes time management.
 
 ---
 
@@ -30,26 +30,26 @@
 
 | #   | Finding                                                        | Confidence | Source             | Impact                     |
 | --- | -------------------------------------------------------------- | ---------- | ------------------ | -------------------------- |
-| 1   | TaskBoard.tsx tem 178 linhas, usa tRPC, sem campo de prioridade | 5          | Codebase           | Requer migração de schema  |
-| 2   | Categoria é campo TEXT (não enum): ["geral", "aula", "crm", "financeiro", "atividade"] | 5 | drizzle/schema.ts  | Pode expandir sem migração |
-| 3   | googleapis é a lib oficial para Google Calendar API            | 5          | Web Research       | Usar OAuth2 com refresh    |
-| 4   | react-big-calendar (8.5k stars) é ideal para visualização      | 4          | Bryntum comparison | Instalar com moment        |
-| 5   | OAuth2 requer access_type: 'offline' para refresh tokens       | 5          | DEV Community      | Persistir tokens no DB     |
-| 6   | Tokens devem ser criptografados em repouso                     | 5          | Security best practices | AES-256 encryption     |
-| 7   | shadcn/ui já tem Calendar, Input, Select disponíveis           | 5          | Codebase           | Reusar componentes         |
-| 8   | calendar.tsx usa react-day-picker (não react-big-calendar)     | 5          | Codebase           | react-big-calendar é nova dep |
+| 1   | TaskBoard.tsx has 178 lines, uses tRPC, no priority field      | 5          | Codebase           | Requires schema migration  |
+| 2   | Category is a TEXT field (not enum): ["geral", "aula", "crm", "financeiro", "atividade"] | 5 | drizzle/schema.ts  | Can expand without migration |
+| 3   | googleapis is the official library for Google Calendar API     | 5          | Web Research       | Use OAuth2 with refresh    |
+| 4   | react-big-calendar (8.5k stars) is ideal for visualization     | 4          | Bryntum comparison | Install with moment        |
+| 5   | OAuth2 requires access_type: 'offline' for refresh tokens      | 5          | DEV Community      | Persist tokens in DB       |
+| 6   | Tokens must be encrypted at rest                               | 5          | Security best practices | AES-256 encryption     |
+| 7   | shadcn/ui already has Calendar, Input, Select available        | 5          | Codebase           | Reuse components           |
+| 8   | calendar.tsx uses react-day-picker (not react-big-calendar)    | 5          | Codebase           | react-big-calendar is a new dep |
 
 ### Knowledge Gaps
 
-- [ ] Confirmar se mentorados usarão Google Calendar pessoal ou compartilhado
-- [ ] Definir quais categorias de tarefa são necessárias (Marketing, Vendas, etc.)
-- [ ] Estratégia de criptografia de tokens (env variable vs. vault)
+- [ ] Confirm whether mentees will use personal or shared Google Calendar
+- [ ] Define which task categories are needed (Marketing, Sales, etc.)
+- [ ] Token encryption strategy (env variable vs. vault)
 
 ### Assumptions to Validate
 
-- [ ] Usuários têm conta Google pessoal para integração
-- [ ] Google Cloud Platform project será criado pelo admin
-- [ ] Limite de 1M requests/dia da API do Google é suficiente
+- [ ] Users have a personal Google account for integration
+- [ ] Google Cloud Platform project will be created by the admin
+- [ ] The 1M requests/day limit on the Google API is sufficient
 
 ---
 
@@ -57,22 +57,22 @@
 
 ### GPU-43: TaskBoard
 
-1. **Empty filter results** — Exibir estado vazio com ilustração e CTA
-2. **Concurrent updates** — Usar invalidation do TanStack Query para sincronização
-3. **Search performance** — Debounce input (300ms) para evitar queries excessivas
-4. **Category migration** — Tasks existentes com 'geral' devem continuar funcionando
-5. **Mobile responsiveness** — Filtros devem colapsar em dropdown no mobile
+1. **Empty filter results** — Display empty state with illustration and CTA
+2. **Concurrent updates** — Use TanStack Query invalidation for synchronization
+3. **Search performance** — Debounce input (300ms) to avoid excessive queries
+4. **Category migration** — Existing tasks with 'geral' must continue working
+5. **Mobile responsiveness** — Filters should collapse into a dropdown on mobile
 
 ### GPU-18: Google Calendar
 
-1. **Token expiration** — Refresh automático com retry exponential backoff
-2. **User revokes access** — Detectar erro 401 e limpar tokens do DB
-3. **Network failure during OAuth** — Exibir erro amigável com retry button
-4. **Multiple tabs** — State parameter no OAuth previne CSRF
-5. **Rate limiting** — Log warnings ao atingir 80% do quota
-6. **Multiple calendars** — Usar calendar primário do usuário por padrão
-7. **Timezone handling** — Armazenar em UTC, exibir em timezone local
-8. **Large event lists** — Paginar eventos com cursor-based pagination
+1. **Token expiration** — Automatic refresh with exponential backoff retry
+2. **User revokes access** — Detect 401 error and clear tokens from DB
+3. **Network failure during OAuth** — Display friendly error with retry button
+4. **Multiple tabs** — State parameter in OAuth prevents CSRF
+5. **Rate limiting** — Log warnings when reaching 80% of quota
+6. **Multiple calendars** — Use the user's primary calendar by default
+7. **Timezone handling** — Store in UTC, display in local timezone
+8. **Large event lists** — Paginate events with cursor-based pagination
 
 ---
 
@@ -82,28 +82,28 @@
 
 | Path                                                    | Relevance                              |
 | ------------------------------------------------------- | -------------------------------------- |
-| `client/src/components/dashboard/TaskBoard.tsx`         | Componente a ser refatorado            |
-| `server/routers/tasks.ts`                               | Router tRPC para tasks                 |
-| `drizzle/schema.ts`                                     | Schema atual das tasks                 |
-| `client/src/components/ui/calendar.tsx`                 | Componente Calendar do shadcn existente|
+| `client/src/components/dashboard/TaskBoard.tsx`         | Component to be refactored             |
+| `server/routers/tasks.ts`                               | tRPC router for tasks                  |
+| `drizzle/schema.ts`                                     | Current tasks schema                   |
+| `client/src/components/ui/calendar.tsx`                 | Existing shadcn Calendar component     |
 
 ### May Reference
 
 | Path                                                    | Relevance                              |
 | ------------------------------------------------------- | -------------------------------------- |
-| `client/src/components/ui/input.tsx`                    | Input para busca                       |
-| `client/src/components/ui/select.tsx`                   | Select para filtros                    |
-| `client/src/components/ui/badge.tsx`                    | Badge para prioridade                  |
-| `server/_core/trpc.ts`                                  | Setup do tRPC                          |
+| `client/src/components/ui/input.tsx`                    | Input for search                       |
+| `client/src/components/ui/select.tsx`                   | Select for filters                     |
+| `client/src/components/ui/badge.tsx`                    | Badge for priority                     |
+| `server/_core/trpc.ts`                                  | tRPC setup                             |
 
 ---
 
 ## Existing Patterns
 
 ```yaml
-naming: camelCase para variáveis, PascalCase para componentes
-file_structure: client/src/components/dashboard/* para componentes de dashboard
-error_handling: TRPCError com códigos apropriados (FORBIDDEN, NOT_FOUND)
+naming: camelCase for variables, PascalCase for components
+file_structure: client/src/components/dashboard/* for dashboard components
+error_handling: TRPCError with appropriate codes (FORBIDDEN, NOT_FOUND)
 state_management: TanStack Query via trpc.useContext()
 styling: Tailwind + CSS variables (--neon-gold, --neon-blue)
 ```
@@ -114,14 +114,14 @@ styling: Tailwind + CSS variables (--neon-gold, --neon-blue)
 
 ```yaml
 non_negotiable:
-  - Usar shadcn/ui components existentes
-  - Não quebrar tasks existentes durante migração
-  - Tokens OAuth criptografados
-  - Validação em cada atomic task
+  - Use existing shadcn/ui components
+  - Do not break existing tasks during migration
+  - OAuth tokens encrypted
+  - Validation at each atomic task
 
 preferences:
-  - Manter design Neon consistente (#0F172A, glow effects)
-  - Priority baixa para GPU-18 (implementar após GPU-43)
+  - Maintain consistent Neon design (#0F172A, glow effects)
+  - Low priority for GPU-18 (implement after GPU-43)
 ```
 
 ---
@@ -138,9 +138,9 @@ preferences:
 | ----------------- | --------------------------------------------------------------------- |
 | **Priority**      | CRITICAL                                                              |
 | **Dependencies**  | None                                                                  |
-| **Parallel Safe** | ❌                                                                    |
+| **Parallel Safe** | No                                                                    |
 
-**Description:** Adicionar enum `prioridade_task` e coluna `priority` à tabela `tasks`.
+**Description:** Add `prioridade_task` enum and `priority` column to the `tasks` table.
 
 **Files to Modify:**
 - `drizzle/schema.ts`
@@ -170,9 +170,9 @@ bun run db:push --dry-run
 | ----------------- | --------------------------------------------------------------------- |
 | **Priority**      | CRITICAL                                                              |
 | **Dependencies**  | AT-001                                                                |
-| **Parallel Safe** | ❌                                                                    |
+| **Parallel Safe** | No                                                                    |
 
-**Description:** Adicionar parâmetros de filtro (search, category, priority) ao router de tasks.
+**Description:** Add filter parameters (search, category, priority) to the tasks router.
 
 **Files to Modify:**
 - `server/routers/tasks.ts`
@@ -203,28 +203,28 @@ bun test -- --grep tasks
 
 ### Phase 2: Frontend Components
 
-#### AT-003: Create TaskFilterToolbar component ⚡
+#### AT-003: Create TaskFilterToolbar component
 
 | Field             | Value                                                                 |
 | ----------------- | --------------------------------------------------------------------- |
 | **Priority**      | HIGH                                                                  |
 | **Dependencies**  | None                                                                  |
-| **Parallel Safe** | ⚡ YES                                                                |
+| **Parallel Safe** | YES                                                                   |
 
-**Description:** Criar componente de toolbar com Input de busca e Selects de categoria/prioridade.
+**Description:** Create toolbar component with search Input and category/priority Selects.
 
 **Files to Create:**
 - `client/src/components/dashboard/TaskFilterToolbar.tsx`
 
 **Implementation Details:**
-- Use `@/components/ui/input` para busca
-- Use `@/components/ui/select` para filtros
-- Emit onChange com debounce de 300ms para busca
-- Categorias existentes: geral, aula, crm, financeiro, atividade
-- Novas categorias (opcional): marketing, vendas, operacional
-- Prioridades: Alta (#F59E0B), Média (#3B82F6), Baixa (#6B7280)
+- Use `@/components/ui/input` for search
+- Use `@/components/ui/select` for filters
+- Emit onChange with 300ms debounce for search
+- Existing categories: geral, aula, crm, financeiro, atividade
+- New categories (optional): marketing, vendas, operacional
+- Priorities: Alta (#F59E0B), Media (#3B82F6), Baixa (#6B7280)
 
-> **Nota:** Category é campo TEXT, não enum. Novos valores podem ser adicionados sem migração.
+> **Note:** Category is a TEXT field, not an enum. New values can be added without migration.
 
 **Validation:**
 ```bash
@@ -235,25 +235,25 @@ bun run build
 
 ---
 
-#### AT-004: Restyle TaskCard with Neon Design System ⚡
+#### AT-004: Restyle TaskCard with Neon Design System
 
 | Field             | Value                                                                 |
 | ----------------- | --------------------------------------------------------------------- |
 | **Priority**      | HIGH                                                                  |
 | **Dependencies**  | None                                                                  |
-| **Parallel Safe** | ⚡ YES                                                                |
+| **Parallel Safe** | YES                                                                   |
 
-**Description:** Refatorar cards de tarefa para seguir Design System Neon.
+**Description:** Refactor task cards to follow the Neon Design System.
 
 **Files to Modify:**
 - `client/src/components/dashboard/TaskBoard.tsx`
 
 **Design Specs:**
 - Background: `#0F172A` (slate-900)
-- Border: `border-primary/20` com hover `border-primary/50`
+- Border: `border-primary/20` with hover `border-primary/50`
 - Priority badges:
   - Alta: `bg-amber-500/20 text-amber-400 border-amber-500/50`
-  - Média: `bg-blue-500/20 text-blue-400 border-blue-500/50`
+  - Media: `bg-blue-500/20 text-blue-400 border-blue-500/50`
   - Baixa: `bg-slate-500/20 text-slate-400 border-slate-500/50`
 - Glow effect on hover: `shadow-[0_0_15px_rgba(59,130,246,0.3)]`
 
@@ -272,9 +272,9 @@ bun run build
 | ----------------- | --------------------------------------------------------------------- |
 | **Priority**      | HIGH                                                                  |
 | **Dependencies**  | AT-002, AT-003                                                        |
-| **Parallel Safe** | ❌                                                                    |
+| **Parallel Safe** | No                                                                    |
 
-**Description:** Integrar toolbar de filtros ao TaskBoard e conectar com tRPC query.
+**Description:** Integrate the filter toolbar into the TaskBoard and connect with the tRPC query.
 
 **Files to Modify:**
 - `client/src/components/dashboard/TaskBoard.tsx`
@@ -301,17 +301,17 @@ bun dev # Manual: test filter functionality
 | ----------------- | --------------------------------------------------------------------- |
 | **Priority**      | MEDIUM                                                                |
 | **Dependencies**  | AT-005                                                                |
-| **Parallel Safe** | ❌                                                                    |
+| **Parallel Safe** | No                                                                    |
 
-**Description:** Criar componente de estado vazio quando filtros não retornam resultados.
+**Description:** Create empty state component when filters return no results.
 
 **Files to Create:**
 - `client/src/components/dashboard/EmptyFilterResult.tsx`
 
 **Design:**
-- Ícone SearchX (lucide-react)
-- Texto: "Nenhuma tarefa encontrada"
-- Botão: "Limpar filtros"
+- Icon: SearchX (lucide-react)
+- Text: "No tasks found"
+- Button: "Clear filters"
 
 **Validation:**
 ```bash
@@ -322,7 +322,7 @@ bun run build
 
 ---
 
-## GPU-18: Google Calendar Integration (Baixa Prioridade)
+## GPU-18: Google Calendar Integration (Low Priority)
 
 ### Phase 1: Setup & Configuration
 
@@ -332,18 +332,18 @@ bun run build
 | ----------------- | --------------------------------------------------------------------- |
 | **Priority**      | CRITICAL                                                              |
 | **Dependencies**  | None                                                                  |
-| **Parallel Safe** | ⚡ YES                                                                |
+| **Parallel Safe** | YES                                                                   |
 
-**Description:** Configurar projeto no GCP, ativar Calendar API e obter credenciais OAuth2.
+**Description:** Configure the GCP project, enable Calendar API, and obtain OAuth2 credentials.
 
 **Manual Steps:**
-1. Acessar console.cloud.google.com
-2. Criar novo projeto "NeonDash Calendar"
-3. Ativar "Google Calendar API"
-4. Configurar OAuth consent screen
-5. Criar credenciais OAuth2 (Web application)
-6. Adicionar redirect URI: `http://localhost:3000/api/calendar/callback`
-7. Copiar Client ID e Client Secret
+1. Go to console.cloud.google.com
+2. Create new project "NeonDash Calendar"
+3. Enable "Google Calendar API"
+4. Configure OAuth consent screen
+5. Create OAuth2 credentials (Web application)
+6. Add redirect URI: `http://localhost:3000/api/calendar/callback`
+7. Copy Client ID and Client Secret
 
 **Environment Variables:**
 ```bash
@@ -367,9 +367,9 @@ cat .env | grep GOOGLE_CLIENT_ID # Should not be empty
 | ----------------- | --------------------------------------------------------------------- |
 | **Priority**      | CRITICAL                                                              |
 | **Dependencies**  | AT-011                                                                |
-| **Parallel Safe** | ❌                                                                    |
+| **Parallel Safe** | No                                                                    |
 
-**Description:** Adicionar tabela para armazenar tokens OAuth do Google de forma segura.
+**Description:** Add table to store Google OAuth tokens securely.
 
 **Files to Modify:**
 - `drizzle/schema.ts`
@@ -414,9 +414,9 @@ bun run db:push --dry-run
 | ----------------- | --------------------------------------------------------------------- |
 | **Priority**      | CRITICAL                                                              |
 | **Dependencies**  | AT-012                                                                |
-| **Parallel Safe** | ❌                                                                    |
+| **Parallel Safe** | No                                                                    |
 
-**Description:** Criar serviço para gerenciar cliente OAuth2 e chamadas à API do Google Calendar.
+**Description:** Create service to manage the OAuth2 client and Google Calendar API calls.
 
 **Files to Create:**
 - `server/services/googleCalendar.ts`
@@ -466,9 +466,9 @@ bun run check
 | ----------------- | --------------------------------------------------------------------- |
 | **Priority**      | HIGH                                                                  |
 | **Dependencies**  | AT-013                                                                |
-| **Parallel Safe** | ❌                                                                    |
+| **Parallel Safe** | No                                                                    |
 
-**Description:** Criar router tRPC com procedures para OAuth flow e operações de calendário.
+**Description:** Create tRPC router with procedures for OAuth flow and calendar operations.
 
 **Files to Create:**
 - `server/routers/calendar.ts`
@@ -477,11 +477,11 @@ bun run check
 - `server/routers.ts` (add calendarRouter)
 
 **Procedures:**
-- `getAuthUrl` — Retorna URL de autorização
-- `handleCallback` — Troca código por tokens, persiste no DB
-- `getStatus` — Retorna se usuário está conectado
-- `getEvents` — Lista eventos do calendário
-- `disconnect` — Remove tokens do usuário
+- `getAuthUrl` — Returns authorization URL
+- `handleCallback` — Exchanges code for tokens, persists in DB
+- `getStatus` — Returns whether user is connected
+- `getEvents` — Lists calendar events
+- `disconnect` — Removes user tokens
 
 **Validation:**
 ```bash
@@ -500,9 +500,9 @@ bun run check
 | ----------------- | --------------------------------------------------------------------- |
 | **Priority**      | HIGH                                                                  |
 | **Dependencies**  | AT-014                                                                |
-| **Parallel Safe** | ❌                                                                    |
+| **Parallel Safe** | No                                                                    |
 
-**Description:** Instalar react-big-calendar e criar página de Agenda.
+**Description:** Install react-big-calendar and create the Agenda page.
 
 **Dependencies to Install:**
 ```bash
@@ -550,17 +550,17 @@ bun run build
 | ----------------- | --------------------------------------------------------------------- |
 | **Priority**      | MEDIUM                                                                |
 | **Dependencies**  | AT-015                                                                |
-| **Parallel Safe** | ❌                                                                    |
+| **Parallel Safe** | No                                                                    |
 
-**Description:** Adicionar botão de conexão com Google e indicador de status.
+**Description:** Add Google connection button and status indicator.
 
 **Files to Modify:**
 - `client/src/pages/Agenda.tsx`
 
 **UI Components:**
-- Button: "Conectar Google Calendar" (quando desconectado)
-- Badge: "Conectado" com status verde (quando conectado)
-- Button: "Desconectar" (quando conectado)
+- Button: "Connect Google Calendar" (when disconnected)
+- Badge: "Connected" with green status (when connected)
+- Button: "Disconnect" (when connected)
 
 **Validation:**
 ```bash
@@ -600,15 +600,15 @@ format: "docs/PLAN-fase-6-funcionalidades-avancadas.md"
 
 files_created:
   - path: "client/src/components/dashboard/TaskFilterToolbar.tsx"
-    purpose: "Toolbar de filtros para TaskBoard"
+    purpose: "Filter toolbar for TaskBoard"
   - path: "client/src/components/dashboard/EmptyFilterResult.tsx"
-    purpose: "Estado vazio para filtros sem resultados"
+    purpose: "Empty state for filters with no results"
   - path: "server/services/googleCalendar.ts"
-    purpose: "Serviço para Google Calendar API"
+    purpose: "Service for Google Calendar API"
   - path: "server/routers/calendar.ts"
-    purpose: "Router tRPC para calendário"
+    purpose: "tRPC router for calendar"
   - path: "client/src/pages/Agenda.tsx"
-    purpose: "Página de agenda com calendário"
+    purpose: "Agenda page with calendar"
 
 files_modified:
   - path: "drizzle/schema.ts"
@@ -621,12 +621,12 @@ files_modified:
     changes: "Integrate filters, restyle with Neon design"
 
 success_definition: |
-  - TaskBoard com filtros funcionais (busca, categoria, prioridade)
-  - Cards com design Neon e badges de prioridade
-  - Estado vazio para filtros sem resultados
-  - Google Calendar conectável via OAuth2
-  - Eventos do calendário exibidos em react-big-calendar
-  - Builds passando sem erros
+  - TaskBoard with functional filters (search, category, priority)
+  - Cards with Neon design and priority badges
+  - Empty state for filters with no results
+  - Google Calendar connectable via OAuth2
+  - Calendar events displayed in react-big-calendar
+  - Builds passing without errors
 
 failure_handling: |
   If schema migration fails: Rollback via db:push with previous schema
@@ -657,7 +657,7 @@ failure_handling: |
 - [x] Validation command each
 - [x] Dependencies mapped
 - [x] Rollback defined
-- [x] Parallel-safe marked (⚡)
+- [x] Parallel-safe marked
 
 ### Behavior
 - [x] Mode specified (CONSERVATIVE)

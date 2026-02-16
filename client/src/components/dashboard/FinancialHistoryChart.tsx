@@ -22,17 +22,17 @@ interface FinancialHistoryChartProps {
 const monthNames = [
   "",
   "JAN",
-  "FEV",
+  "FEB",
   "MAR",
-  "ABR",
-  "MAI",
+  "APR",
+  "MAY",
   "JUN",
   "JUL",
-  "AGO",
-  "SET",
-  "OUT",
+  "AUG",
+  "SEP",
+  "OCT",
   "NOV",
-  "DEZ",
+  "DEC",
 ];
 
 export function FinancialHistoryChart({ data }: FinancialHistoryChartProps) {
@@ -42,7 +42,7 @@ export function FinancialHistoryChart({ data }: FinancialHistoryChartProps) {
       <Card className="bg-card dark:bg-slate-900/50 border-border dark:border-slate-700 shadow-lg">
         <CardHeader>
           <CardTitle className="text-foreground dark:text-slate-200 text-sm font-medium">
-            Receita Mensal dos Últimos 12 Meses
+            Monthly Revenue for the Last 12 Months
           </CardTitle>
         </CardHeader>
         <CardContent className="h-[300px] flex flex-col items-center justify-center gap-4">
@@ -50,10 +50,10 @@ export function FinancialHistoryChart({ data }: FinancialHistoryChartProps) {
             <TrendingUp className="w-8 h-8 text-muted-foreground/50" />
           </div>
           <p className="text-muted-foreground text-center">
-            Nenhum dado financeiro registrado ainda.
+            No financial data recorded yet.
             <br />
             <span className="text-sm">
-              Preencha suas métricas mensais para visualizar o histórico.
+              Fill in your monthly metrics to view the history.
             </span>
           </p>
         </CardContent>
@@ -71,7 +71,7 @@ export function FinancialHistoryChart({ data }: FinancialHistoryChartProps) {
     <Card className="bg-card dark:bg-slate-900/50 border-border dark:border-slate-700 shadow-lg">
       <CardHeader>
         <CardTitle className="text-foreground dark:text-slate-200 text-sm font-medium">
-          Receita Mensal dos Últimos 12 Meses
+          Monthly Revenue for the Last 12 Months
         </CardTitle>
       </CardHeader>
       <CardContent className="h-[300px]">

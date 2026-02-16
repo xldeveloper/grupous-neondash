@@ -1,25 +1,25 @@
 # Spec: {feature-id}
 
-## Resumo
+## Summary
 
 {summary}
 
-## Complexidade
+## Complexity
 
-{L1-L10} — {justificativa}
+{L1-L10} — {justification}
 
 ## Tasks
 
-| ID     | Título | Fase | Arquivos |
-| ------ | ------ | ---- | -------- |
-| AT-001 | ...    | 1    | ...      |
+| ID     | Title  | Phase | Files    |
+| ------ | ------ | ----- | -------- |
+| AT-001 | ...    | 1     | ...      |
 
-## Validação
+## Validation
 
 - [ ] `bun run build`
 - [ ] `bun run lint:check`
 - [ ] `bun run test`
 
-## Notas
+## Notes
 
 {implementation_notes}

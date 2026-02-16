@@ -25,9 +25,9 @@ export default function OpenClawPage() {
             <Bot className="h-6 w-6 text-primary" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold tracking-tight">Assistente NEON</h1>
+            <h1 className="text-2xl font-bold tracking-tight">NEON Assistant</h1>
             <p className="text-sm text-muted-foreground">
-              Seu assistente de mentoria com inteligência artificial
+              Your AI-powered mentorship assistant
             </p>
           </div>
         </div>
@@ -40,12 +40,12 @@ export default function OpenClawPage() {
 
           {/* Context Sidebar */}
           <div className="space-y-4">
-            {/* Current Mentorado Card */}
+            {/* Current Mentee Card */}
             <Card className="border-border/50 bg-card/80 backdrop-blur">
               <CardHeader className="pb-3">
                 <CardTitle className="flex items-center gap-2 text-sm font-medium">
                   <Target className="h-4 w-4 text-primary" />
-                  Seu Perfil
+                  Your Profile
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
@@ -64,7 +64,7 @@ export default function OpenClawPage() {
                     </div>
                     <div className="grid grid-cols-2 gap-2 text-sm">
                       <div className="rounded-lg bg-muted/50 p-2">
-                        <p className="text-muted-foreground">Meta</p>
+                        <p className="text-muted-foreground">Goal</p>
                         <p className="font-semibold">
                           R${" "}
                           {contextQuery.data.mentorado.metaFaturamento?.toLocaleString("pt-BR") ??
@@ -72,16 +72,16 @@ export default function OpenClawPage() {
                         </p>
                       </div>
                       <div className="rounded-lg bg-muted/50 p-2">
-                        <p className="text-muted-foreground">Status IA</p>
+                        <p className="text-muted-foreground">AI Status</p>
                         <p className="font-semibold">
-                          {contextQuery.data.aiConfigured ? "Ativo" : "Offline"}
+                          {contextQuery.data.aiConfigured ? "Active" : "Offline"}
                         </p>
                       </div>
                     </div>
                   </>
                 ) : (
                   <p className="text-sm text-muted-foreground">
-                    Perfil de mentorado não encontrado
+                    Mentee profile not found
                   </p>
                 )}
               </CardContent>
@@ -92,13 +92,13 @@ export default function OpenClawPage() {
               <CardHeader className="pb-3">
                 <CardTitle className="flex items-center gap-2 text-sm font-medium">
                   <Bot className="h-4 w-4 text-emerald-500" />
-                  Status do Assistente
+                  Assistant Status
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
-                    <span className="text-muted-foreground">Modelo</span>
+                    <span className="text-muted-foreground">Model</span>
                     <span className="font-medium">Gemini 2.5 Flash</span>
                   </div>
                   <div className="flex justify-between">
@@ -107,7 +107,7 @@ export default function OpenClawPage() {
                       variant={contextQuery.data?.aiConfigured ? "default" : "secondary"}
                       className="text-xs"
                     >
-                      {contextQuery.data?.aiConfigured ? "Configurado" : "Não configurado"}
+                      {contextQuery.data?.aiConfigured ? "Configured" : "Not configured"}
                     </Badge>
                   </div>
                 </div>

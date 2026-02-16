@@ -102,7 +102,7 @@ export function GlobalAIChat() {
         )}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
-        aria-label={isOpen ? "Fechar chat" : "Abrir assistente IA"}
+        aria-label={isOpen ? "Close chat" : "Open AI assistant"}
       >
         <AnimatePresence mode="wait">
           {isOpen ? (
@@ -125,7 +125,7 @@ export function GlobalAIChat() {
             >
               <img
                 src="/ai-assistant-icon.jpg"
-                alt="Assistente IA"
+                alt="AI Assistant"
                 className="h-10 w-10 rounded-full object-cover"
               />
             </motion.div>
@@ -178,9 +178,9 @@ export function GlobalAIChat() {
                   />
                 </div>
                 <div>
-                  <h3 className="text-base font-semibold">Assistente NEON</h3>
+                  <h3 className="text-base font-semibold">NEON Assistant</h3>
                   <p className="text-xs text-muted-foreground">
-                    {isConnected ? "Online • Pronto para ajudar" : "Conectando..."}
+                    {isConnected ? "Online • Ready to help" : "Connecting..."}
                   </p>
                 </div>
               </div>
@@ -191,7 +191,7 @@ export function GlobalAIChat() {
                   size="icon"
                   onClick={() => setIsExpanded(!isExpanded)}
                   className="h-8 w-8 text-muted-foreground hover:text-foreground"
-                  title={isExpanded ? "Reduzir" : "Expandir"}
+                  title={isExpanded ? "Minimize" : "Expand"}
                 >
                   {isExpanded ? (
                     <Minimize2 className="h-4 w-4" />
@@ -219,9 +219,9 @@ export function GlobalAIChat() {
                     <Bot className="h-10 w-10 text-primary" />
                   </div>
                   <div>
-                    <h4 className="font-semibold">Olá! Eu sou o Assistente NEON</h4>
+                    <h4 className="font-semibold">Hello! I am the NEON Assistant</h4>
                     <p className="mt-1 text-sm text-muted-foreground">
-                      Posso ajudar com análises, sugestões e acompanhamento do seu progresso.
+                      I can help with analyses, suggestions and progress tracking.
                     </p>
                   </div>
                   <Button onClick={handleStartSession} disabled={isLoading} className="gap-2">

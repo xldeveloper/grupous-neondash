@@ -87,9 +87,9 @@ export function EvolucaoView({ mentoradoId }: EvolucaoViewProps) {
                   <Sparkles className="w-6 h-6 text-primary" />
                 </div>
                 <div>
-                  <CardTitle className="text-lg">Preencha suas primeiras métricas! 🎯</CardTitle>
+                  <CardTitle className="text-lg">Fill in your first metrics! 🎯</CardTitle>
                   <CardDescription className="text-base">
-                    Comece a acompanhar sua evolução preenchendo o formulário abaixo
+                    Start tracking your progress by filling out the form below
                   </CardDescription>
                 </div>
               </div>
@@ -106,9 +106,9 @@ export function EvolucaoView({ mentoradoId }: EvolucaoViewProps) {
 
         <Card className="col-span-4 bg-card dark:bg-black/40 border-border dark:border-white/5 shadow-sm">
           <CardHeader>
-            <CardTitle>Lançar Métricas Mensais</CardTitle>
+            <CardTitle>Submit Monthly Metrics</CardTitle>
             <CardDescription>
-              Preencha os dados do mês para alimentar seu dashboard e comparativos.
+              Fill in the monthly data to feed your dashboard and comparisons.
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -118,9 +118,9 @@ export function EvolucaoView({ mentoradoId }: EvolucaoViewProps) {
 
         <Card className="col-span-4">
           <CardHeader>
-            <CardTitle>Histórico Detalhado</CardTitle>
+            <CardTitle>Detailed History</CardTitle>
             <CardDescription>
-              Acompanhamento mensal detalhado das métricas de performance.
+              Detailed monthly tracking of performance metrics.
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -128,20 +128,20 @@ export function EvolucaoView({ mentoradoId }: EvolucaoViewProps) {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Mês/Ano</TableHead>
-                    <TableHead className="text-right">Faturamento</TableHead>
-                    <TableHead className="text-right">Lucro</TableHead>
+                    <TableHead>Month/Year</TableHead>
+                    <TableHead className="text-right">Revenue</TableHead>
+                    <TableHead className="text-right">Profit</TableHead>
                     <TableHead className="text-right">Leads</TableHead>
                     <TableHead className="text-right">Posts</TableHead>
                     <TableHead className="text-right">Stories</TableHead>
-                    <TableHead className="text-center w-16">Ações</TableHead>
+                    <TableHead className="text-center w-16">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {tableData.length === 0 ? (
                     <TableRow>
                       <TableCell colSpan={7} className="text-center h-24">
-                        Nenhum dado encontrado.
+                        No data found.
                       </TableCell>
                     </TableRow>
                   ) : (

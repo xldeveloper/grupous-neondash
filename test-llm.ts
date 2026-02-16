@@ -6,7 +6,7 @@ async function testLLM() {
   try {
     const result = await invokeLLM({
       messages: [
-        { role: "user", content: "Quem é você?" }
+        { role: "user", content: "Who are you?" }
       ]
     });
     console.log("LLM Response Success:");

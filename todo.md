@@ -1,197 +1,197 @@
 # Project TODO
 
-## ✅ Concluído
+## ✅ Completed
 
-### Dashboard Inicial (Dezembro 2025)
+### Initial Dashboard (December 2025)
 
-- [x] Dashboard estático com visualizações de dezembro 2025
-- [x] Análise de performance Neon Estrutura e Neon Escala
-- [x] Sugestões personalizadas para cada mentorado
-- [x] Gráficos comparativos e rankings
+- [x] Static dashboard with December 2025 visualizations
+- [x] Neon Estrutura and Neon Escala performance analysis
+- [x] Personalized suggestions for each mentee
+- [x] Comparative charts and rankings
 
-### Upgrade Full Stack
+### Full Stack Upgrade
 
-- [x] Upgrade para Full Stack (DB + Auth)
-- [x] Resolver conflitos de merge do upgrade
-- [x] Modelar banco de dados (mentorados, métricas mensais, feedbacks)
-- [x] Implementar sistema de autenticação via Manus OAuth
-- [x] Configurar roles (admin/user)
+- [x] Upgrade to Full Stack (DB + Auth)
+- [x] Resolve upgrade merge conflicts
+- [x] Model database (mentees, monthly metrics, feedbacks)
+- [x] Implement authentication system via Manus OAuth
+- [x] Configure roles (admin/user)
 
-### Funcionalidades de Alunos
+### Student Features
 
-- [x] Criar formulários de entrada de dados mensais
-- [x] Desenvolver dashboard individual com gráficos de evolução
-- [x] Adicionar comparativo histórico (gráficos de linha e barra)
-- [x] Exibir feedbacks personalizados do mentor
+- [x] Create monthly data entry forms
+- [x] Develop individual dashboard with evolution charts
+- [x] Add historical comparison (line and bar charts)
+- [x] Display personalized feedback from mentor
 
-### Área Administrativa
+### Administrative Area
 
-- [x] Criar página administrativa completa (/admin)
-- [x] Listar todos os mentorados com filtros
-- [x] Visualizar estatísticas consolidadas
-- [x] Configurar email msm.jur@gmail.com como admin automático
+- [x] Create complete administrative page (/admin)
+- [x] List all mentees with filters
+- [x] View consolidated statistics
+- [x] Configure msm.jur@gmail.com email as automatic admin
 
-### Migração de Dados
+### Data Migration
 
-- [x] Script de migração de dados de dezembro criado
-- [x] Migração executada com sucesso (14 mentorados)
-- [x] Dados de faturamento, métricas e feedbacks importados
+- [x] December data migration script created
+- [x] Migration executed successfully (14 mentees)
+- [x] Revenue, metrics, and feedback data imported
 
-### Melhorias de UX
+### UX Improvements
 
-- [x] Implementar filtro de mês/ano no dashboard
-- [x] Adicionar navegação completa no sidebar
-- [x] Criar estados de loading e empty states
+- [x] Implement month/year filter in dashboard
+- [x] Add complete navigation in sidebar
+- [x] Create loading and empty states
 
-### SEO e Performance
+### SEO and Performance
 
-- [x] Adicionar meta description (155 caracteres)
-- [x] Adicionar palavras-chave relevantes
-- [x] Adicionar Open Graph tags para compartilhamento
+- [x] Add meta description (155 characters)
+- [x] Add relevant keywords
+- [x] Add Open Graph tags for sharing
 
-## 📋 Backlog (Futuras Melhorias)
+## 📋 Backlog (Future Improvements)
 
-### Notificações
+### Notifications
 
-- [x] Sistema de notificações por email (implementado ao vincular perfil)
-- [x] Lembretes automáticos para envio de métricas
-- [x] Alertas de metas não atingidas
+- [x] Email notification system (implemented on profile linking)
+- [x] Automatic reminders for metrics submission
+- [x] Alerts for unmet goals
 
-### Gamificação
+### Gamification
 
-- [x] Sistema de badges e conquistas (14 badges em 5 categorias)
-- [x] Ranking mensal com recompensas (pódio + lista completa)
-- [x] Metas progressivas (aumento automático de 10% ao atingir meta)
+- [x] Badge and achievement system (14 badges in 5 categories)
+- [x] Monthly ranking with rewards (podium + full list)
+- [x] Progressive goals (automatic 10% increase upon reaching goal)
 
-### Relatórios
+### Reports
 
-- [ ] Exportação de relatórios em PDF
-- [ ] Relatórios comparativos entre turmas
-- [ ] Análise de tendências e previsões
+- [ ] PDF report export
+- [ ] Comparative reports between cohorts
+- [ ] Trend analysis and forecasting
 
-### Integrações
+### Integrations
 
-- [ ] Integração com Instagram API
-- [ ] Integração com Google Analytics
-- [ ] Webhook para automações externas
+- [ ] Instagram API integration
+- [ ] Google Analytics integration
+- [ ] Webhook for external automations
 
-## Nova Solicitação - Identidade Visual
+## New Request - Visual Identity
 
-- [x] Analisar manual de identidade visual (cores, tipografia, símbolos)
-- [x] Criar logo SVG (símbolo N + tipografia completa)
-- [x] Atualizar paleta de cores (#112031, #20445B, #AC9469, #D2D0C7)
-- [x] Substituir "NEONDASH" por "NEON" com logo oficial
-- [x] Aplicar identidade visual em todos os componentes
-- [x] Atualizar favicon e título da página
-- [x] Adicionar classes utilitárias para cores da marca
+- [x] Analyze visual identity manual (colors, typography, symbols)
+- [x] Create SVG logo (N symbol + full typography)
+- [x] Update color palette (#112031, #20445B, #AC9469, #D2D0C7)
+- [x] Replace "NEONDASH" with "NEON" using official logo
+- [x] Apply visual identity across all components
+- [x] Update favicon and page title
+- [x] Add utility classes for brand colors
 
-## Nova Solicitação - Sistema de Login Independente (Opção 1)
+## New Request - Independent Login System (Option 1)
 
-- [x] Reverter alterações do Clerk (manter Manus OAuth)
-- [x] Restaurar schema original com openId
-- [x] Adicionar campo email na tabela mentorados
-- [x] Criar procedure tRPC linkEmail para vincular emails
-- [x] Criar interface admin para vincular emails aos mentorados
-- [x] Atualizar MyDashboard para detectar mentorado pelo email logado
-- [x] Atualizar SubmitMetrics para vincular ao mentorado correto
-- [x] Testar fluxo completo de login e visualização
-- [x] Criar checkpoint final
-- [x] Preparar para deploy
+- [x] Revert Clerk changes (keep Manus OAuth)
+- [x] Restore original schema with openId
+- [x] Add email field to mentees table
+- [x] Create tRPC linkEmail procedure to link emails
+- [x] Create admin interface to link emails to mentees
+- [x] Update MyDashboard to detect mentee by logged-in email
+- [x] Update SubmitMetrics to link to correct mentee
+- [x] Test complete login and viewing flow
+- [x] Create final checkpoint
+- [x] Prepare for deploy
 
-## Nova Solicitação - Conformidade com Diretrizes de Design (style/)
+## New Request - Design Guidelines Compliance (style/)
 
-- [x] Analisar arquivos de design na pasta style/
-- [x] Comparar design atual com diretrizes (95% conforme)
-- [x] Identificar gaps de ícones, miniaturas e thumbnails
-- [x] Criar favicon SVG com símbolo N dourado
-- [x] Validar tipografia (Outfit + JetBrains Mono)
-- [x] Validar paleta de cores (#112031, #20445B, #AC9469, #D2D0C7)
-- [x] Validar logo e branding em todas as páginas
-- [x] Criar checkpoint final
+- [x] Analyze design files in style/ folder
+- [x] Compare current design with guidelines (95% compliant)
+- [x] Identify gaps in icons, thumbnails, and thumbnails
+- [x] Create SVG favicon with golden N symbol
+- [x] Validate typography (Outfit + JetBrains Mono)
+- [x] Validate color palette (#112031, #20445B, #AC9469, #D2D0C7)
+- [x] Validate logo and branding on all pages
+- [x] Create final checkpoint
 
-### Nova Solicitação - Atualizar Símbolo N Oficial
+### New Request - Update Official N Symbol
 
-- [x] Copiar arquivo símbolo-07.png para o projeto
-- [x] Atualizar DashboardLayout para usar símbolo oficial
-- [x] Atualizar LandingPage para usar símbolo oficial
-- [x] Atualizar favicon com novo símbolo
-- [x] Verificar botão de logout na sidebar (confirmado presente)
-- [x] Configurar redirecionamento após login para /dashboard
-- [x] Criar checkpoint final
+- [x] Copy symbol-07.png file to project
+- [x] Update DashboardLayout to use official symbol
+- [x] Update LandingPage to use official symbol
+- [x] Update favicon with new symbol
+- [x] Verify logout button in sidebar (confirmed present)
+- [x] Configure redirect after login to /dashboard
+- [x] Create final checkpoint
 
-### Nova Solicitação - Corrigir Redirecionamento Após Login
+### New Request - Fix Post-Login Redirect
 
-- [x] Verificar se o OAuth callback está redirecionando corretamente para /dashboard
-- [x] Garantir que usuários autenticados sejam redirecionados do / para /dashboard
-- [x] Testar fluxo completo: Landing Page → Login → Dashboard
-- [x] Criar checkpoint após validação
+- [x] Verify if OAuth callback is correctly redirecting to /dashboard
+- [x] Ensure authenticated users are redirected from / to /dashboard
+- [x] Test complete flow: Landing Page → Login → Dashboard
+- [x] Create checkpoint after validation
 
-### Nova Solicitação - Corrigir Redirecionamento para Contas Não-Admin
+### New Request - Fix Redirect for Non-Admin Accounts
 
-- [x] Investigar problema de redirecionamento após login com contas não-admin
-- [x] Verificar configuração de cookies (domínio, path, sameSite)
-- [x] Ajustar configuração de cookies para suportar HTTPS e localhost
-- [x] Adicionar logs detalhados para diagnóstico
-- [x] Garantir que o redirecionamento funcione para admin e não-admin
-- [x] Criar checkpoint após validação completa
+- [x] Investigate redirect issue after login with non-admin accounts
+- [x] Verify cookie configuration (domain, path, sameSite)
+- [x] Adjust cookie configuration to support HTTPS and localhost
+- [x] Add detailed logs for diagnostics
+- [x] Ensure redirect works for both admin and non-admin
+- [x] Create checkpoint after full validation
 
-### Nova Solicitação - Sistema de Vinculação e Detecção de Mentorados
+### New Request - Mentee Linking and Detection System
 
-- [x] Criar página /admin/vincular para associar emails aos mentorados
-- [x] Implementar formulário de vinculação com seleção de mentorado e input de email
-- [x] Atualizar MyDashboard para detectar automaticamente mentorado pelo email
-- [x] Criar página de primeiro acesso para usuários sem perfil vinculado
-- [x] Adicionar rotas no App.tsx
-- [x] Adicionar links de navegação no DashboardLayout com filtro de permissões
-- [x] Testar fluxo completo: login → detecção → dashboard personalizado
-- [x] Criar checkpoint final
+- [x] Create /admin/vincular page to associate emails with mentees
+- [x] Implement linking form with mentee selection and email input
+- [x] Update MyDashboard to automatically detect mentee by email
+- [x] Create first-access page for users without linked profile
+- [x] Add routes in App.tsx
+- [x] Add navigation links in DashboardLayout with permission filtering
+- [x] Test complete flow: login → detection → personalized dashboard
+- [x] Create final checkpoint
 
-### Nova Solicitação - Notificações, Gestão de Mentorados e Dashboard Comparativo
+### New Request - Notifications, Mentee Management, and Comparative Dashboard
 
-- [x] Implementar sistema de notificações por email ao vincular perfil
-- [x] Criar função de envio de email usando API do Manus
-- [x] Integrar notificação na ação de vincular email
-- [x] Criar página /admin/mentorados para gestão completa
-- [x] Implementar CRUD de mentorados (criar, editar, remover)
-- [x] Adicionar upload de foto de perfil (via URL)
-- [x] Implementar definição de metas personalizadas
-- [x] Criar dashboard comparativo para mentorados
-- [x] Calcular percentis de performance vs turma
-- [x] Mostrar áreas de destaque do mentorado
-- [x] Adicionar gráficos comparativos anonimizados
-- [x] Atualizar rotas e navegação
-- [x] Criar checkpoint final
+- [x] Implement email notification system on profile linking
+- [x] Create email sending function using Manus API
+- [x] Integrate notification into email linking action
+- [x] Create /admin/mentorados page for complete management
+- [x] Implement mentee CRUD (create, edit, delete)
+- [x] Add profile photo upload (via URL)
+- [x] Implement personalized goal setting
+- [x] Create comparative dashboard for mentees
+- [x] Calculate performance percentiles vs cohort
+- [x] Show mentee's standout areas
+- [x] Add anonymized comparative charts
+- [x] Update routes and navigation
+- [x] Create final checkpoint
 
-### Nova Solicitação - Remover Clerk e Corrigir Autenticação
+### New Request - Remove Clerk and Fix Authentication
 
-- [x] Identificar todas as referências ao Clerk no código
-- [x] Remover imports e configurações do Clerk
-- [x] Garantir que apenas Manus Auth seja utilizado
-- [x] Corrigir redirecionamento após login para dashboard correto
-- [x] Testar fluxo completo de autenticação
-- [x] Criar checkpoint após validação
+- [x] Identify all Clerk references in the code
+- [x] Remove Clerk imports and configurations
+- [x] Ensure only Manus Auth is used
+- [x] Fix post-login redirect to correct dashboard
+- [x] Test complete authentication flow
+- [x] Create checkpoint after validation
 
-### Nova Solicitação - Correção de Bugs Críticos
+### New Request - Critical Bug Fixes
 
-- [x] Corrigir logout incompleto (não volta para landing page)
-- [x] Corrigir query feedback retornando undefined
-- [x] Corrigir erro de âncoras aninhadas no DashboardLayout
-- [x] Verificar redirecionamento após login para dashboard
-- [x] Testar fluxo completo: login → dashboard → logout → landing page
-- [x] Criar checkpoint após validação
+- [x] Fix incomplete logout (not returning to landing page)
+- [x] Fix feedback query returning undefined
+- [x] Fix nested anchor error in DashboardLayout
+- [x] Verify post-login redirect to dashboard
+- [x] Test complete flow: login → dashboard → logout → landing page
+- [x] Create checkpoint after validation
 
-### Nova Solicitação - Corrigir Loop de Login
+### New Request - Fix Login Loop
 
-- [x] Investigar por que o cookie de sessão não está sendo persistido após OAuth callback
-- [x] Verificar configuração de cookies (domain, path, sameSite, secure)
-- [x] Corrigir persistência do cookie para evitar loop de login (removido domínio do cookie)
-- [x] Testar fluxo completo: landing page → login → dashboard
-- [x] Criar checkpoint após validação
+- [x] Investigate why session cookie is not being persisted after OAuth callback
+- [x] Verify cookie configuration (domain, path, sameSite, secure)
+- [x] Fix cookie persistence to avoid login loop (removed cookie domain)
+- [x] Test complete flow: landing page → login → dashboard
+- [x] Create checkpoint after validation
 
-### Nova Solicitação - Corrigir Logout e Redirecionamento
+### New Request - Fix Logout and Redirect
 
-- [x] Corrigir logout para garantir que o cookie seja limpo antes do redirecionamento
-- [x] Garantir que o redirecionamento para landing page funcione após logout
-- [x] Adicionar delay na LandingPage para evitar redirecionamento prematuro
-- [x] Testar fluxo completo: dashboard → logout → landing page → login → dashboard
-- [x] Criar checkpoint após validação
+- [x] Fix logout to ensure cookie is cleared before redirect
+- [x] Ensure redirect to landing page works after logout
+- [x] Add delay in LandingPage to avoid premature redirect
+- [x] Test complete flow: dashboard → logout → landing page → login → dashboard
+- [x] Create checkpoint after validation

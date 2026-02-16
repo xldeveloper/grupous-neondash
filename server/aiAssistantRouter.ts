@@ -58,7 +58,7 @@ export const aiAssistantRouter = router({
       if (!mentorado) {
         throw new TRPCError({
           code: "PRECONDITION_FAILED",
-          message: "Perfil de mentorado não encontrado. Complete seu cadastro primeiro.",
+          message: "Mentee profile not found. Please complete your registration first.",
         });
       }
 
@@ -99,7 +99,7 @@ export const aiAssistantRouter = router({
       if (!mentorado) {
         throw new TRPCError({
           code: "PRECONDITION_FAILED",
-          message: "Perfil de mentorado não encontrado.",
+          message: "Mentee profile not found.",
         });
       }
 

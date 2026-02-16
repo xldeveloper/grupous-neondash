@@ -89,7 +89,7 @@ export function ChatInterface() {
               />
             </div>
             <div>
-              <CardTitle className="text-lg">Assistente NEON</CardTitle>
+              <CardTitle className="text-lg">NEON Assistant</CardTitle>
               <p className="text-xs text-muted-foreground">
                 {isConnected ? (
                   <span className="flex items-center gap-1">
@@ -99,7 +99,7 @@ export function ChatInterface() {
                 ) : (
                   <span className="flex items-center gap-1 text-amber-500">
                     <WifiOff className="h-3 w-3" />
-                    Conectando...
+                    Connecting...
                   </span>
                 )}
               </p>
@@ -127,10 +127,10 @@ export function ChatInterface() {
               <Bot className="h-12 w-12 text-primary" />
             </div>
             <div>
-              <h3 className="text-lg font-semibold">Olá! Eu sou o Assistente NEON</h3>
+              <h3 className="text-lg font-semibold">Hello! I am the NEON Assistant</h3>
               <p className="mt-1 text-sm text-muted-foreground">
-                Seu assistente de mentoria com IA. Posso ajudar com análises, sugestões e
-                acompanhamento do seu progresso.
+                Your AI-powered mentorship assistant. I can help with analyses, suggestions and
+                progress tracking.
               </p>
             </div>
             <Button onClick={createSession} disabled={isLoading} className="gap-2">
@@ -139,7 +139,7 @@ export function ChatInterface() {
               ) : (
                 <MessageSquarePlus className="h-4 w-4" />
               )}
-              Iniciar conversa
+              Start conversation
             </Button>
           </div>
         ) : (
@@ -238,7 +238,7 @@ export function ChatInterface() {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={handleKeyDown}
-                placeholder="Digite sua mensagem..."
+                placeholder="Type your message..."
                 disabled={isSending}
                 className="flex-1"
               />

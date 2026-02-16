@@ -51,7 +51,7 @@ flowchart TD
     H --> C
 
     G --> I{All Tests Pass?}
-    I -->|Yes| J[✅ DEBUG COMPLETE]
+    I -->|Yes| J[DEBUG COMPLETE]
     I -->|No| K[Auto-Research & Fix]
     K --> G
 ```
@@ -238,7 +238,7 @@ bun run test
 
 ## Phase 5: QA Validation Pipeline
 
-> **🔴 CRITICAL GATE**: Ensure fix doesn't break other things
+> **CRITICAL GATE**: Ensure fix doesn't break other things
 
 ### 5.1 Local Quality Checks
 
@@ -260,34 +260,34 @@ railway logs --latest -n 50
 ### 5.3 E2E Validation (if UI affected)
 
 > [!IMPORTANT]
-> **SEMPRE prefira `agent-browser` CLI** ao invés do `browser_subagent` padrão.
-> O `agent-browser` oferece controle programático preciso, snapshots reproduzíveis, e refs consistentes para debugging.
+> **ALWAYS prefer `agent-browser` CLI** over the default `browser_subagent`.
+> `agent-browser` provides precise programmatic control, reproducible snapshots, and consistent refs for debugging.
 
 ```bash
-# Workflow preferido para validação frontend
-agent-browser open http://localhost:3000   # Abre página
-agent-browser snapshot                     # Lista elementos interativos (@refs)
-agent-browser screenshot debug-result.png  # Captura estado visual
-agent-browser get text @e1                 # Verifica conteúdo de elemento
-agent-browser close                        # Cleanup obrigatório
+# Preferred workflow for frontend validation
+agent-browser open http://localhost:3000   # Opens page
+agent-browser snapshot                     # Lists interactive elements (@refs)
+agent-browser screenshot debug-result.png  # Captures visual state
+agent-browser get text @e1                 # Checks element content
+agent-browser close                        # Mandatory cleanup
 ```
 
-**Quando usar cada ferramenta:**
+**When to use each tool:**
 
-| Cenário                        | Ferramenta          | Motivo                                |
-| ------------------------------ | ------------------- | ------------------------------------- |
-| Validar UI visualmente         | `agent-browser`     | Snapshots reproduzíveis, refs estáveis |
-| Testar fluxos de usuário       | `agent-browser`     | Comandos encadeados, sem overhead     |
-| Capturar screenshots           | `agent-browser`     | Direto, salva como PNG                |
-| Gravar vídeo de reprodução     | `browser_subagent`  | Único caso para usar (grava WebP)     |
-| Debugging interativo complexo  | `agent-browser`     | Controle step-by-step                 |
+| Scenario                        | Tool                | Reason                                  |
+| ------------------------------- | ------------------- | --------------------------------------- |
+| Validate UI visually            | `agent-browser`     | Reproducible snapshots, stable refs     |
+| Test user flows                 | `agent-browser`     | Chained commands, no overhead           |
+| Capture screenshots             | `agent-browser`     | Direct, saves as PNG                    |
+| Record reproduction video       | `browser_subagent`  | Only use case for this tool (saves WebP)|
+| Complex interactive debugging   | `agent-browser`     | Step-by-step control                    |
 
 ---
 
 ## Auto-Research & Fix (If QA Fails)
 
 1. **Aggregate Errors**: Stack trace, lib versions, affected code, logs
-2. **Invoke Research**: `/research "Debug Fix: [resumo]. Context: [logs]."`
+2. **Invoke Research**: `/research "Debug Fix: [summary]. Context: [logs]."`
 3. **Generate Atomic Tasks**: Research → Apply fix → Verify
 4. **Re-run QA Pipeline**
 
@@ -343,10 +343,10 @@ Controller → Service → Repository → Database
    Route       Rules       Data
 ```
 
-- ❌ Don't put business logic in controllers
-- ❌ Don't skip the service layer
-- ❌ Don't mix concerns across layers
-- ✅ Use dependency injection for testability
+- Don't put business logic in controllers
+- Don't skip the service layer
+- Don't mix concerns across layers
+- Use dependency injection for testability
 
 ### API Design Check
 
@@ -368,20 +368,20 @@ Controller → Service → Repository → Database
 
 ## Common Anti-Patterns
 
-| ❌ Anti-Pattern              | ✅ Correct Approach           |
-| ---------------------------- | ----------------------------- |
-| Random changes hoping to fix | Systematic investigation      |
-| Ignoring stack traces        | Read every line carefully     |
-| "Works on my machine"        | Reproduce in same environment |
-| Fixing symptoms only         | Find and fix root cause       |
-| No regression test           | Always add test for the bug   |
-| Multiple changes at once     | One change, then verify       |
-| Guessing without data        | Profile and measure first     |
-| SELECT \* everywhere         | Select only needed columns    |
-| N+1 queries                  | Use JOINs or eager loading    |
-| Hardcoded secrets            | Environment variables only    |
-| Skipping auth checks         | Verify every protected route  |
-| Giant controllers            | Split into services           |
+| Anti-Pattern                   | Correct Approach              |
+| ------------------------------ | ----------------------------- |
+| Random changes hoping to fix   | Systematic investigation      |
+| Ignoring stack traces          | Read every line carefully     |
+| "Works on my machine"          | Reproduce in same environment |
+| Fixing symptoms only           | Find and fix root cause       |
+| No regression test             | Always add test for the bug   |
+| Multiple changes at once       | One change, then verify       |
+| Guessing without data          | Profile and measure first     |
+| SELECT \* everywhere           | Select only needed columns    |
+| N+1 queries                    | Use JOINs or eager loading    |
+| Hardcoded secrets              | Environment variables only    |
+| Skipping auth checks           | Verify every protected route  |
+| Giant controllers              | Split into services           |
 
 ---
 
@@ -490,7 +490,7 @@ useEffect(() => {
 ## Output Format
 
 ```markdown
-## 🔍 Debug Report: [Issue Title]
+## Debug Report: [Issue Title]
 
 **Issue:** [one-line description]
 **Root Cause:** [what was actually wrong]
@@ -552,4 +552,4 @@ useEffect(() => {
 
 > **Remember:** Debugging is detective work. Follow the evidence, not your assumptions. Fix root causes, not symptoms.
 
-**Pipeline: `/debug` → reproduce → isolate → root cause → fix → QA validate → (se falhar) → auto-research → re-fix**
+**Pipeline: `/debug` → reproduce → isolate → root cause → fix → QA validate → (if fails) → auto-research → re-fix**

@@ -1,54 +1,54 @@
-# Brainstorming de Design - Dashboard Neon Performance
+# Design Brainstorming - Neon Performance Dashboard
 
 <response>
 <text>
 <idea>
-  **Design Movement**: Neumorfismo Moderno (Soft UI) com toques de Neon Cyberpunk
-  
+  **Design Movement**: Modern Neumorphism (Soft UI) with Neon Cyberpunk accents
+
   **Core Principles**:
-  1. **Profundidade Suave**: Elementos flutuantes com sombras suaves para destacar cartões de performance.
-  2. **Contraste Vibrante**: Fundo claro/off-white para legibilidade, com acentos em neon (verde, rosa, roxo) para dados críticos.
-  3. **Hierarquia Visual Clara**: Uso de tamanho e cor para diferenciar metas atingidas vs. não atingidas.
-  4. **Foco em Dados**: Gráficos limpos e minimalistas, sem excesso de "ruído" visual.
+  1. **Soft Depth**: Floating elements with soft shadows to highlight performance cards.
+  2. **Vibrant Contrast**: Light/off-white background for readability, with neon accents (green, pink, purple) for critical data.
+  3. **Clear Visual Hierarchy**: Use of size and color to differentiate achieved vs. unachieved goals.
+  4. **Data Focus**: Clean and minimalist charts, without excessive visual "noise".
 
 **Color Philosophy**:
 
-- Base: Off-white (#F0F2F5) e Branco (#FFFFFF) para limpeza e profissionalismo.
-- Acentos:
-  - Neon Verde (#00E676): Metas atingidas, crescimento.
-  - Neon Rosa (#F50057): Pontos de atenção, alertas.
-  - Roxo Profundo (#6200EA): Títulos, branding Neon.
-- Intenção: Transmitir modernidade e energia (Neon) mantendo a clareza de um relatório financeiro/performance.
+- Base: Off-white (#F0F2F5) and White (#FFFFFF) for cleanliness and professionalism.
+- Accents:
+  - Neon Green (#00E676): Achieved goals, growth.
+  - Neon Pink (#F50057): Attention points, alerts.
+  - Deep Purple (#6200EA): Titles, Neon branding.
+- Intent: Convey modernity and energy (Neon) while maintaining the clarity of a financial/performance report.
 
 **Layout Paradigm**:
 
-- **Dashboard Assimétrico**: Menu lateral fixo (ou superior flutuante) com área de conteúdo em grid modular.
-- **Cartões Expansíveis**: Visão geral compacta que se expande para detalhes ao clicar.
-- **Timeline Vertical**: Para visualizar a evolução semanal das ações.
+- **Asymmetric Dashboard**: Fixed sidebar (or floating top bar) with a modular grid content area.
+- **Expandable Cards**: Compact overview that expands to details on click.
+- **Vertical Timeline**: To visualize weekly action progress.
 
 **Signature Elements**:
 
-- **Bordas Brilhantes**: Hover effects com brilho neon sutil.
-- **Ícones Duotone**: Ícones modernos com duas tonalidades das cores da marca.
-- **Progress Bars Estilizadas**: Barras de progresso com gradientes neon.
+- **Glowing Borders**: Hover effects with subtle neon glow.
+- **Duotone Icons**: Modern icons with two tones from the brand colors.
+- **Styled Progress Bars**: Progress bars with neon gradients.
 
 **Interaction Philosophy**:
 
-- **Feedback Imediato**: Hover states claros em todos os elementos interativos.
-- **Transições Suaves**: Animações de entrada para gráficos e cartões.
-- **Drill-down Intuitivo**: Clique em um mentorado leva suavemente à sua página detalhada.
+- **Immediate Feedback**: Clear hover states on all interactive elements.
+- **Smooth Transitions**: Entry animations for charts and cards.
+- **Intuitive Drill-down**: Clicking on a mentee smoothly navigates to their detailed page.
 
 **Animation**:
 
-- **Entrada em Cascata**: Cartões carregam um após o outro.
-- **Contadores Animados**: Números de faturamento e métricas sobem gradualmente ao carregar.
-- **Micro-interações**: Botões pulsam levemente ao hover.
+- **Cascading Entry**: Cards load one after another.
+- **Animated Counters**: Revenue and metric numbers gradually count up on load.
+- **Micro-interactions**: Buttons pulse slightly on hover.
 
 **Typography System**:
 
-- **Títulos**: 'Outfit' ou 'Space Grotesk' (Sans-serif geométrica com personalidade).
-- **Corpo**: 'Inter' ou 'DM Sans' (Legibilidade máxima para dados).
-- **Pesos**: Bold para valores monetários, Regular para textos descritivos.
+- **Headings**: 'Outfit' or 'Space Grotesk' (Geometric sans-serif with personality).
+- **Body**: 'Inter' or 'DM Sans' (Maximum readability for data).
+- **Weights**: Bold for monetary values, Regular for descriptive text.
   </idea>
   </text>
   <probability>0.08</probability>
@@ -57,50 +57,50 @@
 <response>
 <text>
 <idea>
-  **Design Movement**: Glassmorphism Dark Mode (Futurista e Elegante)
-  
+  **Design Movement**: Glassmorphism Dark Mode (Futuristic and Elegant)
+
   **Core Principles**:
-  1. **Transparência e Camadas**: Uso de fundos translúcidos com blur para criar profundidade.
-  2. **Imersão Escura**: Fundo escuro profundo para destacar os elementos neon.
-  3. **Minimalismo Sofisticado**: Poucos elementos, muito espaço negativo, foco total no conteúdo.
-  4. **Elegância Tecnológica**: Visual que remete a interfaces de alta tecnologia.
+  1. **Transparency and Layers**: Use of translucent backgrounds with blur to create depth.
+  2. **Dark Immersion**: Deep dark background to highlight neon elements.
+  3. **Sophisticated Minimalism**: Few elements, plenty of negative space, total focus on content.
+  4. **Technological Elegance**: Visual that evokes high-tech interfaces.
 
 **Color Philosophy**:
 
-- Base: Azul Quase Preto (#0F172A) ou Cinza Carvão (#121212).
-- Vidro: Branco com 10-20% de opacidade e backdrop-blur.
-- Acentos:
-  - Ciano Neon (#00E5FF): Destaques positivos.
-  - Magenta Neon (#FF00E5): Destaques de atenção.
-  - Amarelo Neon (#FFEA00): Alertas.
-- Intenção: Criar uma experiência premium e exclusiva, alinhada com o conceito "Black/Neon".
+- Base: Near-Black Blue (#0F172A) or Charcoal Gray (#121212).
+- Glass: White at 10-20% opacity with backdrop-blur.
+- Accents:
+  - Neon Cyan (#00E5FF): Positive highlights.
+  - Neon Magenta (#FF00E5): Attention highlights.
+  - Neon Yellow (#FFEA00): Alerts.
+- Intent: Create a premium and exclusive experience, aligned with the "Black/Neon" concept.
 
 **Layout Paradigm**:
 
-- **Grid Masonry Fluido**: Cartões de diferentes tamanhos se encaixam organicamente.
-- **Navegação Flutuante**: Barra de navegação inferior ou lateral estilo "dock".
-- **Foco Central**: Elemento principal (ranking ou resumo) centralizado com destaque.
+- **Fluid Masonry Grid**: Cards of different sizes fit together organically.
+- **Floating Navigation**: Bottom or side navigation bar in a "dock" style.
+- **Central Focus**: Main element (ranking or summary) centered with emphasis.
 
 **Signature Elements**:
 
-- **Frosted Glass**: Cartões com efeito de vidro fosco.
-- **Glow Effects**: Sombras coloridas que simulam luz neon atrás dos elementos.
-- **Gradientes Sutis**: Textos e bordas com gradientes lineares.
+- **Frosted Glass**: Cards with frosted glass effect.
+- **Glow Effects**: Colored shadows that simulate neon light behind elements.
+- **Subtle Gradients**: Text and borders with linear gradients.
 
 **Interaction Philosophy**:
 
-- **Imersão**: Transições de página que parecem navegar em um espaço 3D.
-- **Foco Dinâmico**: Ao passar o mouse, o elemento focado ilumina-se, outros escurecem levemente.
+- **Immersion**: Page transitions that feel like navigating in 3D space.
+- **Dynamic Focus**: On hover, the focused element lights up, others dim slightly.
 
 **Animation**:
 
-- **Slow Reveal**: Elementos aparecem suavemente com fade-in e slide-up.
-- **Parallax Sutil**: Movimento leve do fundo em relação aos cartões.
+- **Slow Reveal**: Elements appear smoothly with fade-in and slide-up.
+- **Subtle Parallax**: Slight background movement relative to cards.
 
 **Typography System**:
 
-- **Títulos**: 'Rajdhani' ou 'Chakra Petch' (Tech/Futurista).
-- **Corpo**: 'Roboto Mono' para dados, 'Sora' para textos.
+- **Headings**: 'Rajdhani' or 'Chakra Petch' (Tech/Futuristic).
+- **Body**: 'Roboto Mono' for data, 'Sora' for text.
   </idea>
   </text>
   <probability>0.05</probability>
@@ -109,57 +109,57 @@
 <response>
 <text>
 <idea>
-  **Design Movement**: Editorial Clean (Estilo Revista de Negócios)
-  
+  **Design Movement**: Editorial Clean (Business Magazine Style)
+
   **Core Principles**:
-  1. **Tipografia como Protagonista**: Uso de fontes grandes e expressivas para números e títulos.
-  2. **Grids Rígidos e Linhas**: Layout estruturado com linhas divisórias visíveis (estilo brutalismo leve).
-  3. **Paleta Monocromática com Destaque**: Preto e branco predominante, com uma cor de destaque forte.
-  4. **Clareza Absoluta**: Informação apresentada de forma direta, sem distrações visuais.
+  1. **Typography as Protagonist**: Use of large, expressive fonts for numbers and headings.
+  2. **Rigid Grids and Lines**: Structured layout with visible dividing lines (light brutalism style).
+  3. **Monochromatic Palette with Accent**: Predominantly black and white, with one strong accent color.
+  4. **Absolute Clarity**: Information presented directly, without visual distractions.
 
 **Color Philosophy**:
 
-- Base: Branco Papel (#FFFFFF) e Preto Tinta (#000000).
-- Acento Único: Verde Lima Neon (#CCFF00) ou Laranja Internacional (#FF4400).
-- Intenção: Transmitir seriedade, objetividade e foco em resultados (business-oriented).
+- Base: Paper White (#FFFFFF) and Ink Black (#000000).
+- Single Accent: Neon Lime (#CCFF00) or International Orange (#FF4400).
+- Intent: Convey seriousness, objectivity, and focus on results (business-oriented).
 
 **Layout Paradigm**:
 
-- **Split Screen**: Tela dividida entre lista/menu e detalhes.
-- **Tabelas Estilizadas**: Dados apresentados em tabelas com design editorial.
-- **Cabeçalhos Grandes**: Títulos de seção ocupando bastante espaço.
+- **Split Screen**: Screen divided between list/menu and details.
+- **Styled Tables**: Data presented in tables with editorial design.
+- **Large Headers**: Section titles taking up significant space.
 
 **Signature Elements**:
 
-- **Linhas Finas**: Divisórias de 1px pretas ou cinza escuro.
-- **Botões Retangulares**: Botões com cantos retos ou levemente arredondados (2px).
-- **Tags Sólidas**: Categorias e status em tags com fundo preto e texto branco.
+- **Thin Lines**: 1px dividers in black or dark gray.
+- **Rectangular Buttons**: Buttons with square or slightly rounded corners (2px).
+- **Solid Tags**: Categories and statuses in tags with black background and white text.
 
 **Interaction Philosophy**:
 
-- **Precisa e Rápida**: Sem animações longas, transições instantâneas ou muito rápidas (0.2s).
-- **Hover Funcional**: Mudança de cor de fundo ou sublinhado.
+- **Precise and Fast**: No long animations, instant or very fast transitions (0.2s).
+- **Functional Hover**: Background color change or underline.
 
 **Animation**:
 
-- **Minimalista**: Apenas o essencial (fade-in rápido).
+- **Minimalist**: Only the essentials (quick fade-in).
 
 **Typography System**:
 
-- **Títulos**: 'Playfair Display' (Serifa moderna) ou 'Oswald' (Sans condensada).
-- **Corpo**: 'Lato' ou 'Open Sans'.
+- **Headings**: 'Playfair Display' (Modern serif) or 'Oswald' (Condensed sans).
+- **Body**: 'Lato' or 'Open Sans'.
   </idea>
   </text>
   <probability>0.03</probability>
   </response>
 
-# Escolha Final: Neumorfismo Moderno com Toques Neon (Opção 1)
+# Final Choice: Modern Neumorphism with Neon Accents (Option 1)
 
-**Justificativa**: Esta abordagem equilibra a modernidade da marca "Neon" com a clareza necessária para um dashboard de performance. O fundo claro facilita a leitura de dados complexos, enquanto os acentos neon mantêm a identidade visual vibrante e energética do programa. A profundidade suave (soft UI) adiciona um toque de sofisticação sem comprometer a usabilidade.
+**Justification**: This approach balances the modernity of the "Neon" brand with the clarity needed for a performance dashboard. The light background makes it easy to read complex data, while the neon accents maintain the vibrant and energetic visual identity of the program. The soft depth (soft UI) adds a touch of sophistication without compromising usability.
 
-**Diretrizes para Implementação**:
+**Implementation Guidelines**:
 
-- **Fonte Principal**: 'Outfit' (Títulos) e 'Inter' (Corpo).
-- **Cores**: Fundo #F8FAFC, Cartões #FFFFFF, Acentos #00E676 (Sucesso), #F50057 (Atenção), #7C3AED (Marca).
-- **Sombras**: `box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);`
-- **Bordas**: `border-radius: 1rem;` (Arredondadas e amigáveis).
+- **Primary Font**: 'Outfit' (Headings) and 'Inter' (Body).
+- **Colors**: Background #F8FAFC, Cards #FFFFFF, Accents #00E676 (Success), #F50057 (Attention), #7C3AED (Brand).
+- **Shadows**: `box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);`
+- **Borders**: `border-radius: 1rem;` (Rounded and friendly).

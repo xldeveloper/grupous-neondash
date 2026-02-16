@@ -1,5 +1,5 @@
 import { formatDistanceToNow } from "date-fns";
-import { ptBR } from "date-fns/locale";
+import { enUS } from "date-fns/locale";
 import { AlertTriangle, BellOff, Calendar, Check, Loader2, Trophy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -17,17 +17,17 @@ const tipoConfig: Record<
   conquista: {
     icon: Trophy,
     color: "text-yellow-500 bg-yellow-50",
-    label: "Conquista",
+    label: "Achievement",
   },
   alerta_meta: {
     icon: AlertTriangle,
     color: "text-orange-500 bg-orange-50",
-    label: "Alerta",
+    label: "Alert",
   },
   lembrete_metricas: {
     icon: Calendar,
     color: "text-blue-500 bg-blue-50",
-    label: "Lembrete",
+    label: "Reminder",
   },
   ranking: {
     icon: Trophy,
@@ -66,9 +66,9 @@ export function NotificationsView() {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-lg font-bold text-foreground">Notificações</h3>
+          <h3 className="text-lg font-bold text-foreground">Notifications</h3>
           <p className="text-sm text-muted-foreground">
-            {naoLidas > 0 ? `${naoLidas} não lida(s)` : "Tudo atualizado"}
+            {naoLidas > 0 ? `${naoLidas} unread` : "All caught up"}
           </p>
         </div>
 
@@ -81,7 +81,7 @@ export function NotificationsView() {
             className="text-xs h-8"
           >
             <Check className="w-3 h-3 mr-1" />
-            Ler todas
+            Read all
           </Button>
         )}
       </div>
@@ -94,7 +94,7 @@ export function NotificationsView() {
         <Card className="border-none shadow-sm bg-card">
           <CardContent className="py-8 text-center">
             <BellOff className="w-8 h-8 mx-auto text-muted-foreground/50 mb-2" />
-            <p className="text-sm text-muted-foreground">Nenhuma notificação nova.</p>
+            <p className="text-sm text-muted-foreground">No new notifications.</p>
           </CardContent>
         </Card>
       ) : (
@@ -132,7 +132,7 @@ export function NotificationsView() {
                         <span className="text-[10px] text-slate-400 whitespace-nowrap">
                           {formatDistanceToNow(new Date(notif.createdAt), {
                             addSuffix: true,
-                            locale: ptBR,
+                            locale: enUS,
                           })}
                         </span>
                       </div>

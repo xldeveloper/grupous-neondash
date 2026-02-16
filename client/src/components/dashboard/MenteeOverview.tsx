@@ -18,7 +18,7 @@ interface MenteeOverviewProps {
 }
 
 export function MenteeOverview({ mentoradoId, isAdmin, onNavigateToTab }: MenteeOverviewProps) {
-  // Determine if viewing another mentorado (admin mode)
+  // Determine if viewing another mentee (admin mode)
   const isViewingOther = mentoradoId !== undefined;
 
   // Fetch stats - pass mentoradoId only if viewing another user
@@ -26,7 +26,7 @@ export function MenteeOverview({ mentoradoId, isAdmin, onNavigateToTab }: Mentee
     isViewingOther ? { mentoradoId } : undefined
   );
 
-  // Fetch mentorado info - use getById for admin view, me for self view
+  // Fetch mentee info - use getById for admin view, me for self view
   const { data: mentoradoMe, isLoading: isLoadingMe } = trpc.mentorados.me.useQuery(undefined, {
     enabled: !isViewingOther,
   });
@@ -45,11 +45,11 @@ export function MenteeOverview({ mentoradoId, isAdmin, onNavigateToTab }: Mentee
     return <OverviewSkeleton />;
   }
 
-  // If no mentorado exists (user without mentorado profile), show welcome screen
+  // If no mentee exists (user without mentee profile), show welcome screen
   if (!mentorado) {
     return (
       <NewMentoradoWelcome
-        mentoradoName="Novo Usuário"
+        mentoradoName="New User"
         onNavigateToDiagnostico={() => onNavigateToTab?.("diagnostico")}
       />
     );
@@ -60,7 +60,7 @@ export function MenteeOverview({ mentoradoId, isAdmin, onNavigateToTab }: Mentee
     return <OverviewSkeleton />;
   }
 
-  // Note: We now show full overview even with zero data (after diagnostico)
+  // Note: We now show full overview even with zero data (after diagnosis)
   // Stats will display zeros until user enters their first metrics
 
   const formatCurrency = (value: number) =>
@@ -162,7 +162,7 @@ export function MenteeOverview({ mentoradoId, isAdmin, onNavigateToTab }: Mentee
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-primary text-xl font-semibold flex items-center gap-2">
                 <DollarSign className="w-5 h-5" />
-                Histórico Financeiro
+                Financial History
               </h2>
             </div>
             <FinancialHistoryChart data={stats.financials.chartData} />
@@ -171,7 +171,7 @@ export function MenteeOverview({ mentoradoId, isAdmin, onNavigateToTab }: Mentee
           <div className="space-y-4">
             <h2 className="text-primary text-xl font-semibold flex items-center gap-2 px-2">
               <TrendingUp className="w-5 h-5" />
-              Jornada do Mentorado
+              Mentee Journey
             </h2>
             <RoadmapView mentoradoId={mentorado.id} />
           </div>
@@ -183,10 +183,10 @@ export function MenteeOverview({ mentoradoId, isAdmin, onNavigateToTab }: Mentee
           <AITasksCard mentoradoId={mentorado.id} isAdmin={isAdmin} />
 
           <div className="space-y-4">
-            <h2 className="text-primary text-lg font-medium px-1">Principais Estatísticas</h2>
+            <h2 className="text-primary text-lg font-medium px-1">Key Statistics</h2>
 
             <div className="grid grid-cols-1 gap-4">
-              {/* ROI Card - Based on R$ 20,000 mentorship price */}
+              {/* ROI Card - Based on R$20,000 mentorship price */}
               {(() => {
                 const MENTORSHIP_COST = 20000;
                 const roi =
@@ -202,7 +202,7 @@ export function MenteeOverview({ mentoradoId, isAdmin, onNavigateToTab }: Mentee
                       </div>
                       <div>
                         <p className="text-xs uppercase tracking-wider text-muted-foreground font-semibold mb-1">
-                          ROI da Mentoria
+                          Mentorship ROI
                         </p>
                         <div className="flex items-baseline gap-2">
                           <span
@@ -233,7 +233,7 @@ export function MenteeOverview({ mentoradoId, isAdmin, onNavigateToTab }: Mentee
                   </div>
                   <div>
                     <p className="text-xs uppercase tracking-wider text-muted-foreground font-semibold mb-1">
-                      Receita Mensal
+                      Monthly Revenue
                     </p>
                     <div className="flex items-baseline gap-2">
                       <span className="text-2xl font-bold text-foreground tracking-tight">
@@ -257,13 +257,13 @@ export function MenteeOverview({ mentoradoId, isAdmin, onNavigateToTab }: Mentee
                   </div>
                   <div>
                     <p className="text-xs uppercase tracking-wider text-muted-foreground font-semibold mb-1">
-                      Crescimento
+                      Growth
                     </p>
                     <div className="flex items-baseline gap-2">
                       <span className="text-2xl font-bold text-foreground tracking-tight">
                         {stats.financials.growthPercent}%
                       </span>
-                      <span className="text-xs text-muted-foreground font-medium">(Geral)</span>
+                      <span className="text-xs text-muted-foreground font-medium">(Overall)</span>
                     </div>
                   </div>
                 </CardContent>
@@ -279,12 +279,12 @@ export function MenteeOverview({ mentoradoId, isAdmin, onNavigateToTab }: Mentee
               </span>
               <div className="h-px bg-border flex-1"></div>
             </div>
-            <h2 className="text-primary text-lg font-medium px-1">Anotações Privadas</h2>
+            <h2 className="text-primary text-lg font-medium px-1">Private Notes</h2>
             <MentorNotes existingNotes={stats.notes} />
           </div>
 
           <div className="pt-4 space-y-4">
-            <h2 className="text-primary text-lg font-medium px-1">Histórico de Reuniões</h2>
+            <h2 className="text-primary text-lg font-medium px-1">Meeting History</h2>
             <MeetingHistory meetings={stats.meetings} />
           </div>
         </div>

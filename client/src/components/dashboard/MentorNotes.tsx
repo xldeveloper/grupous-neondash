@@ -21,16 +21,16 @@ export function MentorNotes({ existingNotes = [] }: MentorNotesProps) {
 
   const { mutate, isPending } = trpc.interacoes.createNote.useMutation({
     onSuccess: () => {
-      toast.success("Nota salva", {
-        description: "A anotação foi salva com sucesso.",
+      toast.success("Note saved", {
+        description: "The note was saved successfully.",
       });
       setNote("");
       // Invalidate to refresh the overview stats
       trpcUtils.mentorados.getOverviewStats.invalidate();
     },
     onError: () => {
-      toast.error("Erro", {
-        description: "Não foi possível salvar a nota.",
+      toast.error("Error", {
+        description: "Could not save the note.",
       });
     },
   });
@@ -57,7 +57,7 @@ export function MentorNotes({ existingNotes = [] }: MentorNotesProps) {
       {/* New note input */}
       <div className="bg-slate-900/50 p-4 rounded-xl border border-slate-700/50 space-y-3">
         <Textarea
-          placeholder="Adicionar notas..."
+          placeholder="Add notes..."
           className="bg-transparent border-none resize-none focus-visible:ring-0 text-slate-300 placeholder:text-slate-600 min-h-[80px]"
           value={note}
           onChange={(e) => setNote(e.target.value)}
@@ -70,7 +70,7 @@ export function MentorNotes({ existingNotes = [] }: MentorNotesProps) {
             disabled={!note.trim() || isPending}
           >
             {isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
-            Salvar Notas
+            Save Notes
           </Button>
         </div>
       </div>

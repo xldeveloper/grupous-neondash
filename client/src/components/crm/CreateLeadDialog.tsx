@@ -31,14 +31,14 @@ import { trpc } from "@/lib/trpc";
 
 // Form schema - keeps valorEstimado as string for input
 const createLeadFormSchema = z.object({
-  nome: z.string().min(2, "Nome é obrigatório"),
-  email: z.string().email("Email inválido"),
+  nome: z.string().min(2, "Name is required"),
+  email: z.string().email("Invalid email"),
   telefone: z.string().optional(),
   empresa: z.string().optional(),
   origem: z.enum(["instagram", "whatsapp", "google", "indicacao", "site", "outro"]),
   valorEstimado: z.string().optional(),
 
-  // B2B / Qualificação Fields
+  // B2B / Qualification Fields
   indicadoPor: z.string().optional(),
   profissao: z.string().optional(),
   produtoInteresse: z.string().optional(),
@@ -105,13 +105,13 @@ export function CreateLeadDialog({ isOpen, onClose, onSuccess }: CreateLeadDialo
 
   const mutation = trpc.leads.create.useMutation({
     onSuccess: () => {
-      toast.success("Lead criado com sucesso!");
+      toast.success("Lead created successfully!");
       trpcUtils.leads.list.invalidate();
       if (onSuccess) onSuccess();
       onClose();
     },
     onError: (err) => {
-      toast.error(`Erro ao criar lead: ${err.message}`);
+      toast.error(`Error creating lead: ${err.message}`);
     },
   });
 
@@ -165,14 +165,14 @@ export function CreateLeadDialog({ isOpen, onClose, onSuccess }: CreateLeadDialo
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[700px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Novo Lead</DialogTitle>
+          <DialogTitle>New Lead</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            {/* 1. Dados Pessoais */}
+            {/* 1. Personal Data */}
             <div className="space-y-4">
               <h3 className="text-sm font-medium text-muted-foreground border-b pb-1">
-                Dados Pessoais
+                Personal Data
               </h3>
               <div className="grid grid-cols-2 gap-4">
                 <FormField
@@ -180,9 +180,9 @@ export function CreateLeadDialog({ isOpen, onClose, onSuccess }: CreateLeadDialo
                   name="nome"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Nome Completo*</FormLabel>
+                      <FormLabel>Full Name*</FormLabel>
                       <FormControl>
-                        <Input placeholder="Nome do lead" {...field} />
+                        <Input placeholder="Lead name" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -195,7 +195,7 @@ export function CreateLeadDialog({ isOpen, onClose, onSuccess }: CreateLeadDialo
                     <FormItem>
                       <FormLabel>Email*</FormLabel>
                       <FormControl>
-                        <Input placeholder="email@exemplo.com" {...field} />
+                        <Input placeholder="email@example.com" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -208,7 +208,7 @@ export function CreateLeadDialog({ isOpen, onClose, onSuccess }: CreateLeadDialo
                   name="telefone"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>WhatsApp / Telefone</FormLabel>
+                      <FormLabel>WhatsApp / Phone</FormLabel>
                       <FormControl>
                         <Input placeholder="(00) 00000-0000" {...field} />
                       </FormControl>
@@ -221,9 +221,9 @@ export function CreateLeadDialog({ isOpen, onClose, onSuccess }: CreateLeadDialo
                   name="profissao"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Profissão</FormLabel>
+                      <FormLabel>Profession</FormLabel>
                       <FormControl>
-                        <Input placeholder="Ex: Biomédica" {...field} />
+                        <Input placeholder="E.g.: Biomedical" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -236,7 +236,7 @@ export function CreateLeadDialog({ isOpen, onClose, onSuccess }: CreateLeadDialo
                   name="dataNascimento"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Data de Nascimento</FormLabel>
+                      <FormLabel>Date of Birth</FormLabel>
                       <FormControl>
                         <Input type="date" {...field} />
                       </FormControl>
@@ -249,17 +249,17 @@ export function CreateLeadDialog({ isOpen, onClose, onSuccess }: CreateLeadDialo
                   name="genero"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Gênero</FormLabel>
+                      <FormLabel>Gender</FormLabel>
                       <Select onValueChange={field.onChange} defaultValue={field.value}>
                         <FormControl>
                           <SelectTrigger>
-                            <SelectValue placeholder="Selecione" />
+                            <SelectValue placeholder="Select" />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="Feminino">Feminino</SelectItem>
-                          <SelectItem value="Masculino">Masculino</SelectItem>
-                          <SelectItem value="Outro">Outro</SelectItem>
+                          <SelectItem value="Feminino">Female</SelectItem>
+                          <SelectItem value="Masculino">Male</SelectItem>
+                          <SelectItem value="Outro">Other</SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage />
@@ -269,10 +269,10 @@ export function CreateLeadDialog({ isOpen, onClose, onSuccess }: CreateLeadDialo
               </div>
             </div>
 
-            {/* 2. Anamnese Comercial */}
+            {/* 2. Commercial Anamnesis */}
             <div className="space-y-4">
               <h3 className="text-sm font-medium text-muted-foreground border-b pb-1">
-                Anamnese Comercial
+                Commercial Anamnesis
               </h3>
               <div className="grid grid-cols-2 gap-4">
                 <FormField
@@ -280,9 +280,9 @@ export function CreateLeadDialog({ isOpen, onClose, onSuccess }: CreateLeadDialo
                   name="tipoPele"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Tipo de Pele</FormLabel>
+                      <FormLabel>Skin Type</FormLabel>
                       <FormControl>
-                        <Input placeholder="Ex: Oleosa, Seca..." {...field} />
+                        <Input placeholder="E.g.: Oily, Dry..." {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -293,9 +293,9 @@ export function CreateLeadDialog({ isOpen, onClose, onSuccess }: CreateLeadDialo
                   name="alergias"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Alergias</FormLabel>
+                      <FormLabel>Allergies</FormLabel>
                       <FormControl>
-                        <Input placeholder="Possui alguma alergia?" {...field} />
+                        <Input placeholder="Any allergies?" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -307,9 +307,9 @@ export function CreateLeadDialog({ isOpen, onClose, onSuccess }: CreateLeadDialo
                 name="historicoEstetico"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Histórico Estético</FormLabel>
+                    <FormLabel>Aesthetic History</FormLabel>
                     <FormControl>
-                      <Input placeholder="Já fez procedimentos anteriores? Quais?" {...field} />
+                      <Input placeholder="Any previous procedures? Which ones?" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -317,19 +317,19 @@ export function CreateLeadDialog({ isOpen, onClose, onSuccess }: CreateLeadDialo
               />
             </div>
 
-            {/* 3. Interesse */}
+            {/* 3. Interest */}
             <div className="space-y-4">
-              <h3 className="text-sm font-medium text-muted-foreground border-b pb-1">Interesse</h3>
+              <h3 className="text-sm font-medium text-muted-foreground border-b pb-1">Interest</h3>
               <div className="grid grid-cols-2 gap-4">
                 <FormField
                   control={form.control}
                   name="procedimentosInteresse"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Procedimentos de Interesse</FormLabel>
+                      <FormLabel>Procedures of Interest</FormLabel>
                       <FormControl>
                         <Input
-                          placeholder="Ex: Botox, Preenchimento (separe por vírgula)"
+                          placeholder="E.g.: Botox, Fillers (separate with commas)"
                           {...field}
                         />
                       </FormControl>
@@ -342,9 +342,9 @@ export function CreateLeadDialog({ isOpen, onClose, onSuccess }: CreateLeadDialo
                   name="disponibilidade"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Disponibilidade</FormLabel>
+                      <FormLabel>Availability</FormLabel>
                       <FormControl>
-                        <Input placeholder="Ex: Manhã, Terças..." {...field} />
+                        <Input placeholder="E.g.: Mornings, Tuesdays..." {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -357,9 +357,9 @@ export function CreateLeadDialog({ isOpen, onClose, onSuccess }: CreateLeadDialo
                   name="dorPrincipal"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Queixa Principal (Dor)</FormLabel>
+                      <FormLabel>Main Complaint (Pain)</FormLabel>
                       <FormControl>
-                        <Input placeholder="O que mais incomoda?" {...field} />
+                        <Input placeholder="What bothers you the most?" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -370,9 +370,9 @@ export function CreateLeadDialog({ isOpen, onClose, onSuccess }: CreateLeadDialo
                   name="desejoPrincipal"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Desejo/Sonho</FormLabel>
+                      <FormLabel>Desire/Dream</FormLabel>
                       <FormControl>
-                        <Input placeholder="Resultado esperado?" {...field} />
+                        <Input placeholder="Expected outcome?" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -381,10 +381,10 @@ export function CreateLeadDialog({ isOpen, onClose, onSuccess }: CreateLeadDialo
               </div>
             </div>
 
-            {/* 4. Outros (B2B / Qualificação) */}
+            {/* 4. Other (B2B / Qualification) */}
             <div className="space-y-4">
               <h3 className="text-sm font-medium text-muted-foreground border-b pb-1">
-                Qualificação / B2B
+                Qualification / B2B
               </h3>
               <div className="grid grid-cols-2 gap-4">
                 <FormField
@@ -392,20 +392,20 @@ export function CreateLeadDialog({ isOpen, onClose, onSuccess }: CreateLeadDialo
                   name="origem"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Origem do Lead*</FormLabel>
+                      <FormLabel>Lead Source*</FormLabel>
                       <Select onValueChange={field.onChange} defaultValue={field.value}>
                         <FormControl>
                           <SelectTrigger>
-                            <SelectValue placeholder="Selecione" />
+                            <SelectValue placeholder="Select" />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
                           <SelectItem value="instagram">Instagram</SelectItem>
                           <SelectItem value="whatsapp">WhatsApp</SelectItem>
                           <SelectItem value="google">Google</SelectItem>
-                          <SelectItem value="indicacao">Indicação</SelectItem>
-                          <SelectItem value="site">Site</SelectItem>
-                          <SelectItem value="outro">Outro</SelectItem>
+                          <SelectItem value="indicacao">Referral</SelectItem>
+                          <SelectItem value="site">Website</SelectItem>
+                          <SelectItem value="outro">Other</SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage />
@@ -417,9 +417,9 @@ export function CreateLeadDialog({ isOpen, onClose, onSuccess }: CreateLeadDialo
                   name="indicadoPor"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Indicado Por</FormLabel>
+                      <FormLabel>Referred By</FormLabel>
                       <FormControl>
-                        <Input placeholder="Nome de quem indicou" {...field} />
+                        <Input placeholder="Name of referrer" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -432,17 +432,17 @@ export function CreateLeadDialog({ isOpen, onClose, onSuccess }: CreateLeadDialo
                   name="temperatura"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Temperatura</FormLabel>
+                      <FormLabel>Temperature</FormLabel>
                       <Select onValueChange={field.onChange} defaultValue={field.value}>
                         <FormControl>
                           <SelectTrigger>
-                            <SelectValue placeholder="Selecione" />
+                            <SelectValue placeholder="Select" />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="frio">Frio ❄️</SelectItem>
-                          <SelectItem value="morno">Morno 🌤️</SelectItem>
-                          <SelectItem value="quente">Quente 🔥</SelectItem>
+                          <SelectItem value="frio">Cold</SelectItem>
+                          <SelectItem value="morno">Warm</SelectItem>
+                          <SelectItem value="quente">Hot</SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage />
@@ -454,7 +454,7 @@ export function CreateLeadDialog({ isOpen, onClose, onSuccess }: CreateLeadDialo
                   name="valorEstimado"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Valor Proposta (R$)</FormLabel>
+                      <FormLabel>Proposal Value (R$)</FormLabel>
                       <FormControl>
                         <Input placeholder="0,00" {...field} />
                       </FormControl>
@@ -467,10 +467,10 @@ export function CreateLeadDialog({ isOpen, onClose, onSuccess }: CreateLeadDialo
 
             <DialogFooter className="pt-4 sticky bottom-0 bg-background/95 backdrop-blur py-4 border-t mt-4">
               <Button type="button" variant="secondary" onClick={onClose}>
-                Cancelar
+                Cancel
               </Button>
               <Button type="submit" disabled={mutation.isPending}>
-                {mutation.isPending ? "Criando..." : "Criar Lead"}
+                {mutation.isPending ? "Creating..." : "Create Lead"}
               </Button>
             </DialogFooter>
           </form>

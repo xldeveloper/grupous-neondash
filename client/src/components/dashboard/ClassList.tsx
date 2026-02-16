@@ -29,7 +29,7 @@ export function ClassList({ mentoradoId }: { mentoradoId?: number }) {
       <div className="flex items-center justify-between">
         <h2 className="text-xl font-bold font-mono text-primary flex items-center gap-2">
           <Video className="w-5 h-5" />
-          AULAS E ENCONTROS [DBE]
+          CLASSES & MEETINGS [DBE]
         </h2>
         <span className="text-xs font-mono text-slate-400">
           {completedCount}/{sortedClasses.length} completed
@@ -73,8 +73,8 @@ export function ClassList({ mentoradoId }: { mentoradoId?: number }) {
                     </span>
                     <span className="text-xs text-slate-500 font-mono">
                       {item.date
-                        ? new Date(item.date).toLocaleDateString("pt-BR")
-                        : "Data a definir"}
+                        ? new Date(item.date).toLocaleDateString("en-US")
+                        : "Date to be defined"}
                     </span>
                   </div>
                   <h3 className="text-sm font-bold text-foreground mb-1">{item.title}</h3>
@@ -88,7 +88,7 @@ export function ClassList({ mentoradoId }: { mentoradoId?: number }) {
                       className="inline-flex items-center gap-1 text-xs text-neon-blue mt-2 hover:underline"
                     >
                       <PlayCircle className="w-3 h-3" />
-                      Assistir Agora
+                      Watch Now
                     </a>
                   )}
                 </div>
@@ -116,7 +116,7 @@ export function ClassList({ mentoradoId }: { mentoradoId?: number }) {
 
             {sortedClasses.length === 0 && (
               <div className="text-center py-12 text-slate-500 font-mono text-sm">
-                Nenhuma aula disponível
+                No classes available
               </div>
             )}
           </div>

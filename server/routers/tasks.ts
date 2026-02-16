@@ -30,7 +30,7 @@ export const tasksRouter = router({
         if (!isOwnId && !isAdmin) {
           throw new TRPCError({
             code: "FORBIDDEN",
-            message: "Apenas admins podem visualizar tarefas de outros.",
+            message: "Only admins can view other users' tasks.",
           });
         }
         targetMentoradoId = input.mentoradoId;
@@ -39,7 +39,7 @@ export const tasksRouter = router({
       if (!targetMentoradoId) {
         throw new TRPCError({
           code: "UNAUTHORIZED",
-          message: "Perfil de mentorado não encontrado.",
+          message: "Mentee profile not found.",
         });
       }
 
@@ -88,7 +88,7 @@ export const tasksRouter = router({
         if (!isOwnId && !isAdmin) {
           throw new TRPCError({
             code: "FORBIDDEN",
-            message: "Apenas admins podem criar tarefas para outros.",
+            message: "Only admins can create tasks for others.",
           });
         }
         targetMentoradoId = input.mentoradoId;
@@ -97,7 +97,7 @@ export const tasksRouter = router({
       if (!targetMentoradoId) {
         throw new TRPCError({
           code: "UNAUTHORIZED",
-          message: "Perfil de mentorado não encontrado.",
+          message: "Mentee profile not found.",
         });
       }
 
@@ -200,7 +200,7 @@ export const tasksRouter = router({
           });
           throw new TRPCError({
             code: "FORBIDDEN",
-            message: "Apenas admins podem gerar tarefas para outros.",
+            message: "Only admins can generate tasks for others.",
           });
         }
         targetMentoradoId = input.mentoradoId;
@@ -209,7 +209,7 @@ export const tasksRouter = router({
       if (!targetMentoradoId) {
         throw new TRPCError({
           code: "UNAUTHORIZED",
-          message: "Perfil de mentorado não encontrado.",
+          message: "Mentee profile not found.",
         });
       }
 
@@ -219,7 +219,7 @@ export const tasksRouter = router({
         logger.error("llm_configuration_invalid", { errors: llmConfig.errors });
         throw new TRPCError({
           code: "PRECONDITION_FAILED",
-          message: "Configuração de IA incompleta. Contate o administrador.",
+          message: "AI configuration incomplete. Contact the administrator.",
         });
       }
 
@@ -233,15 +233,15 @@ export const tasksRouter = router({
       const systemPrompt =
         promptSetting?.value ||
         `
-      Você é um Business Coach de Elite para clínicas de estética (Persona: "Neon Coach").
-      Sua missão é analisar os dados do mentorado e criar 3-5 tarefas TÁTICAS e IMEDIATAS para alavancar os resultados.
-      
-      Regras:
-      1. Seja direto e imperativo.
-      2. Foque em: Vendas, Marketing (Instagram) e Gestão.
-      3. Use tom motivador mas exigente ("Gamified").
-      4. Retorne APENAS um JSON array de strings. Nada mais.
-      Exemplo: ["Ligar para 10 leads antigos", "Postar story com caixinha de perguntas", "Revisar custos de produtos"]
+      You are an Elite Business Coach for aesthetics clinics (Persona: "Neon Coach").
+      Your mission is to analyze the mentee's data and create 3-5 TACTICAL and IMMEDIATE tasks to boost results.
+
+      Rules:
+      1. Be direct and imperative.
+      2. Focus on: Sales, Marketing (Instagram), and Management.
+      3. Use a motivating but demanding tone ("Gamified").
+      4. Return ONLY a JSON array of strings. Nothing else.
+      Example: ["Call 10 old leads", "Post a story with a Q&A box", "Review product costs"]
       `;
 
       // 2. Fetch Extended Context
@@ -284,27 +284,27 @@ export const tasksRouter = router({
         .limit(5);
 
       const userContext = `
-      Mentorado: ${mentoradoData?.nomeCompleto}
-      Meta Faturamento: R$ ${mentoradoData?.metaFaturamento}
-      
-      Últimas Métricas (3 meses):
+      Mentee: ${mentoradoData?.nomeCompleto}
+      Revenue Goal: R$ ${mentoradoData?.metaFaturamento}
+
+      Recent Metrics (3 months):
       ${recentMetrics
         .map(
-          (m) => `- ${m.mes}/${m.ano}: Fat R$${m.faturamento}, Lucro R$${m.lucro}, Leads ${m.leads}`
+          (m) => `- ${m.mes}/${m.ano}: Revenue R$${m.faturamento}, Profit R$${m.lucro}, Leads ${m.leads}`
         )
         .join("\n")}
-      
-      Funil de Vendas Atual:
-      - Total Leads na base: ${leadsCount.length}
-      - Leads "Novos" (sem contato): ${newLeads.length}
-      
-      Diagnóstico (Pontos de dor/Objetivos):
-      - Dor: ${diagnosticoData?.incomodaRotina || "Não informado"}
-      - Objetivo: ${diagnosticoData?.objetivo6Meses || "Não informado"}
-      - Visão 1 Ano: ${diagnosticoData?.visaoUmAno || "Não informado"}
-      - Prioridade: ${diagnosticoData?.nivelPrioridade || "Normal"}
-      
-      Tarefas Recentes (EVITE REPETIR):
+
+      Current Sales Funnel:
+      - Total Leads in database: ${leadsCount.length}
+      - "New" Leads (no contact): ${newLeads.length}
+
+      Diagnosis (Pain points/Goals):
+      - Pain: ${diagnosticoData?.incomodaRotina || "Not provided"}
+      - Goal: ${diagnosticoData?.objetivo6Meses || "Not provided"}
+      - 1-Year Vision: ${diagnosticoData?.visaoUmAno || "Not provided"}
+      - Priority: ${diagnosticoData?.nivelPrioridade || "Normal"}
+
+      Recent Tasks (AVOID REPEATING):
       ${recentTasks.map((t) => `- ${t.title}`).join("\n")}
       `;
 
@@ -330,7 +330,7 @@ export const tasksRouter = router({
           logger.error("llm_empty_response", { result });
           throw new TRPCError({
             code: "INTERNAL_SERVER_ERROR",
-            message: "Resposta vazia da IA. Tente novamente.",
+            message: "Empty AI response. Please try again.",
           });
         }
 
@@ -348,7 +348,7 @@ export const tasksRouter = router({
 
           if (!Array.isArray(suggestedTasks)) {
             logger.error("invalid_tasks_format", { parsed, content });
-            throw new Error("Formato de resposta inválido: esperado array de tarefas");
+            throw new Error("Invalid response format: expected array of tasks");
           }
         } catch (parseError) {
           logger.error("json_parse_failed", {
@@ -357,7 +357,7 @@ export const tasksRouter = router({
           });
           throw new TRPCError({
             code: "INTERNAL_SERVER_ERROR",
-            message: "Erro ao processar resposta da IA. Tente novamente.",
+            message: "Error processing AI response. Please try again.",
           });
         }
 
@@ -403,7 +403,7 @@ export const tasksRouter = router({
           });
           throw new TRPCError({
             code: "PRECONDITION_FAILED",
-            message: "Configuração de IA incompleta. Contate o administrador.",
+            message: "AI configuration incomplete. Contact the administrator.",
           });
         }
 
@@ -417,27 +417,27 @@ export const tasksRouter = router({
           });
 
           // Map specific error codes to user-friendly messages
-          let userMessage = "Falha ao gerar plano com IA. Tente novamente.";
+          let userMessage = "Failed to generate plan with AI. Please try again.";
 
           switch (error.code) {
             case "TIMEOUT":
-              userMessage = "A IA demorou muito para responder. Tente novamente.";
+              userMessage = "The AI took too long to respond. Please try again.";
               break;
             case "RATE_LIMITED":
-              userMessage = "Limite de requisições atingido. Aguarde um momento e tente novamente.";
+              userMessage = "Request limit reached. Please wait a moment and try again.";
               break;
             case "UNAUTHORIZED":
-              userMessage = "Erro de autenticação com a IA. Contate o administrador.";
+              userMessage = "AI authentication error. Contact the administrator.";
               break;
             case "MODEL_NOT_FOUND":
-              userMessage = "Modelo de IA não encontrado. Contate o administrador.";
+              userMessage = "AI model not found. Contact the administrator.";
               break;
             case "SERVER_ERROR":
               userMessage =
-                "Serviço de IA temporariamente indisponível. Tente novamente em alguns minutos.";
+                "AI service temporarily unavailable. Please try again in a few minutes.";
               break;
             case "NETWORK_ERROR":
-              userMessage = "Erro de conexão. Verifique sua internet e tente novamente.";
+              userMessage = "Connection error. Check your internet and try again.";
               break;
           }
 
@@ -457,7 +457,7 @@ export const tasksRouter = router({
 
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
-          message: "Erro inesperado ao gerar plano. Tente novamente.",
+          message: "Unexpected error generating plan. Please try again.",
         });
       }
     }),
@@ -480,7 +480,7 @@ export const tasksRouter = router({
         if (!isOwnId && !isAdmin) {
           throw new TRPCError({
             code: "FORBIDDEN",
-            message: "Apenas admins podem arquivar tarefas de outros.",
+            message: "Only admins can archive other users' tasks.",
           });
         }
         targetMentoradoId = input.mentoradoId;
@@ -489,7 +489,7 @@ export const tasksRouter = router({
       if (!targetMentoradoId) {
         throw new TRPCError({
           code: "UNAUTHORIZED",
-          message: "Perfil de mentorado não encontrado.",
+          message: "Mentee profile not found.",
         });
       }
 

@@ -1,6 +1,6 @@
 /**
- * Dados estáticos das atividades do PLAY NEON
- * Reestruturado em 6 Fases com base na pesquisa de dores de profissionais de estética
+ * Static data for PLAY NEON activities
+ * Restructured into 6 Phases based on pain-point research for aesthetics professionals
  */
 
 export interface AtividadeStep {
@@ -29,1061 +29,1061 @@ export interface Fase {
 export const FASES: Fase[] = [
   {
     id: 1,
-    title: "Fase 1: Fundamentos",
-    etapaKey: "Fase 1: Fundamentos",
-    description: "Estruture as bases do seu negócio, desde a legalização até as finanças.",
+    title: "Phase 1: Foundations",
+    etapaKey: "Phase 1: Foundations",
+    description: "Build the foundations of your business, from legal compliance to finances.",
     icon: "🏠",
   },
   {
     id: 2,
-    title: "Fase 2: Posicionamento",
-    etapaKey: "Fase 2: Posicionamento",
-    description: "Defina sua identidade, nicho e como você se apresenta ao mercado.",
+    title: "Phase 2: Positioning",
+    etapaKey: "Phase 2: Positioning",
+    description: "Define your identity, niche, and how you present yourself to the market.",
     icon: "🎯",
   },
   {
     id: 3,
-    title: "Fase 3: Marketing",
-    etapaKey: "Fase 3: Marketing",
-    description: "Atraia clientes ideais com estratégias de conteúdo e tráfego.",
+    title: "Phase 3: Marketing",
+    etapaKey: "Phase 3: Marketing",
+    description: "Attract ideal clients with content and paid traffic strategies.",
     icon: "🚀",
   },
   {
     id: 4,
-    title: "Fase 4: Vendas",
-    etapaKey: "Fase 4: Vendas",
-    description: "Converta leads em pacientes fiéis com processos comerciais eficientes.",
+    title: "Phase 4: Sales",
+    etapaKey: "Phase 4: Sales",
+    description: "Convert leads into loyal patients with efficient sales processes.",
     icon: "💰",
   },
   {
     id: 5,
-    title: "Fase 5: Gestão",
-    etapaKey: "Fase 5: Gestão",
-    description: "Organize processos e equipe para escalar seu negócio com saúde.",
+    title: "Phase 5: Management",
+    etapaKey: "Phase 5: Management",
+    description: "Organize processes and team to scale your business sustainably.",
     icon: "📊",
   },
   {
     id: 6,
-    title: "Fase 6: Mindset",
-    etapaKey: "Fase 6: Mindset",
-    description: "Desenvolva a mentalidade e rotinas de uma empresária de sucesso.",
+    title: "Phase 6: Mindset",
+    etapaKey: "Phase 6: Mindset",
+    description: "Develop the mindset and routines of a successful business owner.",
     icon: "🧠",
   },
 ];
 
 export const ATIVIDADES: Atividade[] = [
   // ═══════════════════════════════════════════════════════════════════════════
-  // FASE 1: FUNDAMENTOS (Semanas 1-4)
+  // PHASE 1: FOUNDATIONS (Weeks 1-4)
   // ═══════════════════════════════════════════════════════════════════════════
   {
     codigo: "f1-boas-vindas",
-    titulo: "Boas-Vindas à Jornada NEON",
-    etapa: "Fase 1: Fundamentos",
+    titulo: "Welcome to the NEON Journey",
+    etapa: "Phase 1: Foundations",
     icone: "👋",
-    descricao: "Seu primeiro passo na metodologia NEON.",
+    descricao: "Your first step in the NEON methodology.",
     steps: [
       {
         codigo: "f1-bv-1",
-        label: "Assistir vídeo de boas-vindas",
+        label: "Watch the welcome video",
         descricao:
-          "Acesse a área de membros e assista o vídeo de introdução da Dra. Sacha explicando a metodologia NEON.",
+          "Access the members area and watch Dr. Sacha's introductory video explaining the NEON methodology.",
       },
       {
         codigo: "f1-bv-2",
-        label: "Ler guia de navegação da plataforma",
+        label: "Read the platform navigation guide",
         descricao:
-          "Familiarize-se com todas as áreas do dashboard: atividades, métricas, agenda e comunidade.",
+          "Familiarize yourself with all dashboard areas: activities, metrics, calendar, and community.",
       },
       {
         codigo: "f1-bv-3",
-        label: "Configurar foto de perfil profissional",
+        label: "Set up a professional profile photo",
         descricao:
-          "Use uma foto com fundo neutro, boa iluminação e roupa profissional. Evite selfies ou fotos casuais.",
+          "Use a photo with a neutral background, good lighting, and professional attire. Avoid selfies or casual photos.",
       },
       {
         codigo: "f1-bv-4",
-        label: "Preencher informações do perfil",
+        label: "Fill in profile information",
         descricao:
-          "Complete: nome completo, especialidade, cidade/estado, tempo de atuação e meta de faturamento.",
+          "Complete: full name, specialty, city/state, years of experience, and revenue goal.",
       },
       {
         codigo: "f1-bv-5",
-        label: "Conhecer a comunidade e mentores",
+        label: "Meet the community and mentors",
         descricao:
-          "Entre no grupo do WhatsApp NEON e apresente-se: nome, especialidade, cidade e o que espera da mentoria.",
+          "Join the NEON WhatsApp group and introduce yourself: name, specialty, city, and what you expect from the mentorship.",
       },
     ],
   },
   {
     codigo: "f1-diagnostico",
-    titulo: "Diagnóstico 360° e Metas SMART",
-    etapa: "Fase 1: Fundamentos",
+    titulo: "360° Diagnostic & SMART Goals",
+    etapa: "Phase 1: Foundations",
     icone: "📊",
-    descricao: "Entenda sua situação atual e defina metas claras para os próximos 6 meses.",
+    descricao: "Understand your current situation and set clear goals for the next 6 months.",
     steps: [
       {
         codigo: "f1-diag-1",
-        label: "Mapear faturamento dos últimos 3 meses",
+        label: "Map revenue from the last 3 months",
         descricao:
-          "Some todas as entradas (procedimentos, produtos vendidos). Use extratos bancários se necessário.",
+          "Add up all income (procedures, products sold). Use bank statements if necessary.",
       },
       {
         codigo: "f1-diag-2",
-        label: "Identificar despesas fixas e variáveis",
+        label: "Identify fixed and variable expenses",
         descricao:
-          "Fixas: aluguel, internet, contador. Variáveis: insumos, comissões. Liste tudo com valores.",
+          "Fixed: rent, internet, accountant. Variable: supplies, commissions. List everything with amounts.",
       },
       {
         codigo: "f1-diag-3",
-        label: "Calcular margem de lucro atual",
+        label: "Calculate current profit margin",
         descricao:
-          "Fórmula: (Faturamento - Custos) / Faturamento × 100. Meta saudável: acima de 30%.",
+          "Formula: (Revenue - Costs) / Revenue × 100. Healthy target: above 30%.",
       },
       {
         codigo: "f1-diag-4",
-        label: "Definir faturamento desejado em 6 meses",
-        descricao: "Seja realista: aumento de 30-50% é agressivo mas alcançável. Use método SMART.",
+        label: "Set desired revenue in 6 months",
+        descricao: "Be realistic: a 30-50% increase is aggressive but achievable. Use the SMART method.",
       },
       {
         codigo: "f1-diag-5",
-        label: "Listar 3 maiores obstáculos atuais",
+        label: "List your 3 biggest current obstacles",
         descricao:
-          "Ex: falta de leads, baixa conversão, precificação errada. Priorize por impacto no faturamento.",
+          "E.g.: lack of leads, low conversion, wrong pricing. Prioritize by revenue impact.",
       },
       {
         codigo: "f1-diag-6",
-        label: "Definir meta mensal de leads",
+        label: "Set a monthly lead goal",
         descricao:
-          "Calcule: quantos leads precisa para atingir o faturamento? Se conversão é 20%, para 10 clientes precisa de 50 leads.",
+          "Calculate: how many leads do you need to reach your revenue target? If conversion is 20%, for 10 clients you need 50 leads.",
       },
       {
         codigo: "f1-diag-7",
-        label: "Criar timeline de metas",
+        label: "Create a goals timeline",
         descricao:
-          "Distribua a meta de 6 meses em marcos mensais. Mês 1-2: estrutura. Mês 3-4: captação. Mês 5-6: escala.",
+          "Distribute the 6-month goal into monthly milestones. Months 1-2: structure. Months 3-4: acquisition. Months 5-6: scaling.",
       },
     ],
   },
   {
     codigo: "f1-legalizacao",
-    titulo: "Legalização Completa do Negócio",
-    etapa: "Fase 1: Fundamentos",
+    titulo: "Full Business Legal Compliance",
+    etapa: "Phase 1: Foundations",
     icone: "⚖️",
-    descricao: "Regularize sua atuação profissional com toda documentação necessária.",
+    descricao: "Regularize your professional practice with all required documentation.",
     steps: [
       {
         codigo: "f1-leg-1",
-        label: "Definir CNAE correto",
+        label: "Define the correct CNAE code",
         descricao:
-          "Para estética: 9602-5/02 (Atividades de Estética). Para clínica médica: 8650-0/12. Confirme com contador.",
+          "For aesthetics: 9602-5/02 (Aesthetics Activities). For medical clinic: 8650-0/12. Confirm with your accountant.",
       },
       {
         codigo: "f1-leg-2",
-        label: "Contratar contador especializado",
+        label: "Hire a specialized accountant",
         descricao:
-          "Busque contador com experiência em clínicas/consultórios. Peça referências no grupo NEON.",
+          "Look for an accountant experienced with clinics/offices. Ask for referrals in the NEON group.",
       },
       {
         codigo: "f1-leg-3",
-        label: "Abrir CNPJ (se ainda não tiver)",
+        label: "Register a CNPJ (if you don't have one yet)",
         descricao:
-          "Tipos: MEI não serve para estética. Opte por ME ou LTDA. Lucro Presumido costuma ser mais vantajoso.",
+          "Types: MEI is not suitable for aesthetics. Choose ME or LTDA. Presumed Profit regime is usually more advantageous.",
       },
       {
         codigo: "f1-leg-4",
-        label: "Obter alvará de funcionamento",
+        label: "Obtain a business operating permit",
         descricao:
-          "Solicite na Prefeitura. Documentos: contrato social, CNPJ, comprovante de endereço, taxa paga.",
+          "Apply at City Hall. Documents: articles of incorporation, CNPJ, proof of address, paid fee.",
       },
       {
         codigo: "f1-leg-5",
-        label: "Obter licença da Vigilância Sanitária",
+        label: "Obtain a Health Surveillance license",
         descricao:
-          "Documentos: projeto arquitetônico, PGRS, RT, lista de procedimentos. Prazo: 30-60 dias.",
+          "Documents: architectural plan, PGRS, RT, list of procedures. Timeline: 30-60 days.",
       },
       {
         codigo: "f1-leg-6",
-        label: "Registrar no Conselho de Classe",
-        descricao: "CRBM (biomédicos), COREN (enfermeiros), CFM (médicos). Obtenha número de RT.",
+        label: "Register with the Professional Council",
+        descricao: "CRBM (biomedical), COREN (nurses), CFM (physicians). Obtain your RT number.",
       },
       {
         codigo: "f1-leg-7",
-        label: "Obter autorização do Corpo de Bombeiros",
+        label: "Obtain Fire Department authorization",
         descricao:
-          "AVCB para estabelecimentos. Verifique requisitos de extintores e saídas de emergência.",
+          "AVCB for establishments. Check requirements for fire extinguishers and emergency exits.",
       },
       {
         codigo: "f1-leg-8",
-        label: "Cadastrar no CNES",
+        label: "Register with CNES",
         descricao:
-          "Cadastro Nacional de Estabelecimentos de Saúde. Obrigatório para clínicas. Feito online.",
+          "National Registry of Healthcare Establishments. Mandatory for clinics. Done online.",
       },
     ],
   },
   {
     codigo: "f1-financas",
-    titulo: "Finanças Organizadas",
-    etapa: "Fase 1: Fundamentos",
+    titulo: "Organized Finances",
+    etapa: "Phase 1: Foundations",
     icone: "💳",
-    descricao: "Separe suas finanças pessoais das profissionais e controle seu fluxo de caixa.",
+    descricao: "Separate your personal and business finances and control your cash flow.",
     steps: [
       {
         codigo: "f1-fin-1",
-        label: "Abrir conta bancária PJ",
+        label: "Open a business bank account",
         descricao:
-          "Bancos digitais (Inter, Cora) têm taxas menores. Nunca misture dinheiro PF com PJ.",
+          "Digital banks (Inter, Cora) have lower fees. Never mix personal and business funds.",
       },
       {
         codigo: "f1-fin-2",
-        label: "Configurar planilha de fluxo de caixa",
+        label: "Set up a cash flow spreadsheet",
         descricao:
-          "Baixe modelo no drive NEON ou use apps como Conta Azul, Granatum. Registre TUDO.",
+          "Download the template from the NEON drive or use apps like Conta Azul or Granatum. Record EVERYTHING.",
       },
       {
         codigo: "f1-fin-3",
-        label: "Definir pró-labore mensal",
+        label: "Define a monthly owner's draw",
         descricao:
-          "Valor fixo que você retira todo mês. Sugestão: 30-40% do lucro líquido. Seja disciplinada.",
+          "A fixed amount you withdraw every month. Suggestion: 30-40% of net profit. Be disciplined.",
       },
       {
         codigo: "f1-fin-4",
-        label: "Mapear custos fixos e variáveis",
+        label: "Map fixed and variable costs",
         descricao:
-          "Fixos: aluguel, internet, software. Variáveis: insumos, comissões. Crie categorias claras.",
+          "Fixed: rent, internet, software. Variable: supplies, commissions. Create clear categories.",
       },
       {
         codigo: "f1-fin-5",
-        label: "Criar reserva de emergência",
+        label: "Build an emergency reserve",
         descricao:
-          "Meta: 3-6 meses de custos fixos. Guarde em conta separada. Não toque exceto emergência real.",
+          "Target: 3-6 months of fixed costs. Keep in a separate account. Only touch in a real emergency.",
       },
       {
         codigo: "f1-fin-6",
-        label: "Implementar DRE simplificada",
+        label: "Implement a simplified income statement",
         descricao:
-          "Demonstrativo de Resultados: Receitas - Custos Variáveis - Custos Fixos = Lucro. Faça mensal.",
+          "Income Statement: Revenue - Variable Costs - Fixed Costs = Profit. Do it monthly.",
       },
     ],
   },
   {
     codigo: "f1-precificacao",
-    titulo: "Precificação Lucrativa",
-    etapa: "Fase 1: Fundamentos",
+    titulo: "Profitable Pricing",
+    etapa: "Phase 1: Foundations",
     icone: "🏷️",
-    descricao: "Defina preços que geram lucro e comunicam valor ao cliente.",
+    descricao: "Set prices that generate profit and communicate value to the client.",
     steps: [
       {
         codigo: "f1-prec-1",
-        label: "Calcular custo real por procedimento",
+        label: "Calculate the real cost per procedure",
         descricao:
-          "Inclua: insumos, tempo (seu hora/trabalho), depreciação de equipamentos, overhead.",
+          "Include: supplies, time (your hourly rate), equipment depreciation, overhead.",
       },
       {
         codigo: "f1-prec-2",
-        label: "Pesquisar preços da concorrência",
+        label: "Research competitor prices",
         descricao:
-          "Use perfis de 5-10 concorrentes da sua região. Anote preços e posicionamento de cada um.",
+          "Check profiles of 5-10 competitors in your area. Note prices and positioning of each.",
       },
       {
         codigo: "f1-prec-3",
-        label: "Definir margem mínima de 40%",
+        label: "Set a minimum 40% margin",
         descricao:
-          "Preço = Custo / (1 - Margem). Se custo é R$100 e margem 40%: 100 / 0.6 = R$166,67.",
+          "Price = Cost / (1 - Margin). If cost is R$100 and margin is 40%: 100 / 0.6 = R$166.67.",
       },
       {
         codigo: "f1-prec-4",
-        label: "Criar tabela de preços",
+        label: "Create a price list",
         descricao:
-          "Liste todos os procedimentos com preço. Crie versões: à vista, parcelado, combo.",
+          "List all procedures with prices. Create versions: cash, installments, combo.",
       },
       {
         codigo: "f1-prec-5",
-        label: "Definir política de descontos",
-        descricao: "Máximo 10-15% para pagamento à vista. Nunca dê desconto sem motivo claro.",
+        label: "Define a discount policy",
+        descricao: "Maximum 10-15% for cash payment. Never give a discount without a clear reason.",
       },
     ],
   },
 
   // ═══════════════════════════════════════════════════════════════════════════
-  // FASE 2: POSICIONAMENTO (Semanas 5-8)
+  // PHASE 2: POSITIONING (Weeks 5-8)
   // ═══════════════════════════════════════════════════════════════════════════
   {
     codigo: "f2-nicho",
-    titulo: "Nicho e Especialização",
-    etapa: "Fase 2: Posicionamento",
+    titulo: "Niche & Specialization",
+    etapa: "Phase 2: Positioning",
     icone: "🔍",
-    descricao: "Defina seu nicho de atuação principal para se diferenciar.",
+    descricao: "Define your main niche to differentiate yourself.",
     steps: [
       {
         codigo: "f2-nicho-1",
-        label: "Listar áreas de interesse e expertise",
+        label: "List areas of interest and expertise",
         descricao:
-          "O que você mais gosta de fazer? Harmonização, skincare, corporal? Liste 3-5 áreas.",
+          "What do you enjoy doing most? Facial harmonization, skincare, body treatments? List 3-5 areas.",
       },
       {
         codigo: "f2-nicho-2",
-        label: "Analisar demanda local",
+        label: "Analyze local demand",
         descricao:
-          "Pesquise no Google Trends, veja perguntas no Google, analise concorrência local.",
+          "Search on Google Trends, check Google questions, analyze local competition.",
       },
       {
         codigo: "f2-nicho-3",
-        label: "Avaliar lucratividade do nicho",
-        descricao: "Nichos com maior ticket: harmonização facial, tratamentos corporais avançados.",
+        label: "Assess niche profitability",
+        descricao: "Higher-ticket niches: facial harmonization, advanced body treatments.",
       },
       {
         codigo: "f2-nicho-4",
-        label: "Definir nicho principal",
+        label: "Define your main niche",
         descricao:
-          "Escolha 1-2 nichos para focar. Exemplo: 'Harmonização facial natural para mulheres 35+'.",
+          "Choose 1-2 niches to focus on. Example: 'Natural facial harmonization for women 35+'.",
       },
       {
         codigo: "f2-nicho-5",
-        label: "Criar diferencial competitivo",
+        label: "Create a competitive differentiator",
         descricao:
-          "O que você faz diferente? Atendimento, técnica, resultado, experiência? Defina 3 diferenciais.",
+          "What do you do differently? Service, technique, results, experience? Define 3 differentiators.",
       },
     ],
   },
   {
     codigo: "f2-persona",
-    titulo: "Persona Ideal Validada",
-    etapa: "Fase 2: Posicionamento",
+    titulo: "Validated Ideal Persona",
+    etapa: "Phase 2: Positioning",
     icone: "👤",
-    descricao: "Defina e valide seu cliente ideal para comunicar com precisão.",
+    descricao: "Define and validate your ideal client to communicate precisely.",
     steps: [
       {
         codigo: "f2-pers-1",
-        label: "Definir dados demográficos",
+        label: "Define demographic data",
         descricao:
-          "Idade, gênero, renda, profissão, cidade. Seja específica: 'Mulheres 35-50, renda 10k+, SP capital'.",
+          "Age, gender, income, profession, city. Be specific: 'Women 35-50, income 10k+, SP capital'.",
       },
       {
         codigo: "f2-pers-2",
-        label: "Mapear dores profundas",
+        label: "Map deep pain points",
         descricao:
-          "O que a incomoda? Envelhecimento, autoestima baixa, comparação social? Vá além do superficial.",
+          "What bothers them? Aging, low self-esteem, social comparison? Go beyond the surface.",
       },
       {
         codigo: "f2-pers-3",
-        label: "Identificar desejos e aspirações",
-        descricao: "Como ela quer se sentir? Mais jovem, confiante, bonita? Use as palavras dela.",
+        label: "Identify desires and aspirations",
+        descricao: "How do they want to feel? Younger, confident, beautiful? Use their own words.",
       },
       {
         codigo: "f2-pers-4",
-        label: "Listar objeções comuns",
+        label: "List common objections",
         descricao:
-          "Preço, medo de ficar artificial, não ter tempo. Prepare respostas para cada objeção.",
+          "Price, fear of looking artificial, not having time. Prepare answers for each objection.",
       },
       {
         codigo: "f2-pers-5",
-        label: "Validar com 5 clientes reais",
+        label: "Validate with 5 real clients",
         descricao:
-          "Entreviste 5 melhores clientes. Pergunte: por que me escolheu? O que mais valoriza?",
+          "Interview 5 of your best clients. Ask: why did you choose me? What do you value most?",
       },
     ],
   },
   {
     codigo: "f2-posicionamento",
-    titulo: "Proposta de Valor e Posicionamento",
-    etapa: "Fase 2: Posicionamento",
+    titulo: "Value Proposition & Positioning",
+    etapa: "Phase 2: Positioning",
     icone: "🗺️",
-    descricao: "Construa seu posicionamento único no mercado.",
+    descricao: "Build your unique market positioning.",
     steps: [
       {
         codigo: "f2-pos-1",
-        label: "Analisar 5 concorrentes diretos",
+        label: "Analyze 5 direct competitors",
         descricao:
-          "O que comunicam? Qual preço praticam? Como é o Instagram deles? Anote pontos fortes e fracos.",
+          "What do they communicate? What prices do they charge? What does their Instagram look like? Note strengths and weaknesses.",
       },
       {
         codigo: "f2-pos-2",
-        label: "Identificar gaps de mercado",
+        label: "Identify market gaps",
         descricao:
-          "O que ninguém oferece? Atendimento humanizado? Técnica específica? Horários diferenciados?",
+          "What does nobody offer? Humanized service? Specific technique? Flexible hours?",
       },
       {
         codigo: "f2-pos-3",
-        label: "Criar proposta única de valor",
+        label: "Create a unique value proposition",
         descricao:
-          "Complete: 'Eu ajudo [persona] a [resultado] através de [método], diferente de [concorrência]'.",
+          "Complete: 'I help [persona] achieve [result] through [method], unlike [competitors]'.",
       },
       {
         codigo: "f2-pos-4",
-        label: "Escrever mensagem de posicionamento",
+        label: "Write a positioning statement",
         descricao:
-          "Frase de 2 linhas que resume quem você é e para quem. Use na bio e em todas as apresentações.",
+          "A 2-line sentence summarizing who you are and who you serve. Use it in your bio and all presentations.",
       },
       {
         codigo: "f2-pos-5",
-        label: "Criar elevator pitch de 30 segundos",
+        label: "Create a 30-second elevator pitch",
         descricao:
-          "Treine apresentar quem você é em 30 segundos. Use em networking e primeiros contatos.",
+          "Practice presenting who you are in 30 seconds. Use at networking events and first contacts.",
       },
     ],
   },
   {
     codigo: "f2-perfil",
-    titulo: "Perfil Comportamental DISC",
-    etapa: "Fase 2: Posicionamento",
+    titulo: "DISC Behavioral Profile",
+    etapa: "Phase 2: Positioning",
     icone: "🧠",
-    descricao: "Entenda seu perfil comportamental para melhorar comunicação e vendas.",
+    descricao: "Understand your behavioral profile to improve communication and sales.",
     steps: [
       {
         codigo: "f2-disc-1",
-        label: "Realizar teste DISC",
-        descricao: "Faça o teste gratuito em sites como 123test.com ou peça link no grupo NEON.",
+        label: "Take the DISC test",
+        descricao: "Take the free test at sites like 123test.com or ask for a link in the NEON group.",
       },
       {
         codigo: "f2-disc-2",
-        label: "Analisar seus pontos fortes",
+        label: "Analyze your strengths",
         descricao:
-          "D=decisão, I=influência, S=estabilidade, C=conformidade. Qual domina? Use a seu favor.",
+          "D=dominance, I=influence, S=steadiness, C=conscientiousness. Which one dominates? Use it to your advantage.",
       },
       {
         codigo: "f2-disc-3",
-        label: "Identificar pontos de melhoria",
+        label: "Identify areas for improvement",
         descricao:
-          "Alto D pode parecer agressivo. Alto S pode demorar para agir. Reconheça e trabalhe.",
+          "High D can seem aggressive. High S may be slow to act. Recognize and work on it.",
       },
       {
         codigo: "f2-disc-4",
-        label: "Adaptar comunicação para clientes",
-        descricao: "Cliente D quer resultado rápido. Cliente S quer segurança. Adapte seu pitch.",
+        label: "Adapt communication for clients",
+        descricao: "D clients want fast results. S clients want security. Adapt your pitch.",
       },
     ],
   },
 
   // ═══════════════════════════════════════════════════════════════════════════
-  // FASE 3: MARKETING DIGITAL (Semanas 9-12)
+  // PHASE 3: DIGITAL MARKETING (Weeks 9-12)
   // ═══════════════════════════════════════════════════════════════════════════
   {
     codigo: "f3-instagram",
-    titulo: "Instagram Profissional para Clínicas",
-    etapa: "Fase 3: Marketing",
+    titulo: "Professional Instagram for Clinics",
+    etapa: "Phase 3: Marketing",
     icone: "📱",
-    descricao: "Transforme seu Instagram em máquina de captação de leads qualificados.",
+    descricao: "Turn your Instagram into a qualified lead generation machine.",
     steps: [
       {
         codigo: "f3-ig-1",
-        label: "Converter para conta profissional",
+        label: "Convert to a professional account",
         descricao:
-          "Configurações > Conta > Mudar para conta profissional > Empresa. Conecte ao Facebook Business.",
+          "Settings > Account > Switch to professional account > Business. Connect to Facebook Business.",
       },
       {
         codigo: "f3-ig-2",
-        label: "Otimizar bio com método AIDA",
+        label: "Optimize bio with the AIDA method",
         descricao:
-          "Atenção: emoji + especialidade. Interesse: resultado que entrega. Desejo: prova social. Ação: CTA + link.",
+          "Attention: emoji + specialty. Interest: result you deliver. Desire: social proof. Action: CTA + link.",
       },
       {
         codigo: "f3-ig-3",
-        label: "Definir 3-5 pilares de conteúdo",
+        label: "Define 3-5 content pillars",
         descricao:
-          "Sugestão: Educativo (dicas), Bastidores (humaniza), Resultados (antes/depois), Autoridade (formações).",
+          "Suggestion: Educational (tips), Behind the scenes (humanizes), Results (before/after), Authority (certifications).",
       },
       {
         codigo: "f3-ig-4",
-        label: "Criar calendário editorial de 30 dias",
+        label: "Create a 30-day editorial calendar",
         descricao:
-          "Use Notion ou Google Sheets. Defina: 3-4 posts/semana + stories diários + 1-2 reels/semana.",
+          "Use Notion or Google Sheets. Define: 3-4 posts/week + daily stories + 1-2 reels/week.",
       },
       {
         codigo: "f3-ig-5",
-        label: "Preparar batch de 10 conteúdos",
+        label: "Prepare a batch of 10 content pieces",
         descricao:
-          "Reserve 2-3h por semana para produzir em lote. Grave vídeos, escreva legendas. Use Canva e CapCut.",
+          "Set aside 2-3 hours per week for batch production. Record videos, write captions. Use Canva and CapCut.",
       },
       {
         codigo: "f3-ig-6",
-        label: "Configurar destaques organizados",
+        label: "Set up organized highlights",
         descricao:
-          "Mínimo: Sobre mim, Procedimentos, Resultados, Localização. Use capas padronizadas com sua identidade.",
+          "Minimum: About me, Procedures, Results, Location. Use standardized covers matching your brand identity.",
       },
       {
         codigo: "f3-ig-7",
-        label: "Implementar rotina de stories",
+        label: "Implement a stories routine",
         descricao:
-          "5-7 stories/dia. Roteiro: bastidores manhã, conteúdo educativo, enquete, resultado, CTA final.",
+          "5-7 stories/day. Script: morning behind-the-scenes, educational content, poll, result, final CTA.",
       },
       {
         codigo: "f3-ig-8",
-        label: "Criar primeiro Reels com hook forte",
+        label: "Create your first Reel with a strong hook",
         descricao:
-          "Primeiros 3 segundos são cruciais. Use: pergunta provocativa ou 'você está fazendo isso errado'.",
+          "The first 3 seconds are crucial. Use: a provocative question or 'you're doing this wrong'.",
       },
       {
         codigo: "f3-ig-9",
-        label: "Estabelecer rotina de engajamento",
+        label: "Establish an engagement routine",
         descricao:
-          "30min/dia: responda DMs em até 1h, comente em 10 perfis de potenciais clientes, responda comentários.",
+          "30 min/day: reply to DMs within 1 hour, comment on 10 profiles of potential clients, respond to comments.",
       },
       {
         codigo: "f3-ig-10",
-        label: "Acompanhar métricas semanalmente",
+        label: "Track metrics weekly",
         descricao:
-          "Insights: alcance, visitas ao perfil, cliques no link, salvamentos. Meta: crescer 10% semana a semana.",
+          "Insights: reach, profile visits, link clicks, saves. Goal: grow 10% week over week.",
       },
     ],
   },
   {
     codigo: "f3-trafego",
-    titulo: "Tráfego Pago: Fundamentos Meta Ads",
-    etapa: "Fase 3: Marketing",
+    titulo: "Paid Traffic: Meta Ads Fundamentals",
+    etapa: "Phase 3: Marketing",
     icone: "🎯",
-    descricao: "Configure suas primeiras campanhas para acelerar captação de leads.",
+    descricao: "Set up your first campaigns to accelerate lead generation.",
     steps: [
       {
         codigo: "f3-tf-1",
-        label: "Criar Gerenciador de Negócios",
+        label: "Create a Business Manager",
         descricao:
-          "Acesse business.facebook.com. Crie conta com e-mail profissional. Adicione sua página e Instagram.",
+          "Go to business.facebook.com. Create an account with a professional email. Add your page and Instagram.",
       },
       {
         codigo: "f3-tf-2",
-        label: "Configurar Pixel do Meta",
+        label: "Set up the Meta Pixel",
         descricao:
-          "Eventos > Adicionar Pixel. Instale no seu site ou landing page. Essencial para remarketing.",
+          "Events > Add Pixel. Install it on your website or landing page. Essential for remarketing.",
       },
       {
         codigo: "f3-tf-3",
-        label: "Definir público-alvo inicial",
+        label: "Define your initial target audience",
         descricao:
-          "Segmente por: localização (10-30km), idade (25-55), interesses (estética, beleza, skincare).",
+          "Segment by: location (10-30 km), age (25-55), interests (aesthetics, beauty, skincare).",
       },
       {
         codigo: "f3-tf-4",
-        label: "Criar campanha de engajamento",
+        label: "Create an engagement campaign",
         descricao:
-          "Objetivo: Engajamento. Orçamento: R$15-30/dia para testar. Duração: 7 dias para aprendizado.",
+          "Objective: Engagement. Budget: R$15-30/day for testing. Duration: 7 days for learning.",
       },
       {
         codigo: "f3-tf-5",
-        label: "Analisar resultados após 7 dias",
-        descricao: "CPC aceitável: < R$1,00. CTR: > 1%. Desative anúncios ruins, duplique os bons.",
+        label: "Analyze results after 7 days",
+        descricao: "Acceptable CPC: < R$1.00. CTR: > 1%. Deactivate poor ads, duplicate the good ones.",
       },
       {
         codigo: "f3-tf-6",
-        label: "Escalar para campanha de leads",
+        label: "Scale to a lead generation campaign",
         descricao:
-          "Objetivo: Mensagens WhatsApp ou Cadastro. Custo por lead meta: R$10-40 dependendo do procedimento.",
+          "Objective: WhatsApp Messages or Sign-up. Cost per lead target: R$10-40 depending on the procedure.",
       },
     ],
   },
 
   // ═══════════════════════════════════════════════════════════════════════════
-  // FASE 4: VENDAS E ATENDIMENTO (Semanas 13-16)
+  // PHASE 4: SALES & CUSTOMER SERVICE (Weeks 13-16)
   // ═══════════════════════════════════════════════════════════════════════════
   {
     codigo: "f4-whatsapp",
-    titulo: "WhatsApp Business Estratégico",
-    etapa: "Fase 4: Vendas",
+    titulo: "Strategic WhatsApp Business",
+    etapa: "Phase 4: Sales",
     icone: "💬",
-    descricao: "Configure seu principal canal de vendas para converter mais leads.",
+    descricao: "Set up your main sales channel to convert more leads.",
     steps: [
       {
         codigo: "f4-wpp-1",
-        label: "Migrar para WhatsApp Business",
+        label: "Migrate to WhatsApp Business",
         descricao:
-          "Baixe o app WhatsApp Business (não o normal). Migre histórico. Use número comercial separado se possível.",
+          "Download the WhatsApp Business app (not the regular one). Migrate your history. Use a separate business number if possible.",
       },
       {
         codigo: "f4-wpp-2",
-        label: "Configurar perfil comercial completo",
+        label: "Set up a complete business profile",
         descricao:
-          "Foto: sua foto profissional. Descrição: especialidade + CTA. Horário. Endereço com mapa.",
+          "Photo: your professional photo. Description: specialty + CTA. Hours. Address with map.",
       },
       {
         codigo: "f4-wpp-3",
-        label: "Criar catálogo de serviços",
+        label: "Create a service catalog",
         descricao:
-          "Adicione 5-10 procedimentos principais. Foto, descrição curta, preço (opcional), link para agendar.",
+          "Add 5-10 main procedures. Photo, short description, price (optional), link to schedule.",
       },
       {
         codigo: "f4-wpp-4",
-        label: "Configurar mensagem de saudação",
+        label: "Set up a greeting message",
         descricao:
-          "'Olá! 👋 Obrigada por entrar em contato! Em breve vamos te responder. O que você gostaria de saber?'",
+          "'Hello! 👋 Thanks for reaching out! We'll get back to you shortly. What would you like to know?'",
       },
       {
         codigo: "f4-wpp-5",
-        label: "Configurar mensagem de ausência",
+        label: "Set up an away message",
         descricao:
-          "Ative fora do horário: 'Nosso horário é seg-sex, 9h-18h. Deixe sua mensagem que responderemos!'",
+          "Enable outside hours: 'Our hours are Mon-Fri, 9 AM-6 PM. Leave your message and we'll respond!'",
       },
       {
         codigo: "f4-wpp-6",
-        label: "Criar etiquetas de organização",
+        label: "Create organization labels",
         descricao:
-          "'Novo lead', 'Em negociação', 'Agendado', 'Pós-atendimento', 'Inativo'. Cores diferentes.",
+          "'New lead', 'In negotiation', 'Scheduled', 'Post-service', 'Inactive'. Different colors.",
       },
       {
         codigo: "f4-wpp-7",
-        label: "Preparar respostas rápidas",
+        label: "Prepare quick replies",
         descricao:
-          "Crie 10+ templates: valores, endereço, como funciona procedimento X, formas de pagamento, confirmação.",
+          "Create 10+ templates: pricing, address, how procedure X works, payment methods, confirmation.",
       },
       {
         codigo: "f4-wpp-8",
-        label: "Definir SLA de resposta",
+        label: "Define a response SLA",
         descricao:
-          "Meta: responder em até 5min no horário comercial. Máximo aceitável: 1h. Lead quente esfria em 5min!",
+          "Goal: respond within 5 min during business hours. Maximum acceptable: 1 hour. A hot lead goes cold in 5 min!",
       },
     ],
   },
   {
     codigo: "f4-vendas",
-    titulo: "Script de Vendas Consultivas",
-    etapa: "Fase 4: Vendas",
+    titulo: "Consultative Sales Script",
+    etapa: "Phase 4: Sales",
     icone: "💰",
-    descricao: "Desenvolva técnicas de vendas que convertem sem parecer vendedor.",
+    descricao: "Develop sales techniques that convert without feeling pushy.",
     steps: [
       {
         codigo: "f4-vend-1",
-        label: "Estudar vendas consultivas",
+        label: "Study consultative selling",
         descricao:
-          "Venda consultiva = entender a dor antes de oferecer solução. Leia: SPIN Selling ou assista aulas NEON.",
+          "Consultative selling = understand the pain before offering a solution. Read: SPIN Selling or watch NEON classes.",
       },
       {
         codigo: "f4-vend-2",
-        label: "Criar script de descoberta",
+        label: "Create a discovery script",
         descricao:
-          "Perguntas: 'O que te motivou a buscar isso agora?' 'Já fez algo parecido?' 'O que espera de resultado?'",
+          "Questions: 'What motivated you to seek this now?' 'Have you done something similar before?' 'What result do you expect?'",
       },
       {
         codigo: "f4-vend-3",
-        label: "Mapear objeções comuns",
+        label: "Map common objections",
         descricao:
-          "Liste as 5 objeções mais frequentes: preço, medo, tempo, desconfiança. Prepare respostas para cada.",
+          "List the 5 most frequent objections: price, fear, time, distrust. Prepare answers for each.",
       },
       {
         codigo: "f4-vend-4",
-        label: "Criar script de contorno de objeções",
+        label: "Create an objection-handling script",
         descricao:
-          "'Entendo sua preocupação com o valor. Posso te mostrar como o retorno compensa o investimento?'",
+          "'I understand your concern about the cost. Can I show you how the return justifies the investment?'",
       },
       {
         codigo: "f4-vend-5",
-        label: "Definir processo de follow-up",
+        label: "Define a follow-up process",
         descricao:
-          "Cadência de 7 toques: D1 (proposta), D2 (check), D4 (valor), D7 (urgência), D14, D21, D30 (última).",
+          "7-touch cadence: D1 (proposal), D2 (check-in), D4 (value), D7 (urgency), D14, D21, D30 (final).",
       },
     ],
   },
   {
     codigo: "f4-jornada",
-    titulo: "Jornada WOW do Paciente",
-    etapa: "Fase 4: Vendas",
+    titulo: "WOW Patient Journey",
+    etapa: "Phase 4: Sales",
     icone: "⭐",
-    descricao: "Crie uma experiência memorável do primeiro contato à fidelização.",
+    descricao: "Create a memorable experience from first contact to loyalty.",
     steps: [
       {
         codigo: "f4-jor-1",
-        label: "Mapear jornada atual",
+        label: "Map the current journey",
         descricao:
-          "Desenhe: lead > contato > agendamento > preparo > atendimento > pós. Identifique gaps e fricções.",
+          "Draw: lead > contact > scheduling > preparation > service > post-service. Identify gaps and friction points.",
       },
       {
         codigo: "f4-jor-2",
-        label: "Criar script de primeira abordagem",
+        label: "Create a first-contact script",
         descricao:
-          "Acolhimento + descoberta + qualificação. 'O que te motivou?' 'Já fez algo antes?' 'Qual sua expectativa?'",
+          "Welcome + discovery + qualification. 'What motivated you?' 'Have you done this before?' 'What are your expectations?'",
       },
       {
         codigo: "f4-jor-3",
-        label: "Implementar confirmação 24h antes",
+        label: "Implement a 24-hour confirmation",
         descricao:
-          "'Olá [nome]! Lembrando do seu horário amanhã às [hora]. Qualquer necessidade, me avise! 💙'",
+          "'Hi [name]! Just a reminder about your appointment tomorrow at [time]. Let me know if you need anything! 💙'",
       },
       {
         codigo: "f4-jor-4",
-        label: "Enviar orientações pré-procedimento",
+        label: "Send pre-procedure instructions",
         descricao:
-          "Crie PDF ou mensagem: o que evitar, como se preparar, o que esperar. Reduz ansiedade e no-shows.",
+          "Create a PDF or message: what to avoid, how to prepare, what to expect. Reduces anxiety and no-shows.",
       },
       {
         codigo: "f4-jor-5",
-        label: "Criar momento WOW no atendimento",
+        label: "Create a WOW moment during the service",
         descricao:
-          "Elementos: chá/café na chegada, música ambiente, manta aquecida, brinde surpresa, foto antes/depois.",
+          "Elements: tea/coffee upon arrival, ambient music, heated blanket, surprise gift, before/after photo.",
       },
       {
         codigo: "f4-jor-6",
-        label: "Follow-up 24h pós-procedimento",
+        label: "24-hour post-procedure follow-up",
         descricao:
-          "'Oi [nome]! Tudo bem com você? Como está se sentindo? Qualquer dúvida, estou aqui! 💙'",
+          "'Hi [name]! How are you doing? How are you feeling? Any questions, I'm here! 💙'",
       },
       {
         codigo: "f4-jor-7",
-        label: "Follow-up 7 dias pós",
+        label: "7-day post-procedure follow-up",
         descricao:
-          "Verificar resultado, pedir feedback, solicitar avaliação Google. 'Está satisfeita com o resultado?'",
+          "Check results, ask for feedback, request a Google review. 'Are you happy with the results?'",
       },
       {
         codigo: "f4-jor-8",
-        label: "Implementar reativação 60-90 dias",
+        label: "Implement 60-90 day reactivation",
         descricao:
-          "'Olá [nome]! Já faz 2 meses desde seu [procedimento]. Hora de agendar a manutenção!'",
+          "'Hi [name]! It's been 2 months since your [procedure]. Time to schedule your maintenance!'",
       },
       {
         codigo: "f4-jor-9",
-        label: "Criar programa de indicações",
+        label: "Create a referral program",
         descricao:
-          "'Indique uma amiga e ganhe 10% na próxima sessão!' Cartão físico ou digital para compartilhar.",
+          "'Refer a friend and get 10% off your next session!' Physical or digital card to share.",
       },
     ],
   },
 
   // ═══════════════════════════════════════════════════════════════════════════
-  // FASE 5: GESTÃO E ESCALA (Semanas 17-20)
+  // PHASE 5: MANAGEMENT & SCALING (Weeks 17-20)
   // ═══════════════════════════════════════════════════════════════════════════
   {
     codigo: "f5-organizacao",
-    titulo: "Organização e Produtividade",
-    etapa: "Fase 5: Gestão",
+    titulo: "Organization & Productivity",
+    etapa: "Phase 5: Management",
     icone: "📅",
-    descricao: "Organize sua agenda e sistema de tarefas para máxima produtividade.",
+    descricao: "Organize your calendar and task system for maximum productivity.",
     steps: [
       {
         codigo: "f5-org-1",
-        label: "Escolher ferramenta de agenda",
+        label: "Choose a calendar tool",
         descricao:
-          "Google Calendar (integra com tudo), Calendly (agendamento online), ou sistemas como Simples Agenda.",
+          "Google Calendar (integrates with everything), Calendly (online scheduling), or systems like Simples Agenda.",
       },
       {
         codigo: "f5-org-2",
-        label: "Configurar blocos de tempo",
+        label: "Set up time blocks",
         descricao:
-          "Blocos para: atendimentos, administrativo, conteúdo, personal. Proteja horários estratégicos.",
+          "Blocks for: appointments, administrative, content, personal. Protect strategic time slots.",
       },
       {
         codigo: "f5-org-3",
-        label: "Definir horários administrativos",
+        label: "Define administrative hours",
         descricao:
-          "Reserve 2-3h/semana para: finanças, planejamento, análise de métricas. Não atenda nesse horário.",
+          "Reserve 2-3 hours/week for: finances, planning, metrics analysis. Do not see clients during this time.",
       },
       {
         codigo: "f5-org-4",
-        label: "Implementar sistema de confirmação",
-        descricao: "Automação 48h e 24h antes. Reduza no-shows em até 50% com lembretes.",
+        label: "Implement a confirmation system",
+        descricao: "Automation 48h and 24h before. Reduce no-shows by up to 50% with reminders.",
       },
       {
         codigo: "f5-org-5",
-        label: "Proteger 1 dia de folga",
+        label: "Protect 1 day off",
         descricao:
-          "Escolha um dia SEM atendimentos. Não negocie. Seu descanso impacta sua performance.",
+          "Choose one day WITHOUT appointments. Non-negotiable. Your rest impacts your performance.",
       },
     ],
   },
   {
     codigo: "f5-processos",
-    titulo: "Processos e SOPs",
-    etapa: "Fase 5: Gestão",
+    titulo: "Processes & SOPs",
+    etapa: "Phase 5: Management",
     icone: "📋",
-    descricao: "Documente e padronize seus processos operacionais.",
+    descricao: "Document and standardize your operational processes.",
     steps: [
       {
         codigo: "f5-sop-1",
-        label: "Listar processos-chave",
-        descricao: "Atendimento, vendas, financeiro, pós. Liste tudo que você faz repetidamente.",
+        label: "List key processes",
+        descricao: "Service, sales, finance, post-service. List everything you do repeatedly.",
       },
       {
         codigo: "f5-sop-2",
-        label: "Documentar SOP de atendimento",
+        label: "Document the service SOP",
         descricao:
-          "Passo a passo: recepção, anamnese, procedimento, orientações, foto, despedida. Com checklist.",
+          "Step by step: reception, intake form, procedure, instructions, photo, farewell. With checklist.",
       },
       {
         codigo: "f5-sop-3",
-        label: "Documentar SOP de vendas",
+        label: "Document the sales SOP",
         descricao:
-          "Etapas: qualificação, apresentação, objeção, fechamento, pós-venda. Scripts incluídos.",
+          "Steps: qualification, presentation, objection, closing, post-sale. Scripts included.",
       },
       {
         codigo: "f5-sop-4",
-        label: "Documentar SOP financeiro",
-        descricao: "Recebimentos, pagamentos, conciliação, DRE. Quem faz o quê, quando e como.",
+        label: "Document the financial SOP",
+        descricao: "Collections, payments, reconciliation, income statement. Who does what, when, and how.",
       },
       {
         codigo: "f5-sop-5",
-        label: "Criar checklist de qualidade",
+        label: "Create a quality checklist",
         descricao:
-          "Verificação diária: estoque, equipamentos, limpeza, agenda. Semanal: métricas, pendências.",
+          "Daily check: inventory, equipment, cleaning, schedule. Weekly: metrics, pending items.",
       },
     ],
   },
   {
     codigo: "f5-dashboard",
-    titulo: "Dashboard de Resultados",
-    etapa: "Fase 5: Gestão",
+    titulo: "Results Dashboard",
+    etapa: "Phase 5: Management",
     icone: "📈",
-    descricao: "Monitore os indicadores-chave e tome decisões baseadas em dados.",
+    descricao: "Monitor key indicators and make data-driven decisions.",
     steps: [
       {
         codigo: "f5-kpi-1",
-        label: "Definir KPIs de faturamento",
-        descricao: "Faturamento mensal, ticket médio, recorrência. Meta e real. Compare mês a mês.",
+        label: "Define revenue KPIs",
+        descricao: "Monthly revenue, average ticket, recurrence. Goal vs. actual. Compare month over month.",
       },
       {
         codigo: "f5-kpi-2",
-        label: "Definir KPIs de marketing",
+        label: "Define marketing KPIs",
         descricao:
-          "Leads gerados, custo por lead, taxa de conversão. Qual canal traz mais resultado?",
+          "Leads generated, cost per lead, conversion rate. Which channel brings the best results?",
       },
       {
         codigo: "f5-kpi-3",
-        label: "Definir KPIs de atendimento",
-        descricao: "Taxa de no-show, NPS, taxa de retorno. Como está a experiência do cliente?",
+        label: "Define service KPIs",
+        descricao: "No-show rate, NPS, return rate. How is the client experience?",
       },
       {
         codigo: "f5-kpi-4",
-        label: "Configurar planilha/dashboard",
-        descricao: "Use Google Sheets ou Notion. Atualize semanalmente. Visualize evolução.",
+        label: "Set up a spreadsheet/dashboard",
+        descricao: "Use Google Sheets or Notion. Update weekly. Visualize progress.",
       },
       {
         codigo: "f5-kpi-5",
-        label: "Estabelecer rotina de análise",
-        descricao: "Sexta-feira: revisar semana. Último dia do mês: análise completa. 30min cada.",
+        label: "Establish an analysis routine",
+        descricao: "Friday: review the week. Last day of the month: full analysis. 30 min each.",
       },
       {
         codigo: "f5-kpi-6",
-        label: "Definir ajustes baseados em dados",
+        label: "Define data-driven adjustments",
         descricao:
-          "Se conversão baixa: revisar script. Se leads baixos: revisar tráfego. Aja no gargalo.",
+          "If conversion is low: review the script. If leads are low: review traffic. Act on the bottleneck.",
       },
     ],
   },
   {
     codigo: "f5-equipe",
-    titulo: "Gestão de Equipe (quando aplicável)",
-    etapa: "Fase 5: Gestão",
+    titulo: "Team Management (when applicable)",
+    etapa: "Phase 5: Management",
     icone: "👥",
-    descricao: "Construa e gerencie sua equipe de alta performance.",
+    descricao: "Build and manage your high-performance team.",
     steps: [
       {
         codigo: "f5-eq-1",
-        label: "Mapear cargos necessários",
+        label: "Map required positions",
         descricao:
-          "Funções típicas: recepcionista, assistente, social media. O que você mais precisa delegar?",
+          "Typical roles: receptionist, assistant, social media manager. What do you most need to delegate?",
       },
       {
         codigo: "f5-eq-2",
-        label: "Criar descritivo de funções",
+        label: "Create job descriptions",
         descricao:
-          "Responsabilidades, horário, competências, remuneração. Seja clara desde o início.",
+          "Responsibilities, schedule, competencies, compensation. Be clear from the start.",
       },
       {
         codigo: "f5-eq-3",
-        label: "Definir processo seletivo",
+        label: "Define a hiring process",
         descricao:
-          "Onde divulgar, entrevista, teste prático, período de experiência. Contrate devagar.",
+          "Where to advertise, interview, practical test, trial period. Hire slowly.",
       },
       {
         codigo: "f5-eq-4",
-        label: "Estruturar onboarding",
-        descricao: "Primeira semana: cultura, processos, sistemas. Use os SOPs que você criou.",
+        label: "Structure the onboarding",
+        descricao: "First week: culture, processes, systems. Use the SOPs you created.",
       },
       {
         codigo: "f5-eq-5",
-        label: "Criar sistema de feedback",
-        descricao: "1:1 semanal de 15min. O que foi bem, o que melhorar, suporte necessário.",
+        label: "Create a feedback system",
+        descricao: "Weekly 15-min 1:1. What went well, what to improve, support needed.",
       },
     ],
   },
 
   // ═══════════════════════════════════════════════════════════════════════════
-  // FASE 6: MINDSET E ROTINAS (Contínuo)
+  // PHASE 6: MINDSET & ROUTINES (Ongoing)
   // ═══════════════════════════════════════════════════════════════════════════
   {
     codigo: "f6-mural",
-    titulo: "Mural da Vida Extraordinária",
-    etapa: "Fase 6: Mindset",
+    titulo: "Extraordinary Life Vision Board",
+    etapa: "Phase 6: Mindset",
     icone: "✨",
-    descricao: "Crie seu mural de visualização e mantenha o foco nos seus sonhos.",
+    descricao: "Create your vision board and stay focused on your dreams.",
     steps: [
       {
         codigo: "f6-mur-1",
-        label: "Definir visão de vida ideal",
+        label: "Define your ideal life vision",
         descricao:
-          "Como é sua vida em 3 anos? Casa, viagens, rotina, relacionamentos, negócio. Seja específica.",
+          "What does your life look like in 3 years? Home, travel, routine, relationships, business. Be specific.",
       },
       {
         codigo: "f6-mur-2",
-        label: "Coletar imagens inspiradoras",
+        label: "Collect inspiring images",
         descricao:
-          "Pinterest, revistas, fotos. Represente cada área: carreira, família, saúde, lazer, finanças.",
+          "Pinterest, magazines, photos. Represent each area: career, family, health, leisure, finances.",
       },
       {
         codigo: "f6-mur-3",
-        label: "Montar o mural físico ou digital",
+        label: "Build a physical or digital board",
         descricao:
-          "Físico: quadro na parede do escritório. Digital: fundo de tela, Pinterest secreto, Notion.",
+          "Physical: board on the office wall. Digital: wallpaper, secret Pinterest board, Notion.",
       },
       {
         codigo: "f6-mur-4",
-        label: "Posicionar em local visível",
+        label: "Place it somewhere visible",
         descricao:
-          "Você precisa VER todo dia. Mesinha de cabeceira, tela do computador, espelho do banheiro.",
+          "You need to SEE it every day. Nightstand, computer screen, bathroom mirror.",
       },
     ],
   },
   {
     codigo: "f6-gratidao",
-    titulo: "Prática de Gratidão Diária",
-    etapa: "Fase 6: Mindset",
+    titulo: "Daily Gratitude Practice",
+    etapa: "Phase 6: Mindset",
     icone: "🙏",
-    descricao: "Pratique gratidão diária para mindset positivo e abundância.",
+    descricao: "Practice daily gratitude for a positive and abundant mindset.",
     steps: [
       {
         codigo: "f6-grat-1",
-        label: "Escolher formato (caderno ou app)",
+        label: "Choose a format (journal or app)",
         descricao:
-          "Caderno físico para quem gosta de escrever. Apps: Day One, Gratitude. Escolha o que vai usar.",
+          "Physical journal for those who like to write. Apps: Day One, Gratitude. Choose what you'll actually use.",
       },
       {
         codigo: "f6-grat-2",
-        label: "Definir horário diário",
+        label: "Set a daily time",
         descricao:
-          "Manhã (define o dia) ou noite (reflexão). Conecte a hábito existente: após café, antes de dormir.",
+          "Morning (sets the day) or evening (reflection). Link to an existing habit: after coffee, before bed.",
       },
       {
         codigo: "f6-grat-3",
-        label: "Registrar 3 gratidões por dia",
+        label: "Record 3 gratitudes per day",
         descricao:
-          "Seja específica: não 'família', mas 'a ligação com minha mãe hoje de manhã que me alegrou'.",
+          "Be specific: not 'family', but 'the call with my mom this morning that made me happy'.",
       },
       {
         codigo: "f6-grat-4",
-        label: "Refletir sobre impactos semanalmente",
-        descricao: "Sexta: releia a semana. Como seu humor e perspectiva mudaram? O que aprendeu?",
+        label: "Reflect on impacts weekly",
+        descricao: "Friday: reread the week. How did your mood and perspective change? What did you learn?",
       },
     ],
   },
   {
     codigo: "f6-leitura",
-    titulo: "Rotina de Leitura",
-    etapa: "Fase 6: Mindset",
+    titulo: "Reading Routine",
+    etapa: "Phase 6: Mindset",
     icone: "📚",
-    descricao: "Desenvolva o hábito de leitura para crescimento contínuo.",
+    descricao: "Develop a reading habit for continuous growth.",
     steps: [
       {
         codigo: "f6-leit-1",
-        label: "Escolher livro da lista NEON",
+        label: "Choose a book from the NEON list",
         descricao:
-          "Sugestões: Quem Pensa Enriquece, Mindset, Essencialismo, Comece pelo Porquê. Peça lista no grupo.",
+          "Suggestions: Think and Grow Rich, Mindset, Essentialism, Start with Why. Ask for the list in the group.",
       },
       {
         codigo: "f6-leit-2",
-        label: "Definir meta de leitura",
+        label: "Set a reading goal",
         descricao:
-          "Sugestão: 10-20 páginas/dia ou 1 livro/mês. Comece pequeno, aumente gradualmente.",
+          "Suggestion: 10-20 pages/day or 1 book/month. Start small, increase gradually.",
       },
       {
         codigo: "f6-leit-3",
-        label: "Reservar horário fixo",
-        descricao: "Manhã cedo, almoço, antes de dormir. Substitua 30min de celular por leitura.",
+        label: "Set a fixed time",
+        descricao: "Early morning, lunch, before bed. Replace 30 min of phone time with reading.",
       },
       {
         codigo: "f6-leit-4",
-        label: "Registrar insights aplicáveis",
+        label: "Record actionable insights",
         descricao:
-          "Não só leia, aplique. Anote: 'O que posso fazer diferente a partir disso?' Implemente 1 coisa por livro.",
+          "Don't just read, apply. Write down: 'What can I do differently based on this?' Implement 1 thing per book.",
       },
     ],
   },
   {
     codigo: "f6-saude-mental",
-    titulo: "Saúde Mental do Empreendedor",
-    etapa: "Fase 6: Mindset",
+    titulo: "Entrepreneur Mental Health",
+    etapa: "Phase 6: Mindset",
     icone: "🧘",
-    descricao: "Cuide de você para cuidar do seu negócio. Prevenção de burnout.",
+    descricao: "Take care of yourself to take care of your business. Burnout prevention.",
     steps: [
       {
         codigo: "f6-sm-1",
-        label: "Reconhecer sinais de esgotamento",
+        label: "Recognize signs of burnout",
         descricao:
-          "Sintomas: exaustão constante, cinismo sobre trabalho, queda de produtividade, irritabilidade, insônia.",
+          "Symptoms: constant exhaustion, work cynicism, drop in productivity, irritability, insomnia.",
       },
       {
         codigo: "f6-sm-2",
-        label: "Definir horários de trabalho fixos",
+        label: "Set fixed work hours",
         descricao:
-          "Hora de início e fim. Não responda WhatsApp fora do horário. Configure 'modo não perturbe'.",
+          "Start and end times. Don't reply to WhatsApp outside hours. Enable 'Do Not Disturb' mode.",
       },
       {
         codigo: "f6-sm-3",
-        label: "Criar ritual de desconexão diária",
+        label: "Create a daily disconnection ritual",
         descricao:
-          "Após 20h: celular em outro cômodo. Atividade relaxante: banho, leitura, série, família.",
+          "After 8 PM: phone in another room. Relaxing activity: bath, reading, show, family time.",
       },
       {
         codigo: "f6-sm-4",
-        label: "Proteger 1 dia de folga sagrado",
+        label: "Protect 1 sacred day off",
         descricao:
-          "Mínimo 1 dia/semana SEM trabalho. Não olhe métricas. Seu cérebro precisa descansar.",
+          "At least 1 day/week WITHOUT work. Don't check metrics. Your brain needs to rest.",
       },
       {
         codigo: "f6-sm-5",
-        label: "Criar rede de apoio",
+        label: "Build a support network",
         descricao:
-          "Use o grupo NEON ativamente. Tenha 2-3 colegas para desabafar. Considere terapia.",
+          "Use the NEON group actively. Have 2-3 colleagues to vent to. Consider therapy.",
       },
       {
         codigo: "f6-sm-6",
-        label: "Praticar exercício físico regular",
+        label: "Exercise regularly",
         descricao:
-          "Mínimo 3x/semana, 30min. Caminhada, academia, yoga, dança. Libera endorfinas, reduz ansiedade.",
+          "At least 3x/week, 30 min. Walking, gym, yoga, dancing. Releases endorphins, reduces anxiety.",
       },
       {
         codigo: "f6-sm-7",
-        label: "Implementar pausas durante o dia",
+        label: "Implement breaks during the day",
         descricao:
-          "Pomodoro: 25min trabalho + 5min pausa. A cada 4 ciclos: 15-30min. Levante, hidrate, respire.",
+          "Pomodoro: 25 min work + 5 min break. Every 4 cycles: 15-30 min. Stand up, hydrate, breathe.",
       },
     ],
   },
   {
     codigo: "f6-mentoria",
-    titulo: "Aproveitando a Mentoria NEON",
-    etapa: "Fase 6: Mindset",
+    titulo: "Making the Most of NEON Mentorship",
+    etapa: "Phase 6: Mindset",
     icone: "📞",
-    descricao: "Maximize o valor da sua mentoria com preparação e execução.",
+    descricao: "Maximize the value of your mentorship with preparation and execution.",
     steps: [
       {
         codigo: "f6-ment-1",
-        label: "Preparar pauta antes de cada call",
+        label: "Prepare an agenda before each call",
         descricao:
-          "Liste: 3 vitórias do mês, 3 desafios atuais, 3 perguntas específicas. Envie 24h antes.",
+          "List: 3 wins of the month, 3 current challenges, 3 specific questions. Send 24 hours in advance.",
       },
       {
         codigo: "f6-ment-2",
-        label: "Definir objetivos da mentoria",
+        label: "Define mentorship objectives",
         descricao:
-          "O que você PRECISA sair sabendo dessa call? Foco salva tempo e aumenta resultado.",
+          "What do you NEED to walk away knowing from this call? Focus saves time and boosts results.",
       },
       {
         codigo: "f6-ment-3",
-        label: "Registrar insights durante a call",
-        descricao: "Anote tudo: recomendações, tarefas, prazos. Use Notion, Notes ou papel mesmo.",
+        label: "Record insights during the call",
+        descricao: "Write down everything: recommendations, tasks, deadlines. Use Notion, Notes, or even paper.",
       },
       {
         codigo: "f6-ment-4",
-        label: "Criar plano de ação pós-call",
+        label: "Create a post-call action plan",
         descricao:
-          "Transforme insights em tarefas com prazo. Máximo 3-5 ações. Priorize por impacto.",
+          "Turn insights into tasks with deadlines. Maximum 3-5 actions. Prioritize by impact.",
       },
       {
         codigo: "f6-ment-5",
-        label: "Executar e reportar na próxima",
+        label: "Execute and report at the next session",
         descricao:
-          "O diferencial está na EXECUÇÃO. Faça o combinado e conte os resultados na próxima call.",
+          "The differentiator is EXECUTION. Do what was agreed and share the results at the next call.",
       },
     ],
   },
 ];
 
 /**
- * Agrupa atividades por etapa
+ * Groups activities by phase
  */
 export function getAtividadesByEtapa(): Record<string, Atividade[]> {
   const grouped: Record<string, Atividade[]> = {};
@@ -1097,7 +1097,7 @@ export function getAtividadesByEtapa(): Record<string, Atividade[]> {
 }
 
 /**
- * Calcula progresso total dado um mapa de progresso
+ * Calculates total progress given a progress map
  */
 export function calcularProgresso(progressMap: Record<string, boolean>): {
   total: number;
@@ -1125,7 +1125,7 @@ export function calcularProgresso(progressMap: Record<string, boolean>): {
 }
 
 /**
- * Color mapping for etapa categories (6 Fases)
+ * Color mapping for phase categories (6 Phases)
  */
 export function getEtapaColor(etapa: string): {
   border: string;
@@ -1134,37 +1134,37 @@ export function getEtapaColor(etapa: string): {
   ring: string;
 } {
   const colorMap: Record<string, { border: string; bg: string; text: string; ring: string }> = {
-    "Fase 1: Fundamentos": {
+    "Phase 1: Foundations": {
       border: "border-l-amber-500",
       bg: "bg-amber-500/10",
       text: "text-amber-500",
       ring: "ring-amber-500/30",
     },
-    "Fase 2: Posicionamento": {
+    "Phase 2: Positioning": {
       border: "border-l-blue-500",
       bg: "bg-blue-500/10",
       text: "text-blue-500",
       ring: "ring-blue-500/30",
     },
-    "Fase 3: Marketing": {
+    "Phase 3: Marketing": {
       border: "border-l-pink-500",
       bg: "bg-pink-500/10",
       text: "text-pink-500",
       ring: "ring-pink-500/30",
     },
-    "Fase 4: Vendas": {
+    "Phase 4: Sales": {
       border: "border-l-emerald-500",
       bg: "bg-emerald-500/10",
       text: "text-emerald-500",
       ring: "ring-emerald-500/30",
     },
-    "Fase 5: Gestão": {
+    "Phase 5: Management": {
       border: "border-l-violet-500",
       bg: "bg-violet-500/10",
       text: "text-violet-500",
       ring: "ring-violet-500/30",
     },
-    "Fase 6: Mindset": {
+    "Phase 6: Mindset": {
       border: "border-l-teal-500",
       bg: "bg-teal-500/10",
       text: "text-teal-500",
@@ -1190,19 +1190,19 @@ export function getMotivationalMessage(percentage: number): {
   emoji: string;
 } {
   if (percentage === 100) {
-    return { message: "Parabéns! Jornada completa! 🎉", emoji: "🏆" };
+    return { message: "Congratulations! Journey complete! 🎉", emoji: "🏆" };
   }
   if (percentage >= 75) {
-    return { message: "Quase lá! Você está arrasando!", emoji: "🔥" };
+    return { message: "Almost there! You're crushing it!", emoji: "🔥" };
   }
   if (percentage >= 50) {
-    return { message: "Metade do caminho! Continue assim!", emoji: "💪" };
+    return { message: "Halfway there! Keep it up!", emoji: "💪" };
   }
   if (percentage >= 25) {
-    return { message: "Ótimo progresso! Mantenha o ritmo!", emoji: "⚡" };
+    return { message: "Great progress! Keep the momentum!", emoji: "⚡" };
   }
   if (percentage > 0) {
-    return { message: "Bom começo! O primeiro passo é o mais importante.", emoji: "🚀" };
+    return { message: "Good start! The first step is the most important.", emoji: "🚀" };
   }
-  return { message: "Sua jornada começa agora!", emoji: "✨" };
+  return { message: "Your journey starts now!", emoji: "✨" };
 }

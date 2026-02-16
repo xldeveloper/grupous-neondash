@@ -60,11 +60,11 @@ export function FiltersPanel({
   const Content = (
     <div className="space-y-6">
       <div className="space-y-2">
-        <label className="text-sm font-medium">Busca Global</label>
+        <label className="text-sm font-medium">Global Search</label>
         <div className="relative">
           <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input
-            placeholder="Nome, email ou telefone..."
+            placeholder="Name, email or phone..."
             className="pl-8"
             value={filters.busca}
             onChange={(e) => handleChange("busca", e.target.value)}
@@ -74,57 +74,57 @@ export function FiltersPanel({
 
       <div className="space-y-4">
         <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
-          Filtros Básicos
+          Basic Filters
         </h3>
 
         <div className="space-y-2">
           <label className="text-sm font-medium">Status</label>
           <Select value={filters.status} onValueChange={(val) => handleChange("status", val)}>
             <SelectTrigger>
-              <SelectValue placeholder="Todos os status" />
+              <SelectValue placeholder="All statuses" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">Todos</SelectItem>
-              <SelectItem value="novo">Novo</SelectItem>
-              <SelectItem value="primeiro_contato">Primeiro Contato</SelectItem>
-              <SelectItem value="qualificado">Qualificado</SelectItem>
-              <SelectItem value="proposta">Proposta</SelectItem>
-              <SelectItem value="negociacao">Negociação</SelectItem>
-              <SelectItem value="fechado">Fechado</SelectItem>
-              <SelectItem value="perdido">Perdido</SelectItem>
+              <SelectItem value="all">All</SelectItem>
+              <SelectItem value="novo">New</SelectItem>
+              <SelectItem value="primeiro_contato">First Contact</SelectItem>
+              <SelectItem value="qualificado">Qualified</SelectItem>
+              <SelectItem value="proposta">Proposal</SelectItem>
+              <SelectItem value="negociacao">Negotiation</SelectItem>
+              <SelectItem value="fechado">Closed</SelectItem>
+              <SelectItem value="perdido">Lost</SelectItem>
             </SelectContent>
           </Select>
         </div>
 
         <div className="space-y-2">
-          <label className="text-sm font-medium">Origem</label>
+          <label className="text-sm font-medium">Source</label>
           <Select value={filters.origem} onValueChange={(val) => handleChange("origem", val)}>
             <SelectTrigger>
-              <SelectValue placeholder="Todas as origens" />
+              <SelectValue placeholder="All sources" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">Todas</SelectItem>
+              <SelectItem value="all">All</SelectItem>
               <SelectItem value="instagram">Instagram</SelectItem>
               <SelectItem value="whatsapp">WhatsApp</SelectItem>
               <SelectItem value="google">Google</SelectItem>
-              <SelectItem value="indicacao">Indicação</SelectItem>
-              <SelectItem value="site">Site</SelectItem>
-              <SelectItem value="outro">Outro</SelectItem>
+              <SelectItem value="indicacao">Referral</SelectItem>
+              <SelectItem value="site">Website</SelectItem>
+              <SelectItem value="outro">Other</SelectItem>
             </SelectContent>
           </Select>
         </div>
 
         <div className="space-y-2">
-          <label className="text-sm font-medium">Período</label>
+          <label className="text-sm font-medium">Period</label>
           <Select value={filters.periodo} onValueChange={(val) => handleChange("periodo", val)}>
             <SelectTrigger>
-              <SelectValue placeholder="Selecione o período" />
+              <SelectValue placeholder="Select period" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="7d">Últimos 7 dias</SelectItem>
-              <SelectItem value="30d">Últimos 30 dias</SelectItem>
-              <SelectItem value="90d">Últimos 90 dias</SelectItem>
-              <SelectItem value="all">Todo o período</SelectItem>
+              <SelectItem value="7d">Last 7 days</SelectItem>
+              <SelectItem value="30d">Last 30 days</SelectItem>
+              <SelectItem value="90d">Last 90 days</SelectItem>
+              <SelectItem value="all">All time</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -138,7 +138,7 @@ export function FiltersPanel({
             className="w-full justify-between p-0 hover:bg-transparent"
           >
             <span className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
-              Filtros Avançados
+              Advanced Filters
             </span>
             {advancedOpen ? (
               <ChevronUp className="h-4 w-4 text-muted-foreground" />
@@ -151,7 +151,7 @@ export function FiltersPanel({
         <CollapsibleContent className="space-y-6 pt-2">
           <div className="space-y-4">
             <div className="flex justify-between">
-              <label className="text-sm font-medium">Valor Estimado</label>
+              <label className="text-sm font-medium">Estimated Value</label>
               <span className="text-xs text-muted-foreground">
                 R$ {filters.valorMin.toLocaleString()} - {filters.valorMax.toLocaleString()}
               </span>
@@ -175,7 +175,7 @@ export function FiltersPanel({
           <div className="space-y-2">
             <label className="text-sm font-medium">Tags</label>
             <Input
-              placeholder="Digite tags separadas por vírgula..."
+              placeholder="Enter tags separated by commas..."
               onChange={(e) => {
                 const tags = e.target.value
                   .split(",")
@@ -199,10 +199,10 @@ export function FiltersPanel({
 
       <div className="flex gap-2 pt-4 border-t">
         <Button variant="outline" className="flex-1" onClick={clearFilters}>
-          Limpar
+          Clear
         </Button>
         <Button className="flex-1" onClick={onClose}>
-          Aplicar
+          Apply
         </Button>
       </div>
     </div>
@@ -213,7 +213,7 @@ export function FiltersPanel({
       <Sheet open={isOpen} onOpenChange={onClose}>
         <SheetContent side="right" className="w-full sm:w-[400px] overflow-y-auto">
           <SheetHeader className="mb-6">
-            <SheetTitle>Filtrar Leads</SheetTitle>
+            <SheetTitle>Filter Leads</SheetTitle>
           </SheetHeader>
           {Content}
         </SheetContent>
@@ -230,7 +230,7 @@ export function FiltersPanel({
     `}
     >
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-lg font-semibold">Filtros</h2>
+        <h2 className="text-lg font-semibold">Filters</h2>
         <Button variant="ghost" size="icon" onClick={onClose}>
           <X className="h-4 w-4" />
         </Button>

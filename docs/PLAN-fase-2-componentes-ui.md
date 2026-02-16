@@ -1,75 +1,75 @@
-# Plano de Implementação: Fase 2 - Componentes UI Core
+# Implementation Plan: Phase 2 - Core UI Components
 
-**Objetivo:** Refatorar componentes essenciais da interface do usuário para alinhá-los com a nova identidade visual Neon e melhorar a experiência de navegação.
+**Objective:** Refactor essential user interface components to align them with the new Neon visual identity and improve the navigation experience.
 
-**Tempo Total Estimado:** ~6 horas
+**Total Estimated Time:** ~6 hours
 
-**Complexidade Média:** L4
+**Average Complexity:** L4
 
-**Issues Envolvidos:** GPU-24, GPU-27
+**Issues Involved:** GPU-24, GPU-27
 
-**Dependências:** Conclusão da Fase 1 (Fundação - Design System & Estilos).
+**Dependencies:** Completion of Phase 1 (Foundation - Design System & Styles).
 
 ---
 
-## Tarefas Sequenciais
+## Sequential Tasks
 
-### 1. GPU-24: Mudar Componente de Seleção de Abas
+### 1. GPU-24: Change Tab Selection Component
 
-**Objetivo:** Substituir o componente de abas padrão do shadcn/ui por uma versão customizada, mais moderna e alinhada ao estilo Neon.
+**Objective:** Replace the default shadcn/ui tabs component with a customized, more modern version aligned with the Neon style.
 
 #### Atomic Tasks
 
-- **AT-001:** No arquivo `client/src/components/ui/tabs.tsx`, criar uma nova variante ou um novo componente (ex: `NeonTabs`) que herde a funcionalidade do `Tabs` original.
-- **AT-002:** Estilizar o novo componente para que o fundo seja escuro (`#0F172A`) e o indicador da aba ativa tenha um gradiente animado (de `#F59E0B` para `#FBBF24`).
-- **AT-003:** Utilizar a biblioteca `framer-motion` para adicionar uma animação de layout (`layoutId`) que mova suavemente o indicador entre as abas.
-- **AT-004:** Substituir o `TabsList` padrão pelo novo componente `NeonTabs` no arquivo `client/src/pages/MyDashboard.tsx`.
+- **AT-001:** In the `client/src/components/ui/tabs.tsx` file, create a new variant or component (e.g.: `NeonTabs`) that inherits the functionality of the original `Tabs`.
+- **AT-002:** Style the new component so the background is dark (`#0F172A`) and the active tab indicator has an animated gradient (from `#F59E0B` to `#FBBF24`).
+- **AT-003:** Use the `framer-motion` library to add a layout animation (`layoutId`) that smoothly moves the indicator between tabs.
+- **AT-004:** Replace the default `TabsList` with the new `NeonTabs` component in the `client/src/pages/MyDashboard.tsx` file.
 
 #### Antigravity Prompt
 
 ```markdown
 # ROLE: Senior Frontend Engineer
 
-# CONTEXT: Projeto NeonDash (React + Tailwind + shadcn/ui)
+# CONTEXT: NeonDash Project (React + Tailwind + shadcn/ui)
 
-# TASK: Implementar novo design de abas (Tabs) com animação
+# TASK: Implement new tab design with animation
 
-1.  Leia o arquivo `client/src/components/ui/tabs.tsx`.
-2.  Crie uma nova variante ou componente `NeonTabs` que utilize um fundo escuro (`#0F172A`) e um indicador de seleção com gradiente (Primary: `#F59E0B` para Secondary: `#FBBF24`).
-3.  Adicione uma animação suave de transição entre as abas usando `framer-motion` (já instalado), aplicando um `layoutId` ao indicador.
-4.  Aplique o novo componente no arquivo `client/src/pages/MyDashboard.tsx`, substituindo o `TabsList` atual.
-5.  Garanta que o contraste do texto seja WCAG AAA (Texto: `#F8FAFC` em fundo escuro).
-6.  Execute `bun run build` para validar a implementação.
+1.  Read the file `client/src/components/ui/tabs.tsx`.
+2.  Create a new variant or `NeonTabs` component that uses a dark background (`#0F172A`) and a selection indicator with gradient (Primary: `#F59E0B` to Secondary: `#FBBF24`).
+3.  Add a smooth transition animation between tabs using `framer-motion` (already installed), applying a `layoutId` to the indicator.
+4.  Apply the new component in the `client/src/pages/MyDashboard.tsx` file, replacing the current `TabsList`.
+5.  Ensure the text contrast is WCAG AAA (Text: `#F8FAFC` on dark background).
+6.  Run `bun run build` to validate the implementation.
 ```
 
 ---
 
-### 2. GPU-27: Trocar Seleção de Mentorado por Floating Dock
+### 2. GPU-27: Replace Mentee Selection with Floating Dock
 
-**Objetivo:** Substituir o seletor (`Select`) padrão de mentorados por uma experiência de usuário mais rica e interativa, inspirada no Dock do macOS.
+**Objective:** Replace the default mentee `Select` with a richer, more interactive user experience inspired by the macOS Dock.
 
 #### Atomic Tasks
 
-- **AT-001:** Criar um novo arquivo de componente em `client/src/components/ui/floating-dock.tsx`.
-- **AT-002:** Implementar a lógica do Floating Dock utilizando `framer-motion` para criar o efeito de "escala magnética" nos ícones conforme o mouse se aproxima.
-- **AT-003:** Popular o dock com os avatares dos mentorados. Caso um mentorado não tenha foto, gerar um avatar com suas iniciais e uma cor de fundo da paleta Neon.
-- **AT-004:** No layout principal da aplicação (provavelmente `client/src/components/DashboardLayout.tsx`), substituir o componente `Select` de mentorados pelo novo `FloatingDock`.
-- **AT-005:** Garantir que o clique em um avatar no dock atualize o estado global do mentorado selecionado, filtrando os dados do dashboard.
+- **AT-001:** Create a new component file at `client/src/components/ui/floating-dock.tsx`.
+- **AT-002:** Implement the Floating Dock logic using `framer-motion` to create the "magnetic scale" effect on icons as the mouse approaches.
+- **AT-003:** Populate the dock with mentee avatars. If a mentee has no photo, generate an avatar with their initials and a background color from the Neon palette.
+- **AT-004:** In the main application layout (likely `client/src/components/DashboardLayout.tsx`), replace the mentee `Select` component with the new `FloatingDock`.
+- **AT-005:** Ensure that clicking an avatar in the dock updates the global state of the selected mentee, filtering the dashboard data.
 
 #### Antigravity Prompt
 
 ```markdown
 # ROLE: Senior UI/UX Developer
 
-# CONTEXT: Projeto NeonDash (React + Framer Motion)
+# CONTEXT: NeonDash Project (React + Framer Motion)
 
-# TASK: Implementar Floating Dock para seleção de mentorado
+# TASK: Implement Floating Dock for mentee selection
 
-1.  Crie um novo arquivo `client/src/components/ui/floating-dock.tsx`.
-2.  Implemente o componente Floating Dock (inspirado na Aceternity UI) usando `framer-motion` para animações de escala e posição baseadas na proximidade do mouse.
-3.  O dock deve exibir os avatares dos mentorados. Se não houver foto, use as iniciais com um fundo colorido do projeto.
-4.  No arquivo de layout principal (verifique `client/src/components/DashboardLayout.tsx` ou onde o seletor de mentorado estiver), substitua o `Select` atual pelo novo `FloatingDock`.
-5.  Garanta que ao clicar em um item do dock, o estado global do mentorado selecionado seja atualizado.
-6.  Adicione tooltips elegantes acima de cada ícone com o nome do mentorado ao passar o mouse.
-7.  Execute `bun run check` para validar os tipos e `bun run build` para a compilação.
+1.  Create a new file `client/src/components/ui/floating-dock.tsx`.
+2.  Implement the Floating Dock component (inspired by Aceternity UI) using `framer-motion` for scale and position animations based on mouse proximity.
+3.  The dock should display mentee avatars. If there is no photo, use initials with a colored background from the project.
+4.  In the main layout file (check `client/src/components/DashboardLayout.tsx` or wherever the mentee selector is), replace the current `Select` with the new `FloatingDock`.
+5.  Ensure that clicking a dock item updates the global selected mentee state.
+6.  Add elegant tooltips above each icon with the mentee's name on hover.
+7.  Run `bun run check` to validate types and `bun run build` for compilation.
 ```

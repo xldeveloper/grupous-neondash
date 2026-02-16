@@ -35,7 +35,7 @@ import { InteractionTemplatesDialog } from "./InteractionTemplatesDialog";
 // Input schema for form - keeps duracao as string
 const interactionFormSchema = z.object({
   tipo: z.enum(["ligacao", "email", "whatsapp", "reuniao", "nota"]),
-  notas: z.string().min(1, "Notas são obrigatórias"),
+  notas: z.string().min(1, "Notes are required"),
   duracao: z.string().optional(),
 });
 
@@ -78,14 +78,14 @@ export function AddInteractionDialog({
 
   const mutation = trpc.leads.addInteraction.useMutation({
     onSuccess: () => {
-      toast.success("Interação registrada!");
+      toast.success("Interaction recorded!");
       trpcUtils.leads.list.invalidate();
       trpcUtils.leads.getById.invalidate({ id: leadId });
       if (onSuccess) onSuccess();
       onClose();
     },
     onError: () => {
-      toast.error("Erro ao registrar interação");
+      toast.error("Error recording interaction");
     },
   });
 
@@ -124,7 +124,7 @@ export function AddInteractionDialog({
       <Dialog open={isOpen} onOpenChange={onClose}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Nova Interação</DialogTitle>
+            <DialogTitle>New Interaction</DialogTitle>
           </DialogHeader>
 
           {/* Template Quick Select */}
@@ -135,7 +135,7 @@ export function AddInteractionDialog({
               className="gap-2 shrink-0"
               onClick={() => setTemplatesOpen(true)}
             >
-              <BookTemplate className="h-4 w-4" /> Gerenciar Templates
+              <BookTemplate className="h-4 w-4" /> Manage Templates
             </Button>
             {templates?.templates.slice(0, 3).map((t: any) => (
               <Button
@@ -157,19 +157,19 @@ export function AddInteractionDialog({
                 name="tipo"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Tipo</FormLabel>
+                    <FormLabel>Type</FormLabel>
                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Selecione o tipo" />
+                          <SelectValue placeholder="Select type" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="nota">Nota</SelectItem>
-                        <SelectItem value="ligacao">Ligação</SelectItem>
+                        <SelectItem value="nota">Note</SelectItem>
+                        <SelectItem value="ligacao">Phone Call</SelectItem>
                         <SelectItem value="whatsapp">WhatsApp</SelectItem>
                         <SelectItem value="email">Email</SelectItem>
-                        <SelectItem value="reuniao">Reunião</SelectItem>
+                        <SelectItem value="reuniao">Meeting</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -182,10 +182,10 @@ export function AddInteractionDialog({
                 name="notas"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Notas</FormLabel>
+                    <FormLabel>Notes</FormLabel>
                     <FormControl>
                       <Textarea
-                        placeholder="Descreva a interação..."
+                        placeholder="Describe the interaction..."
                         className="min-h-[100px]"
                         {...field}
                       />
@@ -201,7 +201,7 @@ export function AddInteractionDialog({
                   name="duracao"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Duração (minutos)</FormLabel>
+                      <FormLabel>Duration (minutes)</FormLabel>
                       <FormControl>
                         <Input type="number" {...field} />
                       </FormControl>
@@ -213,10 +213,10 @@ export function AddInteractionDialog({
 
               <DialogFooter>
                 <Button type="button" variant="secondary" onClick={onClose}>
-                  Cancelar
+                  Cancel
                 </Button>
                 <Button type="submit" disabled={mutation.isPending}>
-                  {mutation.isPending ? "Salvando..." : "Salvar"}
+                  {mutation.isPending ? "Saving..." : "Save"}
                 </Button>
               </DialogFooter>
             </form>

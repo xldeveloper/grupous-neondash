@@ -1,94 +1,94 @@
-# PRP: Unificação Neon Estrutura e Escala em NEON Único
+# PRP: Unification of Neon Estrutura and Escala into a Single NEON
 
 ## Metadata
 
-| Campo              | Valor                                             |
+| Field              | Value                                             |
 | ------------------ | ------------------------------------------------- |
-| **Complexity**     | L6 — Arquitetura, migração de dados, multi-file   |
-| **Estimated Time** | 4-6 horas                                         |
-| **Parallel Safe**  | Parcialmente (AT-001 deve ser executado primeiro) |
-| **Risk Level**     | Médio (requer migração de dados em produção)      |
+| **Complexity**     | L6 — Architecture, data migration, multi-file     |
+| **Estimated Time** | 4-6 hours                                         |
+| **Parallel Safe**  | Partially (AT-001 must be executed first)          |
+| **Risk Level**     | Medium (requires data migration in production)    |
 
 ---
 
-## 1. Objetivo e Contexto
+## 1. Objective and Context
 
-O objetivo desta implementação é **unificar os grupos "Neon Estrutura" e "Neon Escala" em um único grupo denominado "NEON"**. Atualmente, o sistema separa mentorados em duas turmas distintas, cada uma com suas próprias métricas, rankings e visualizações. Esta separação será eliminada, criando uma experiência unificada tanto no banco de dados quanto na interface do usuário.
+The goal of this implementation is to **unify the "Neon Estrutura" and "Neon Escala" groups into a single group called "NEON"**. Currently, the system separates mentees into two distinct cohorts, each with its own metrics, rankings, and visualizations. This separation will be eliminated, creating a unified experience in both the database and the user interface.
 
-A mudança impacta múltiplas camadas da aplicação, desde o schema do banco de dados PostgreSQL (via Drizzle ORM), passando pela lógica de negócio no backend (tRPC routers), até os componentes React no frontend. O resultado final será um dashboard consolidado onde todos os mentorados competem em um único ranking e visualizam métricas agregadas.
+The change impacts multiple layers of the application, from the PostgreSQL database schema (via Drizzle ORM), through the business logic in the backend (tRPC routers), to the React components in the frontend. The final result will be a consolidated dashboard where all mentees compete in a single ranking and view aggregated metrics.
 
 ---
 
-## 2. Análise de Impacto
+## 2. Impact Analysis
 
-### 2.1 Arquivos Afetados
+### 2.1 Affected Files
 
-| Camada       | Arquivo                                           | Tipo de Mudança                                |
+| Layer        | File                                              | Type of Change                                 |
 | ------------ | ------------------------------------------------- | ---------------------------------------------- |
-| **Database** | `drizzle/schema.ts`                               | Modificar `turmaEnum` para valor único         |
-| **Database** | `drizzle/0000_nifty_betty_ross.sql`               | Referência (não modificar)                     |
-| **Database** | Nova migração                                     | Criar migração para atualizar dados existentes |
-| **Backend**  | `server/gamificacao.ts`                           | Remover loop por turmas no cálculo de ranking  |
-| **Backend**  | `server/gamificacaoRouter.ts`                     | Remover filtro de turma do endpoint            |
-| **Backend**  | `server/mentoradosRouter.ts`                      | Remover validação de turma nos inputs          |
-| **Backend**  | `server/emailService.ts`                          | Remover referência a turma no email            |
-| **Backend**  | `server/services/userService.ts`                  | Remover default de turma                       |
-| **Backend**  | `server/seed-playbook.ts`                         | Unificar módulos do playbook                   |
-| **Backend**  | `server/routers/playbook.ts`                      | Remover filtro de turma                        |
-| **Backend**  | `server/_core/context.ts`                         | Remover default de turma                       |
-| **Frontend** | `client/src/pages/Home.tsx`                       | Remover abas de turma, unificar dados          |
-| **Frontend** | `client/src/pages/Admin.tsx`                      | Remover contadores separados                   |
-| **Frontend** | `client/src/pages/MyDashboard.tsx`                | Remover badge de turma                         |
-| **Frontend** | `client/src/pages/VincularEmails.tsx`             | Remover display de turma                       |
-| **Frontend** | `client/src/pages/MoltbotPage.tsx`                | Remover referência a turma                     |
-| **Frontend** | `client/src/components/dashboard/RankingView.tsx` | Remover filtro de turma                        |
-| **Frontend** | `client/src/components/dashboard/TurmaView.tsx`   | Remover ou refatorar completamente             |
-| **Frontend** | `client/src/components/profile-card.tsx`          | Remover prop turma                             |
-| **Frontend** | `client/src/components/admin/*.tsx`               | Remover referências a turma                    |
-| **Frontend** | `client/src/lib/data.ts`                          | Unificar estrutura de dados                    |
+| **Database** | `drizzle/schema.ts`                               | Modify `turmaEnum` to a single value           |
+| **Database** | `drizzle/0000_nifty_betty_ross.sql`               | Reference (do not modify)                      |
+| **Database** | New migration                                     | Create migration to update existing data       |
+| **Backend**  | `server/gamificacao.ts`                           | Remove loop by cohorts in ranking calculation  |
+| **Backend**  | `server/gamificacaoRouter.ts`                     | Remove cohort filter from endpoint             |
+| **Backend**  | `server/mentoradosRouter.ts`                      | Remove cohort validation from inputs           |
+| **Backend**  | `server/emailService.ts`                          | Remove cohort reference in email               |
+| **Backend**  | `server/services/userService.ts`                  | Remove cohort default                          |
+| **Backend**  | `server/seed-playbook.ts`                         | Unify playbook modules                         |
+| **Backend**  | `server/routers/playbook.ts`                      | Remove cohort filter                           |
+| **Backend**  | `server/_core/context.ts`                         | Remove cohort default                          |
+| **Frontend** | `client/src/pages/Home.tsx`                       | Remove cohort tabs, unify data                 |
+| **Frontend** | `client/src/pages/Admin.tsx`                      | Remove separate counters                       |
+| **Frontend** | `client/src/pages/MyDashboard.tsx`                | Remove cohort badge                            |
+| **Frontend** | `client/src/pages/VincularEmails.tsx`             | Remove cohort display                          |
+| **Frontend** | `client/src/pages/MoltbotPage.tsx`                | Remove cohort reference                        |
+| **Frontend** | `client/src/components/dashboard/RankingView.tsx` | Remove cohort filter                           |
+| **Frontend** | `client/src/components/dashboard/TurmaView.tsx`   | Remove or completely refactor                  |
+| **Frontend** | `client/src/components/profile-card.tsx`          | Remove cohort prop                             |
+| **Frontend** | `client/src/components/admin/*.tsx`               | Remove cohort references                       |
+| **Frontend** | `client/src/lib/data.ts`                          | Unify data structure                           |
 
 ---
 
-## 3. Tarefas Atômicas
+## 3. Atomic Tasks
 
-### Fase 1: Foundation (Database)
+### Phase 1: Foundation (Database)
 
-#### AT-001: Criar Migração para Unificar Turma no Banco de Dados
+#### AT-001: Create Migration to Unify Cohort in the Database
 
-**Prioridade:** Critical  
-**Dependências:** Nenhuma  
-**Parallel Safe:** Não
+**Priority:** Critical
+**Dependencies:** None
+**Parallel Safe:** No
 
-**Descrição:** Esta tarefa cria uma migração SQL que atualiza todos os registros existentes para usar um valor único de turma e modifica o enum no schema do Drizzle.
+**Description:** This task creates a SQL migration that updates all existing records to use a single cohort value and modifies the enum in the Drizzle schema.
 
-**Arquivos a Modificar:**
+**Files to Modify:**
 
-1. `drizzle/schema.ts` — Linha 18
-2. Criar novo arquivo de migração
+1. `drizzle/schema.ts` — Line 18
+2. Create a new migration file
 
-**Prompt para Implementação:**
+**Implementation Prompt:**
 
 ```
-Você é um especialista em Drizzle ORM e PostgreSQL. Execute as seguintes modificações no projeto neondash:
+You are a Drizzle ORM and PostgreSQL expert. Execute the following modifications on the neondash project:
 
-1. ABRA o arquivo `drizzle/schema.ts` e localize a linha 18:
+1. OPEN the file `drizzle/schema.ts` and locate line 18:
    export const turmaEnum = pgEnum("turma", ["neon_estrutura", "neon_escala"]);
 
-2. MODIFIQUE para:
+2. MODIFY to:
    export const turmaEnum = pgEnum("turma", ["neon"]);
 
-3. CRIE um novo arquivo de migração SQL em `drizzle/migrations/` com timestamp atual (formato: XXXX_unify_turma.sql) contendo:
+3. CREATE a new SQL migration file in `drizzle/migrations/` with current timestamp (format: XXXX_unify_turma.sql) containing:
 
--- Atualizar todos os mentorados para turma unificada
+-- Update all mentees to unified cohort
 UPDATE mentorados SET turma = 'neon' WHERE turma IN ('neon_estrutura', 'neon_escala');
 
--- Atualizar todos os rankings para turma unificada
+-- Update all rankings to unified cohort
 UPDATE ranking_mensal SET turma = 'neon' WHERE turma IN ('neon_estrutura', 'neon_escala');
 
--- Atualizar todos os playbook_modules para turma unificada
+-- Update all playbook_modules to unified cohort
 UPDATE playbook_modules SET turma = 'neon' WHERE turma IN ('neon_estrutura', 'neon_escala');
 
--- Alterar o enum (PostgreSQL requer recriação)
+-- Alter the enum (PostgreSQL requires recreation)
 ALTER TYPE turma RENAME TO turma_old;
 CREATE TYPE turma AS ENUM ('neon');
 ALTER TABLE mentorados ALTER COLUMN turma TYPE turma USING 'neon'::turma;
@@ -96,71 +96,71 @@ ALTER TABLE ranking_mensal ALTER COLUMN turma TYPE turma USING 'neon'::turma;
 ALTER TABLE playbook_modules ALTER COLUMN turma TYPE turma USING turma::text::turma;
 DROP TYPE turma_old;
 
-4. EXECUTE `bun run db:generate` para gerar o snapshot atualizado.
+4. EXECUTE `bun run db:generate` to generate the updated snapshot.
 
-VALIDAÇÃO:
-- Verifique que `drizzle/schema.ts` contém apenas 'neon' no turmaEnum
-- Verifique que o arquivo de migração foi criado
-- Execute `bun run db:migrate` em ambiente de desenvolvimento para testar
+VALIDATION:
+- Verify that `drizzle/schema.ts` contains only 'neon' in turmaEnum
+- Verify that the migration file was created
+- Execute `bun run db:migrate` in the development environment to test
 ```
 
-**Validação:**
+**Validation:**
 
-- `grep -n "turmaEnum" drizzle/schema.ts` deve mostrar apenas `["neon"]`
-- Arquivo de migração existe em `drizzle/migrations/`
-- `bun run db:migrate` executa sem erros
+- `grep -n "turmaEnum" drizzle/schema.ts` should show only `["neon"]`
+- Migration file exists in `drizzle/migrations/`
+- `bun run db:migrate` executes without errors
 
 **Rollback:**
 
 ```bash
-# Reverter schema
+# Revert schema
 git checkout drizzle/schema.ts
-# Deletar migração
+# Delete migration
 rm drizzle/migrations/*unify_turma.sql
-# Em produção, executar SQL reverso
+# In production, execute reverse SQL
 ```
 
 ---
 
-### Fase 2: Core (Backend Logic)
+### Phase 2: Core (Backend Logic)
 
-#### AT-002: Remover Lógica de Turmas no Cálculo de Gamificação
+#### AT-002: Remove Cohort Logic in Gamification Calculation
 
-**Prioridade:** Critical  
-**Dependências:** `[AT-001]`  
-**Parallel Safe:** Sim (após AT-001)
+**Priority:** Critical
+**Dependencies:** `[AT-001]`
+**Parallel Safe:** Yes (after AT-001)
 
-**Descrição:** O arquivo `server/gamificacao.ts` atualmente itera sobre as duas turmas para calcular rankings separados. Esta lógica deve ser simplificada para processar todos os mentorados em um único ranking.
+**Description:** The file `server/gamificacao.ts` currently iterates over both cohorts to calculate separate rankings. This logic must be simplified to process all mentees in a single ranking.
 
-**Arquivos a Modificar:**
+**Files to Modify:**
 
-1. `server/gamificacao.ts` — Linhas 305-420
+1. `server/gamificacao.ts` — Lines 305-420
 
-**Prompt para Implementação:**
+**Implementation Prompt:**
 
 ```
-Você é um especialista em TypeScript e lógica de backend. Execute as seguintes modificações no arquivo `server/gamificacao.ts`:
+You are a TypeScript and backend logic expert. Execute the following modifications on the file `server/gamificacao.ts`:
 
-1. LOCALIZE a função `calculateMonthlyRanking` (aproximadamente linha 305).
+1. LOCATE the function `calculateMonthlyRanking` (approximately line 305).
 
-2. ENCONTRE o código:
+2. FIND the code:
    const turmas = ["neon_estrutura", "neon_escala"] as const;
    for (const turma of turmas) {
 
-3. REMOVA o loop de turmas e REFATORE para processar todos os mentorados ativos de uma vez:
+3. REMOVE the cohort loop and REFACTOR to process all active mentees at once:
 
-   // ANTES (remover):
+   // BEFORE (remove):
    const turmas = ["neon_estrutura", "neon_escala"] as const;
    for (const turma of turmas) {
      const mentoradosTurma = await db
        .select()
        .from(mentorados)
        .where(and(eq(mentorados.turma, turma), eq(mentorados.ativo, "sim")));
-     // ... resto do código dentro do loop
+     // ... rest of the code inside the loop
    }
 
-   // DEPOIS (substituir por):
-   const todosmentorados = await db
+   // AFTER (replace with):
+   const allMentorados = await db
      .select()
      .from(mentorados)
      .where(eq(mentorados.ativo, "sim"));
@@ -171,14 +171,14 @@ Você é um especialista em TypeScript e lógica de backend. Execute as seguinte
      bonus: number;
    }[] = [];
 
-   for (const m of todosmentorados) {
-     // ... manter a lógica de cálculo de pontuação existente
+   for (const m of allMentorados) {
+     // ... keep the existing score calculation logic
    }
 
-   // Ordenar por pontuação
+   // Sort by score
    rankings.sort((a, b) => b.pontuacao - a.pontuacao);
 
-   // Deletar rankings existentes do mês (sem filtro de turma)
+   // Delete existing rankings for the month (without cohort filter)
    await db
      .delete(rankingMensal)
      .where(
@@ -188,7 +188,7 @@ Você é um especialista em TypeScript e lógica de backend. Execute as seguinte
        )
      );
 
-   // Inserir novos rankings com turma fixa 'neon'
+   // Insert new rankings with fixed cohort 'neon'
    for (let i = 0; i < rankings.length; i++) {
      await db.insert(rankingMensal).values({
        mentoradoId: rankings[i].mentoradoId,
@@ -201,196 +201,196 @@ Você é um especialista em TypeScript e lógica de backend. Execute as seguinte
      });
    }
 
-4. LOCALIZE a função `getRanking` (aproximadamente linha 712) e REMOVA o parâmetro opcional de turma:
+4. LOCATE the function `getRanking` (approximately line 712) and REMOVE the optional cohort parameter:
 
-   // ANTES:
+   // BEFORE:
    turma?: "neon_estrutura" | "neon_escala"
 
-   // DEPOIS:
-   // Remover completamente o parâmetro turma
+   // AFTER:
+   // Remove the turma parameter completely
 
-5. ATUALIZE a query dentro de `getRanking` para não filtrar por turma.
+5. UPDATE the query inside `getRanking` to not filter by cohort.
 
-VALIDAÇÃO:
-- Execute `bun run typecheck` para verificar tipos
-- Execute `bun run test` para rodar os testes existentes
+VALIDATION:
+- Execute `bun run typecheck` to verify types
+- Execute `bun run test` to run existing tests
 ```
 
-**Validação:**
+**Validation:**
 
-- `grep -n "neon_estrutura\|neon_escala" server/gamificacao.ts` não retorna resultados
-- `bun run typecheck` passa sem erros
-- `bun run test` passa (pode precisar atualizar testes)
+- `grep -n "neon_estrutura\|neon_escala" server/gamificacao.ts` returns no results
+- `bun run typecheck` passes without errors
+- `bun run test` passes (may need to update tests)
 
 ---
 
-#### AT-003: Atualizar Routers tRPC para Remover Filtros de Turma
+#### AT-003: Update tRPC Routers to Remove Cohort Filters
 
-**Prioridade:** Critical  
-**Dependências:** `[AT-002]`  
-**Parallel Safe:** Sim
+**Priority:** Critical
+**Dependencies:** `[AT-002]`
+**Parallel Safe:** Yes
 
-**Descrição:** Os routers tRPC expõem endpoints que aceitam turma como parâmetro. Estes devem ser atualizados para não aceitar mais este filtro.
+**Description:** The tRPC routers expose endpoints that accept cohort as a parameter. These must be updated to no longer accept this filter.
 
-**Arquivos a Modificar:**
+**Files to Modify:**
 
-1. `server/gamificacaoRouter.ts` — Linha 70
-2. `server/mentoradosRouter.ts` — Linhas 62, 170, 218
-3. `server/routers/playbook.ts` — Linha 15
+1. `server/gamificacaoRouter.ts` — Line 70
+2. `server/mentoradosRouter.ts` — Lines 62, 170, 218
+3. `server/routers/playbook.ts` — Line 15
 
-**Prompt para Implementação:**
+**Implementation Prompt:**
 
 ```
-Você é um especialista em tRPC e Zod. Execute as seguintes modificações nos routers do backend:
+You are a tRPC and Zod expert. Execute the following modifications on the backend routers:
 
-### Arquivo 1: server/gamificacaoRouter.ts
+### File 1: server/gamificacaoRouter.ts
 
-1. LOCALIZE linha 70:
+1. LOCATE line 70:
    turma: z.enum(["neon_estrutura", "neon_escala"]).optional(),
 
-2. REMOVA esta linha completamente do schema de input.
+2. REMOVE this line completely from the input schema.
 
-3. ATUALIZE a chamada para `Gamificacao.getRanking` removendo o parâmetro turma.
+3. UPDATE the call to `Gamificacao.getRanking` removing the turma parameter.
 
-### Arquivo 2: server/mentoradosRouter.ts
+### File 2: server/mentoradosRouter.ts
 
-1. LOCALIZE linha 62 (dentro de `create`):
+1. LOCATE line 62 (inside `create`):
    turma: z.enum(["neon_estrutura", "neon_escala"]),
 
-2. SUBSTITUA por:
+2. REPLACE with:
    turma: z.literal("neon").default("neon"),
 
-3. LOCALIZE linha 170 (dentro de `update`):
+3. LOCATE line 170 (inside `update`):
    turma: z.enum(["neon_estrutura", "neon_escala"]).optional(),
 
-4. REMOVA esta linha completamente (turma não deve ser editável).
+4. REMOVE this line completely (turma should not be editable).
 
-5. LOCALIZE linha 218 (dentro de `createNew`):
+5. LOCATE line 218 (inside `createNew`):
    turma: z.enum(["neon_estrutura", "neon_escala"]),
 
-6. SUBSTITUA por:
+6. REPLACE with:
    turma: z.literal("neon").default("neon"),
 
-### Arquivo 3: server/routers/playbook.ts
+### File 3: server/routers/playbook.ts
 
-1. LOCALIZE linha 15:
+1. LOCATE line 15:
    z.object({ turma: z.enum(["neon_estrutura", "neon_escala"]).optional() })
 
-2. REMOVA o objeto de input completamente ou substitua por z.void().
+2. REMOVE the input object completely or replace with z.void().
 
-3. ATUALIZE a query para não filtrar por turma.
+3. UPDATE the query to not filter by cohort.
 
-VALIDAÇÃO:
+VALIDATION:
 - Execute `bun run typecheck`
-- Teste os endpoints manualmente via Postman ou Thunder Client
+- Test the endpoints manually via Postman or Thunder Client
 ```
 
-**Validação:**
+**Validation:**
 
-- `grep -rn "neon_estrutura\|neon_escala" server/*.ts server/routers/*.ts` não retorna resultados
-- `bun run typecheck` passa
+- `grep -rn "neon_estrutura\|neon_escala" server/*.ts server/routers/*.ts` returns no results
+- `bun run typecheck` passes
 
 ---
 
-#### AT-004: Atualizar Serviços Auxiliares do Backend
+#### AT-004: Update Auxiliary Backend Services
 
-**Prioridade:** High  
-**Dependências:** `[AT-001]`  
-**Parallel Safe:** Sim
+**Priority:** High
+**Dependencies:** `[AT-001]`
+**Parallel Safe:** Yes
 
-**Descrição:** Serviços auxiliares como email e contexto de usuário também referenciam turmas e devem ser atualizados.
+**Description:** Auxiliary services such as email and user context also reference cohorts and must be updated.
 
-**Arquivos a Modificar:**
+**Files to Modify:**
 
-1. `server/emailService.ts` — Linha 51
-2. `server/services/userService.ts` — Linhas 95-96
-3. `server/_core/context.ts` — Linha 134
+1. `server/emailService.ts` — Line 51
+2. `server/services/userService.ts` — Lines 95-96
+3. `server/_core/context.ts` — Line 134
 
-**Prompt para Implementação:**
+**Implementation Prompt:**
 
 ```
-Você é um especialista em TypeScript. Execute as seguintes modificações nos serviços auxiliares:
+You are a TypeScript expert. Execute the following modifications on the auxiliary services:
 
-### Arquivo 1: server/emailService.ts
+### File 1: server/emailService.ts
 
-1. LOCALIZE linha 51:
+1. LOCATE line 51:
    turma === "neon_estrutura" ? "Neon Estrutura" : "Neon Escala";
 
-2. SUBSTITUA por:
+2. REPLACE with:
    const turmaNome = "NEON";
 
-3. ATUALIZE o template de email para usar apenas "NEON" como nome da turma.
+3. UPDATE the email template to use only "NEON" as the cohort name.
 
-### Arquivo 2: server/services/userService.ts
+### File 2: server/services/userService.ts
 
-1. LOCALIZE linhas 95-96:
+1. LOCATE lines 95-96:
    (user.public_metadata?.turma as "neon_estrutura" | "neon_escala") ||
    "neon_estrutura";
 
-2. SUBSTITUA por:
+2. REPLACE with:
    "neon" as const;
 
-### Arquivo 3: server/_core/context.ts
+### File 3: server/_core/context.ts
 
-1. LOCALIZE linha 134:
+1. LOCATE line 134:
    turma: "neon_estrutura", // Default value
 
-2. SUBSTITUA por:
-   turma: "neon", // Turma unificada
+2. REPLACE with:
+   turma: "neon", // Unified cohort
 
-VALIDAÇÃO:
+VALIDATION:
 - Execute `bun run typecheck`
-- Verifique que não há mais referências a "neon_estrutura" ou "neon_escala" nestes arquivos
+- Verify that there are no more references to "neon_estrutura" or "neon_escala" in these files
 ```
 
-**Validação:**
+**Validation:**
 
-- `grep -n "neon_estrutura\|neon_escala" server/emailService.ts server/services/userService.ts server/_core/context.ts` não retorna resultados
+- `grep -n "neon_estrutura\|neon_escala" server/emailService.ts server/services/userService.ts server/_core/context.ts` returns no results
 
 ---
 
-### Fase 3: Integration (Frontend)
+### Phase 3: Integration (Frontend)
 
-#### AT-005: Unificar Página Home e Remover Abas de Turma
+#### AT-005: Unify Home Page and Remove Cohort Tabs
 
-**Prioridade:** High  
-**Dependências:** `[AT-002, AT-003]`  
-**Parallel Safe:** Sim
+**Priority:** High
+**Dependencies:** `[AT-002, AT-003]`
+**Parallel Safe:** Yes
 
-**Descrição:** A página Home atualmente exibe abas separadas para "Neurônios Estrutura" e "Neurônios Escala". Estas devem ser removidas e substituídas por uma visão unificada.
+**Description:** The Home page currently displays separate tabs for "Estrutura Neurons" and "Escala Neurons". These must be removed and replaced with a unified view.
 
-**Arquivos a Modificar:**
+**Files to Modify:**
 
 1. `client/src/pages/Home.tsx`
 
-**Prompt para Implementação:**
+**Implementation Prompt:**
 
 ```
-Você é um especialista em React e TypeScript. Execute as seguintes modificações em `client/src/pages/Home.tsx`:
+You are a React and TypeScript expert. Execute the following modifications on `client/src/pages/Home.tsx`:
 
-1. LOCALIZE as importações de `analiseData` e ATUALIZE para usar dados unificados:
+1. LOCATE the imports of `analiseData` and UPDATE to use unified data:
 
-   // A estrutura de dados será modificada em AT-008, mas prepare o código para:
+   // The data structure will be modified in AT-008, but prepare the code for:
    const allMentorados = [
      ...Object.entries(analiseData.neon?.analise || {}),
    ];
 
-2. LOCALIZE o array de tabs no `FloatingDockTabsList` (linhas 122-148):
+2. LOCATE the tabs array in `FloatingDockTabsList` (lines 122-148):
 
    {
      value: "estrutura",
-     label: "Neurônios Estrutura",
+     label: "Estrutura Neurons",
      icon: Users,
    },
    {
      value: "escala",
-     label: "Neurônios Escala",
+     label: "Escala Neurons",
      icon: TrendingUp,
    },
 
-3. REMOVA estas duas entradas do array de tabs.
+3. REMOVE these two entries from the tabs array.
 
-4. LOCALIZE os `FloatingDockTabsContent` para "estrutura" e "escala" (linhas 365-373):
+4. LOCATE the `FloatingDockTabsContent` for "estrutura" and "escala" (lines 365-373):
 
    <FloatingDockTabsContent value="estrutura" className="mt-0">
      <TurmaView type="estrutura" />
@@ -400,54 +400,54 @@ Você é um especialista em React e TypeScript. Execute as seguintes modificaç�
      <TurmaView type="escala" />
    </FloatingDockTabsContent>
 
-5. SUBSTITUA por uma única aba "Mentorados":
+5. REPLACE with a single "Mentees" tab:
 
    <FloatingDockTabsContent value="mentorados" className="mt-0">
      <MentoradosUnifiedView />
    </FloatingDockTabsContent>
 
-6. ATUALIZE a lógica de cálculo de `topPerformers`, `faturamentoTotal`, `totalMentorados` e `chartData` para usar dados unificados em vez de concatenar duas fontes.
+6. UPDATE the calculation logic for `topPerformers`, `faturamentoTotal`, `totalMentorados`, and `chartData` to use unified data instead of concatenating two sources.
 
-7. REMOVA os badges "5 Estrutura" e "9 Escala" (linhas 215-220) e substitua por um único contador total.
+7. REMOVE the "5 Estrutura" and "9 Escala" badges (lines 215-220) and replace with a single total counter.
 
-VALIDAÇÃO:
-- Execute `bun run dev` e verifique visualmente que as abas de turma não aparecem mais
-- Verifique que os dados agregados estão corretos
+VALIDATION:
+- Execute `bun run dev` and visually verify that cohort tabs no longer appear
+- Verify that aggregated data is correct
 ```
 
-**Validação:**
+**Validation:**
 
-- Visualmente, a página Home não exibe mais abas de turma
-- `grep -n "estrutura\|escala" client/src/pages/Home.tsx` retorna apenas referências a "infraestrutura" ou similares (não relacionadas a turmas)
+- Visually, the Home page no longer displays cohort tabs
+- `grep -n "estrutura\|escala" client/src/pages/Home.tsx` returns only references to "infrastructure" or similar (not cohort-related)
 
 ---
 
-#### AT-006: Atualizar RankingView para Remover Filtro de Turma
+#### AT-006: Update RankingView to Remove Cohort Filter
 
-**Prioridade:** High  
-**Dependências:** `[AT-003]`  
-**Parallel Safe:** Sim
+**Priority:** High
+**Dependencies:** `[AT-003]`
+**Parallel Safe:** Yes
 
-**Descrição:** O componente RankingView possui um dropdown para filtrar por turma que deve ser removido.
+**Description:** The RankingView component has a dropdown to filter by cohort that must be removed.
 
-**Arquivos a Modificar:**
+**Files to Modify:**
 
 1. `client/src/components/dashboard/RankingView.tsx`
 
-**Prompt para Implementação:**
+**Implementation Prompt:**
 
 ```
-Você é um especialista em React e TypeScript. Execute as seguintes modificações em `client/src/components/dashboard/RankingView.tsx`:
+You are a React and TypeScript expert. Execute the following modifications on `client/src/components/dashboard/RankingView.tsx`:
 
-1. LOCALIZE o state de turma (linha 24-26):
+1. LOCATE the cohort state (line 24-26):
 
    const [turma, setTurma] = useState<
      "neon_estrutura" | "neon_escala" | "todas"
    >("todas");
 
-2. REMOVA completamente este state.
+2. REMOVE this state completely.
 
-3. LOCALIZE a query tRPC (linhas 28-32):
+3. LOCATE the tRPC query (lines 28-32):
 
    const { data: ranking, isLoading } = trpc.gamificacao.ranking.useQuery({
      ano: selectedYear,
@@ -455,14 +455,14 @@ Você é um especialista em React e TypeScript. Execute as seguintes modificaç�
      turma: turma === "todas" ? undefined : turma,
    });
 
-4. SIMPLIFIQUE para:
+4. SIMPLIFY to:
 
    const { data: ranking, isLoading } = trpc.gamificacao.ranking.useQuery({
      ano: selectedYear,
      mes: selectedMonth,
    });
 
-5. LOCALIZE o Select de turma (linhas 77-90) e REMOVA completamente:
+5. LOCATE the cohort Select (lines 77-90) and REMOVE completely:
 
    <Select
      value={turma}
@@ -471,7 +471,7 @@ Você é um especialista em React e TypeScript. Execute as seguintes modificaç�
      ...
    </Select>
 
-6. LOCALIZE os Badges de turma nos cards do podium (linhas 155-162) e REMOVA:
+6. LOCATE the cohort Badges on podium cards (lines 155-162) and REMOVE:
 
    <Badge
      variant="outline"
@@ -482,7 +482,7 @@ Você é um especialista em React e TypeScript. Execute as seguintes modificaç�
        : "Escala"}
    </Badge>
 
-7. LOCALIZE a exibição de turma na lista completa (linhas 224-228) e REMOVA:
+7. LOCATE the cohort display in the full list (lines 224-228) and REMOVE:
 
    <p className="text-sm text-slate-500">
      {item.mentorado.turma === "neon_estrutura"
@@ -490,26 +490,26 @@ Você é um especialista em React e TypeScript. Execute as seguintes modificaç�
        : "Neon Escala"}
    </p>
 
-VALIDAÇÃO:
-- Execute `bun run dev` e verifique que o filtro de turma não aparece mais
-- Verifique que o ranking exibe todos os mentorados em uma única lista
+VALIDATION:
+- Execute `bun run dev` and verify that the cohort filter no longer appears
+- Verify that the ranking displays all mentees in a single list
 ```
 
-**Validação:**
+**Validation:**
 
-- `grep -n "neon_estrutura\|neon_escala" client/src/components/dashboard/RankingView.tsx` não retorna resultados
+- `grep -n "neon_estrutura\|neon_escala" client/src/components/dashboard/RankingView.tsx` returns no results
 
 ---
 
-#### AT-007: Atualizar Componentes Administrativos
+#### AT-007: Update Administrative Components
 
-**Prioridade:** Medium  
-**Dependências:** `[AT-003]`  
-**Parallel Safe:** Sim
+**Priority:** Medium
+**Dependencies:** `[AT-003]`
+**Parallel Safe:** Yes
 
-**Descrição:** Os componentes administrativos exibem contadores e badges de turma que devem ser removidos.
+**Description:** Administrative components display cohort counters and badges that must be removed.
 
-**Arquivos a Modificar:**
+**Files to Modify:**
 
 1. `client/src/pages/Admin.tsx`
 2. `client/src/pages/VincularEmails.tsx`
@@ -517,156 +517,156 @@ VALIDAÇÃO:
 4. `client/src/components/admin/MenteeManagementView.tsx`
 5. `client/src/components/admin/LinkEmailsView.tsx`
 
-**Prompt para Implementação:**
+**Implementation Prompt:**
 
 ```
-Você é um especialista em React. Execute as seguintes modificações nos componentes administrativos:
+You are a React expert. Execute the following modifications on the administrative components:
 
-### Arquivo 1: client/src/pages/Admin.tsx
+### File 1: client/src/pages/Admin.tsx
 
-1. LOCALIZE linhas 36-39:
+1. LOCATE lines 36-39:
    const estruturaCount =
      mentorados?.filter((m: any) => m.turma === "neon_estrutura").length || 0;
    const escalaCount =
      mentorados?.filter((m: any) => m.turma === "neon_escala").length || 0;
 
-2. SUBSTITUA por:
+2. REPLACE with:
    const totalCount = mentorados?.length || 0;
 
-3. LOCALIZE linhas 70-73 (badges de contagem) e SUBSTITUA por um único contador:
+3. LOCATE lines 70-73 (count badges) and REPLACE with a single counter:
    <span className="bg-neon-gold/20 text-neon-blue-dark px-2 py-0.5 rounded-full font-medium">
-     {totalCount} Mentorados
+     {totalCount} Mentees
    </span>
 
-4. LOCALIZE linhas 147-154 (exibição de turma na tabela) e REMOVA completamente a coluna de turma.
+4. LOCATE lines 147-154 (cohort display in table) and REMOVE the cohort column completely.
 
-### Arquivo 2: client/src/pages/VincularEmails.tsx
+### File 2: client/src/pages/VincularEmails.tsx
 
-1. LOCALIZE linhas 102-106 e 164-166 que exibem badges de turma e REMOVA.
+1. LOCATE lines 102-106 and 164-166 that display cohort badges and REMOVE.
 
-### Arquivo 3: client/src/components/admin/AdminOverview.tsx
+### File 3: client/src/components/admin/AdminOverview.tsx
 
-1. BUSQUE por referências a "estrutura" ou "escala" e REMOVA.
+1. SEARCH for references to "estrutura" or "escala" and REMOVE.
 
-### Arquivo 4: client/src/components/admin/MenteeManagementView.tsx
+### File 4: client/src/components/admin/MenteeManagementView.tsx
 
-1. BUSQUE por referências a "estrutura" ou "escala" e REMOVA.
+1. SEARCH for references to "estrutura" or "escala" and REMOVE.
 
-### Arquivo 5: client/src/components/admin/LinkEmailsView.tsx
+### File 5: client/src/components/admin/LinkEmailsView.tsx
 
-1. BUSQUE por referências a "estrutura" ou "escala" e REMOVA.
+1. SEARCH for references to "estrutura" or "escala" and REMOVE.
 
-VALIDAÇÃO:
-- Execute `bun run dev` e navegue até a área administrativa
-- Verifique que não há mais referências visuais a turmas separadas
+VALIDATION:
+- Execute `bun run dev` and navigate to the admin area
+- Verify that there are no more visual references to separate cohorts
 ```
 
-**Validação:**
+**Validation:**
 
-- `grep -rn "neon_estrutura\|neon_escala" client/src/pages/Admin.tsx client/src/pages/VincularEmails.tsx client/src/components/admin/` não retorna resultados
+- `grep -rn "neon_estrutura\|neon_escala" client/src/pages/Admin.tsx client/src/pages/VincularEmails.tsx client/src/components/admin/` returns no results
 
 ---
 
-#### AT-008: Atualizar Outros Componentes de Frontend
+#### AT-008: Update Other Frontend Components
 
-**Prioridade:** Medium  
-**Dependências:** `[AT-003]`  
-**Parallel Safe:** Sim
+**Priority:** Medium
+**Dependencies:** `[AT-003]`
+**Parallel Safe:** Yes
 
-**Descrição:** Componentes adicionais como profile-card, MyDashboard e MoltbotPage também referenciam turmas.
+**Description:** Additional components such as profile-card, MyDashboard, and MoltbotPage also reference cohorts.
 
-**Arquivos a Modificar:**
+**Files to Modify:**
 
 1. `client/src/components/profile-card.tsx`
 2. `client/src/pages/MyDashboard.tsx`
 3. `client/src/pages/MoltbotPage.tsx`
 
-**Prompt para Implementação:**
+**Implementation Prompt:**
 
 ```
-Você é um especialista em React e TypeScript. Execute as seguintes modificações:
+You are a React and TypeScript expert. Execute the following modifications:
 
-### Arquivo 1: client/src/components/profile-card.tsx
+### File 1: client/src/components/profile-card.tsx
 
-1. LOCALIZE a interface de props (linha 20):
+1. LOCATE the props interface (line 20):
    turma?: "neon_estrutura" | "neon_escala";
 
-2. REMOVA esta prop completamente.
+2. REMOVE this prop completely.
 
-3. LOCALIZE a lógica de gradiente baseada em turma (linhas 46-52) e SIMPLIFIQUE para um único gradiente padrão:
+3. LOCATE the gradient logic based on cohort (lines 46-52) and SIMPLIFY to a single default gradient:
    const gradientClass = "bg-gradient-to-r from-purple-500 to-pink-500";
 
-4. LOCALIZE o Badge de turma (linhas 103-107) e REMOVA completamente.
+4. LOCATE the cohort Badge (lines 103-107) and REMOVE completely.
 
-### Arquivo 2: client/src/pages/MyDashboard.tsx
+### File 2: client/src/pages/MyDashboard.tsx
 
-1. LOCALIZE linha 252:
+1. LOCATE line 252:
    {currentMentorado?.turma === "neon_estrutura"
 
-2. REMOVA toda a lógica condicional de turma e substitua por um texto fixo ou remova o badge completamente.
+2. REMOVE all cohort conditional logic and replace with fixed text or remove the badge completely.
 
-### Arquivo 3: client/src/pages/MoltbotPage.tsx
+### File 3: client/src/pages/MoltbotPage.tsx
 
-1. LOCALIZE linhas 67 e 85 que verificam turma e REMOVA as condicionais.
+1. LOCATE lines 67 and 85 that check cohort and REMOVE the conditionals.
 
-VALIDAÇÃO:
-- Execute `bun run typecheck` para verificar que não há erros de tipo
-- Verifique visualmente que os componentes renderizam corretamente
+VALIDATION:
+- Execute `bun run typecheck` to verify no type errors
+- Visually verify that components render correctly
 ```
 
-**Validação:**
+**Validation:**
 
-- `grep -rn "neon_estrutura\|neon_escala" client/src/components/profile-card.tsx client/src/pages/MyDashboard.tsx client/src/pages/MoltbotPage.tsx` não retorna resultados
+- `grep -rn "neon_estrutura\|neon_escala" client/src/components/profile-card.tsx client/src/pages/MyDashboard.tsx client/src/pages/MoltbotPage.tsx` returns no results
 
 ---
 
-### Fase 4: Polish (Data & Seeding)
+### Phase 4: Polish (Data & Seeding)
 
-#### AT-009: Unificar Dados Estáticos em data.ts
+#### AT-009: Unify Static Data in data.ts
 
-**Prioridade:** Medium  
-**Dependências:** `[AT-005]`  
-**Parallel Safe:** Sim
+**Priority:** Medium
+**Dependencies:** `[AT-005]`
+**Parallel Safe:** Yes
 
-**Descrição:** O arquivo `client/src/lib/data.ts` contém dados mockados separados por turma que devem ser unificados.
+**Description:** The file `client/src/lib/data.ts` contains mock data separated by cohort that must be unified.
 
-**Arquivos a Modificar:**
+**Files to Modify:**
 
 1. `client/src/lib/data.ts`
 
-**Prompt para Implementação:**
+**Implementation Prompt:**
 
 ```
-Você é um especialista em TypeScript. Execute as seguintes modificações em `client/src/lib/data.ts`:
+You are a TypeScript expert. Execute the following modifications on `client/src/lib/data.ts`:
 
-1. LOCALIZE a interface `AnaliseCompleta` (linhas 49-52):
+1. LOCATE the `AnaliseCompleta` interface (lines 49-52):
 
    export interface AnaliseCompleta {
      neon_estrutura: GrupoAnalise;
      neon_escala: GrupoAnalise;
    }
 
-2. SUBSTITUA por:
+2. REPLACE with:
 
    export interface AnaliseCompleta {
      neon: GrupoAnalise;
    }
 
-3. LOCALIZE o objeto `analiseData` (linha 54 em diante) e UNIFIQUE os dados:
+3. LOCATE the `analiseData` object (line 54 onwards) and UNIFY the data:
 
    export const analiseData: AnaliseCompleta = {
      neon: {
        analise: {
-         // Combinar todos os mentorados de ambas as turmas anteriores
+         // Combine all mentees from both previous cohorts
          ...dadosNeonEstrutura,
          ...dadosNeonEscala,
        },
        ranking: [
-         // Combinar e reordenar por score
+         // Combine and reorder by score
          ...rankingCombinado,
        ],
        benchmarks: {
-         meta_faturamento: 20000, // Média entre 16000 e 30000
+         meta_faturamento: 20000, // Average between 16000 and 30000
          posts_feed_min: 10,
          stories_min: 44,
          procedimentos_min: 8,
@@ -675,262 +675,262 @@ Você é um especialista em TypeScript. Execute as seguintes modificações em `
      },
    };
 
-4. REMOVA a propriedade `bonus_estrutura` dos detalhes dos mentorados (não faz mais sentido com turma única).
+4. REMOVE the `bonus_estrutura` property from mentee details (no longer relevant with a single cohort).
 
-5. RECALCULE o ranking combinado ordenando todos os mentorados por score.
+5. RECALCULATE the combined ranking by sorting all mentees by score.
 
-VALIDAÇÃO:
+VALIDATION:
 - Execute `bun run typecheck`
-- Verifique que os imports em outros arquivos não quebram
+- Verify that imports in other files do not break
 ```
 
-**Validação:**
+**Validation:**
 
-- `grep -n "neon_estrutura\|neon_escala" client/src/lib/data.ts` não retorna resultados
-- `bun run typecheck` passa
+- `grep -n "neon_estrutura\|neon_escala" client/src/lib/data.ts` returns no results
+- `bun run typecheck` passes
 
 ---
 
-#### AT-010: Atualizar Script de Seeding do Playbook
+#### AT-010: Update Playbook Seeding Script
 
-**Prioridade:** Low  
-**Dependências:** `[AT-001]`  
-**Parallel Safe:** Sim
+**Priority:** Low
+**Dependencies:** `[AT-001]`
+**Parallel Safe:** Yes
 
-**Descrição:** O script de seeding cria módulos separados por turma que devem ser unificados.
+**Description:** The seeding script creates modules separated by cohort that must be unified.
 
-**Arquivos a Modificar:**
+**Files to Modify:**
 
 1. `server/seed-playbook.ts`
 
-**Prompt para Implementação:**
+**Implementation Prompt:**
 
 ```
-Você é um especialista em TypeScript e Drizzle ORM. Execute as seguintes modificações em `server/seed-playbook.ts`:
+You are a TypeScript and Drizzle ORM expert. Execute the following modifications on `server/seed-playbook.ts`:
 
-1. LOCALIZE todas as referências a `turma: "neon_estrutura"` e `turma: "neon_escala"`.
+1. LOCATE all references to `turma: "neon_estrutura"` and `turma: "neon_escala"`.
 
-2. SUBSTITUA todas por `turma: "neon"`.
+2. REPLACE all with `turma: "neon"`.
 
-3. CONSIDERE unificar módulos duplicados (ex: se houver "Fase 1" para ambas as turmas, manter apenas uma).
+3. CONSIDER unifying duplicate modules (e.g.: if there is "Phase 1" for both cohorts, keep only one).
 
-4. EXEMPLO de estrutura final:
+4. EXAMPLE of final structure:
 
    const [mod1] = await db
      .insert(playbookModules)
      .values({
-       title: "Fase 1: Onboarding e Diagnóstico",
-       description: "Primeiros passos na metodologia NEON.",
+       title: "Phase 1: Onboarding and Diagnostic",
+       description: "First steps in the NEON methodology.",
        order: 1,
-       turma: "neon", // Turma unificada
+       turma: "neon", // Unified cohort
      })
      .returning();
 
-VALIDAÇÃO:
-- Execute `bun run seed:playbook` em ambiente de desenvolvimento
-- Verifique no banco de dados que os módulos foram criados com turma "neon"
+VALIDATION:
+- Execute `bun run seed:playbook` in the development environment
+- Verify in the database that modules were created with cohort "neon"
 ```
 
-**Validação:**
+**Validation:**
 
-- `grep -n "neon_estrutura\|neon_escala" server/seed-playbook.ts` não retorna resultados
+- `grep -n "neon_estrutura\|neon_escala" server/seed-playbook.ts` returns no results
 
 ---
 
-### Fase 5: Validation
+### Phase 5: Validation
 
-#### AT-011: Refatorar ou Remover TurmaView
+#### AT-011: Refactor or Remove TurmaView
 
-**Prioridade:** Medium  
-**Dependências:** `[AT-005, AT-009]`  
-**Parallel Safe:** Sim
+**Priority:** Medium
+**Dependencies:** `[AT-005, AT-009]`
+**Parallel Safe:** Yes
 
-**Descrição:** O componente TurmaView foi projetado para exibir dados de uma turma específica. Com a unificação, ele deve ser refatorado para uma visão geral ou removido.
+**Description:** The TurmaView component was designed to display data for a specific cohort. With the unification, it must be refactored to a general view or removed.
 
-**Arquivos a Modificar:**
+**Files to Modify:**
 
 1. `client/src/components/dashboard/TurmaView.tsx`
 
-**Prompt para Implementação:**
+**Implementation Prompt:**
 
 ```
-Você é um especialista em React. Execute uma das seguintes opções para `client/src/components/dashboard/TurmaView.tsx`:
+You are a React expert. Execute one of the following options for `client/src/components/dashboard/TurmaView.tsx`:
 
-### Opção A: Refatorar para MentoradosUnifiedView
+### Option A: Refactor to MentoradosUnifiedView
 
-1. RENOMEIE o arquivo para `MentoradosUnifiedView.tsx`.
+1. RENAME the file to `MentoradosUnifiedView.tsx`.
 
-2. REMOVA a prop `type` da interface.
+2. REMOVE the `type` prop from the interface.
 
-3. ATUALIZE para usar `analiseData.neon` diretamente:
+3. UPDATE to use `analiseData.neon` directly:
 
    export function MentoradosUnifiedView() {
      const data = analiseData.neon;
-     // ... resto da lógica
+     // ... rest of the logic
    }
 
-4. REMOVA toda lógica condicional baseada em tipo de turma.
+4. REMOVE all conditional logic based on cohort type.
 
-5. ATUALIZE o título para "Visão Geral NEON".
+5. UPDATE the title to "NEON Overview".
 
-### Opção B: Remover Completamente
+### Option B: Remove Completely
 
-1. DELETE o arquivo `TurmaView.tsx`.
+1. DELETE the file `TurmaView.tsx`.
 
-2. ATUALIZE `client/src/pages/Home.tsx` para não importar este componente.
+2. UPDATE `client/src/pages/Home.tsx` to not import this component.
 
-3. CRIE uma nova seção inline em Home.tsx para exibir os mentorados.
+3. CREATE a new inline section in Home.tsx to display the mentees.
 
-VALIDAÇÃO:
-- Execute `bun run dev` e verifique que a aplicação carrega sem erros
-- Verifique que os dados dos mentorados são exibidos corretamente
+VALIDATION:
+- Execute `bun run dev` and verify that the application loads without errors
+- Verify that mentee data is displayed correctly
 ```
 
-**Validação:**
+**Validation:**
 
-- Aplicação carrega sem erros
-- Dados de mentorados são exibidos em uma visão unificada
+- Application loads without errors
+- Mentee data is displayed in a unified view
 
 ---
 
-#### AT-012: Limpeza Final e Validação Completa
+#### AT-012: Final Cleanup and Complete Validation
 
-**Prioridade:** Low  
-**Dependências:** `[AT-001 até AT-011]`  
-**Parallel Safe:** Não
+**Priority:** Low
+**Dependencies:** `[AT-001 through AT-011]`
+**Parallel Safe:** No
 
-**Descrição:** Realizar uma busca global para garantir que todas as referências foram removidas e executar testes completos.
+**Description:** Perform a global search to ensure all references have been removed and run complete tests.
 
-**Prompt para Implementação:**
+**Implementation Prompt:**
 
 ```
-Você é um especialista em qualidade de código. Execute as seguintes verificações finais:
+You are a code quality expert. Execute the following final verifications:
 
-1. BUSCA GLOBAL por referências remanescentes:
+1. GLOBAL SEARCH for remaining references:
    grep -rn "neon_estrutura\|neon_escala\|Neon Estrutura\|Neon Escala" --include="*.ts" --include="*.tsx" --include="*.sql" --include="*.json" .
 
-2. IGNORE resultados em:
+2. IGNORE results in:
    - node_modules/
    - .git/
-   - Arquivos de snapshot antigos (se não forem mais necessários)
+   - Old snapshot files (if no longer needed)
 
-3. PARA cada resultado encontrado, avalie se:
-   - É código ativo que precisa ser atualizado
-   - É um arquivo de histórico/backup que pode ser ignorado
-   - É um teste que precisa ser atualizado
+3. FOR each result found, assess whether:
+   - It is active code that needs to be updated
+   - It is a history/backup file that can be ignored
+   - It is a test that needs to be updated
 
-4. EXECUTE os comandos de validação:
+4. EXECUTE validation commands:
    bun run typecheck
    bun run lint
    bun run test
    bun run build
 
-5. CORRIJA quaisquer erros encontrados.
+5. FIX any errors found.
 
-6. ATUALIZE o arquivo `drizzle/meta/0000_snapshot.json` se necessário (geralmente gerado automaticamente).
+6. UPDATE the file `drizzle/meta/0000_snapshot.json` if necessary (usually auto-generated).
 
-VALIDAÇÃO:
-- Todos os comandos de validação passam sem erros
-- A busca global não retorna resultados em código ativo
-- A aplicação funciona corretamente em ambiente de desenvolvimento
+VALIDATION:
+- All validation commands pass without errors
+- Global search returns no results in active code
+- Application works correctly in the development environment
 ```
 
-**Validação:**
+**Validation:**
 
-- `bun run typecheck` — 0 erros
+- `bun run typecheck` — 0 errors
 - `bun run lint` — 0 warnings
-- `bun run test` — Todos os testes passam
-- `bun run build` — Build completa com sucesso
+- `bun run test` — All tests pass
+- `bun run build` — Build completes successfully
 
 ---
 
-## 4. Diagrama de Dependências
+## 4. Dependency Diagram
 
 ```
 AT-001 (Database Migration)
-    │
-    ├──► AT-002 (Backend Gamificação)
-    │        │
-    │        └──► AT-003 (tRPC Routers)
-    │                 │
-    │                 ├──► AT-005 (Home.tsx)
-    │                 │        │
-    │                 │        └──► AT-011 (TurmaView)
-    │                 │
-    │                 ├──► AT-006 (RankingView)
-    │                 │
-    │                 ├──► AT-007 (Admin Components)
-    │                 │
-    │                 └──► AT-008 (Other Components)
-    │
-    ├──► AT-004 (Backend Services)
-    │
-    ├──► AT-009 (data.ts) ──► AT-011
-    │
-    └──► AT-010 (Seed Playbook)
+    |
+    |---> AT-002 (Backend Gamification)
+    |        |
+    |        └---> AT-003 (tRPC Routers)
+    |                 |
+    |                 |---> AT-005 (Home.tsx)
+    |                 |        |
+    |                 |        └---> AT-011 (TurmaView)
+    |                 |
+    |                 |---> AT-006 (RankingView)
+    |                 |
+    |                 |---> AT-007 (Admin Components)
+    |                 |
+    |                 └---> AT-008 (Other Components)
+    |
+    |---> AT-004 (Backend Services)
+    |
+    |---> AT-009 (data.ts) ---> AT-011
+    |
+    └---> AT-010 (Seed Playbook)
 
-AT-012 (Final Validation) ◄── Todas as tarefas anteriores
+AT-012 (Final Validation) <-- All previous tasks
 ```
 
 ---
 
-## 5. Considerações de Rollback
+## 5. Rollback Considerations
 
-Em caso de problemas em produção, o rollback deve seguir a ordem inversa:
+In case of production issues, rollback should follow reverse order:
 
-1. **Frontend:** Reverter commits dos componentes React
-2. **Backend:** Reverter commits dos routers e serviços
-3. **Database:** Executar migração reversa (recriar enum com valores antigos e atualizar dados)
+1. **Frontend:** Revert React component commits
+2. **Backend:** Revert router and service commits
+3. **Database:** Execute reverse migration (recreate enum with old values and update data)
 
-**Script de Rollback do Banco de Dados:**
+**Database Rollback Script:**
 
 ```sql
--- Reverter enum de turma
+-- Revert cohort enum
 ALTER TYPE turma RENAME TO turma_new;
 CREATE TYPE turma AS ENUM ('neon_estrutura', 'neon_escala');
 
--- Atribuir turma baseado em critério (ex: metaFaturamento)
+-- Assign cohort based on criteria (e.g.: revenue target)
 UPDATE mentorados
 SET turma = CASE
   WHEN meta_faturamento <= 20000 THEN 'neon_estrutura'::turma
   ELSE 'neon_escala'::turma
 END;
 
--- Atualizar ranking_mensal de forma similar
+-- Update ranking_mensal similarly
 UPDATE ranking_mensal SET turma = 'neon_estrutura'::turma;
 
--- Limpar tipo temporário
+-- Clean up temporary type
 DROP TYPE turma_new;
 ```
 
 ---
 
-## 6. Checklist de Validação Final
+## 6. Final Validation Checklist
 
-| Item                       | Comando/Ação                             | Status |
-| -------------------------- | ---------------------------------------- | ------ |
-| TypeScript compila         | `bun run typecheck`                      | ⬜     |
-| Lint passa                 | `bun run lint`                           | ⬜     |
-| Testes passam              | `bun run test`                           | ⬜     |
-| Build completa             | `bun run build`                          | ⬜     |
-| Busca global limpa         | `grep -rn "neon_estrutura\|neon_escala"` | ⬜     |
-| Migração testada em dev    | Manual                                   | ⬜     |
-| UI funciona corretamente   | Manual                                   | ⬜     |
-| Ranking unificado funciona | Manual                                   | ⬜     |
-| Área admin funciona        | Manual                                   | ⬜     |
-
----
-
-## 7. Próximos Passos
-
-Após a aprovação deste plano:
-
-1. Execute `/implement` para iniciar a implementação
-2. Ou modifique o plano conforme necessário
-3. Considere criar um branch `feature/unify-neon` para as mudanças
+| Item                         | Command/Action                           | Status |
+| ---------------------------- | ---------------------------------------- | ------ |
+| TypeScript compiles          | `bun run typecheck`                      |        |
+| Lint passes                  | `bun run lint`                           |        |
+| Tests pass                   | `bun run test`                           |        |
+| Build completes              | `bun run build`                          |        |
+| Global search clean          | `grep -rn "neon_estrutura\|neon_escala"` |        |
+| Migration tested in dev      | Manual                                   |        |
+| UI works correctly           | Manual                                   |        |
+| Unified ranking works        | Manual                                   |        |
+| Admin area works             | Manual                                   |        |
 
 ---
 
-**Autor:** Manus AI  
-**Data:** 31 de Janeiro de 2026  
-**Versão:** 1.0
+## 7. Next Steps
+
+After approval of this plan:
+
+1. Execute `/implement` to start the implementation
+2. Or modify the plan as needed
+3. Consider creating a `feature/unify-neon` branch for the changes
+
+---
+
+**Author:** Manus AI
+**Date:** January 31, 2026
+**Version:** 1.0

@@ -14,10 +14,10 @@ export function AuthSync() {
   const [isCreating, setIsCreating] = useState(false);
   const utils = trpc.useUtils();
 
-  // DEBUG: Log estado de autenticação
+  // DEBUG: Log authentication state
   useEffect(() => {
     // biome-ignore lint/suspicious/noConsole: debug logging for auth flow
-    console.log("[AUTHSYNC] Estado auth:", {
+    console.log("[AUTHSYNC] Auth state:", {
       isAuthenticated,
       hasUser: !!user,
       userId: user?.id,
@@ -32,10 +32,10 @@ export function AuthSync() {
     retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 10000),
     onMutate: () => {
       // biome-ignore lint/suspicious/noConsole: debug logging for auth flow
-      console.log("[AUTHSYNC] ensureMentorado onMutate - chamando mutation");
+      console.log("[AUTHSYNC] ensureMentorado onMutate - calling mutation");
       setIsCreating(true);
       // AT-009: Show progress toast
-      toast.loading("Preparando seu perfil...", {
+      toast.loading("Preparing your profile...", {
         id: "ensure-mentorado",
         duration: Infinity,
       });
@@ -50,7 +50,7 @@ export function AuthSync() {
       });
       setIsCreating(false);
       if (data.created) {
-        toast.success("Perfil criado com sucesso!", {
+        toast.success("Profile created successfully!", {
           id: "ensure-mentorado",
           duration: 3000,
         });
@@ -59,7 +59,7 @@ export function AuthSync() {
       }
       // AT-005: Invalidate queries to force refetch
       // biome-ignore lint/suspicious/noConsole: debug logging for auth flow
-      console.log("[AUTHSYNC] Invalidando queries mentorados.me e auth.me");
+      console.log("[AUTHSYNC] Invalidating queries mentorados.me and auth.me");
       utils.mentorados.me.invalidate();
       utils.auth.me.invalidate();
     },
@@ -68,7 +68,7 @@ export function AuthSync() {
       console.error("[AUTHSYNC] ensureMentorado onError:", error);
       setIsCreating(false);
       // AT-009: Show error toast (retry is handled automatically by TanStack Query)
-      toast.error("Erro ao preparar seu perfil. Tentando novamente...", {
+      toast.error("Error preparing your profile. Trying again...", {
         id: "ensure-mentorado",
         duration: 3000,
       });
@@ -77,7 +77,7 @@ export function AuthSync() {
 
   useEffect(() => {
     // biome-ignore lint/suspicious/noConsole: debug logging for auth flow
-    console.log("[AUTHSYNC] useEffect verificação:", {
+    console.log("[AUTHSYNC] useEffect verification:", {
       isAuthenticated,
       hasSynced: hasSynced.current,
       willTrigger: isAuthenticated && !hasSynced.current,
@@ -85,7 +85,7 @@ export function AuthSync() {
     if (isAuthenticated && !hasSynced.current) {
       hasSynced.current = true;
       // biome-ignore lint/suspicious/noConsole: debug logging for auth flow
-      console.log("[AUTHSYNC] Chamando ensureMentorado()");
+      console.log("[AUTHSYNC] Calling ensureMentorado()");
       ensureMentorado();
     }
   }, [isAuthenticated, ensureMentorado]);

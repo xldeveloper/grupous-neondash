@@ -56,7 +56,7 @@ export const aiAgentRouter = router({
     )
     .mutation(async ({ ctx, input }) => {
       if (!ctx.mentorado) {
-        throw new Error("Mentorado não encontrado");
+        throw new Error("Mentee not found");
       }
       const mentoradoId = ctx.mentorado.id;
 
@@ -97,7 +97,7 @@ export const aiAgentRouter = router({
    */
   toggleEnabled: protectedProcedure.mutation(async ({ ctx }) => {
     if (!ctx.mentorado) {
-      throw new Error("Mentorado não encontrado");
+      throw new Error("Mentee not found");
     }
     const mentoradoId = ctx.mentorado.id;
 
@@ -137,7 +137,7 @@ export const aiAgentRouter = router({
    */
   resetToDefaults: protectedProcedure.mutation(async ({ ctx }) => {
     if (!ctx.mentorado) {
-      throw new Error("Mentorado não encontrado");
+      throw new Error("Mentee not found");
     }
     const mentoradoId = ctx.mentorado.id;
 

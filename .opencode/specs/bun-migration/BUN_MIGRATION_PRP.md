@@ -1,8 +1,8 @@
-# ═══════════════════════════════════════════════════════════════════════════════
+# ===============================================================================
 
-# PRP: Migração Completa para Bun Package Manager
+# PRP: Complete Migration to Bun Package Manager
 
-# ═══════════════════════════════════════════════════════════════════════════════
+# ===============================================================================
 
 ```yaml
 # ─────────────────────────────────────────────────────────────────────────────
@@ -10,7 +10,7 @@
 # ─────────────────────────────────────────────────────────────────────────────
 metadata:
   complexity: "L3 — Multi-file standardization with low technical risk"
-  estimated_time: "30-45 minutos"
+  estimated_time: "30-45 minutes"
   parallel_safe: true
   risk_level: "LOW — Changes are documentation and config only, no code logic changes"
 
@@ -127,7 +127,7 @@ constraints:
 # ─────────────────────────────────────────────────────────────────────────────
 atomic_tasks:
   # ═══════════════════════════════════════════════════════════════════════════
-  # PHASE 1: CRITICAL FIXES (Executar primeiro)
+  # PHASE 1: CRITICAL FIXES (Execute first)
   # ═══════════════════════════════════════════════════════════════════════════
 
   - id: "AT-001"
@@ -239,10 +239,10 @@ atomic_tasks:
       expected_content: |
         ## Package Manager
 
-        **⚠️ IMPORTANTE**: Este projeto **sempre usa `bun`** como package manager. Nunca use `npm`, `yarn` ou `pnpm`.
+        **IMPORTANT**: This project **always uses `bun`** as the package manager. Never use `npm`, `yarn`, or `pnpm`.
 
-        - ✅ **Sempre use**: `bun install`, `bun run`, `bunx`
-        - ❌ **Nunca use**: `npm install`, `npm run`, `npx`, `yarn`, `pnpm`
+        - **Always use**: `bun install`, `bun run`, `bunx`
+        - **Never use**: `npm install`, `npm run`, `npx`, `yarn`, `pnpm`
       validation: "Read lines 10-16 and verify formatting"
       rollback: "git checkout AGENTS.md"
     acceptance_criteria:
@@ -261,10 +261,10 @@ atomic_tasks:
       expected_content: |
         ## Package Manager
 
-        **⚠️ IMPORTANTE**: Este projeto **sempre usa `bun`** como package manager. Nunca use `npm`, `yarn` ou `pnpm`.
+        **IMPORTANT**: This project **always uses `bun`** as the package manager. Never use `npm`, `yarn`, or `pnpm`.
 
-        - ✅ **Sempre use**: `bun install`, `bun run`, `bunx`
-        - ❌ **Nunca use**: `npm install`, `npm run`, `npx`, `yarn`, `pnpm`
+        - **Always use**: `bun install`, `bun run`, `bunx`
+        - **Never use**: `npm install`, `npm run`, `npx`, `yarn`, `pnpm`
       validation: "Read lines 10-16 and verify formatting"
       rollback: "git checkout GEMINI.md"
     acceptance_criteria:
@@ -366,7 +366,7 @@ output:
       changes: "Add non-bun lockfiles to ignore list"
 
   success_definition: |
-    ✅ CRITERIA FOR SUCCESS:
+    CRITERIA FOR SUCCESS:
     1. Only bun.lock exists as lockfile
     2. All hooks use bunx instead of npx
     3. All CI/CD references use bun
@@ -423,7 +423,7 @@ execution_order:
 
 # QUICK EXECUTION COMMANDS
 
-## Para executar manualmente (PowerShell):
+## To execute manually (PowerShell):
 
 ```powershell
 # PHASE 1: Critical Fixes
@@ -461,23 +461,23 @@ bun run lint:check
 
 # SUMMARY REPORT
 
-## 📊 Estado Atual do Projeto GPUS
+## Current State of GPUS Project
 
-| Componente            | Package Manager | Status              |
+| Component             | Package Manager | Status              |
 | --------------------- | --------------- | ------------------- |
-| package.json scripts  | Bun ✅          | Correto             |
-| CI (ci.yml)           | Bun ✅          | Correto             |
-| Dockerfile            | Bun ✅          | Correto             |
-| bun.lock              | Presente ✅     | Correto             |
-| package-lock.json     | npm ❌          | **REMOVER**         |
-| .claude/settings.json | npx ❌          | **TROCAR por bunx** |
-| .cursor/hooks.json    | npx ❌          | **TROCAR por bunx** |
-| deploy.yml            | pnpm ❌         | **TROCAR por bun**  |
-| convex/README.md      | npx ❌          | **TROCAR por bunx** |
+| package.json scripts  | Bun             | Correct             |
+| CI (ci.yml)           | Bun             | Correct             |
+| Dockerfile            | Bun             | Correct             |
+| bun.lock              | Present         | Correct             |
+| package-lock.json     | npm             | **REMOVE**          |
+| .claude/settings.json | npx             | **REPLACE with bunx** |
+| .cursor/hooks.json    | npx             | **REPLACE with bunx** |
+| deploy.yml            | pnpm            | **REPLACE with bun**  |
+| convex/README.md      | npx             | **REPLACE with bunx** |
 
-## 🎯 Impacto das Mudanças
+## Impact of Changes
 
-- **Zero impacto no código**: Nenhuma mudança em lógica de aplicação
-- **Baixo risco**: Apenas configurações e documentação
-- **Alta consistência**: Elimina confusão sobre qual package manager usar
-- **Previne problemas futuros**: .gitignore bloqueia outros lockfiles
+- **Zero code impact**: No changes to application logic
+- **Low risk**: Only configurations and documentation
+- **High consistency**: Eliminates confusion about which package manager to use
+- **Prevents future issues**: .gitignore blocks other lockfiles

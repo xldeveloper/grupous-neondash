@@ -1,6 +1,6 @@
-# PLAN-crm-admin-restriction: Restringir Visualização Admin no CRM
+# PLAN-crm-admin-restriction: Restrict Admin View in CRM
 
-> **Goal:** Garantir que a seção "VISUALIZAÇÃO ADMIN" no CRM seja visível apenas para administradores, e que mentorados vejam apenas seus próprios dados.
+> **Goal:** Ensure that the "ADMIN VIEW" section in the CRM is visible only to administrators, and that mentees see only their own data.
 
 ---
 
@@ -8,44 +8,44 @@
 
 | # | Finding | Confidence | Source | Impact |
 |---|---------|------------|--------|--------|
-| 1 | Frontend check `isAdmin` está correto: `user?.role === "admin"` | 5/5 | [LeadsPage.tsx:23](file:///home/mauricio/neondash/client/src/pages/crm/LeadsPage.tsx#L23) | Check correto no frontend |
-| 2 | Admin selector só renderiza se `isAdmin === true` | 5/5 | [LeadsPage.tsx:128](file:///home/mauricio/neondash/client/src/pages/crm/LeadsPage.tsx#L128) | Condição correta |
-| 3 | Backend valida `ctx.user.role !== "admin"` antes de permitir acesso a outros mentorados | 5/5 | [leadsRouter.ts:29-31](file:///home/mauricio/neondash/server/leadsRouter.ts#L29-L31) | Segurança backend OK |
-| 4 | Role é determinado pelo email estar em `ADMIN_EMAILS` env var | 5/5 | [db.ts:107-117](file:///home/mauricio/neondash/server/db.ts#L107-L117) | Configuração via env |
-| 5 | Não há verificação adicional no `adminProcedure` para rotas sensíveis | 3/5 | Codebase | Potencial melhoria |
-| 6 | Não existe ferramenta para auditar usuários com role admin | 4/5 | Codebase | Dificulta diagnóstico |
+| 1 | Frontend check `isAdmin` is correct: `user?.role === "admin"` | 5/5 | [LeadsPage.tsx:23](file:///home/mauricio/neondash/client/src/pages/crm/LeadsPage.tsx#L23) | Correct frontend check |
+| 2 | Admin selector only renders if `isAdmin === true` | 5/5 | [LeadsPage.tsx:128](file:///home/mauricio/neondash/client/src/pages/crm/LeadsPage.tsx#L128) | Correct condition |
+| 3 | Backend validates `ctx.user.role !== "admin"` before allowing access to other mentees | 5/5 | [leadsRouter.ts:29-31](file:///home/mauricio/neondash/server/leadsRouter.ts#L29-L31) | Backend security OK |
+| 4 | Role is determined by the email being in the `ADMIN_EMAILS` env var | 5/5 | [db.ts:107-117](file:///home/mauricio/neondash/server/db.ts#L107-L117) | Configuration via env |
+| 5 | There is no additional verification in `adminProcedure` for sensitive routes | 3/5 | Codebase | Potential improvement |
+| 6 | There is no tool to audit users with admin role | 4/5 | Codebase | Hinders diagnosis |
 
 ### Knowledge Gaps & Assumptions
 
-- **Gap:** Não há logs de acesso admin para auditoria
-- **Assumption:** O problema reportado é um usuário específico com role "admin" incorretamente atribuído
-- **Assumption:** A env var `ADMIN_EMAILS` está configurada corretamente
+- **Gap:** There are no admin access logs for auditing
+- **Assumption:** The reported issue is a specific user with an incorrectly assigned "admin" role
+- **Assumption:** The `ADMIN_EMAILS` env var is configured correctly
 
 ---
 
 ## 1. User Review Required
 
 > [!IMPORTANT]
-> **Verificação de Dados Necessária**
-> 
-> O código está implementado corretamente. Se um mentorado está vendo a "VISUALIZAÇÃO ADMIN", significa que:
-> 1. O email dele está na lista `ADMIN_EMAILS` (verifique a env var)
-> 2. OU o `role` no banco foi manualmente alterado para "admin"
-> 
-> **Ação recomendada:** Executar a query de auditoria no AT-001 para identificar todos os usuários admin.
+> **Data Verification Required**
+>
+> The code is implemented correctly. If a mentee is seeing the "ADMIN VIEW", it means:
+> 1. Their email is in the `ADMIN_EMAILS` list (check the env var)
+> 2. OR their `role` in the database was manually changed to "admin"
+>
+> **Recommended action:** Run the audit query in AT-001 to identify all admin users.
 
 ---
 
 ## 2. Proposed Changes
 
-### Component: Auditoria (Novo)
+### Component: Audit (New)
 
-#### [NEW] SQL Query para Auditoria Admin
-**Purpose:** Identificar todos os usuários com role "admin" no banco de dados.
+#### [NEW] SQL Query for Admin Audit
+**Purpose:** Identify all users with the "admin" role in the database.
 
 ```sql
-SELECT id, email, name, role, "clerkId", "createdAt" 
-FROM users 
+SELECT id, email, name, role, "clerkId", "createdAt"
+FROM users
 WHERE role = 'admin';
 ```
 
@@ -54,75 +54,75 @@ WHERE role = 'admin';
 ### Component: Backend Security
 
 #### [MODIFY] [adminRouter.ts](file:///home/mauricio/neondash/server/adminRouter.ts)
-- **Action:** Adicionar endpoint de auditoria para listar usuários admin
-- **Details:** Novo procedure `listAdminUsers` protegido por `adminProcedure`
+- **Action:** Add audit endpoint to list admin users
+- **Details:** New `listAdminUsers` procedure protected by `adminProcedure`
 
 ---
 
 ### Component: Environment Verification
 
 #### [VERIFY] Environment Variable
-- **Action:** Verificar valor de `ADMIN_EMAILS` em produção
-- **Details:** Garantir que apenas emails de admins reais estejam listados
+- **Action:** Verify value of `ADMIN_EMAILS` in production
+- **Details:** Ensure that only real admin emails are listed
 
 ---
 
 ## 3. Atomic Implementation Tasks
 
 > [!CAUTION]
-> Este é um problema de **baixa complexidade (L2)**. O código já está correto. As tarefas abaixo são para verificação e melhorias de auditoria.
+> This is a **low complexity (L2)** issue. The code is already correct. The tasks below are for verification and audit improvements.
 
-### AT-001: Auditar Usuários Admin no Banco ⚡
-**Goal:** Identificar todos os usuários com role "admin" para verificar se há atribuições incorretas
+### AT-001: Audit Admin Users in the Database
+**Goal:** Identify all users with the "admin" role to check for incorrect assignments
 **Dependencies:** None
 
 #### Subtasks:
-- [ ] ST-001.1: Executar query de auditoria no Neon console
+- [ ] ST-001.1: Run audit query in Neon console
   - **Query:** `SELECT id, email, name, role FROM users WHERE role = 'admin';`
-  - **Validation:** Listar todos os admins e verificar se são esperados
-- [ ] ST-001.2: Remover role admin de usuários que não deveriam ser admin
+  - **Validation:** List all admins and verify they are expected
+- [ ] ST-001.2: Remove admin role from users who should not be admin
   - **Query:** `UPDATE users SET role = 'user' WHERE email = '...' AND role = 'admin';`
-  - **Validation:** Verificar que apenas admins corretos permanecem
-- [ ] ST-001.3: Verificar env var `ADMIN_EMAILS`
-  - **File:** `.env` ou plataforma de deploy
-  - **Validation:** Confirmar que lista contém apenas emails de admins
+  - **Validation:** Verify that only correct admins remain
+- [ ] ST-001.3: Verify `ADMIN_EMAILS` env var
+  - **File:** `.env` or deployment platform
+  - **Validation:** Confirm that the list contains only admin emails
 
-**Rollback:** `UPDATE users SET role = 'admin' WHERE email = '...'` para restaurar
+**Rollback:** `UPDATE users SET role = 'admin' WHERE email = '...'` to restore
 
 ---
 
-### AT-002: Adicionar Endpoint de Auditoria Admin
-**Goal:** Permitir que admins listem todos os usuários com acesso administrativo
+### AT-002: Add Admin Audit Endpoint
+**Goal:** Allow admins to list all users with administrative access
 **Dependencies:** AT-001
 
 #### Subtasks:
-- [ ] ST-002.1: Criar procedure `admin.listAdminUsers`
+- [ ] ST-002.1: Create `admin.listAdminUsers` procedure
   - **File:** `server/adminRouter.ts`
-  - **Validation:** Apenas admins podem acessar
-- [ ] ST-002.2: Retornar lista de usuários com role="admin"
+  - **Validation:** Only admins can access
+- [ ] ST-002.2: Return list of users with role="admin"
   - **File:** `server/adminRouter.ts`
-  - **Validation:** Query executa corretamente
-- [ ] ST-002.3: Adicionar UI no painel admin (opcional)
+  - **Validation:** Query executes correctly
+- [ ] ST-002.3: Add UI in admin panel (optional)
   - **File:** `client/src/components/admin/AdminPanelView.tsx`
-  - **Validation:** Lista visível no painel
+  - **Validation:** List visible in the panel
 
-**Rollback:** Reverter commits do adminRouter.ts
+**Rollback:** Revert adminRouter.ts commits
 
 ---
 
-### AT-003: Melhorar Logs de Acesso Admin
-**Goal:** Registrar quando um admin acessa dados de outro mentorado para auditoria
-**Dependencies:** None ⚡
+### AT-003: Improve Admin Access Logs
+**Goal:** Log when an admin accesses another mentee's data for auditing
+**Dependencies:** None
 
 #### Subtasks:
-- [ ] ST-003.1: Adicionar log quando admin visualiza outro mentorado
+- [ ] ST-003.1: Add log when admin views another mentee
   - **File:** `server/leadsRouter.ts`
-  - **Validation:** Log aparece no servidor
-- [ ] ST-003.2: Incluir timestamp, adminId, targetMentoradoId no log
+  - **Validation:** Log appears on the server
+- [ ] ST-003.2: Include timestamp, adminId, targetMentoradoId in the log
   - **File:** `server/leadsRouter.ts`
-  - **Validation:** Informações completas no log
+  - **Validation:** Complete information in the log
 
-**Rollback:** Remover chamadas de log
+**Rollback:** Remove log calls
 
 ---
 
@@ -134,21 +134,21 @@ WHERE role = 'admin';
 - `bun test` - Unit tests
 
 ### Manual Verification
-1. [ ] Logar como mentorado (não-admin) e verificar que "VISUALIZAÇÃO ADMIN" NÃO aparece
-2. [ ] Logar como admin e verificar que "VISUALIZAÇÃO ADMIN" aparece
-3. [ ] Admin seleciona outro mentorado → dados do mentorado selecionado são exibidos
-4. [ ] Mentorado tenta acessar API com `mentoradoId` de outro → erro 403 FORBIDDEN
+1. [ ] Log in as a mentee (non-admin) and verify that "ADMIN VIEW" does NOT appear
+2. [ ] Log in as admin and verify that "ADMIN VIEW" appears
+3. [ ] Admin selects another mentee -> selected mentee's data is displayed
+4. [ ] Mentee tries to access API with another user's `mentoradoId` -> 403 FORBIDDEN error
 
 ---
 
 ## 5. Rollback Plan
 
 ```bash
-# Se alterações de código forem necessárias
+# If code changes are needed
 git revert HEAD
 
-# Se role foi alterado incorretamente
-UPDATE users SET role = 'admin' WHERE email = 'email-do-admin-real@example.com';
+# If role was changed incorrectly
+UPDATE users SET role = 'admin' WHERE email = 'real-admin-email@example.com';
 ```
 
 ---
@@ -157,20 +157,20 @@ UPDATE users SET role = 'admin' WHERE email = 'email-do-admin-real@example.com';
 
 | # | Edge Case | Handling |
 |---|-----------|----------|
-| 1 | Admin email removido de ADMIN_EMAILS mas role já era admin | Role persiste até próximo login |
-| 2 | Múltiplos emails na env var separados incorretamente | Usar `,` como separador |
-| 3 | Usuario tenta manipular request para parecer admin | Backend valida ctx.user.role |
-| 4 | Cache de autenticação mostra role antigo | staleTime de 5min no useAuth |
-| 5 | Mentorado com email igual a admin email | Verificar duplicatas no banco |
+| 1 | Admin email removed from ADMIN_EMAILS but role was already admin | Role persists until next login |
+| 2 | Multiple emails in env var separated incorrectly | Use `,` as separator |
+| 3 | User tries to manipulate request to appear as admin | Backend validates ctx.user.role |
+| 4 | Authentication cache shows old role | staleTime of 5min in useAuth |
+| 5 | Mentee with email equal to admin email | Check for duplicates in the database |
 
 ---
 
 ## 7. Summary
 
-**O código está correto.** O problema reportado é provavelmente uma questão de dados:
-1. Um usuário tem `role = "admin"` quando não deveria
-2. OU o email do usuário está na lista `ADMIN_EMAILS`
+**The code is correct.** The reported issue is likely a data problem:
+1. A user has `role = "admin"` when they should not
+2. OR the user's email is in the `ADMIN_EMAILS` list
 
-**Ação imediata:** Executar AT-001 (auditoria) para identificar o problema.
+**Immediate action:** Run AT-001 (audit) to identify the problem.
 
-**Melhorias opcionais:** AT-002 e AT-003 para facilitar auditoria futura.
+**Optional improvements:** AT-002 and AT-003 to facilitate future auditing.

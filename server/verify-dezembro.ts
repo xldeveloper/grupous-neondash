@@ -1,11 +1,11 @@
-/* biome-ignore-all lint/suspicious/noConsole: Script CLI de verificação - console é intencional */
+/* biome-ignore-all lint/suspicious/noConsole: Verification CLI script - console is intentional */
 import { and, eq } from "drizzle-orm";
 import { mentorados, metricasMensais } from "../drizzle/schema";
 import { getDb } from "./db";
 
 async function verify() {
   const db = getDb();
-  console.log("📊 Verificando dados de dezembro 2025...\n");
+  console.log("📊 Verifying December 2025 data...\n");
 
   const result = await db
     .select({
@@ -18,11 +18,11 @@ async function verify() {
     .innerJoin(mentorados, eq(mentorados.id, metricasMensais.mentoradoId))
     .where(and(eq(metricasMensais.ano, 2025), eq(metricasMensais.mes, 12)));
 
-  console.log("Métricas dezembro 2025:");
+  console.log("December 2025 metrics:");
   for (const r of result) {
-    console.log(`  ${r.nome}: R$${r.faturamento} fat | R$${r.lucro} lucro | ${r.leads} leads`);
+    console.log(`  ${r.nome}: R$${r.faturamento} revenue | R$${r.lucro} profit | ${r.leads} leads`);
   }
-  console.log(`\nTotal: ${result.length} registros de dezembro 2025`);
+  console.log(`\nTotal: ${result.length} December 2025 records`);
   process.exit(0);
 }
 

@@ -151,7 +151,7 @@ export async function getEvents(
 
   return (data.items || []).map((event) => ({
     id: event.id || "",
-    title: event.summary || "Sem título",
+    title: event.summary || "Untitled",
     description: event.description || undefined,
     start: new Date(event.start?.dateTime || event.start?.date || ""),
     end: new Date(event.end?.dateTime || event.end?.date || ""),
@@ -197,7 +197,7 @@ export async function createEvent(
   const data = await response.json();
   return {
     id: data.id || "",
-    title: data.summary || "Sem título",
+    title: data.summary || "Untitled",
     description: data.description || undefined,
     start: new Date(data.start?.dateTime || data.start?.date || ""),
     end: new Date(data.end?.dateTime || data.end?.date || ""),
@@ -253,7 +253,7 @@ export async function updateEvent(
   const data = await response.json();
   return {
     id: data.id || "",
-    title: data.summary || "Sem título",
+    title: data.summary || "Untitled",
     description: data.description || undefined,
     start: new Date(data.start?.dateTime || data.start?.date || ""),
     end: new Date(data.end?.dateTime || data.end?.date || ""),

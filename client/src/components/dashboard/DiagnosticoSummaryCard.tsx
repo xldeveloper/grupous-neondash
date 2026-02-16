@@ -26,7 +26,7 @@ export function DiagnosticoSummaryCard({
 
   // Truncate text for display
   const truncate = (text: string | null | undefined, maxLength = 100) => {
-    if (!text) return "Não informado";
+    if (!text) return "Not provided";
     return text.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
   };
 
@@ -49,9 +49,9 @@ export function DiagnosticoSummaryCard({
                 <ClipboardCheck className="w-6 h-6 text-white" />
               </div>
               <div>
-                <CardTitle className="text-xl text-foreground">Diagnóstico Completo ✓</CardTitle>
+                <CardTitle className="text-xl text-foreground">Diagnosis Complete ✓</CardTitle>
                 <CardDescription className="text-muted-foreground">
-                  Ótimo trabalho, {firstName}! Seu diagnóstico foi registrado.
+                  Great work, {firstName}! Your diagnosis has been recorded.
                 </CardDescription>
               </div>
             </div>
@@ -62,30 +62,30 @@ export function DiagnosticoSummaryCard({
               className="border-emerald-500/30 hover:bg-emerald-500/10 hover:border-emerald-500/50"
             >
               <Edit3 className="w-4 h-4 mr-2" />
-              Editar
+              Edit
             </Button>
           </div>
         </CardHeader>
 
         <CardContent className="relative z-10 pt-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* Objetivo 6 meses */}
+            {/* 6-month goal */}
             <div className="p-4 rounded-xl bg-card/60 dark:bg-slate-900/40 border border-border dark:border-slate-700/50">
               <div className="flex items-center gap-2 mb-2">
                 <Target className="w-4 h-4 text-emerald-500" />
                 <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                  Meta 6 Meses
+                  6-Month Goal
                 </span>
               </div>
               <p className="text-sm text-foreground">{truncate(diagnostico.objetivo6Meses)}</p>
             </div>
 
-            {/* Visão 1 ano */}
+            {/* 1-year vision */}
             <div className="p-4 rounded-xl bg-card/60 dark:bg-slate-900/40 border border-border dark:border-slate-700/50">
               <div className="flex items-center gap-2 mb-2">
                 <Lightbulb className="w-4 h-4 text-[#D4AF37]" />
                 <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                  Visão 1 Ano
+                  1-Year Vision
                 </span>
               </div>
               <p className="text-sm text-foreground">{truncate(diagnostico.visaoUmAno)}</p>
@@ -95,9 +95,9 @@ export function DiagnosticoSummaryCard({
           {/* Next Step Prompt */}
           <div className="mt-6 p-4 rounded-xl bg-gradient-to-r from-primary/10 to-primary/5 dark:from-slate-800/60 dark:to-slate-900/40 border border-primary/20">
             <p className="text-sm text-muted-foreground">
-              <span className="font-semibold text-foreground">Próximo passo:</span> Registre suas
-              métricas mensais na aba <span className="text-primary font-medium">Métricas</span>{" "}
-              para visualizar sua evolução nos gráficos.
+              <span className="font-semibold text-foreground">Next step:</span> Record your
+              monthly metrics in the <span className="text-primary font-medium">Metrics</span>{" "}
+              tab to view your progress in the charts.
             </p>
           </div>
         </CardContent>

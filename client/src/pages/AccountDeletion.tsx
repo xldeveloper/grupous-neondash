@@ -64,9 +64,9 @@ export function AccountDeletion() {
           <div className="mx-auto w-16 h-16 rounded-full bg-gradient-to-br from-pink-500 via-rose-500 to-orange-500 flex items-center justify-center mb-4">
             <Instagram className="w-8 h-8 text-white" />
           </div>
-          <CardTitle className="text-2xl">Exclusão de Dados do Instagram</CardTitle>
+          <CardTitle className="text-2xl">Instagram Data Deletion</CardTitle>
           <CardDescription>
-            Solicite a remoção dos seus dados do Instagram armazenados em nossa plataforma
+            Request the removal of your Instagram data stored on our platform
           </CardDescription>
         </CardHeader>
 
@@ -74,14 +74,14 @@ export function AccountDeletion() {
           {/* Info Alert */}
           <Alert>
             <AlertTriangle className="h-4 w-4" />
-            <AlertTitle>Importante</AlertTitle>
+            <AlertTitle>Important</AlertTitle>
             <AlertDescription>
-              Esta ação irá remover permanentemente todos os dados do Instagram associados à sua
-              conta, incluindo:
+              This action will permanently remove all Instagram data associated with your
+              account, including:
               <ul className="list-disc list-inside mt-2 space-y-1 text-sm">
-                <li>Token de acesso e autorização</li>
-                <li>Histórico de sincronização de métricas</li>
-                <li>Dados de posts e stories sincronizados</li>
+                <li>Access and authorization token</li>
+                <li>Metrics sync history</li>
+                <li>Synced posts and stories data</li>
               </ul>
             </AlertDescription>
           </Alert>
@@ -91,11 +91,11 @@ export function AccountDeletion() {
             <Alert className="border-green-500/50 bg-green-500/10">
               <CheckCircle2 className="h-4 w-4 text-green-500" />
               <AlertTitle className="text-green-700 dark:text-green-400">
-                Dados Removidos com Sucesso
+                Data Removed Successfully
               </AlertTitle>
               <AlertDescription className="text-green-600 dark:text-green-300">
-                Todos os seus dados do Instagram foram permanentemente removidos de nossa
-                plataforma. Você pode reconectar sua conta a qualquer momento.
+                All your Instagram data has been permanently removed from our
+                platform. You can reconnect your account at any time.
               </AlertDescription>
             </Alert>
           )}
@@ -104,9 +104,9 @@ export function AccountDeletion() {
           {status === "error" && (
             <Alert variant="destructive">
               <AlertTriangle className="h-4 w-4" />
-              <AlertTitle>Erro ao Remover Dados</AlertTitle>
+              <AlertTitle>Error Removing Data</AlertTitle>
               <AlertDescription>
-                {errorMessage || "Ocorreu um erro ao processar sua solicitação. Tente novamente."}
+                {errorMessage || "An error occurred while processing your request. Please try again."}
               </AlertDescription>
             </Alert>
           )}
@@ -115,9 +115,9 @@ export function AccountDeletion() {
           {!isSignedIn && (
             <Alert variant="destructive">
               <AlertTriangle className="h-4 w-4" />
-              <AlertTitle>Login Necessário</AlertTitle>
+              <AlertTitle>Login Required</AlertTitle>
               <AlertDescription>
-                Para solicitar a exclusão dos seus dados, você precisa estar logado em sua conta.
+                To request deletion of your data, you need to be logged into your account.
               </AlertDescription>
             </Alert>
           )}
@@ -125,7 +125,7 @@ export function AccountDeletion() {
           {/* User Info */}
           {isSignedIn && user && status !== "success" && (
             <div className="p-4 rounded-lg bg-muted/50 border">
-              <p className="text-sm text-muted-foreground mb-1">Conta conectada:</p>
+              <p className="text-sm text-muted-foreground mb-1">Connected account:</p>
               <p className="font-medium">{user.primaryEmailAddress?.emailAddress}</p>
             </div>
           )}
@@ -144,31 +144,31 @@ export function AccountDeletion() {
                   {status === "loading" ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Processando...
+                      Processing...
                     </>
                   ) : (
                     <>
                       <Trash2 className="mr-2 h-4 w-4" />
-                      Excluir Meus Dados do Instagram
+                      Delete My Instagram Data
                     </>
                   )}
                 </Button>
               </AlertDialogTrigger>
               <AlertDialogContent>
                 <AlertDialogHeader>
-                  <AlertDialogTitle>Confirmar Exclusão de Dados</AlertDialogTitle>
+                  <AlertDialogTitle>Confirm Data Deletion</AlertDialogTitle>
                   <AlertDialogDescription>
-                    Tem certeza que deseja excluir permanentemente todos os seus dados do Instagram?
-                    Esta ação não pode ser desfeita.
+                    Are you sure you want to permanently delete all your Instagram data?
+                    This action cannot be undone.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                  <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
                   <AlertDialogAction
                     onClick={handleDeleteRequest}
                     className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                   >
-                    Sim, Excluir Dados
+                    Yes, Delete Data
                   </AlertDialogAction>
                 </AlertDialogFooter>
               </AlertDialogContent>
@@ -177,20 +177,20 @@ export function AccountDeletion() {
 
           {!isSignedIn && (
             <Button asChild className="w-full" size="lg">
-              <a href="/">Fazer Login</a>
+              <a href="/">Log In</a>
             </Button>
           )}
 
           {status === "success" && (
             <Button asChild variant="outline" className="w-full" size="lg">
-              <a href="/meu-dashboard">Voltar ao Dashboard</a>
+              <a href="/meu-dashboard">Back to Dashboard</a>
             </Button>
           )}
 
           <p className="text-xs text-center text-muted-foreground">
-            Conforme exigido pela Política de Dados da Meta/Facebook.
+            As required by the Meta/Facebook Data Policy.
             <br />
-            Dúvidas? Entre em contato:{" "}
+            Questions? Contact us:{" "}
             <a href="mailto:suporte@grupous.com.br" className="underline hover:text-foreground">
               suporte@grupous.com.br
             </a>

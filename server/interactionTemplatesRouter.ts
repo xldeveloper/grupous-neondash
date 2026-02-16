@@ -58,7 +58,7 @@ export const interactionTemplatesRouter = router({
         .where(eq(interactionTemplates.id, input.id));
 
       if (!existing || existing.userId !== ctx.user.id) {
-        throw new Error("Template não encontrado ou não autorizado");
+        throw new Error("Template not found or not authorized");
       }
 
       const [updated] = await db
@@ -85,7 +85,7 @@ export const interactionTemplatesRouter = router({
         .where(eq(interactionTemplates.id, input.id));
 
       if (!existing || existing.userId !== ctx.user.id) {
-        throw new Error("Template não encontrado ou não autorizado");
+        throw new Error("Template not found or not authorized");
       }
 
       await db.delete(interactionTemplates).where(eq(interactionTemplates.id, input.id));

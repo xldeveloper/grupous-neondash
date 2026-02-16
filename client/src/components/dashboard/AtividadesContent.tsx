@@ -44,7 +44,7 @@ import { trpc } from "@/lib/trpc";
 import { cn } from "@/lib/utils";
 
 interface AtividadesContentProps {
-  mentoradoId?: number; // For admin viewing specific mentorado
+  mentoradoId?: number; // For admin viewing specific mentee
 }
 
 interface NotePopoverState {
@@ -58,14 +58,14 @@ interface TaskPopoverState {
 }
 
 /**
- * Componente interativo para atividades do PLAY NEON
- * - Lista atividades expansíveis (Accordion)
- * - Checkboxes animados para marcar passos como concluídos
- * - Celebração com confetti ao completar passos
- * - Notas pessoais para cada passo (Popover inline)
- * - Criação de tarefas a partir de atividades (Popover inline)
- * - Anel de progresso circular animado
- * - Módulos coloridos por etapa
+ * Interactive component for PLAY NEON activities
+ * - Expandable activity list (Accordion)
+ * - Animated checkboxes to mark steps as completed
+ * - Confetti celebration upon completing steps
+ * - Personal notes for each step (inline Popover)
+ * - Task creation from activities (inline Popover)
+ * - Animated circular progress ring
+ * - Color-coded modules by stage
  */
 export function AtividadesContent({ mentoradoId }: AtividadesContentProps) {
   // Celebration effect
@@ -200,7 +200,7 @@ export function AtividadesContent({ mentoradoId }: AtividadesContentProps) {
         className="fixed inset-0 z-50 pointer-events-none"
       />
 
-      {/* Header com gradient */}
+      {/* Header with gradient */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -213,13 +213,13 @@ export function AtividadesContent({ mentoradoId }: AtividadesContentProps) {
           </div>
           <div className="flex-1">
             <h2 className="text-2xl font-bold text-foreground">PLAY NEON</h2>
-            <p className="text-muted-foreground text-sm">Sua jornada de crescimento começa aqui</p>
+            <p className="text-muted-foreground text-sm">Your growth journey starts here</p>
           </div>
           <Sparkles className="w-6 h-6 text-primary/50 absolute top-4 right-4" />
         </div>
       </motion.div>
 
-      {/* Callout principal */}
+      {/* Main callout */}
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
@@ -230,18 +230,18 @@ export function AtividadesContent({ mentoradoId }: AtividadesContentProps) {
             <Bookmark className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
             <div>
               <p className="text-foreground font-semibold">
-                Aqui nossa jornada DE FATO começará a acontecer.
+                This is where our journey TRULY begins.
               </p>
               <p className="text-muted-foreground mt-1">
-                Nessa página você encontrará todas as ferramentas e etapas para implementar na sua
-                jornada.
+                On this page you will find all the tools and steps to implement in your
+                journey.
               </p>
             </div>
           </CardContent>
         </Card>
       </motion.div>
 
-      {/* Seção de Progresso com Anel Circular */}
+      {/* Progress Section with Circular Ring */}
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -258,13 +258,13 @@ export function AtividadesContent({ mentoradoId }: AtividadesContentProps) {
                   ) : (
                     <CheckCircle2 className="w-5 h-5 text-primary" />
                   )}
-                  <span className="text-lg font-semibold text-foreground">Progresso Geral</span>
+                  <span className="text-lg font-semibold text-foreground">Overall Progress</span>
                 </div>
                 <p className="text-muted-foreground">
                   <span className="text-2xl font-bold text-primary">{completed}</span>
-                  <span className="text-muted-foreground"> de </span>
+                  <span className="text-muted-foreground"> of </span>
                   <span className="text-foreground font-medium">{total}</span>
-                  <span className="text-muted-foreground"> passos concluídos</span>
+                  <span className="text-muted-foreground"> steps completed</span>
                 </p>
                 <motion.div
                   key={motivational.message}
@@ -281,7 +281,7 @@ export function AtividadesContent({ mentoradoId }: AtividadesContentProps) {
         </Card>
       </motion.div>
 
-      {/* Atividades agrupadas por etapa */}
+      {/* Activities grouped by stage */}
       <div className="space-y-6">
         {Object.entries(atividadesByEtapa).map(([etapa, atividades], etapaIndex) => {
           const etapaColors = getEtapaColor(etapa);
@@ -366,7 +366,7 @@ export function AtividadesContent({ mentoradoId }: AtividadesContentProps) {
                             </p>
                           )}
 
-                          {/* Botão para criar tarefa com Popover */}
+                          {/* Button to create task with Popover */}
                           {!isReadOnly && (
                             <AnimatedPopover>
                               <AnimatedPopoverTrigger asChild>
@@ -376,7 +376,7 @@ export function AtividadesContent({ mentoradoId }: AtividadesContentProps) {
                                   className="mb-4 border-border text-muted-foreground hover:bg-muted hover:text-foreground cursor-pointer"
                                 >
                                   <Plus className="w-4 h-4 mr-1" />
-                                  Criar Tarefa
+                                  Create Task
                                 </Button>
                               </AnimatedPopoverTrigger>
                               <AnimatedPopoverContent align="start" className="w-80">
@@ -389,7 +389,7 @@ export function AtividadesContent({ mentoradoId }: AtividadesContentProps) {
                                     <h4 className="font-semibold text-foreground">Criar Tarefa</h4>
                                   </div>
                                   <p className="text-sm text-muted-foreground">
-                                    Vinculada à:{" "}
+                                    Linked to:{" "}
                                     <span className="text-foreground">{atividade.titulo}</span>
                                   </p>
                                   <Input
@@ -397,7 +397,7 @@ export function AtividadesContent({ mentoradoId }: AtividadesContentProps) {
                                     onChange={(e) =>
                                       handleTaskChange(atividade.codigo, e.target.value)
                                     }
-                                    placeholder="Título da tarefa..."
+                                    placeholder="Task title..."
                                     className="bg-muted border-border text-foreground"
                                   />
                                   <div className="flex gap-2">
@@ -407,7 +407,7 @@ export function AtividadesContent({ mentoradoId }: AtividadesContentProps) {
                                         size="sm"
                                         className="flex-1 cursor-pointer"
                                       >
-                                        Cancelar
+                                        Cancel
                                       </Button>
                                     </AnimatedPopoverClose>
                                     <Button
@@ -422,7 +422,7 @@ export function AtividadesContent({ mentoradoId }: AtividadesContentProps) {
                                       {createTaskMutation.isPending ? (
                                         <Loader2 className="w-4 h-4 animate-spin" />
                                       ) : (
-                                        "Criar"
+                                        "Create"
                                       )}
                                     </Button>
                                   </div>
@@ -472,7 +472,7 @@ export function AtividadesContent({ mentoradoId }: AtividadesContentProps) {
                                       />
                                     </div>
 
-                                    {/* Conteúdo do step */}
+                                    {/* Step content */}
                                     <div className="flex-1 min-w-0">
                                       <label
                                         htmlFor={key}
@@ -492,7 +492,7 @@ export function AtividadesContent({ mentoradoId }: AtividadesContentProps) {
                                       )}
                                     </div>
 
-                                    {/* Botão de nota - estilo pill */}
+                                    {/* Note button - pill style */}
                                     {!isReadOnly && (
                                       <AnimatedPopover
                                         onOpenChange={(open) => {
@@ -514,7 +514,7 @@ export function AtividadesContent({ mentoradoId }: AtividadesContentProps) {
                                             {hasNote ? (
                                               <>
                                                 <Pencil className="w-3 h-3" />
-                                                <span>Nota</span>
+                                                <span>Note</span>
                                               </>
                                             ) : (
                                               <>
@@ -537,10 +537,10 @@ export function AtividadesContent({ mentoradoId }: AtividadesContentProps) {
                                               </div>
                                               <div>
                                                 <h4 className="font-semibold text-foreground">
-                                                  Nota Pessoal
+                                                  Personal Note
                                                 </h4>
                                                 <p className="text-xs text-muted-foreground">
-                                                  Suas anotações sobre este passo
+                                                  Your notes about this step
                                                 </p>
                                               </div>
                                             </div>
@@ -568,7 +568,7 @@ export function AtividadesContent({ mentoradoId }: AtividadesContentProps) {
                                               onChange={(e) =>
                                                 handleNoteChange(key, e.target.value)
                                               }
-                                              placeholder="Escreva suas anotações, dúvidas ou insights..."
+                                              placeholder="Write your notes, questions or insights..."
                                               className="bg-background border-border text-foreground min-h-[320px] resize-y text-sm placeholder:text-muted-foreground/50"
                                             />
                                           </div>
@@ -592,8 +592,8 @@ export function AtividadesContent({ mentoradoId }: AtividadesContentProps) {
                                                   <Loader2 className="w-4 h-4 animate-spin mr-2" />
                                                 ) : null}
                                                 {updateNoteMutation.isPending
-                                                  ? "Salvando..."
-                                                  : "Salvar Nota"}
+                                                  ? "Saving..."
+                                                  : "Save Note"}
                                               </Button>
                                             </AnimatedPopoverClose>
                                           </div>
@@ -601,7 +601,7 @@ export function AtividadesContent({ mentoradoId }: AtividadesContentProps) {
                                       </AnimatedPopover>
                                     )}
 
-                                    {/* Indicador de nota (readonly) */}
+                                    {/* Note indicator (readonly) */}
                                     {isReadOnly && hasNote && (
                                       <span
                                         className="text-primary p-1.5 bg-primary/10 rounded-full"
@@ -630,7 +630,7 @@ export function AtividadesContent({ mentoradoId }: AtividadesContentProps) {
         })}
       </div>
 
-      {/* Nota de rodapé */}
+      {/* Footer note */}
       <motion.p
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -638,8 +638,8 @@ export function AtividadesContent({ mentoradoId }: AtividadesContentProps) {
         className="text-muted-foreground text-sm text-center pt-4 border-t border-border"
       >
         {isReadOnly
-          ? "Visualização do progresso do mentorado"
-          : "Marque os passos concluídos para acompanhar seu progresso"}
+          ? "Viewing mentee progress"
+          : "Check off completed steps to track your progress"}
       </motion.p>
     </div>
   );

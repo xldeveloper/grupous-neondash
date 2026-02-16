@@ -65,13 +65,13 @@ export const userRateLimiter = rateLimit({
   skip: isAdmin,
   message: {
     error: "Too many requests",
-    message: "Você excedeu o limite de requisições. Tente novamente em alguns minutos.",
+    message: "You have exceeded the request limit. Please try again in a few minutes.",
     retryAfterMs: WINDOW_MS,
   },
   handler: (_req: Request, res: Response) => {
     res.status(429).json({
       error: "Too many requests",
-      message: "Você excedeu o limite de requisições. Tente novamente em alguns minutos.",
+      message: "You have exceeded the request limit. Please try again in a few minutes.",
     });
   },
 });
@@ -89,13 +89,13 @@ export const authRateLimiter = rateLimit({
   skipSuccessfulRequests: true, // Only count failed attempts
   message: {
     error: "Too many authentication attempts",
-    message: "Muitas tentativas de autenticação. Aguarde alguns minutos.",
+    message: "Too many authentication attempts. Please wait a few minutes.",
     retryAfterMs: WINDOW_MS,
   },
   handler: (_req: Request, res: Response) => {
     res.status(429).json({
       error: "Too many authentication attempts",
-      message: "Muitas tentativas de autenticação. Aguarde alguns minutos.",
+      message: "Too many authentication attempts. Please wait a few minutes.",
     });
   },
 });

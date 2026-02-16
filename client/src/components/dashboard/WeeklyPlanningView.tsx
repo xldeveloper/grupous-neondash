@@ -164,11 +164,11 @@ export function WeeklyPlanningView() {
         <CardContent className="flex flex-col items-center justify-center py-16 text-center">
           <ClipboardList className="w-16 h-16 text-muted-foreground/30 mb-4" />
           <h3 className="text-xl font-semibold text-muted-foreground mb-2">
-            Nenhum planejamento ativo
+            No active planning
           </h3>
           <p className="text-sm text-muted-foreground/70 max-w-sm">
-            Seu mentor ainda não criou um planejamento semanal para você. Entre em contato para
-            solicitar!
+            Your mentor has not created a weekly planning for you yet. Get in touch to
+            request one!
           </p>
         </CardContent>
       </Card>
@@ -194,8 +194,8 @@ export function WeeklyPlanningView() {
                 <CardTitle className="text-xl">{plan.titulo}</CardTitle>
                 <CardDescription className="flex items-center gap-2 mt-1">
                   <Calendar className="w-4 h-4" />
-                  Semana {plan.semana} •{" "}
-                  {new Date(0, plan.mes - 1).toLocaleString("pt-BR", { month: "long" })} {plan.ano}
+                  Week {plan.semana} •{" "}
+                  {new Date(0, plan.mes - 1).toLocaleString("en-US", { month: "long" })} {plan.ano}
                 </CardDescription>
               </div>
             </div>
@@ -210,10 +210,10 @@ export function WeeklyPlanningView() {
               {progressPercent === 100 ? (
                 <>
                   <CheckCircle2 className="w-4 h-4 mr-1" />
-                  Completo!
+                  Complete!
                 </>
               ) : (
-                `${progressPercent}% Concluído`
+                `${progressPercent}% Completed`
               )}
             </Badge>
           </div>
@@ -222,7 +222,7 @@ export function WeeklyPlanningView() {
           <div className="space-y-2">
             <div className="flex justify-between text-sm text-muted-foreground">
               <span>
-                {completedCount} de {actionableSteps.length} itens
+                {completedCount} of {actionableSteps.length} items
               </span>
               <span>{progressPercent}%</span>
             </div>
@@ -236,7 +236,7 @@ export function WeeklyPlanningView() {
         <CardHeader>
           <CardTitle className="text-lg flex items-center gap-2">
             <ClipboardList className="w-5 h-5 text-primary" />
-            Seus Objetivos Semanais
+            Your Weekly Goals
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -306,10 +306,10 @@ export function WeeklyPlanningView() {
                                 </span>
                               </TooltipTrigger>
                               <TooltipContent>
-                                {category === "G" && "Gestão"}
-                                {category === "R" && "Relacionamento"}
-                                {category === "V" && "Vendas"}
-                                {category === "M" && "Mentalidade"}
+                                {category === "G" && "Management"}
+                                {category === "R" && "Relationship"}
+                                {category === "V" && "Sales"}
+                                {category === "M" && "Mindset"}
                               </TooltipContent>
                             </Tooltip>
                           )}
@@ -345,7 +345,7 @@ export function WeeklyPlanningView() {
                             className="mt-3 space-y-2"
                           >
                             <Textarea
-                              placeholder="Adicione suas anotações..."
+                              placeholder="Add your notes..."
                               value={noteTexts[step.originalIndex] || progress?.notes || ""}
                               onChange={(e) =>
                                 setNoteTexts((prev) => ({
@@ -361,7 +361,7 @@ export function WeeklyPlanningView() {
                                 onClick={() => handleSaveNote(step.originalIndex)}
                                 disabled={notesMutation.isPending}
                               >
-                                Salvar
+                                Save
                               </Button>
                               <Button
                                 size="sm"
@@ -373,7 +373,7 @@ export function WeeklyPlanningView() {
                                   }))
                                 }
                               >
-                                Cancelar
+                                Cancel
                               </Button>
                             </div>
                           </motion.div>
@@ -402,7 +402,7 @@ export function WeeklyPlanningView() {
                             </Button>
                           </TooltipTrigger>
                           <TooltipContent>
-                            {hasNotes ? "Ver/Editar anotações" : "Adicionar anotação"}
+                            {hasNotes ? "View/Edit notes" : "Add note"}
                           </TooltipContent>
                         </Tooltip>
                       )}

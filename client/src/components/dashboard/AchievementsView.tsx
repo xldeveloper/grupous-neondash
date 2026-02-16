@@ -61,14 +61,14 @@ const colorMap: Record<string, string> = {
 };
 
 const categoriaLabels: Record<string, string> = {
-  faturamento: "Faturamento",
-  conteudo: "Conteúdo",
-  operacional: "Operacional",
-  consistencia: "Consistência",
-  especial: "Especial",
+  faturamento: "Revenue",
+  conteudo: "Content",
+  operacional: "Operational",
+  consistencia: "Consistency",
+  especial: "Special",
 };
 
-// Component helper to isolate logic and avoiding re-fches if parent components re-nder
+// Component helper to isolate logic and avoid re-fetches if parent components re-render
 function ActivityProgressContent() {
   const { data: progressMap } = trpc.atividades.getProgress.useQuery();
 
@@ -80,14 +80,14 @@ function ActivityProgressContent() {
     <>
       <BentoCardHeader className="pb-2">
         <div className="text-sm font-medium text-green-700 dark:text-green-400 uppercase tracking-wider">
-          Progresso Geral
+          Overall Progress
         </div>
       </BentoCardHeader>
       <BentoCardContent>
         <div className="text-4xl font-bold text-green-900 dark:text-green-100">
           {percentage}%
           <span className="text-sm font-normal text-green-600 dark:text-green-500 ml-2">
-            ({completed}/{total} passos)
+            ({completed}/{total} steps)
           </span>
         </div>
       </BentoCardContent>
@@ -111,8 +111,8 @@ export function AchievementsView() {
   return (
     <div className="space-y-8">
       <div>
-        <h2 className="text-2xl font-bold text-slate-900 tracking-tight">Conquistas</h2>
-        <p className="text-slate-500 mt-1">Suas medalhas e badges conquistados na mentoria</p>
+        <h2 className="text-2xl font-bold text-slate-900 tracking-tight">Achievements</h2>
+        <p className="text-slate-500 mt-1">Your medals and badges earned in mentoring</p>
       </div>
 
       {isLoading ? (
@@ -129,7 +129,7 @@ export function AchievementsView() {
             >
               <BentoCardHeader className="pb-2">
                 <div className="text-sm font-medium text-amber-700 dark:text-amber-400 uppercase tracking-wider">
-                  Badges Conquistados
+                  Badges Earned
                 </div>
               </BentoCardHeader>
               <BentoCardContent>
@@ -148,7 +148,7 @@ export function AchievementsView() {
             >
               <BentoCardHeader className="pb-2">
                 <div className="text-sm font-medium text-teal-700 dark:text-teal-400 uppercase tracking-wider">
-                  Pontos Totais
+                  Total Points
                 </div>
               </BentoCardHeader>
               <BentoCardContent>
@@ -170,7 +170,7 @@ export function AchievementsView() {
           <AnimatedTabs defaultValue="all" className="w-full">
             <AnimatedTabsList className="mb-6 overflow-x-auto w-full md:w-auto justify-start bg-slate-100 dark:bg-slate-800 p-1.5 rounded-2xl">
               <AnimatedTabsTrigger value="all" className="rounded-xl">
-                Todos
+                All
               </AnimatedTabsTrigger>
               {categorias.map((cat) => (
                 <AnimatedTabsTrigger key={cat} value={cat} className="rounded-xl">
@@ -240,7 +240,7 @@ export function AchievementsView() {
                           </Badge>
                           {earned && earnedData && (
                             <p className="text-xs text-neon-green mt-2">
-                              Conquistado em {earnedData.mes}/{earnedData.ano}
+                              Earned on {earnedData.mes}/{earnedData.ano}
                             </p>
                           )}
                         </div>
@@ -315,7 +315,7 @@ export function AchievementsView() {
                               </Badge>
                               {earned && earnedData && (
                                 <p className="text-xs text-neon-green mt-2">
-                                  Conquistado em {earnedData.mes}/{earnedData.ano}
+                                  Earned on {earnedData.mes}/{earnedData.ano}
                                 </p>
                               )}
                             </div>

@@ -77,7 +77,7 @@ export function Agenda() {
 
   const updateEventMutation = trpc.calendar.updateEvent.useMutation({
     onSuccess: (updatedEvent) => {
-      toast.success(`Evento "${updatedEvent.event.title}" foi movido com sucesso.`);
+      toast.success(`Event "${updatedEvent.event.title}" was moved successfully.`);
       utils.calendar.getEvents.invalidate();
     },
     onError: (error) => {
@@ -88,12 +88,12 @@ export function Agenda() {
         error.message.includes("Permission");
 
       if (isPermissionError) {
-        toast.error("Permissão insuficiente", {
-          description: "Desconecte e reconecte sua conta Google para atualizar as permissões.",
+        toast.error("Insufficient permission", {
+          description: "Disconnect and reconnect your Google account to update permissions.",
           duration: 8000,
         });
       } else {
-        toast.error(`Erro ao atualizar evento: ${error.message}`);
+        toast.error(`Error updating event: ${error.message}`);
       }
       // Revert changes by refetching
       utils.calendar.getEvents.invalidate();
@@ -232,10 +232,10 @@ export function Agenda() {
     if (!upcoming) return null;
 
     return {
-      name: upcoming.title || "Sem título",
-      procedure: upcoming.description || "Consulta",
+      name: upcoming.title || "Untitled",
+      procedure: upcoming.description || "Consultation",
       time: moment(upcoming.start).format("HH:mm"),
-      room: upcoming.location || "Consultório",
+      room: upcoming.location || "Office",
       status: "Confirmed" as const,
     };
   }, [myEvents]);
@@ -279,13 +279,13 @@ export function Agenda() {
             <CalendarIcon className="w-20 h-20 mx-auto mb-6 text-[#C6A665]" />
             <h2 className="text-3xl font-bold font-mono text-[#C6A665] mb-4">
               {!statusQuery.data?.configured
-                ? "Google Calendar Não Configurado"
-                : "Conecte seu Google Calendar"}
+                ? "Google Calendar Not Configured"
+                : "Connect your Google Calendar"}
             </h2>
             <p className="text-lg text-gray-400 font-mono mb-8">
               {!statusQuery.data?.configured
-                ? "O administrador precisa configurar as credenciais do Google Cloud para habilitar a integração."
-                : "Sincronize sua agenda pessoal do Google Calendar para visualizar seus compromissos aqui."}
+                ? "The administrator needs to configure Google Cloud credentials to enable the integration."
+                : "Sync your personal Google Calendar to view your appointments here."}
             </p>
             {statusQuery.data?.configured && (
               <Button
@@ -294,14 +294,14 @@ export function Agenda() {
                 className="bg-[#C6A665] hover:bg-[#C6A665]/90 text-black font-bold text-lg px-8 py-6 rounded-xl"
               >
                 <Link className="w-5 h-5 mr-3" />
-                Sincronizar Minha Agenda
+                Sync My Calendar
               </Button>
             )}
             {!statusQuery.data?.configured && (
               <p className="text-gray-500 text-sm font-mono">
-                Configure as variáveis <code className="text-[#C6A665]">GOOGLE_CLIENT_ID</code> e{" "}
-                <code className="text-[#C6A665]">GOOGLE_CLIENT_SECRET</code> no arquivo{" "}
-                <code className="text-[#C6A665]">.env</code>
+                Configure the <code className="text-[#C6A665]">GOOGLE_CLIENT_ID</code> and{" "}
+                <code className="text-[#C6A665]">GOOGLE_CLIENT_SECRET</code> variables in the{" "}
+                <code className="text-[#C6A665]">.env</code> file
               </p>
             )}
           </NeonCard>
@@ -317,7 +317,7 @@ export function Agenda() {
         <div className="flex flex-col md:flex-row items-center justify-between gap-4 border-b border-[#C6A665]/20 pb-6">
           <div>
             <h1 className="text-3xl md:text-4xl font-serif text-[#C6A665] tracking-tight">
-              Agenda NEON
+              NEON Calendar
             </h1>
           </div>
 
@@ -358,18 +358,18 @@ export function Agenda() {
                 eventPropGetter={eventPropGetter}
                 {...calendarStyles}
                 messages={{
-                  today: "Hoje",
-                  previous: "Anterior",
-                  next: "Próximo",
-                  month: "Mês",
-                  week: "Semana",
-                  day: "Dia",
+                  today: "Today",
+                  previous: "Previous",
+                  next: "Next",
+                  month: "Month",
+                  week: "Week",
+                  day: "Day",
                   agenda: "Agenda",
-                  date: "Data",
-                  time: "Hora",
-                  event: "Evento",
-                  noEventsInRange: "Nenhum evento neste período.",
-                  showMore: (total) => `+${total} mais`,
+                  date: "Date",
+                  time: "Time",
+                  event: "Event",
+                  noEventsInRange: "No events in this period.",
+                  showMore: (total) => `+${total} more`,
                 }}
                 onSelectEvent={(event: CalendarEvent) => {
                   setSelectedSlot({ start: event.start, end: event.end, allDay: event.allDay });

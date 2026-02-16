@@ -53,7 +53,7 @@ export const calendarRouter = router({
     if (!isGoogleConfigured()) {
       throw new TRPCError({
         code: "PRECONDITION_FAILED",
-        message: "Google Calendar não está configurado.",
+        message: "Google Calendar is not configured.",
       });
     }
 
@@ -83,7 +83,7 @@ export const calendarRouter = router({
       if (input.state && input.state !== ctx.user.id.toString()) {
         throw new TRPCError({
           code: "BAD_REQUEST",
-          message: "State parameter inválido.",
+          message: "Invalid state parameter.",
         });
       }
 
@@ -108,7 +108,7 @@ export const calendarRouter = router({
       } catch (error) {
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
-          message: error instanceof Error ? error.message : "Falha ao conectar Google Calendar.",
+          message: error instanceof Error ? error.message : "Failed to connect Google Calendar.",
         });
       }
     }),
@@ -141,7 +141,7 @@ export const calendarRouter = router({
       if (!token) {
         throw new TRPCError({
           code: "PRECONDITION_FAILED",
-          message: "Google Calendar não conectado.",
+          message: "Google Calendar not connected.",
         });
       }
 
@@ -153,7 +153,7 @@ export const calendarRouter = router({
           await db.delete(googleTokens).where(eq(googleTokens.userId, ctx.user.id));
           throw new TRPCError({
             code: "PRECONDITION_FAILED",
-            message: "Sessão expirada. Por favor, reconecte o Google Calendar.",
+            message: "Session expired. Please reconnect Google Calendar.",
           });
         }
 
@@ -175,7 +175,7 @@ export const calendarRouter = router({
           await db.delete(googleTokens).where(eq(googleTokens.userId, ctx.user.id));
           throw new TRPCError({
             code: "PRECONDITION_FAILED",
-            message: "Falha ao atualizar sessão. Por favor, reconecte o Google Calendar.",
+            message: "Failed to refresh session. Please reconnect Google Calendar.",
           });
         }
       }
@@ -198,12 +198,12 @@ export const calendarRouter = router({
           await db.delete(googleTokens).where(eq(googleTokens.userId, ctx.user.id));
           throw new TRPCError({
             code: "PRECONDITION_FAILED",
-            message: "Acesso revogado. Por favor, reconecte o Google Calendar.",
+            message: "Access revoked. Please reconnect Google Calendar.",
           });
         }
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
-          message: error instanceof Error ? error.message : "Falha ao buscar eventos.",
+          message: error instanceof Error ? error.message : "Failed to fetch events.",
         });
       }
     }),
@@ -229,7 +229,7 @@ export const calendarRouter = router({
       try {
         await revokeToken(token.accessToken);
       } catch {
-        // Ignore revocation errors - token might already be revoked
+        // Ignore revocation errors - token may already be revoked
       }
 
       // Delete from database
@@ -269,7 +269,7 @@ export const calendarRouter = router({
       if (!token) {
         throw new TRPCError({
           code: "PRECONDITION_FAILED",
-          message: "Google Calendar não conectado.",
+          message: "Google Calendar not connected.",
         });
       }
 
@@ -289,7 +289,7 @@ export const calendarRouter = router({
       } catch (error) {
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
-          message: error instanceof Error ? error.message : "Falha ao criar evento.",
+          message: error instanceof Error ? error.message : "Failed to create event.",
         });
       }
     }),
@@ -325,7 +325,7 @@ export const calendarRouter = router({
       if (!token) {
         throw new TRPCError({
           code: "PRECONDITION_FAILED",
-          message: "Google Calendar não conectado.",
+          message: "Google Calendar not connected.",
         });
       }
 
@@ -334,7 +334,7 @@ export const calendarRouter = router({
         throw new TRPCError({
           code: "FORBIDDEN",
           message:
-            "Permissão insuficiente. Desconecte e reconecte o Google Calendar para atualizar permissões.",
+            "Insufficient permission. Disconnect and reconnect Google Calendar to update permissions.",
         });
       }
 
@@ -345,7 +345,7 @@ export const calendarRouter = router({
           await db.delete(googleTokens).where(eq(googleTokens.userId, ctx.user.id));
           throw new TRPCError({
             code: "PRECONDITION_FAILED",
-            message: "Sessão expirada. Por favor, reconecte o Google Calendar.",
+            message: "Session expired. Please reconnect Google Calendar.",
           });
         }
 
@@ -366,7 +366,7 @@ export const calendarRouter = router({
           await db.delete(googleTokens).where(eq(googleTokens.userId, ctx.user.id));
           throw new TRPCError({
             code: "PRECONDITION_FAILED",
-            message: "Falha ao atualizar sessão. Por favor, reconecte o Google Calendar.",
+            message: "Failed to refresh session. Please reconnect Google Calendar.",
           });
         }
       }
@@ -392,12 +392,12 @@ export const calendarRouter = router({
           throw new TRPCError({
             code: "FORBIDDEN",
             message:
-              "Permissão negada pelo Google. Desconecte e reconecte sua conta para atualizar permissões.",
+              "Permission denied by Google. Disconnect and reconnect your account to update permissions.",
           });
         }
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
-          message: error instanceof Error ? error.message : "Falha ao atualizar evento.",
+          message: error instanceof Error ? error.message : "Failed to update event.",
         });
       }
     }),
@@ -423,7 +423,7 @@ export const calendarRouter = router({
       if (!token) {
         throw new TRPCError({
           code: "PRECONDITION_FAILED",
-          message: "Google Calendar não conectado.",
+          message: "Google Calendar not connected.",
         });
       }
 
@@ -433,7 +433,7 @@ export const calendarRouter = router({
       } catch (error) {
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
-          message: error instanceof Error ? error.message : "Falha ao excluir evento.",
+          message: error instanceof Error ? error.message : "Failed to delete event.",
         });
       }
     }),

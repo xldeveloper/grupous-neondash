@@ -33,30 +33,30 @@ export function InstagramConnectionCard({ mentoradoId }: InstagramConnectionCard
   // tRPC mutations
   const saveToken = trpc.instagram.saveToken.useMutation({
     onSuccess: () => {
-      toast.success("Instagram conectado com sucesso!");
+      toast.success("Instagram connected successfully!");
       connectionStatus.refetch();
     },
     onError: (error: { message: string }) => {
-      toast.error(`Erro ao salvar conexão: ${error.message}`);
+      toast.error(`Error saving connection: ${error.message}`);
     },
   });
 
   const disconnect = trpc.instagram.disconnect.useMutation({
     onSuccess: () => {
-      toast.success("Instagram desconectado");
+      toast.success("Instagram disconnected");
       connectionStatus.refetch();
     },
     onError: (error: { message: string }) => {
-      toast.error(`Erro ao desconectar: ${error.message}`);
+      toast.error(`Error disconnecting: ${error.message}`);
     },
   });
 
   const syncMetrics = trpc.instagram.syncMetrics.useMutation({
     onSuccess: (data) => {
-      toast.success(`Métricas sincronizadas: ${data.posts} posts, ${data.stories} stories`);
+      toast.success(`Metrics synced: ${data.posts} posts, ${data.stories} stories`);
     },
     onError: (error: { message: string }) => {
-      toast.error(`Erro ao sincronizar: ${error.message}`);
+      toast.error(`Error syncing: ${error.message}`);
     },
   });
 
@@ -109,7 +109,7 @@ export function InstagramConnectionCard({ mentoradoId }: InstagramConnectionCard
 
           if (!igAccount) {
             toast.error(
-              "Conta Instagram Business não encontrada. Vincule sua conta Instagram a uma Página do Facebook."
+              "Instagram Business account not found. Link your Instagram account to a Facebook Page."
             );
             return;
           }
@@ -122,12 +122,12 @@ export function InstagramConnectionCard({ mentoradoId }: InstagramConnectionCard
             instagramUsername: igAccount.username,
           });
         } catch (error) {
-          toast.error(error instanceof Error ? error.message : "Erro ao conectar Instagram");
+          toast.error(error instanceof Error ? error.message : "Error connecting Instagram");
         } finally {
           setIsProcessing(false);
         }
       } else if (response.status === "not_authorized") {
-        toast.error("Você precisa autorizar o acesso ao Instagram.");
+        toast.error("You need to authorize access to Instagram.");
       }
     };
 
@@ -205,7 +205,7 @@ export function InstagramConnectionCard({ mentoradoId }: InstagramConnectionCard
       // Remove from backend
       await disconnect.mutateAsync({ mentoradoId });
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Erro ao desconectar");
+      toast.error(error instanceof Error ? error.message : "Error disconnecting");
     }
   };
 
@@ -227,7 +227,7 @@ export function InstagramConnectionCard({ mentoradoId }: InstagramConnectionCard
   // Manual login handler for HTTP environments (fallback when XFBML doesn't render)
   const handleManualLogin = () => {
     if (!window.FB) {
-      toast.error("Facebook SDK não carregado. Aguarde ou recarregue a página.");
+      toast.error("Facebook SDK not loaded. Please wait or reload the page.");
       return;
     }
 
@@ -237,7 +237,7 @@ export function InstagramConnectionCard({ mentoradoId }: InstagramConnectionCard
           // Trigger the same flow as the XFBML button
           window.checkLoginState?.();
         } else {
-          toast.error("Login cancelado ou não autorizado.");
+          toast.error("Login canceled or not authorized.");
         }
       },
       {
@@ -260,7 +260,7 @@ export function InstagramConnectionCard({ mentoradoId }: InstagramConnectionCard
             <div>
               <CardTitle className="text-lg">Instagram Business</CardTitle>
               <CardDescription>
-                Sincronize métricas de posts e stories automaticamente
+                Sync post and story metrics automatically
               </CardDescription>
             </div>
           </div>
@@ -268,12 +268,12 @@ export function InstagramConnectionCard({ mentoradoId }: InstagramConnectionCard
             {isConnected ? (
               <>
                 <CheckCircle className="mr-1 h-3 w-3" />
-                Conectado
+                Connected
               </>
             ) : (
               <>
                 <XCircle className="mr-1 h-3 w-3" />
-                Desconectado
+                Disconnected
               </>
             )}
           </Badge>
@@ -284,26 +284,26 @@ export function InstagramConnectionCard({ mentoradoId }: InstagramConnectionCard
         {!sdkLoaded && (
           <Alert>
             <Loader2 className="h-4 w-4 animate-spin" />
-            <AlertDescription>Carregando Facebook SDK...</AlertDescription>
+            <AlertDescription>Loading Facebook SDK...</AlertDescription>
           </Alert>
         )}
 
         {isProcessing && (
           <Alert>
             <Loader2 className="h-4 w-4 animate-spin" />
-            <AlertDescription>Conectando Instagram...</AlertDescription>
+            <AlertDescription>Connecting Instagram...</AlertDescription>
           </Alert>
         )}
 
         {isConnected && connectionStatus.data && (
           <div className="rounded-lg border bg-muted/50 p-4 space-y-2">
             <div className="flex items-center gap-2">
-              <span className="text-sm text-muted-foreground">Conta:</span>
+              <span className="text-sm text-muted-foreground">Account:</span>
               <span className="font-medium">@{connectionStatus.data.instagramUsername}</span>
             </div>
             {lastSync && (
               <div className="flex items-center gap-2">
-                <span className="text-sm text-muted-foreground">Última sincronização:</span>
+                <span className="text-sm text-muted-foreground">Last sync:</span>
                 <span className="text-sm">{new Date(lastSync).toLocaleString("pt-BR")}</span>
               </div>
             )}
@@ -324,7 +324,7 @@ export function InstagramConnectionCard({ mentoradoId }: InstagramConnectionCard
                 ) : (
                   <RefreshCw className="mr-2 h-4 w-4" />
                 )}
-                Sincronizar Agora
+                Sync Now
               </Button>
               <Button
                 variant="destructive"
@@ -332,7 +332,7 @@ export function InstagramConnectionCard({ mentoradoId }: InstagramConnectionCard
                 disabled={disconnect.isPending}
               >
                 {disconnect.isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-                Desconectar
+                Disconnect
               </Button>
             </>
           ) : (
@@ -366,7 +366,7 @@ export function InstagramConnectionCard({ mentoradoId }: InstagramConnectionCard
                   ) : (
                     <Instagram className="mr-2 h-4 w-4" />
                   )}
-                  {!sdkLoaded ? "Carregando..." : "Conectar com Facebook"}
+                  {!sdkLoaded ? "Loading..." : "Connect with Facebook"}
                 </Button>
               )}
             </div>
@@ -374,10 +374,10 @@ export function InstagramConnectionCard({ mentoradoId }: InstagramConnectionCard
         </div>
 
         <p className="text-xs text-muted-foreground">
-          Ao conectar, você autoriza a sincronização de métricas de posts e stories. Seus dados são
-          usados apenas para análise de desempenho.
+          By connecting, you authorize the synchronization of post and story metrics. Your data is
+          used only for performance analysis.
           <a href="/account-deletion" className="ml-1 underline hover:text-foreground">
-            Solicitar exclusão de dados
+            Request data deletion
           </a>
         </p>
       </CardContent>

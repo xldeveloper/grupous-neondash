@@ -81,7 +81,7 @@ function AutoSaveInput({
           {isSaved && (
             <span className="flex items-center gap-1 text-green-600 dark:text-green-400">
               <Check className="h-3 w-3" />
-              Salvo
+              Saved
             </span>
           )}
         </div>
@@ -286,8 +286,8 @@ export function SubmitMetricsForm({
 
   const submitMutation = trpc.mentorados.submitMetricas.useMutation({
     onSuccess: () => {
-      toast.success("Métricas enviadas com sucesso!", {
-        description: `Dados de ${getMesNome(mes)}/${ano} foram salvos.`,
+      toast.success("Metrics submitted successfully!", {
+        description: `Data for ${getMesNome(mes)}/${ano} has been saved.`,
       });
 
       // Reset form
@@ -307,7 +307,7 @@ export function SubmitMetricsForm({
       if (onSuccess) onSuccess();
     },
     onError: (error) => {
-      toast.error("Erro ao enviar métricas", {
+      toast.error("Error submitting metrics", {
         description: error.message,
       });
     },
@@ -331,18 +331,18 @@ export function SubmitMetricsForm({
 
   const getMesNome = (m: number) => {
     const meses = [
-      "Janeiro",
-      "Fevereiro",
-      "Março",
-      "Abril",
-      "Maio",
-      "Junho",
-      "Julho",
-      "Agosto",
-      "Setembro",
-      "Outubro",
-      "Novembro",
-      "Dezembro",
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
     ];
     return meses[m - 1];
   };
@@ -354,17 +354,17 @@ export function SubmitMetricsForm({
         <Alert className="bg-primary/10 border-primary/20">
           <Sparkles className="h-4 w-4 text-primary" />
           <AlertDescription className="text-sm">
-            <strong>Hora de lançar Janeiro/2026!</strong> Você já tem dados de Dezembro/2025.
-            Compare seu progresso mês-a-mês preenchendo as métricas do novo mês.
+            <strong>Time to submit January/2026!</strong> You already have December/2025 data.
+            Compare your month-over-month progress by filling in the new month's metrics.
           </AlertDescription>
         </Alert>
       )}
 
-      {/* Período - hidden when editing past metrics */}
+      {/* Period - hidden when editing past metrics */}
       {!lockPeriod && (
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2">
-            <Label htmlFor="ano">Ano</Label>
+            <Label htmlFor="ano">Year</Label>
             <Select value={ano.toString()} onValueChange={(v) => setAno(parseInt(v, 10))}>
               <SelectTrigger id="ano">
                 <SelectValue />
@@ -378,7 +378,7 @@ export function SubmitMetricsForm({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="mes">Mês</Label>
+            <Label htmlFor="mes">Month</Label>
             <Select value={mes.toString()} onValueChange={(v) => setMes(parseInt(v, 10))}>
               <SelectTrigger id="mes">
                 <SelectValue />
@@ -395,13 +395,13 @@ export function SubmitMetricsForm({
         </div>
       )}
 
-      {/* Financeiro */}
+      {/* Financial */}
       <div className="space-y-4">
-        <h4 className="font-medium text-sm text-muted-foreground border-b pb-1">Financeiro</h4>
+        <h4 className="font-medium text-sm text-muted-foreground border-b pb-1">Financial</h4>
         <div className="grid grid-cols-2 gap-4">
           <AutoSaveInput
             id="faturamento"
-            label="Faturamento (R$)"
+            label="Revenue (R$)"
             value={faturamento}
             onChange={setFaturamento}
             isLoading={faturamentoSave.isLoading}
@@ -415,7 +415,7 @@ export function SubmitMetricsForm({
 
           <AutoSaveInput
             id="lucro"
-            label="Lucro (R$)"
+            label="Profit (R$)"
             value={lucro}
             onChange={setLucro}
             isLoading={lucroSave.isLoading}
@@ -456,7 +456,7 @@ export function SubmitMetricsForm({
               className="text-xs"
             >
               <Instagram className="h-3 w-3 mr-1" />
-              Conectar Instagram
+              Connect Instagram
             </Button>
           ) : null}
         </div>
@@ -487,9 +487,9 @@ export function SubmitMetricsForm({
         </div>
       </div>
 
-      {/* Operacional */}
+      {/* Operational */}
       <div className="space-y-4">
-        <h4 className="font-medium text-sm text-muted-foreground border-b pb-1">Operacional</h4>
+        <h4 className="font-medium text-sm text-muted-foreground border-b pb-1">Operational</h4>
         <div className="grid grid-cols-2 gap-4">
           <AutoSaveInput
             id="leads"
@@ -505,7 +505,7 @@ export function SubmitMetricsForm({
 
           <AutoSaveInput
             id="procedimentos"
-            label="Procedimentos"
+            label="Procedures"
             value={procedimentos}
             onChange={setProcedimentos}
             isLoading={procedimentosSave.isLoading}
@@ -517,12 +517,12 @@ export function SubmitMetricsForm({
         </div>
       </div>
 
-      {/* Observações */}
+      {/* Notes */}
       <div className="space-y-2">
-        <Label htmlFor="observacoes">Observações</Label>
+        <Label htmlFor="observacoes">Notes</Label>
         <Textarea
           id="observacoes"
-          placeholder="Notas sobre o mês..."
+          placeholder="Notes about the month..."
           value={observacoes}
           onChange={(e) => setObservacoes(e.target.value)}
           rows={3}
@@ -537,12 +537,12 @@ export function SubmitMetricsForm({
         {submitMutation.isPending ? (
           <>
             <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-            Enviando...
+            Submitting...
           </>
         ) : (
           <>
             <CheckCircle2 className="w-4 h-4 mr-2" />
-            Salvar Métricas
+            Save Metrics
           </>
         )}
       </Button>

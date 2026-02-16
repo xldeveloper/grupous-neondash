@@ -1,23 +1,23 @@
 ---
-description: Pipeline QA integrado com auto-research e auto-fix
+description: Integrated QA pipeline with auto-research and auto-fix
 ---
 
 # /qa - Quality Assurance Pipeline
 
-Pipeline integrado: **Verificação → Auto-Research → Auto-Fix**
+Integrated pipeline: **Verification → Auto-Research → Auto-Fix**
 
-## Fluxo Integrado
+## Integrated Flow
 
 ```mermaid
 flowchart TD
     A[/qa] --> B[Phase 1: Local Checks]
-    B --> C{Erros?}
-    C -->|Não| D[Phase 2: Deploy]
-    D --> E{Erros?}
-    E -->|Não| F[✅ QA PASS]
+    B --> C{Errors?}
+    C -->|No| D[Phase 2: Deploy]
+    D --> E{Errors?}
+    E -->|No| F[✅ QA PASS]
 
-    C -->|Sim| G[Aggregation Protocol]
-    E -->|Sim| G
+    C -->|Yes| G[Aggregation Protocol]
+    E -->|Yes| G
 
     G --> H["/research (Docs & Best Practices)"]
     H --> I[Atomic Implementation Plan]
@@ -238,7 +238,7 @@ Remember to be constructive and provide specific examples with file paths and li
 
 ## Phase 1: Local Quality Checks
 
-> **⚠️ CRITICAL GATE**: Não prosseguir se qualquer check falhar
+> **CRITICAL GATE**: Do not proceed if any check fails
 
 ```bash
 # Code quality & linting
@@ -253,7 +253,7 @@ bun run test:coverage
 
 ## Phase 2: Deployment Validation
 
-> **✅ PREREQUISITE**: Phase 1 deve passar completamente
+> **PREREQUISITE**: Phase 1 must pass completely
 
 ### 2.1 Deploy Status Check
 
@@ -267,91 +267,91 @@ bunx convex deploy --prod
 
 ### 2.2 Deploy Logs Verification
 
-> **🔍 CRITICAL**: Inspecionar logs para identificar erros de runtime/deploy
+> **CRITICAL**: Inspect logs to identify runtime/deploy errors
 
 ```bash
-# Railway: Verificar logs recentes de deploy (últimas 100 linhas)
+# Railway: Check recent deploy logs (last 100 lines)
 railway logs --latest -n 100
 
-# Convex: Verificar logs de produção
+# Convex: Check production logs
 bunx convex logs --prod --success --failure
 ```
 
 ### 2.3 Deploy Error Analysis
 
-Se erros forem encontrados nos logs:
+If errors are found in the logs:
 
-1. **Railway Errors** - Identificar:
-   - Build failures (dependências, TypeScript, bundling)
+1. **Railway Errors** - Identify:
+   - Build failures (dependencies, TypeScript, bundling)
    - Runtime errors (crashes, memory, timeouts)
    - Environment variable issues
    - Network/connection problems
 
-2. **Convex Errors** - Identificar:
+2. **Convex Errors** - Identify:
    - Function execution errors
    - Schema validation failures
    - Authentication/authorization issues
    - Query/mutation timeouts
 
-3. **Ação**: Agregar todos os erros e prosseguir para Phase 3
+3. **Action**: Aggregate all errors and proceed to Phase 3
 
 ## Phase 3: Error Aggregation & Auto-Research
 
-Se erros forem detectados em qualquer fase:
+If errors are detected in any phase:
 
-1. **Protocolo de Agregação**: Coletar contexto completo:
-   - Stack trace completo.
-   - Versões de bibliotecas envolvidas.
-   - Código fonte dos arquivos afetados.
-   - Logs de erro do terminal e dashboard (Railway/Convex).
-2. **Invoca automaticamente** o workflow de pesquisa:
-   > `/research "QA Fix: [resumo]. Context: [logs/traces]. GOAL: Research docs/best practices and plan atomic fixes."`
-3. **Gerar Atomic Tasks**: O plano DEVE quebrar cada fix em:
+1. **Aggregation Protocol**: Collect complete context:
+   - Full stack trace.
+   - Versions of involved libraries.
+   - Source code of affected files.
+   - Error logs from terminal and dashboard (Railway/Convex).
+2. **Automatically invoke** the research workflow:
+   > `/research "QA Fix: [summary]. Context: [logs/traces]. GOAL: Research docs/best practices and plan atomic fixes."`
+3. **Generate Atomic Tasks**: The plan MUST break each fix into:
    - `[ ] Research API/pattern (if unknown)`
    - `[ ] Apply fix to [file]`
    - `[ ] Verify fix (unit/build/lint)`
 
-4. **Aguarda Aprovação**: O usuário deve aprovar o `implementation_plan.md` e `task.md` gerados.
+4. **Await Approval**: The user must approve the generated `implementation_plan.md` and `task.md`.
 
 ### Research Strategy (Docs & Best Practices)
 
-O workflow `/research` garantirá:
+The `/research` workflow will ensure:
 
-- **Consulta a Docs Oficiais**: Uso obrigatório do `context7` e `librarian` para buscar a fonte da verdade (Convex, Clerk, TanStack, etc.).
-- **Atomic Tasks**: Decomposição do fix em subtasks atômicas verificáveis no `task.md` (ex: "Research Error X", "Fix Component Y", "Verify Z").
-- **Best Practices**: Garantia de que o fix segue os padrões recomendados, não apenas "workarounds".
+- **Official Docs Consultation**: Mandatory use of `context7` and `librarian` to find the source of truth (Convex, Clerk, TanStack, etc.).
+- **Atomic Tasks**: Decomposition of the fix into verifiable atomic subtasks in `task.md` (e.g., "Research Error X", "Fix Component Y", "Verify Z").
+- **Best Practices**: Ensuring the fix follows recommended patterns, not just "workarounds".
 
 ### Skill Integration Strategy
 
-DEVE incorporar as seguintes skills no plano de correção:
+MUST incorporate the following skills in the fix plan:
 
-**A. Para Erros de Backend / Banco de Dados (Convex):**
+**A. For Backend / Database Errors (Convex):**
 
 > **USE SKILL**: `ai-data-analyst`
 >
-> - **Objetivo**: Analisar consistência de dados, schemas e logs de query.
-> - **Ação**: Criar scripts Python para validar estado do banco vs. expectations.
-> - **Comando Exemplo**: "Use ai-data-analyst para verificar se todos os usuários possuem 'stripeId' válido na tabela 'users' do Convex."
+> - **Objective**: Analyze data consistency, schemas, and query logs.
+> - **Action**: Create Python scripts to validate database state vs. expectations.
+> - **Example Command**: "Use ai-data-analyst to verify that all users have a valid 'stripeId' in the 'users' table in Convex."
 
-**B. Para Erros de Frontend / UI (React/TanStack):**
+**B. For Frontend / UI Errors (React/TanStack):**
 
 > **USE SKILL**: `webapp-testing`
 >
-> - **Objetivo**: Reproduzir bugs visuais, testar fluxos de interação e validar fixes.
-> - **Ação**: Criar scripts Playwright (usando `scripts/with_server.py`) para reprodução controlada.
-> - **Comando Exemplo**: "Use webapp-testing para criar um teste que simula o clique no botão 'Checkout' e captura o erro de console."
+> - **Objective**: Reproduce visual bugs, test interaction flows, and validate fixes.
+> - **Action**: Create Playwright scripts (using `scripts/with_server.py`) for controlled reproduction.
+> - **Example Command**: "Use webapp-testing to create a test that simulates clicking the 'Checkout' button and captures the console error."
 
 ## Phase 4: Auto-Implementation
 
-Após o plano de correção e tarefas serem aprovados:
+After the fix plan and tasks are approved:
 
-1. **Invoca `/implement`** para executar o plano:
-   - Consome `implementation_plan.md` e `task.md`.
-   - Executa atomic tasks e subtasks geradas pelo `/research`.
+1. **Invoke `/implement`** to execute the plan:
+   - Consumes `implementation_plan.md` and `task.md`.
+   - Executes atomic tasks and subtasks generated by `/research`.
 
-2. **Re-executa `/qa`** para validação final (Loop de Feedback):
-   - Se passar: ✅ Sucesso.
-   - Se falhar: 🔄 Retorna para Phase 3 com novos erros.
+2. **Re-run `/qa`** for final validation (Feedback Loop):
+   - If it passes: Success.
+   - If it fails: Return to Phase 3 with new errors.
 
 ## Success Metrics
 
@@ -375,11 +375,11 @@ Após o plano de correção e tarefas serem aprovados:
 
 ## Technical Notes
 
-- **Auto-research**: Acionado automaticamente quando erros são detectados
-- **Auto-implementation**: Executado após plano aprovado
-- **Re-run automático**: `/qa` re-executa após `/implement` completar
-- **Preserve tasks**: Novas tasks de fix são adicionadas ao TodoWrite existente
+- **Auto-research**: Automatically triggered when errors are detected
+- **Auto-implementation**: Executed after the plan is approved
+- **Automatic re-run**: `/qa` re-runs after `/implement` completes
+- **Preserve tasks**: New fix tasks are added to the existing TodoWrite
 
 ---
 
-**Pipeline completo: `/qa` → detecta erros → `/research` → `/implement` → `/qa` (re-run)**
+**Full pipeline: `/qa` → detects errors → `/research` → `/implement` → `/qa` (re-run)**

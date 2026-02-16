@@ -8,7 +8,7 @@ trigger: always_on
 
 ---
 
-## 🔴 MANDATORY SKILL LOADING
+## MANDATORY SKILL LOADING
 
 Before ANY implementation:
 
@@ -41,7 +41,7 @@ Before ANY implementation:
 
 ---
 
-## 🧠 LEVER Philosophy (ALWAYS APPLY)
+## LEVER Philosophy (ALWAYS APPLY)
 
 > **L**everage patterns | **E**xtend first | **V**erify reactivity | **E**liminate duplication | **R**educe complexity
 
@@ -70,7 +70,7 @@ Before coding:
 
 ---
 
-## 🛠️ Three-Pass Implementation
+## Three-Pass Implementation
 
 | Pass              | Focus                                | Code           |
 | ----------------- | ------------------------------------ | -------------- |
@@ -80,7 +80,7 @@ Before coding:
 
 ---
 
-## 📋 Request Classification
+## Request Classification
 
 | Type          | Keywords                  | Action             |
 | ------------- | ------------------------- | ------------------ |
@@ -92,17 +92,17 @@ Before coding:
 
 ---
 
-## 🏗️ Architecture Principles
+## Architecture Principles
 
 ### Database
 
 **Goal**: 0 new tables. Extend existing.
 
 ```typescript
-// ❌ DON'T
+// DON'T
 campaignTracking: pgTable("campaign_tracking", { ... })
 
-// ✅ DO
+// DO
 users: pgTable("users", {
   ...existing,
   campaignSource: varchar("campaign_source"),
@@ -114,9 +114,9 @@ users: pgTable("users", {
 **Goal**: No duplicate logic.
 
 ```typescript
-// ❌ DON'T: getTrialUsers AND getUsers
+// DON'T: getTrialUsers AND getUsers
 
-// ✅ DO: Extend with computed props
+// DO: Extend with computed props
 export const getUserStatus = query({
   handler: async ctx => ({
     ...(await getUser(ctx)),
@@ -134,7 +134,7 @@ export const getUserStatus = query({
 
 ---
 
-## 🔧 Code Quality Standards (Ultracite)
+## Code Quality Standards (Ultracite)
 
 ### Type Safety
 
@@ -146,7 +146,7 @@ export const getUserStatus = query({
 ### Modern TypeScript
 
 ```typescript
-// ✅ Use
+// Use
 const foo = bar?.baz ?? "default"; // Optional chaining + nullish
 for (const item of items) {
 } // for...of
@@ -157,7 +157,7 @@ const msg = `Hello ${name}`; // Template literals
 ### "Type instantiation is excessively deep"
 
 ```typescript
-// ✅ Early cast
+// Early cast
 const mutate = useMutation((api as any).leads.updateStatus);
 ```
 
@@ -192,7 +192,7 @@ const mutate = useMutation((api as any).leads.updateStatus);
 
 ---
 
-## ✅ Review Checklist
+## Review Checklist
 
 ### Code Quality
 
@@ -210,7 +210,7 @@ const mutate = useMutation((api as any).leads.updateStatus);
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 neondash/
@@ -231,7 +231,7 @@ neondash/
 
 ---
 
-## 🛑 Anti-Patterns
+## Anti-Patterns
 
 | Pattern               | Problem                   |
 | --------------------- | ------------------------- |
@@ -244,7 +244,7 @@ neondash/
 
 ---
 
-## 📦 Stack Quick Reference
+## Stack Quick Reference
 
 | Layer    | Technology                    |
 | -------- | ----------------------------- |
@@ -261,7 +261,7 @@ neondash/
 
 ---
 
-## 🚀 Commands
+## Commands
 
 ```bash
 bun dev             # Dev server
@@ -273,4 +273,3 @@ bun run test        # Vitest run
 bun run test:watch  # Vitest watch mode
 bun run db:push     # Drizzle migrations
 ```
-

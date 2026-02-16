@@ -1,13 +1,13 @@
-# PROMPT PARA ANTIGRAVITY: Migração Wouter → TanStack Router
+# PROMPT FOR ANTIGRAVITY: Migration from Wouter to TanStack Router
 
-Execute este plano de migração completa do Wouter para TanStack Router.
+Execute this complete migration plan from Wouter to TanStack Router.
 
 ## PROJECT CONTEXT
 
 - **Project**: NEON Dashboard (Portal mentorias.black)
 - **Tech Stack**: React 19.2 + Vite 7 + tRPC 11 + Drizzle ORM + Neon PostgreSQL + Express + Clerk + Bun 1.3+
-- **Current Router**: Wouter 3.7.1 (com patch customizado em `patches/wouter@3.7.1.patch`)
-- **Target**: @tanstack/react-router com integração nativa tRPC
+- **Current Router**: Wouter 3.7.1 (with custom patch in `patches/wouter@3.7.1.patch`)
+- **Target**: @tanstack/react-router with native tRPC integration
 
 ## MIGRATION SCOPE
 
@@ -189,7 +189,7 @@ import Escala from "../pages/Escala";
 
 export const Route = createFileRoute("/dashboard_.$id")({
   loader: async ({ params: { id }, context: { trpc } }) => {
-    // Preload data for specific mentorado
+    // Preload data for specific mentee
     return { mentorado: await trpc.mentorados.byId.query(parseInt(id)) };
   },
   component: MentoradoDetail,
@@ -232,11 +232,11 @@ Update Link components in `client/src/components/DashboardLayout.tsx`:
 ```typescript
 // BEFORE:
 import { Link } from "wouter"
-<Link href="/dashboard">Visão Geral</Link>
+<Link href="/dashboard">Overview</Link>
 
 // AFTER:
 import { Link } from '@tanstack/react-router'
-<Link to="/dashboard">Visão Geral</Link>
+<Link to="/dashboard">Overview</Link>
 ```
 
 ### 7. UPDATE ProtectedRoute
@@ -347,15 +347,15 @@ const location = useLocation().pathname;
 
 ## VALIDATION CRITERIA
 
-✅ **Build**: `bun run check` passes (no TypeScript errors)
-✅ **Dependencies**: `wouter` removed from `package.json`
-✅ **Routes**: All 16 routes navigable and rendering correctly
-✅ **Auth**: Clerk authentication still protecting routes
-✅ **Data**: tRPC queries working in loaders
-✅ **Search Params**: Typed search params working (comparativo, ranking)
-✅ **Lazy Loading**: All lazy-loaded components still lazy
-✅ **Mobile**: Mobile menu and responsive layout intact
-✅ **Patch**: No more `patches/` directory
+- **Build**: `bun run check` passes (no TypeScript errors)
+- **Dependencies**: `wouter` removed from `package.json`
+- **Routes**: All 16 routes navigable and rendering correctly
+- **Auth**: Clerk authentication still protecting routes
+- **Data**: tRPC queries working in loaders
+- **Search Params**: Typed search params working (comparativo, ranking)
+- **Lazy Loading**: All lazy-loaded components still lazy
+- **Mobile**: Mobile menu and responsive layout intact
+- **Patch**: No more `patches/` directory
 
 ## FILES TO CREATE/MODIFY
 
@@ -368,15 +368,15 @@ const location = useLocation().pathname;
 - `client/src/routes/meu-dashboard.tsx` - My Dashboard route
 - `client/src/routes/enviar-metricas.tsx` - Submit Metrics
 - `client/src/routes/admin.tsx` - Admin
-- `client/src/routes/admin.vincular.tsx` - Vincular Emails
-- `client/src/routes/admin.mentorados.tsx` - Gestão Mentorados
-- `client/src/routes/comparativo.tsx` - Comparativo
-- `client/src/routes/conquistas.tsx` - Conquistas
+- `client/src/routes/admin.vincular.tsx` - Link Emails
+- `client/src/routes/admin.mentorados.tsx` - Mentee Management
+- `client/src/routes/comparativo.tsx` - Comparative
+- `client/src/routes/conquistas.tsx` - Achievements
 - `client/src/routes/ranking.tsx` - Ranking
-- `client/src/routes/notificacoes.tsx` - Notificações
-- `client/src/routes/estrutura.tsx` - Estrutura
-- `client/src/routes/escala.tsx` - Escala
-- `client/src/routes/primeiro-acesso.tsx` - Primeiro Acesso
+- `client/src/routes/notificacoes.tsx` - Notifications
+- `client/src/routes/estrutura.tsx` - Structure
+- `client/src/routes/escala.tsx` - Scale
+- `client/src/routes/primeiro-acesso.tsx` - First Access
 - `client/src/routes/404.tsx` - Not Found (optional, or handle via throwNotFound)
 
 ### MODIFY:

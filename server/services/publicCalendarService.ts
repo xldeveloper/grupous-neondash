@@ -76,7 +76,7 @@ function parseICalFeed(icsData: string): CalendarEvent[] {
 
       events.push({
         id: event.uid || `${Date.now()}-${Math.random()}`,
-        title: event.summary || "Sem título",
+        title: event.summary || "Untitled",
         description,
         start: event.startDate.toJSDate(),
         end: event.endDate?.toJSDate() || event.startDate.toJSDate(),

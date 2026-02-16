@@ -1,21 +1,21 @@
-# PRP: Fase 4 - Lógica de Progresso
+# PRP: Phase 4 - Progress Logic
 
 ## Metadata
 
-| Campo              | Valor                                                           |
+| Field              | Value                                                           |
 | ------------------ | --------------------------------------------------------------- |
 | **Complexity**     | L2 — Minor enhancements to existing implementation              |
-| **Estimated Time** | 1-2 horas                                                       |
-| **Parallel Safe**  | Sim (tasks são independentes)                                   |
-| **Risk Level**     | Muito Baixo (funcionalidade core já implementada)               |
+| **Estimated Time** | 1-2 hours                                                       |
+| **Parallel Safe**  | Yes (tasks are independent)                                     |
+| **Risk Level**     | Very Low (core functionality already implemented)               |
 | **Issues**         | GPU-52                                                          |
-| **Dependências**   | Conclusão da Fase 3 (Estrutura de Dados)                        |
+| **Dependencies**   | Completion of Phase 3 (Data Structure)                          |
 
 ---
 
-## 1. Objetivo
+## 1. Objective
 
-Sincronizar o estado real das atividades concluídas com a interface do usuário, fornecendo feedback visual preciso e em tempo real sobre a evolução do mentorado.
+Synchronize the real state of completed activities with the user interface, providing accurate and real-time visual feedback on the mentee's progress.
 
 ---
 
@@ -23,36 +23,36 @@ Sincronizar o estado real das atividades concluídas com a interface do usuário
 
 | #   | Finding                                                                      | Confidence | Source                              | Impact    |
 | --- | ---------------------------------------------------------------------------- | ---------- | ----------------------------------- | --------- |
-| 1   | `getProgress` query **já existe** no backend                                 | 5/5        | atividadesRouter.ts:17-33           | ✅ Done   |
-| 2   | `getProgressById` query para admin **já existe**                             | 5/5        | atividadesRouter.ts:39-57           | ✅ Done   |
-| 3   | `toggleStep` mutation com refetch **já implementado**                        | 5/5        | AtividadesContent.tsx:91-93         | ✅ Done   |
-| 4   | `calcularProgresso` function funcional                                       | 5/5        | atividades-data.ts:520-543          | ✅ Done   |
-| 5   | `AtividadesContent.tsx` exibe progresso geral corretamente                   | 5/5        | AtividadesContent.tsx:219-232       | ✅ Done   |
-| 6   | `AchievementsView.tsx` usa `ActivityProgressContent` isolado                 | 5/5        | AchievementsView.tsx:73-99          | ✅ Done   |
-| 7   | Progresso por atividade exibido no accordion                                 | 5/5        | AtividadesContent.tsx:245-276       | ✅ Done   |
-| 8   | ❌ Plano original referencia `AtividadesCard.tsx` que **não existe**         | 5/5        | grep_search + find_by_name          | N/A       |
-| 9   | Dashboard principal (`MyDashboard.tsx`) menciona "Progresso Geral" (linha 258)| 4/5        | grep_search                         | Verificar |
-| 10  | Testes existentes focam em gamificação, não em atividades                    | 5/5        | gamificacao.test.ts                 | Gap       |
+| 1   | `getProgress` query **already exists** in the backend                        | 5/5        | atividadesRouter.ts:17-33           | Done      |
+| 2   | `getProgressById` query for admin **already exists**                         | 5/5        | atividadesRouter.ts:39-57           | Done      |
+| 3   | `toggleStep` mutation with refetch **already implemented**                   | 5/5        | AtividadesContent.tsx:91-93         | Done      |
+| 4   | `calcularProgresso` function is functional                                   | 5/5        | atividades-data.ts:520-543          | Done      |
+| 5   | `AtividadesContent.tsx` displays overall progress correctly                  | 5/5        | AtividadesContent.tsx:219-232       | Done      |
+| 6   | `AchievementsView.tsx` uses isolated `ActivityProgressContent`               | 5/5        | AchievementsView.tsx:73-99          | Done      |
+| 7   | Progress per activity displayed in the accordion                             | 5/5        | AtividadesContent.tsx:245-276       | Done      |
+| 8   | Original plan references `AtividadesCard.tsx` which **does not exist**       | 5/5        | grep_search + find_by_name          | N/A       |
+| 9   | Main dashboard (`MyDashboard.tsx`) mentions "Overall Progress" (line 258)    | 4/5        | grep_search                         | Verify    |
+| 10  | Existing tests focus on gamification, not activities                         | 5/5        | gamificacao.test.ts                 | Gap       |
 
 ---
 
 ## 3. Current Implementation Status
 
 > [!IMPORTANT]
-> A funcionalidade core de progresso de atividades **já está implementada** e funcional.
+> The core activity progress functionality **is already implemented** and functional.
 
-### Backend (✅ Completo)
-- Query `getProgress` retorna mapa de progresso do mentorado atual
-- Query `getProgressById` permite admin visualizar progresso de qualquer mentorado
-- Mutation `toggleStep` atualiza status e faz refetch automático
-- Mutation `updateNote` permite adicionar notas pessoais
+### Backend (Complete)
+- Query `getProgress` returns progress map for the current mentee
+- Query `getProgressById` allows admin to view any mentee's progress
+- Mutation `toggleStep` updates status and triggers automatic refetch
+- Mutation `updateNote` allows adding personal notes
 
-### Frontend (✅ Completo)
-- `AtividadesContent.tsx`: Exibe barra de progresso geral + progresso por atividade
-- `AchievementsView.tsx`: Card de "Progresso Geral" na aba de conquistas
-- Reatividade: `onSuccess: () => progressQuery.refetch()` já implementado
+### Frontend (Complete)
+- `AtividadesContent.tsx`: Displays overall progress bar + progress per activity
+- `AchievementsView.tsx`: "Overall Progress" card in the achievements tab
+- Reactivity: `onSuccess: () => progressQuery.refetch()` already implemented
 
-### Função de Cálculo (✅ Completo)
+### Calculation Function (Complete)
 ```typescript
 // atividades-data.ts:520-543
 export function calcularProgresso(progressMap: Record<string, boolean>): {
@@ -68,17 +68,17 @@ export function calcularProgresso(progressMap: Record<string, boolean>): {
 
 | Gap                                                  | Status      | Mitigation                                   |
 | ---------------------------------------------------- | ----------- | -------------------------------------------- |
-| Dashboard principal exibe progresso de atividades?   | A verificar | Verificar MyDashboard.tsx linha 258          |
-| Testes unitários para atividadesRouter?              | Não existem | Criar testes básicos (opcional)              |
-| Invalidação de cache funciona corretamente?          | A verificar | Testar manualmente marcando/desmarcando step |
+| Does the main dashboard display activity progress?   | To verify   | Check MyDashboard.tsx line 258               |
+| Unit tests for atividadesRouter?                     | None exist  | Create basic tests (optional)                |
+| Does cache invalidation work correctly?              | To verify   | Test manually by marking/unmarking a step    |
 
 ---
 
 ## 5. Assumptions to Validate
 
-1. ✅ O fluxo de marcar step como concluído atualiza a UI imediatamente (via refetch)
-2. ⚠️ O progresso é exibido no dashboard principal (verificar `MyDashboard.tsx`)
-3. ✅ Admin pode visualizar progresso de qualquer mentorado
+1. The flow of marking a step as completed updates the UI immediately (via refetch)
+2. Progress is displayed on the main dashboard (verify `MyDashboard.tsx`)
+3. Admin can view any mentee's progress
 
 ---
 
@@ -86,42 +86,42 @@ export function calcularProgresso(progressMap: Record<string, boolean>): {
 
 | #   | Edge Case                                    | Current Handling                               |
 | --- | -------------------------------------------- | ---------------------------------------------- |
-| 1   | Novo mentorado sem progresso                 | Retorna mapa vazio, progresso = 0%             |
-| 2   | Atividade adicionada após mentorado iniciar  | Progresso recalculado automaticamente          |
-| 3   | Step marcado/desmarcado rapidamente          | Mutation individual, refetch após cada toggle  |
-| 4   | Admin visualiza mentorado sem atividades     | Exibe 0/0 passos (0%)                          |
-| 5   | Conexão perdida durante toggle               | TRQ/React Query handles retry automatically    |
+| 1   | New mentee without progress                  | Returns empty map, progress = 0%               |
+| 2   | Activity added after mentee started          | Progress recalculated automatically            |
+| 3   | Step marked/unmarked rapidly                 | Individual mutation, refetch after each toggle  |
+| 4   | Admin views mentee without activities        | Displays 0/0 steps (0%)                        |
+| 5   | Connection lost during toggle                | tRPC/React Query handles retry automatically   |
 
 ---
 
-## 7. Tarefas Atômicas
+## 7. Atomic Tasks
 
-### ⚡ AT-001: Verificar Exibição no Dashboard Principal
+### AT-001: Verify Display on Main Dashboard
 
-**Dependências:** Nenhuma
-**Parallel Safe:** Sim
-**Status:** A verificar
+**Dependencies:** None
+**Parallel Safe:** Yes
+**Status:** To verify
 
-**Ação:** Confirmar se `MyDashboard.tsx` exibe o progresso de atividades como card/widget.
+**Action:** Confirm whether `MyDashboard.tsx` displays activity progress as a card/widget.
 
-**Arquivo:** `client/src/pages/MyDashboard.tsx` (linha 258 menciona "Progresso Geral")
+**File:** `client/src/pages/MyDashboard.tsx` (line 258 mentions "Overall Progress")
 
-**Validação:**
+**Validation:**
 ```bash
 bun dev
-# Acessar http://localhost:5000/dashboard
-# Verificar se existe card de progresso de atividades
+# Navigate to http://localhost:5000/dashboard
+# Verify if an activity progress card exists
 ```
 
 ---
 
-### ⚡ AT-002: (Opcional) Adicionar Teste Unitário para atividadesRouter
+### AT-002: (Optional) Add Unit Test for atividadesRouter
 
-**Dependências:** Nenhuma
-**Parallel Safe:** Sim
-**Status:** Opcional (melhoria de qualidade)
+**Dependencies:** None
+**Parallel Safe:** Yes
+**Status:** Optional (quality improvement)
 
-**Ação:** Criar `server/atividades.test.ts` seguindo padrão de `gamificacao.test.ts`.
+**Action:** Create `server/atividades.test.ts` following the pattern from `gamificacao.test.ts`.
 
 **Template:**
 ```typescript
@@ -140,22 +140,22 @@ describe("Atividades Router", () => {
 });
 ```
 
-**Validação:**
+**Validation:**
 ```bash
 bun test server/atividades.test.ts
 ```
 
 ---
 
-### ⚡ AT-003: (Opcional) Adicionar Widget de Progresso no Dashboard
+### AT-003: (Optional) Add Progress Widget to Dashboard
 
-**Dependências:** `[AT-001]` (se verificação mostrar que não existe)
-**Parallel Safe:** Sim
-**Status:** Condicional
+**Dependencies:** `[AT-001]` (if verification shows it does not exist)
+**Parallel Safe:** Yes
+**Status:** Conditional
 
-**Ação:** Se `MyDashboard.tsx` não exibir progresso de atividades, adicionar um card de resumo.
+**Action:** If `MyDashboard.tsx` does not display activity progress, add a summary card.
 
-**Componente sugerido:**
+**Suggested component:**
 ```tsx
 function AtividadesProgressWidget() {
   const { data: progressMap } = trpc.atividades.getProgress.useQuery();
@@ -168,13 +168,13 @@ function AtividadesProgressWidget() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Progresso nas Atividades</CardTitle>
+        <CardTitle>Activity Progress</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="text-3xl font-bold">{percentage}%</div>
         <Progress value={percentage} />
         <p className="text-sm text-muted-foreground mt-2">
-          {completed}/{total} passos concluídos
+          {completed}/{total} steps completed
         </p>
       </CardContent>
     </Card>
@@ -182,10 +182,10 @@ function AtividadesProgressWidget() {
 }
 ```
 
-**Validação:**
+**Validation:**
 ```bash
 bun run check
-bun dev # Verificar visualmente no dashboard
+bun dev # Verify visually on the dashboard
 ```
 
 ---
@@ -201,21 +201,21 @@ bun dev # Verificar visualmente no dashboard
 
 ### Manual Verification
 
-1. **Marcar Step como Concluído:**
-   - Acessar `/dashboard` → Atividades
-   - Clicar em checkbox de qualquer step
-   - Verificar que barra de progresso geral atualiza imediatamente
-   - Verificar que contador X/Y atualiza
+1. **Mark a Step as Completed:**
+   - Navigate to `/dashboard` -> Activities
+   - Click on any step checkbox
+   - Verify that the overall progress bar updates immediately
+   - Verify that the X/Y counter updates
 
-2. **Desmarcar Step:**
-   - Clicar novamente no checkbox
-   - Verificar que progresso diminui corretamente
+2. **Unmark a Step:**
+   - Click the checkbox again
+   - Verify that progress decreases correctly
 
-3. **Verificar Admin View:**
-   - Login como admin
-   - Acessar lista de mentorados
-   - Clicar em um mentorado
-   - Verificar visualização do progresso (read-only)
+3. **Verify Admin View:**
+   - Log in as admin
+   - Access the mentee list
+   - Click on a mentee
+   - Verify progress visualization (read-only)
 
 ---
 
@@ -223,12 +223,12 @@ bun dev # Verificar visualmente no dashboard
 
 ```mermaid
 graph TD
-    AT001[AT-001: Verificar Dashboard] --> Decision{Existe widget?}
-    Decision -->|Não| AT003[AT-003: Adicionar Widget]
-    Decision -->|Sim| Done[✅ Fase 4 Completa]
+    AT001[AT-001: Verify Dashboard] --> Decision{Widget exists?}
+    Decision -->|No| AT003[AT-003: Add Widget]
+    Decision -->|Yes| Done[Phase 4 Complete]
     AT003 --> Done
 
-    AT002[AT-002: Testes] --> Done
+    AT002[AT-002: Tests] --> Done
 
     style AT001 fill:#4ade80
     style AT002 fill:#94a3b8
@@ -237,19 +237,19 @@ graph TD
 
 ---
 
-## 10. Conclusão
+## 10. Conclusion
 
 > [!TIP]
-> **A Fase 4 está essencialmente completa!**
+> **Phase 4 is essentially complete!**
 >
-> A lógica de progresso de atividades já foi implementada durante desenvolvimentos anteriores:
-> - Backend: `getProgress`, `toggleStep` funcionais
-> - Frontend: `AtividadesContent.tsx` exibe progresso corretamente
-> - Reatividade: Refetch automático após cada toggle
+> The activity progress logic was already implemented during previous development:
+> - Backend: `getProgress`, `toggleStep` are functional
+> - Frontend: `AtividadesContent.tsx` displays progress correctly
+> - Reactivity: Automatic refetch after each toggle
 
-O único trabalho restante é:
-1. **Verificar** se o dashboard principal exibe um resumo do progresso
-2. **Opcionalmente** adicionar testes unitários para cobertura
+The only remaining work is:
+1. **Verify** whether the main dashboard displays a progress summary
+2. **Optionally** add unit tests for coverage
 
 ---
 
@@ -271,10 +271,10 @@ O único trabalho restante é:
 ## Next Steps
 
 ```
-✅ Fase 4 já está implementada!
+Phase 4 is already implemented!
 
-Ações recomendadas:
-1. Executar verificação manual (AT-001) para confirmar
-2. Prosseguir para Fase 5 (Onboarding) se confirmado
-3. Opcionalmente adicionar testes (AT-002)
+Recommended actions:
+1. Execute manual verification (AT-001) to confirm
+2. Proceed to Phase 5 (Onboarding) if confirmed
+3. Optionally add tests (AT-002)
 ```

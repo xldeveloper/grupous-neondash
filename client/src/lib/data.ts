@@ -90,14 +90,14 @@ export const analiseData: AnaliseCompleta = {
           },
           bonus_estrutura: 10,
         },
-        classificacao: "Excelente",
+        classificacao: "Excellent",
         feedback: {
           analise_dezembro:
-            "Excelente performance em faturamento (R$ 16.350) e stories (99), mas baixa frequência no feed (2 posts).",
+            "Excellent performance in revenue (R$ 16,350) and stories (99), but low feed frequency (2 posts).",
           foco_janeiro:
-            "Manter o ritmo de stories e aumentar a presença no feed para educar a audiência sobre novos procedimentos.",
+            "Maintain the stories pace and increase feed presence to educate the audience about new procedures.",
           sugestao:
-            "Ana, seu engajamento nos stories é fantástico e refletiu diretamente no seu faturamento. Para janeiro, o foco é transformar essa audiência quente em pacientes recorrentes. Aumente para 3 posts semanais no feed focando em 'dor vs. solução' para atrair novos seguidores que ainda não veem seus stories. Use a campanha de 'Avaliação Estratégica' para preencher a agenda da semana 3 e 4.",
+            "Ana, your stories engagement is fantastic and directly reflected in your revenue. For January, the focus is turning that warm audience into recurring patients. Increase to 3 weekly feed posts focusing on 'pain vs. solution' to attract new followers who don't yet see your stories. Use the 'Strategic Assessment' campaign to fill the schedule for weeks 3 and 4.",
         },
       },
       "Alina Targino": {
@@ -137,14 +137,14 @@ export const analiseData: AnaliseCompleta = {
           },
           bonus_estrutura: 10,
         },
-        classificacao: "Excelente",
+        classificacao: "Excellent",
         feedback: {
           analise_dezembro:
-            "Ótima consistência em posts (20) e stories (84), mas faturamento (R$ 9.220) abaixo da meta de R$ 16k.",
+            "Great consistency in posts (20) and stories (84), but revenue (R$ 9,220) below the R$ 16k target.",
           foco_janeiro:
-            "Converter o alto volume de conteúdo em agendamentos efetivos através de prospecção ativa.",
+            "Convert the high content volume into effective bookings through active prospecting.",
           sugestao:
-            "Alina, você é uma máquina de conteúdo! Agora precisamos converter essa visibilidade em vendas. Em janeiro, aplique a estratégia de 'Prospecção Ativa' enviando mensagens diretas para quem interage com seus posts. Não espere eles virem até você. Use o roteiro de convite para avaliação estratégica com os 30 nomes mais engajados do seu Instagram.",
+            "Alina, you are a content machine! Now we need to convert that visibility into sales. In January, apply the 'Active Prospecting' strategy by sending direct messages to people who interact with your posts. Don't wait for them to come to you. Use the strategic assessment invitation script with the 30 most engaged names on your Instagram.",
         },
       },
       "Tânia Cristina": {
@@ -184,14 +184,14 @@ export const analiseData: AnaliseCompleta = {
           },
           bonus_estrutura: 10,
         },
-        classificacao: "Excelente",
+        classificacao: "Excellent",
         feedback: {
           analise_dezembro:
-            "Consistência exemplar no feed (20 posts), mas faturamento (R$ 9.120) ainda tem potencial de crescimento.",
+            "Exemplary consistency on the feed (20 posts), but revenue (R$ 9,120) still has growth potential.",
           foco_janeiro:
-            "Melhorar a oferta nos stories e focar em procedimentos de maior ticket médio.",
+            "Improve the stories offering and focus on higher average ticket procedures.",
           sugestao:
-            "Tânia, sua vitrine está linda, mas precisamos ser mais intencionais na venda. Para janeiro, reduza levemente o feed se necessário, mas intensifique os stories com chamadas para ação (CTAs) diretas. A campanha de '10 vagas para avaliação' é perfeita para você criar urgência e fechar pacotes de maior valor.",
+            "Tania, your storefront looks great, but we need to be more intentional about selling. For January, slightly reduce the feed if needed, but intensify stories with direct calls to action (CTAs). The '10 spots for assessment' campaign is perfect for you to create urgency and close higher-value packages.",
         },
       },
       "Mariana Guimarães": {
@@ -231,14 +231,14 @@ export const analiseData: AnaliseCompleta = {
           },
           bonus_estrutura: 10,
         },
-        classificacao: "Excelente",
+        classificacao: "Excellent",
         feedback: {
           analise_dezembro:
-            "Rainha dos stories (157!), mas faturamento (R$ 9.068) e feed (7 posts) podem melhorar.",
+            "Stories queen (157!), but revenue (R$ 9,068) and feed (7 posts) can improve.",
           foco_janeiro:
-            "Equilibrar a presença no feed e usar a base de leads (13 captados) para gerar vendas.",
+            "Balance the feed presence and leverage the lead base (13 captured) to generate sales.",
           sugestao:
-            "Mariana, sua conexão nos stories é incrível. Em janeiro, vamos usar essa influência para lotar a agenda. Pegue esses 13 leads de dezembro e os novos que surgirem e aplique o roteiro de prospecção ativa. No feed, foque em posts de 'Prova Social' para validar sua autoridade para quem chega agora.",
+            "Mariana, your stories connection is incredible. In January, let's use that influence to fill the schedule. Take those 13 leads from December plus new ones that come in and apply the active prospecting script. On the feed, focus on 'Social Proof' posts to validate your authority for newcomers.",
         },
       },
       "Gabriela Santiago": {
@@ -278,13 +278,13 @@ export const analiseData: AnaliseCompleta = {
           },
           bonus_estrutura: 10,
         },
-        classificacao: "Regular",
+        classificacao: "Fair",
         feedback: {
           analise_dezembro:
-            "Faturamento (R$ 3.600) e ações (2 posts) abaixo do potencial. Precisa de um choque de gestão.",
-          foco_janeiro: "Execução rigorosa do básico: constância mínima e prospecção ativa.",
+            "Revenue (R$ 3,600) and actions (2 posts) below potential. Needs a management turnaround.",
+          foco_janeiro: "Rigorous execution of the basics: minimum consistency and active prospecting.",
           sugestao:
-            "Gabriela, janeiro é o mês da virada. Não se preocupe com perfeição, foque em execução. Sua meta é simples: 3 posts na semana e prospecção ativa diária. Use o Google Meu Negócio para atrair pacientes locais que já procuram pelo seu serviço. A meta é dobrar esse faturamento com ações simples e consistentes.",
+            "Gabriela, January is the turning point. Don't worry about perfection, focus on execution. Your goal is simple: 3 posts per week and daily active prospecting. Use Google My Business to attract local patients already searching for your service. The goal is to double this revenue with simple, consistent actions.",
         },
       },
       "Thais Olimpia": {
@@ -324,13 +324,13 @@ export const analiseData: AnaliseCompleta = {
           },
           leads: { realizado: 184, esperado: 20, percentual: 920.0, score: 10 },
         },
-        classificacao: "Excelente",
+        classificacao: "Excellent",
         feedback: {
           analise_dezembro:
-            "Performance estelar! Bateu meta de faturamento (R$ 30.725) e gerou incríveis 184 leads.",
-          foco_janeiro: "Gestão de leads e qualificação para manter a taxa de conversão alta.",
+            "Stellar performance! Hit the revenue target (R$ 30,725) and generated an incredible 184 leads.",
+          foco_janeiro: "Lead management and qualification to maintain a high conversion rate.",
           sugestao:
-            "Thais, você 'zerou' o jogo em dezembro! Com 184 leads, seu desafio em janeiro é qualificação e conversão. Não deixe esses contatos esfriarem. Use a campanha de avaliação estratégica para filtrar os curiosos dos compradores reais. Mantenha a constância e comece a pensar em delegar o agendamento se ainda não o fez.",
+            "Thais, you 'cleared' the game in December! With 184 leads, your challenge in January is qualification and conversion. Don't let those contacts go cold. Use the strategic assessment campaign to filter the curious from the real buyers. Maintain consistency and start thinking about delegating scheduling if you haven't already.",
         },
       },
       "Lana Máximo": {
@@ -370,14 +370,14 @@ export const analiseData: AnaliseCompleta = {
           },
           leads: { realizado: 13, esperado: 20, percentual: 65.0, score: 6.5 },
         },
-        classificacao: "Excelente",
+        classificacao: "Excellent",
         feedback: {
           analise_dezembro:
-            "Faturamento recorde (R$ 88.365), mas feed (5 posts) foi deixado de lado.",
+            "Record revenue (R$ 88,365), but the feed (5 posts) was neglected.",
           foco_janeiro:
-            "Retomar a presença no feed para garantir a demanda futura e não depender apenas de indicações/recorrência.",
+            "Resume feed presence to ensure future demand and avoid relying solely on referrals/recurring clients.",
           sugestao:
-            "Lana, resultados impressionantes! Para garantir que esse faturamento seja sustentável a longo prazo, precisamos reaquecer o feed. Volte com os 3 posts semanais focados em educação e autoridade. Você já tem o faturamento, agora construa o império de marca para sustentar esse nível o ano todo.",
+            "Lana, impressive results! To ensure this revenue is sustainable long-term, we need to re-engage the feed. Return with 3 weekly posts focused on education and authority. You already have the revenue; now build the brand empire to sustain this level all year.",
         },
       },
       "Kleber Oliveira": {
@@ -417,14 +417,14 @@ export const analiseData: AnaliseCompleta = {
           },
           leads: { realizado: 92, esperado: 20, percentual: 460.0, score: 10 },
         },
-        classificacao: "Excelente",
+        classificacao: "Excellent",
         feedback: {
           analise_dezembro:
-            "Faturamento monstro (R$ 66.300), mas feed (2 posts) quase inexistente.",
+            "Monster revenue (R$ 66,300), but the feed (2 posts) is nearly nonexistent.",
           foco_janeiro:
-            "Organizar a casa digital. O faturamento está ótimo, mas a vitrine precisa refletir esse sucesso.",
+            "Organize the digital storefront. Revenue is great, but the showcase needs to reflect that success.",
           sugestao:
-            "Kleber, financeiramente você está voando. O risco é ficar invisível para novos públicos. Em janeiro, dedique tempo para organizar o feed com posts de 'Prova Social' e 'Bastidores'. Mostre o sucesso da clínica para atrair pacientes que buscam tickets ainda mais altos. Google Meu Negócio atualizado é essencial para você.",
+            "Kleber, financially you are soaring. The risk is becoming invisible to new audiences. In January, dedicate time to organizing the feed with 'Social Proof' and 'Behind the Scenes' posts. Show the clinic's success to attract patients seeking even higher ticket values. An updated Google My Business is essential for you.",
         },
       },
       Carmen: {
@@ -464,13 +464,13 @@ export const analiseData: AnaliseCompleta = {
           },
           leads: { realizado: 27, esperado: 20, percentual: 135.0, score: 10 },
         },
-        classificacao: "Bom",
+        classificacao: "Good",
         feedback: {
           analise_dezembro:
-            "Faturamento excelente (R$ 65.274) com bom equilíbrio de posts (10) e stories (131).",
-          foco_janeiro: "Manter a consistência e focar em fidelização.",
+            "Excellent revenue (R$ 65,274) with a good balance of posts (10) and stories (131).",
+          foco_janeiro: "Maintain consistency and focus on client retention.",
           sugestao:
-            "Carmen, você encontrou o equilíbrio ideal. Em janeiro, seu foco deve ser manter essa máquina rodando e pedir avaliações no Google Meu Negócio. Com esse volume de atendimentos, você pode dominar a busca local rapidamente. Incentive seus pacientes a deixarem depoimentos para atrair ainda mais demanda orgânica.",
+            "Carmen, you found the ideal balance. In January, your focus should be keeping this machine running and asking for Google My Business reviews. With this volume of appointments, you can dominate local search quickly. Encourage your patients to leave testimonials to attract even more organic demand.",
         },
       },
       "Jéssica Sales": {
@@ -510,13 +510,13 @@ export const analiseData: AnaliseCompleta = {
           },
           leads: { realizado: 43, esperado: 20, percentual: 215.0, score: 10 },
         },
-        classificacao: "Bom",
+        classificacao: "Good",
         feedback: {
           analise_dezembro:
-            "Bom faturamento (R$ 22.554) e stories consistentes (93), mas feed (7 posts) pode melhorar.",
-          foco_janeiro: "Acelerar para bater os 30k. Faltou pouco!",
+            "Good revenue (R$ 22,554) and consistent stories (93), but the feed (7 posts) can improve.",
+          foco_janeiro: "Accelerate to hit 30k. You were so close!",
           sugestao:
-            "Jéssica, os 30k estão logo ali! Em janeiro, a prospecção ativa será seu diferencial. Pegue sua lista de pacientes antigos e ofereça a avaliação estratégica. No conteúdo, foque em mostrar resultados (antes/depois com ética) para aumentar o desejo e facilitar o fechamento de planos maiores.",
+            "Jessica, the 30k mark is right there! In January, active prospecting will be your differentiator. Take your list of past patients and offer the strategic assessment. For content, focus on showing results (ethical before/after) to increase desire and make it easier to close larger plans.",
         },
       },
       "Iza Pionório": {
@@ -556,13 +556,13 @@ export const analiseData: AnaliseCompleta = {
           },
           leads: { realizado: 47, esperado: 20, percentual: 235.0, score: 10 },
         },
-        classificacao: "Bom",
+        classificacao: "Good",
         feedback: {
           analise_dezembro:
-            "Volume alto de posts (23) e stories (137), mas faturamento (R$ 11.425) não acompanhou o esforço.",
-          foco_janeiro: "Ajuste de oferta e público. Muito esforço, pouco resultado financeiro.",
+            "High volume of posts (23) and stories (137), but revenue (R$ 11,425) did not match the effort.",
+          foco_janeiro: "Adjust the offer and target audience. Too much effort, too little financial return.",
           sugestao:
-            "Iza, sua dedicação é inquestionável. O problema pode estar na oferta ou no público. Em janeiro, vamos focar em qualidade, não quantidade. Reduza os posts se precisar, mas melhore a copy e a oferta. Use a prospecção ativa para buscar pacientes com perfil de compra imediata e ticket mais alto.",
+            "Iza, your dedication is unquestionable. The problem may be in the offer or the audience. In January, let's focus on quality, not quantity. Reduce posts if needed, but improve the copy and the offer. Use active prospecting to find patients with an immediate buying profile and higher ticket.",
         },
       },
       Élica: {
@@ -602,13 +602,13 @@ export const analiseData: AnaliseCompleta = {
           },
           leads: { realizado: 12, esperado: 20, percentual: 60.0, score: 6.0 },
         },
-        classificacao: "Regular",
+        classificacao: "Fair",
         feedback: {
           analise_dezembro:
-            "Stories altíssimos (196!), mas faturamento (R$ 20.110) e feed (3 posts) desequilibrados.",
-          foco_janeiro: "Converter a audiência dos stories em vendas diretas.",
+            "Very high stories (196!), but revenue (R$ 20,110) and feed (3 posts) are unbalanced.",
+          foco_janeiro: "Convert the stories audience into direct sales.",
           sugestao:
-            "Élica, você tem a atenção da sua audiência nos stories, agora cobre por isso! Em janeiro, seja mais direta nas ofertas. Menos 'bom dia' e mais 'agenda aberta'. Use a caixinha de perguntas para identificar dores e chame no direct para agendar. O feed precisa de atenção: 3 posts semanais para não depender só de quem já te segue.",
+            "Elica, you have your audience's attention on stories; now charge for it! In January, be more direct with your offers. Less 'good morning' and more 'schedule open'. Use the question box to identify pain points and reach out via DM to book. The feed needs attention: 3 weekly posts so you don't depend only on existing followers.",
         },
       },
       Jayne: {
@@ -648,14 +648,14 @@ export const analiseData: AnaliseCompleta = {
           },
           leads: { realizado: 52, esperado: 20, percentual: 260.0, score: 10 },
         },
-        classificacao: "Regular",
+        classificacao: "Fair",
         feedback: {
           analise_dezembro:
-            "Muitos posts (30), muitos leads (52), mas faturamento baixo (R$ 4.900). Problema de conversão.",
+            "Many posts (30), many leads (52), but low revenue (R$ 4,900). Conversion problem.",
           foco_janeiro:
-            "Foco total em vendas e fechamento. O marketing está funcionando, a venda não.",
+            "Total focus on sales and closing. Marketing is working; sales are not.",
           sugestao:
-            "Jayne, você está atraindo as pessoas (52 leads!), mas não está fechando. Pare de focar apenas em atrair e foque em converter. Em janeiro, dedique-se a aprender a fechar vendas. Chame esses leads novamente, ofereça a avaliação estratégica e treine seu script de vendas. Seu ouro está nesses contatos não convertidos.",
+            "Jayne, you are attracting people (52 leads!), but you are not closing. Stop focusing only on attracting and focus on converting. In January, dedicate yourself to learning how to close sales. Reach out to those leads again, offer the strategic assessment, and practice your sales script. Your gold is in those unconverted contacts.",
         },
       },
       "Tamara Dilma": {
@@ -690,13 +690,13 @@ export const analiseData: AnaliseCompleta = {
           },
           leads: { realizado: 0, esperado: 20, percentual: 0.0, score: 0.0 },
         },
-        classificacao: "Regular",
+        classificacao: "Fair",
         feedback: {
           analise_dezembro:
-            "Faturamento razoável (R$ 18.278) sustentado por posts (23), mas ZERO stories e leads.",
-          foco_janeiro: "Aparecer nos stories! É impossível escalar sem conexão pessoal.",
+            "Reasonable revenue (R$ 18,278) sustained by posts (23), but ZERO stories and leads.",
+          foco_janeiro: "Show up on stories! It's impossible to scale without personal connection.",
           sugestao:
-            "Tamara, seu feed garante o básico, mas a falta de stories (0) está deixando dinheiro na mesa. Em janeiro, a meta é simples: apareça nos stories todos os dias. Bastidores, café, dúvidas. As pessoas compram de pessoas. Comece devagar, mas comece. Isso vai destravar o próximo nível do seu faturamento.",
+            "Tamara, your feed covers the basics, but the lack of stories (0) is leaving money on the table. In January, the goal is simple: show up on stories every day. Behind the scenes, coffee, questions. People buy from people. Start slowly, but start. This will unlock the next level of your revenue.",
         },
       },
     },

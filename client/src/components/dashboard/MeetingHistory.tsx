@@ -15,7 +15,7 @@ export function MeetingHistory({ meetings }: MeetingHistoryProps) {
   if (!meetings || meetings.length === 0) {
     return (
       <div className="bg-slate-900/50 p-6 rounded-lg border border-slate-800 text-center text-slate-500 text-sm">
-        Nenhuma reunião registrada recentemente.
+        No meetings recorded recently.
       </div>
     );
   }
@@ -36,7 +36,7 @@ export function MeetingHistory({ meetings }: MeetingHistoryProps) {
               })}
             </div>
             <div className="text-xs text-slate-500">
-              {meeting.duracao ? `Duração: ${meeting.duracao}m` : "Sem duração"}
+              {meeting.duracao ? `Duration: ${meeting.duracao}m` : "No duration"}
             </div>
           </div>
           <Button
@@ -44,7 +44,7 @@ export function MeetingHistory({ meetings }: MeetingHistoryProps) {
             size="sm"
             className="h-7 text-xs border-[#D4AF37]/30 text-[#D4AF37] hover:bg-[#D4AF37]/10 hover:text-[#D4AF37]"
           >
-            Ver Resumo
+            View Summary
           </Button>
         </div>
       ))}

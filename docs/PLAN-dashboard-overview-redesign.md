@@ -6,14 +6,14 @@
 
 | # | Finding | Confidence | Source | Impact |
 |---|---------|------------|--------|--------|
-| 1 | Current "Visão Geral" (`Home.tsx`) is an Admin Dashboard (Top Performers, etc). | 5/5 | `client/src/pages/Home.tsx` | Replacing it directly breaks Admin capabilities unless conditioned by Role or Selection. |
+| 1 | Current "Overview" (`Home.tsx`) is an Admin Dashboard (Top Performers, etc). | 5/5 | `client/src/pages/Home.tsx` | Replacing it directly breaks Admin capabilities unless conditioned by Role or Selection. |
 | 2 | Image data maps to `metricasMensais` (Financials), `mentorados` (Header), `diagnosticos` (Specialty). | 4/5 | `drizzle/schema.ts` | Existing data structures are largely sufficient. |
-| 3 | "Anotações Privadas" can use `interacoes` table (type='nota'). | 4/5 | `drizzle/schema.ts` | Reuse existing table instead of creating new one. |
-| 4 | "Histórico de Reuniões" likely maps to `interacoes` (type='reuniao') or `classes` (type='encontro'). | 3/5 | `drizzle/schema.ts` | Need to confirm if "reuniao" interactions are actively used/logged. |
-| 5 | "Marcos" (Milestones) like "Início", "Primeira Clínica" don't have a dedicated table. | 3/5 | `drizzle/schema.ts` | May need new `timeline_events` or logic based on `diagnosticos`/`tasks`. |
+| 3 | "Private Notes" can use `interacoes` table (type='nota'). | 4/5 | `drizzle/schema.ts` | Reuse existing table instead of creating new one. |
+| 4 | "Meeting History" likely maps to `interacoes` (type='reuniao') or `classes` (type='encontro'). | 3/5 | `drizzle/schema.ts` | Need to confirm if "reuniao" interactions are actively used/logged. |
+| 5 | "Milestones" like "Start", "First Clinic" don't have a dedicated table. | 3/5 | `drizzle/schema.ts` | May need new `timeline_events` or logic based on `diagnosticos`/`tasks`. |
 
 ### Knowledge Gaps & Assumptions
-- **Gap:** How specific milestones ("Contratação da Primeira Secretária") are tracked.
+- **Gap:** How specific milestones ("Hiring the First Secretary") are tracked.
 - **Assumption:** The user wants this view to appear when clicking into a mentee's details (or logged in as mentee), not replacing the global admin dashboard.
 - **Assumption:** "ROI" will be calculated based on (Revenue / Fixed Cost) or simple Revenue growth, as investment data is missing.
 - **Assumption:** The uploaded image represents the target design for *Desktop*.
@@ -23,7 +23,7 @@
 ## 1. User Review Required
 
 > [!IMPORTANT]
-> **Integration Context**: This design represents a **Single Mentee** view. The current "Visão Geral" in `Home.tsx` is an **Admin Aggregation** view.
+> **Integration Context**: This design represents a **Single Mentee** view. The current "Overview" in `Home.tsx` is an **Admin Aggregation** view.
 > We will implement this as `MenteeOverview.tsx`. You will need to decide:
 > 1. Should this be a new page (e.g., `/mentorado/:id`)?
 > 2. Or a modal/sidebar/drill-down from the main dashboard?
@@ -64,7 +64,7 @@
 - **Details:** Display milestones with icons.
 
 #### [NEW] `client/src/components/dashboard/MentorNotes.tsx`
-- **Action:** Textarea with "Salvar Notas" button.
+- **Action:** Textarea with "Save Notes" button.
 - **Details:** Wires to `createNote` mutation.
 
 ---

@@ -25,14 +25,14 @@ interface BadgeIconProps {
 
 export function BadgeIcon({ code, className, size = 24 }: BadgeIconProps) {
   const map: Record<string, { icon: React.ElementType; color: string }> = {
-    // Consistência
+    // Consistency
     primeiro_registro: { icon: Flag, color: "text-blue-500" },
     consistencia_bronze: { icon: Medal, color: "text-amber-700" }, // Bronze
     consistencia_prata: { icon: Medal, color: "text-gray-400" }, // Silver
     consistencia_ouro: { icon: Medal, color: "text-yellow-500" }, // Gold
     pontualidade: { icon: Clock, color: "text-emerald-500" },
 
-    // Faturamento
+    // Revenue
     meta_atingida: { icon: Target, color: "text-red-500" },
     crescimento_25: { icon: TrendingUp, color: "text-green-500" },
     crescimento_50: { icon: Rocket, color: "text-teal-500" },
@@ -43,11 +43,11 @@ export function BadgeIcon({ code, className, size = 24 }: BadgeIconProps) {
     top_1_turma: { icon: Crown, color: "text-yellow-400" },
     acima_media: { icon: Activity, color: "text-indigo-500" },
 
-    // Operacional
+    // Operational
     gerador_leads: { icon: Magnet, color: "text-pink-500" },
     conversao_master: { icon: Sparkles, color: "text-primary" },
 
-    // Especial
+    // Special
     evolucao_completa: { icon: GraduationCap, color: "text-blue-600" },
     jornada_completa: { icon: MapIcon, color: "text-fuchsia-500" },
   };

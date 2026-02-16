@@ -66,7 +66,7 @@ export function InstagramAnalyticsView({ mentoradoId }: InstagramAnalyticsViewPr
         <CardContent className="py-12 text-center">
           <Instagram className="w-12 h-12 text-muted-foreground mx-auto mb-4 opacity-50" />
           <p className="text-muted-foreground">
-            Selecione um mentorado para ver as análises do Instagram.
+            Select a mentee to view Instagram analytics.
           </p>
         </CardContent>
       </Card>
@@ -104,9 +104,9 @@ export function InstagramAnalyticsView({ mentoradoId }: InstagramAnalyticsViewPr
           {/* Header with Sync Button */}
           <motion.div className="flex items-center justify-between" variants={fadeIn}>
             <div>
-              <h3 className="text-xl font-semibold text-foreground">Métricas do Instagram</h3>
+              <h3 className="text-xl font-semibold text-foreground">Instagram Metrics</h3>
               <p className="text-sm text-muted-foreground">
-                Acompanhe seu desempenho nas redes sociais
+                Track your social media performance
               </p>
             </div>
             <Button
@@ -117,7 +117,7 @@ export function InstagramAnalyticsView({ mentoradoId }: InstagramAnalyticsViewPr
               className="gap-2"
             >
               <RefreshCcw className={`w-4 h-4 ${syncMutation.isPending ? "animate-spin" : ""}`} />
-              Atualizar
+              Refresh
             </Button>
           </motion.div>
 
@@ -132,7 +132,7 @@ export function InstagramAnalyticsView({ mentoradoId }: InstagramAnalyticsViewPr
                 <CardHeader className="relative pb-2">
                   <CardTitle className="flex items-center gap-2 text-sm font-medium text-muted-foreground uppercase tracking-wider">
                     <Image className="w-4 h-4 text-pink-500" />
-                    Posts no Feed
+                    Feed Posts
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="relative">
@@ -143,7 +143,7 @@ export function InstagramAnalyticsView({ mentoradoId }: InstagramAnalyticsViewPr
                       <AnimatedCounter to={currentMetrics?.postsFeed ?? 0} duration={1} />
                     )}
                   </div>
-                  <p className="text-xs text-muted-foreground mt-2">este mês</p>
+                  <p className="text-xs text-muted-foreground mt-2">this month</p>
                 </CardContent>
               </Card>
             </motion.div>
@@ -168,7 +168,7 @@ export function InstagramAnalyticsView({ mentoradoId }: InstagramAnalyticsViewPr
                       <AnimatedCounter to={currentMetrics?.stories ?? 0} duration={1} />
                     )}
                   </div>
-                  <p className="text-xs text-muted-foreground mt-2">este mês</p>
+                  <p className="text-xs text-muted-foreground mt-2">this month</p>
                 </CardContent>
               </Card>
             </motion.div>
@@ -182,7 +182,7 @@ export function InstagramAnalyticsView({ mentoradoId }: InstagramAnalyticsViewPr
                 <CardHeader className="relative pb-2">
                   <CardTitle className="flex items-center gap-2 text-sm font-medium text-muted-foreground uppercase tracking-wider">
                     <Users className="w-4 h-4 text-blue-500" />
-                    Seguidores
+                    Followers
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="relative">
@@ -210,9 +210,9 @@ export function InstagramAnalyticsView({ mentoradoId }: InstagramAnalyticsViewPr
                 <div>
                   <CardTitle className="flex items-center gap-2 text-xl font-semibold">
                     <TrendingUp className="w-5 h-5 text-primary" />
-                    Evolução de Métricas
+                    Metrics Evolution
                   </CardTitle>
-                  <p className="text-sm text-muted-foreground">Últimos 6 meses</p>
+                  <p className="text-sm text-muted-foreground">Last 6 months</p>
                 </div>
               </CardHeader>
               <CardContent className="h-[300px]">
@@ -287,7 +287,7 @@ export function InstagramAnalyticsView({ mentoradoId }: InstagramAnalyticsViewPr
                   </ResponsiveContainer>
                 ) : (
                   <div className="h-full flex items-center justify-center text-muted-foreground">
-                    <p>Nenhum dado histórico disponível</p>
+                    <p>No historical data available</p>
                   </div>
                 )}
               </CardContent>

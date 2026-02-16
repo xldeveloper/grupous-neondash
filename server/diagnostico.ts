@@ -11,12 +11,12 @@ export const diagnosticoRouter = router({
     .query(async ({ ctx, input }) => {
       const db = getDb();
 
-      // Case 1: Admin requesting specific mentorado
+      // Case 1: Admin requesting specific mentee
       if (input?.mentoradoId) {
         if (ctx.user.role !== "admin") {
           throw new TRPCError({
             code: "FORBIDDEN",
-            message: "Apenas administradores podem visualizar outros diagnósticos.",
+            message: "Only administrators can view other diagnostics.",
           });
         }
         const result = await db
@@ -46,27 +46,27 @@ export const diagnosticoRouter = router({
   upsert: protectedProcedure
     .input(
       z.object({
-        // 1. Ponto de Partida
+        // 1. Starting Point
         atuacaoSaude: z.string().optional(),
         tempoLivre: z.string().optional(),
         jaAtuaEstetica: z.string().optional(),
         temClinica: z.string().optional(),
-        // 2. Realidade Financeira
+        // 2. Financial Reality
         rendaMensal: z.string().optional(),
         faturaEstetica: z.string().optional(),
         contas: z.string().optional(),
         custoVida: z.string().optional(),
         capacidadeInvestimento: z.string().optional(), // NEW
-        // 3. Desafios Atuais
+        // 3. Current Challenges
         incomodaRotina: z.string().optional(),
         dificuldadeCrescer: z.string().optional(),
         tentativasAnteriores: z.string().optional(), // NEW
-        // 4. Visão de Sucesso
+        // 4. Vision of Success
         objetivo6Meses: z.string().optional(),
         resultadoTransformador: z.string().optional(),
         visaoUmAno: z.string().optional(), // NEW
         porqueAgora: z.string().optional(), // NEW
-        // 5. Compromisso
+        // 5. Commitment
         horasDisponiveis: z.string().optional(), // NEW
         nivelPrioridade: z.string().optional(), // NEW
         redeApoio: z.string().optional(), // NEW
@@ -78,18 +78,18 @@ export const diagnosticoRouter = router({
       const db = getDb();
       let targetMentoradoId: number;
 
-      // 1. Determine Target Mentorado
+      // 1. Determine Target Mentee
       if (input.mentoradoId) {
         // Only admin can set mentoradoId
         if (ctx.user.role !== "admin") {
           throw new TRPCError({
             code: "FORBIDDEN",
-            message: "Apenas administradores podem editar outros diagnósticos.",
+            message: "Only administrators can edit other diagnostics.",
           });
         }
         targetMentoradoId = input.mentoradoId;
       } else {
-        // Normal user: find their own mentorado record
+        // Normal user: find their own mentee record
         const mentorado = await db.query.mentorados.findFirst({
           where: eq(mentorados.userId, ctx.user.id),
         });
@@ -97,7 +97,7 @@ export const diagnosticoRouter = router({
         if (!mentorado) {
           throw new TRPCError({
             code: "PRECONDITION_FAILED",
-            message: "Usuário não vinculado a um mentorado.",
+            message: "User is not linked to a mentee.",
           });
         }
         targetMentoradoId = mentorado.id;

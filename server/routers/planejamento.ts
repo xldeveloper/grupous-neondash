@@ -29,7 +29,7 @@ export const planejamentoRouter = router({
         if (!isOwnId && !isAdmin) {
           throw new TRPCError({
             code: "FORBIDDEN",
-            message: "Apenas admins podem visualizar planejamento de outros.",
+            message: "Only admins can view other users' plans.",
           });
         }
         targetMentoradoId = input.mentoradoId;
@@ -38,7 +38,7 @@ export const planejamentoRouter = router({
       if (!targetMentoradoId) {
         throw new TRPCError({
           code: "UNAUTHORIZED",
-          message: "Perfil de mentorado não encontrado.",
+          message: "Mentee profile not found.",
         });
       }
 
@@ -90,7 +90,7 @@ export const planejamentoRouter = router({
         if (!isOwnId && !isAdmin) {
           throw new TRPCError({
             code: "FORBIDDEN",
-            message: "Apenas admins podem visualizar planejamento de outros.",
+            message: "Only admins can view other users' plans.",
           });
         }
         targetMentoradoId = input.mentoradoId;
@@ -99,7 +99,7 @@ export const planejamentoRouter = router({
       if (!targetMentoradoId) {
         throw new TRPCError({
           code: "UNAUTHORIZED",
-          message: "Perfil de mentorado não encontrado.",
+          message: "Mentee profile not found.",
         });
       }
 
@@ -131,7 +131,7 @@ export const planejamentoRouter = router({
       if (ctx.user?.role !== "admin") {
         throw new TRPCError({
           code: "FORBIDDEN",
-          message: "Apenas admins podem criar planejamentos.",
+          message: "Only admins can create plans.",
         });
       }
 
@@ -207,7 +207,7 @@ export const planejamentoRouter = router({
       if (ctx.user?.role !== "admin") {
         throw new TRPCError({
           code: "FORBIDDEN",
-          message: "Apenas admins podem criar planejamentos.",
+          message: "Only admins can create plans.",
         });
       }
 
@@ -293,7 +293,7 @@ export const planejamentoRouter = router({
       if (!mentoradoId) {
         throw new TRPCError({
           code: "UNAUTHORIZED",
-          message: "Perfil de mentorado não encontrado.",
+          message: "Mentee profile not found.",
         });
       }
 
@@ -305,7 +305,7 @@ export const planejamentoRouter = router({
         .limit(1);
 
       if (!plan) {
-        throw new TRPCError({ code: "NOT_FOUND", message: "Planejamento não encontrado." });
+        throw new TRPCError({ code: "NOT_FOUND", message: "Plan not found." });
       }
 
       const isOwner = plan.mentoradoId === mentoradoId;
@@ -377,7 +377,7 @@ export const planejamentoRouter = router({
       if (!mentoradoId) {
         throw new TRPCError({
           code: "UNAUTHORIZED",
-          message: "Perfil de mentorado não encontrado.",
+          message: "Mentee profile not found.",
         });
       }
 
@@ -389,7 +389,7 @@ export const planejamentoRouter = router({
         .limit(1);
 
       if (!plan) {
-        throw new TRPCError({ code: "NOT_FOUND", message: "Planejamento não encontrado." });
+        throw new TRPCError({ code: "NOT_FOUND", message: "Plan not found." });
       }
 
       const isOwner = plan.mentoradoId === mentoradoId;
@@ -463,7 +463,7 @@ export const planejamentoRouter = router({
         .limit(1);
 
       if (!plan) {
-        throw new TRPCError({ code: "NOT_FOUND", message: "Planejamento não encontrado." });
+        throw new TRPCError({ code: "NOT_FOUND", message: "Plan not found." });
       }
 
       const isOwner = plan.mentoradoId === mentoradoId;
@@ -489,7 +489,7 @@ export const planejamentoRouter = router({
       if (ctx.user?.role !== "admin") {
         throw new TRPCError({
           code: "FORBIDDEN",
-          message: "Apenas admins podem deletar planejamentos.",
+          message: "Only admins can delete plans.",
         });
       }
 

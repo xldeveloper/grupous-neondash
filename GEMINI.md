@@ -9,7 +9,7 @@
 | **Runtime**      | **Bun** (Package Manager + Runtime + Server Bundler)                                  |
 | **Routing**      | wouter (SPA)                                                                          |
 | **Auth**         | **Clerk** (JWT-based, replaces Manus OAuth)                                           |
-| **Purpose**      | Track mentorados (mentees) performance metrics, faturamento, and mentor feedback      |
+| **Purpose**      | Track mentee performance metrics, revenue, and mentor feedback                        |
 | **Architecture** | Monorepo: `client/` (React SPA) + `server/` (Express + tRPC) + `shared/`              |
 
 ---
@@ -17,10 +17,10 @@
 ## Package Manager
 
 > [!CAUTION]
-> Este projeto **usa `bun`** como package manager, runtime e bundler do servidor.
+> This project **uses `bun`** as the package manager, runtime, and server bundler.
 
-- ✅ **Sempre use**: `bun install`, `bun run`, `bunx`
-- ❌ **Nunca use**: `npm`, `yarn`, `pnpm`
+- ALWAYS use: `bun install`, `bun run`, `bunx`
+- NEVER use: `npm`, `yarn`, `pnpm`
 
 ---
 
@@ -276,62 +276,62 @@ Before creating a PR:
 
 ## MCP Activation Protocol (MANDATORY)
 
-> **Regra**: MCPs devem ser usados AUTOMATICAMENTE quando as condições abaixo forem satisfeitas.
+> **Rule**: MCPs MUST be used AUTOMATICALLY when the conditions below are met.
 
-### Sequential Thinking - Raciocínio Estruturado
+### Sequential Thinking - Structured Reasoning
 
-| Trigger                                        | Ação                                          |
-| ---------------------------------------------- | --------------------------------------------- |
-| Início de tarefa L4+ (complexidade média-alta) | `sequentialthinking` para quebrar em passos   |
-| Após qualquer erro de build/deploy/runtime     | `sequentialthinking` para analisar causa raiz |
-| A cada 5 passos de implementação               | `sequentialthinking` para verificar progresso |
-| Múltiplas abordagens possíveis                 | `sequentialthinking` para comparar trade-offs |
-| Decisões arquiteturais                         | `sequentialthinking` antes de implementar     |
+| Trigger                                            | Action                                              |
+| -------------------------------------------------- | --------------------------------------------------- |
+| Start of L4+ task (medium-high complexity)         | `sequentialthinking` to break down into steps       |
+| After any build/deploy/runtime error               | `sequentialthinking` to analyze root cause          |
+| Every 5 implementation steps                       | `sequentialthinking` to verify progress             |
+| Multiple possible approaches                       | `sequentialthinking` to compare trade-offs          |
+| Architectural decisions                            | `sequentialthinking` before implementing            |
 
-### Context7 - Documentação Oficial
+### Context7 - Official Documentation
 
-| Trigger                                        | Ação                                         |
+| Trigger                                        | Action                                       |
 | ---------------------------------------------- | -------------------------------------------- |
-| Código com Drizzle ORM (schema, queries)       | `context7 resolve-library-id` → `query-docs` |
-| Código com tRPC (routers, procedures)          | `context7 resolve-library-id` → `query-docs` |
-| Código com TanStack Query (mutations, queries) | `context7 resolve-library-id` → `query-docs` |
-| Código com shadcn/ui (components)              | `context7 resolve-library-id` → `query-docs` |
-| Código com Clerk (auth, users, sessions)       | `context7 resolve-library-id` → `query-docs` |
-| Código com Recharts (charts, visualization)    | `context7 resolve-library-id` → `query-docs` |
-| Código com react-hook-form + zod               | `context7 resolve-library-id` → `query-docs` |
-| Qualquer API/biblioteca npm desconhecida       | `context7 resolve-library-id` → `query-docs` |
-| Configuração de Vite, Prettier, TypeScript     | `context7 resolve-library-id` → `query-docs` |
+| Code with Drizzle ORM (schema, queries)        | `context7 resolve-library-id` → `query-docs` |
+| Code with tRPC (routers, procedures)           | `context7 resolve-library-id` → `query-docs` |
+| Code with TanStack Query (mutations, queries)  | `context7 resolve-library-id` → `query-docs` |
+| Code with shadcn/ui (components)               | `context7 resolve-library-id` → `query-docs` |
+| Code with Clerk (auth, users, sessions)        | `context7 resolve-library-id` → `query-docs` |
+| Code with Recharts (charts, visualization)     | `context7 resolve-library-id` → `query-docs` |
+| Code with react-hook-form + zod               | `context7 resolve-library-id` → `query-docs` |
+| Any unknown npm API/library                    | `context7 resolve-library-id` → `query-docs` |
+| Vite, Prettier, TypeScript configuration       | `context7 resolve-library-id` → `query-docs` |
 
-### Tavily - Pesquisa Web
+### Tavily - Web Search
 
-| Trigger                                    | Ação                                                |
-| ------------------------------------------ | --------------------------------------------------- |
-| context7 não retorna informação suficiente | `tavily-search` com query específica                |
-| Erro de deploy/runtime sem solução clara   | `tavily-search` → `tavily-extract` se URL promissor |
-| Best practices ou padrões modernos (2024+) | `tavily-search` para tendências atuais              |
-| Integrações não documentadas oficialmente  | `tavily-search` → `tavily-extract` se necessário    |
+| Trigger                                          | Action                                                  |
+| ------------------------------------------------ | ------------------------------------------------------- |
+| context7 does not return sufficient information  | `tavily-search` with specific query                     |
+| Deploy/runtime error with no clear solution      | `tavily-search` → `tavily-extract` if URL is promising  |
+| Best practices or modern patterns (2024+)        | `tavily-search` for current trends                      |
+| Integrations not officially documented           | `tavily-search` → `tavily-extract` if needed            |
 
 ---
 
 ## Research Cascade Protocol
 
-Ordem obrigatória de pesquisa para problemas desconhecidos:
+Mandatory research order for unknown problems:
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│  RESEARCH CASCADE (seguir em ordem)                         │
+│  RESEARCH CASCADE (follow in order)                         │
 ├─────────────────────────────────────────────────────────────┤
 │  1. LOCAL CODEBASE                                          │
 │     └─→ grep_search, view_file, list_dir                    │
 │                                                              │
-│  2. CONTEXT7 (docs oficiais)                                │
+│  2. CONTEXT7 (official docs)                                │
 │     └─→ resolve-library-id → query-docs                     │
 │                                                              │
-│  3. TAVILY (web search) - apenas se 1 e 2 insuficientes    │
+│  3. TAVILY (web search) - only if 1 and 2 insufficient     │
 │     └─→ tavily-search → tavily-extract                      │
 │                                                              │
-│  4. SEQUENTIAL THINKING (síntese)                           │
-│     └─→ Combinar informações e definir solução              │
+│  4. SEQUENTIAL THINKING (synthesis)                         │
+│     └─→ Combine information and define solution             │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -477,10 +477,10 @@ export function FeatureCard({ ...props }) {
 When TS inference hits recursion limits:
 
 ```typescript
-// ❌ Anti-Pattern: Persistent Compilation Errors
+// Anti-Pattern: Persistent Compilation Errors
 const mutate = trpc.feature.create.useMutation();
 
-// ✅ Pattern: Explicit type annotation or early cast
+// Pattern: Explicit type annotation or early cast
 const mutate = trpc.feature.create.useMutation<typeof trpc.feature.create>();
 ```
 
@@ -489,7 +489,7 @@ const mutate = trpc.feature.create.useMutation<typeof trpc.feature.create>();
 ```typescript
 // Shared validation (can be used client + server)
 const createFeatureSchema = z.object({
-  name: z.string().min(1, "Nome é obrigatório"),
+  name: z.string().min(1, "Name is required"),
   value: z.number().nonnegative(),
 });
 
@@ -502,11 +502,11 @@ type CreateFeatureInput = z.infer<typeof createFeatureSchema>;
 
 | Variable                     | Description                                | Required |
 | ---------------------------- | ------------------------------------------ | -------- |
-| `DATABASE_URL`               | Neon PostgreSQL connection string (pooled) | ✅       |
-| `VITE_CLERK_PUBLISHABLE_KEY` | Clerk frontend key                         | ✅       |
-| `CLERK_SECRET_KEY`           | Clerk backend key                          | ✅       |
-| `JWT_SECRET`                 | Session signing key                        | ✅       |
-| `PORT`                       | Server port (default: 3000)                | ❌       |
+| `DATABASE_URL`               | Neon PostgreSQL connection string (pooled) | Yes      |
+| `VITE_CLERK_PUBLISHABLE_KEY` | Clerk frontend key                         | Yes      |
+| `CLERK_SECRET_KEY`           | Clerk backend key                          | Yes      |
+| `JWT_SECRET`                 | Session signing key                        | Yes      |
+| `PORT`                       | Server port (default: 3000)                | No       |
 
 ---
 

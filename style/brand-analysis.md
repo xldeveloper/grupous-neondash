@@ -1,68 +1,68 @@
-# Análise de Identidade Visual - Neon
+# Visual Identity Analysis - Neon
 
-## Paleta de Cores
+## Color Palette
 
-### Cores Principais (HEX)
+### Main Colors (HEX)
 
-- **Cinza Claro**: #D2D0C7 (RGB: 210, 208, 199) - Neutro elegante
-- **Azul Petróleo**: #20445B (RGB: 32, 68, 91) - Cor principal/institucional
-- **Azul Escuro**: #112031 (RGB: 17, 32, 49) - Cor de destaque/contraste
-- **Dourado**: #AC9469 (RGB: 172, 148, 105) - Cor de sofisticação/luxo
+- **Light Gray**: #D2D0C7 (RGB: 210, 208, 199) - Elegant neutral
+- **Teal Blue**: #20445B (RGB: 32, 68, 91) - Main/institutional color
+- **Dark Blue**: #112031 (RGB: 17, 32, 49) - Highlight/contrast color
+- **Gold**: #AC9469 (RGB: 172, 148, 105) - Sophistication/luxury color
 
-### Cores Pantone
+### Pantone Colors
 
-- PANTONE 2330 C (Cinza)
-- PANTONE 2168 C (Azul Petróleo)
-- PANTONE 5395 C (Azul Escuro)
-- PANTONE 4007 C (Dourado)
+- PANTONE 2330 C (Gray)
+- PANTONE 2168 C (Teal Blue)
+- PANTONE 5395 C (Dark Blue)
+- PANTONE 4007 C (Gold)
 
-## Tipografia
+## Typography
 
-### Marca Tipográfica
+### Brand Typography
 
-- **Nome**: "neon" (minúsculas)
-- **Tagline**: "MENTORIA BLACK" (maiúsculas, tracking amplo)
-- **Estilo**: Traços retos, contrastes sutis, elegante e sofisticada
+- **Name**: "neon" (lowercase)
+- **Tagline**: "MENTORIA BLACK" (uppercase, wide tracking)
+- **Style**: Straight strokes, subtle contrasts, elegant and sophisticated
 
-## Símbolo/Logo
+## Symbol/Logo
 
-- **Forma**: Letra "N" estilizada com forma fluida
-- **Cor do símbolo**: Dourado (#AC9469)
-- **Aplicação**: Pode ser usado isolado ou com tipografia
+- **Shape**: Stylized "N" letter with fluid form
+- **Symbol color**: Gold (#AC9469)
+- **Application**: Can be used standalone or with typography
 
-## Conceito Criativo
+## Creative Concept
 
-### Palavras-chave
+### Keywords
 
 - KNOWHOW
-- ELEGÂNCIA
-- SOFISTICAÇÃO
-- EXCLUSIVIDADE
-- CRESCIMENTO
-- BRILHO
-- SUCESSO
+- ELEGANCE
+- SOPHISTICATION
+- EXCLUSIVITY
+- GROWTH
+- BRILLIANCE
+- SUCCESS
 
-### Descrição
+### Description
 
-A identidade visual reflete exclusividade e elegância. A tipografia da marca, com traços retos e contrastes sutis, mantém o estilo visual da marca do grupo US.
+The visual identity reflects exclusivity and elegance. The brand typography, with straight strokes and subtle contrasts, maintains the visual style of the Grupo US brand.
 
-O destaque fica para a letra N que possui forma fluida, que se desdobra em um símbolo com forte impacto visual, que cria um link com as outras marcas do grupo, criando unidade visual.
+The highlight goes to the letter N, which has a fluid form that unfolds into a symbol with strong visual impact, creating a link with the other brands of the group and establishing visual unity.
 
-A padronagem amplia o sistema gráfico trazendo dinamismo e personalidade para a marca.
+The pattern system expands the graphic system, bringing dynamism and personality to the brand.
 
-A paleta de cores segue a identidade do Grupo US: azul profundo, dourado e tons neutros.
+The color palette follows the Grupo US identity: deep blue, gold, and neutral tones.
 
-## Estilo de Imagens
+## Image Style
 
-- Fundo azul escuro (#112031 ou similar)
-- Linhas douradas decorativas verticais
-- Fotografia com alta qualidade
-- Estilo sofisticado e profissional
-- Foco em pessoas (mentorados/profissionais)
+- Dark blue background (#112031 or similar)
+- Decorative golden vertical lines
+- High-quality photography
+- Sophisticated and professional style
+- Focus on people (mentees/professionals)
 
-## Aplicações
+## Applications
 
-- Redes sociais
-- Peças gráficas
+- Social media
+- Graphic materials
 - Website/Dashboard
-- Materiais institucionais
+- Institutional materials

@@ -32,15 +32,15 @@ import { instagramService } from "./services/instagramService";
  * Input schema for connecting Instagram
  */
 const connectInstagramSchema = z.object({
-  mentoradoId: z.number().positive("ID do mentorado deve ser positivo"),
+  mentoradoId: z.number().positive("Mentee ID must be positive"),
 });
 
 /**
  * Input schema for Instagram OAuth callback
  */
 const instagramCallbackSchema = z.object({
-  code: z.string().min(1, "Código de autorização é obrigatório"),
-  mentoradoId: z.number().positive("ID do mentorado deve ser positivo"),
+  code: z.string().min(1, "Authorization code is required"),
+  mentoradoId: z.number().positive("Mentee ID must be positive"),
 });
 
 /**
@@ -55,7 +55,7 @@ const getInstagramMetricsSchema = z.object({
  * Input schema for disconnecting Instagram
  */
 const disconnectInstagramSchema = z.object({
-  mentoradoId: z.number().positive("ID do mentorado deve ser positivo"),
+  mentoradoId: z.number().positive("Mentee ID must be positive"),
 });
 
 import { createLogger } from "./_core/logger";
@@ -140,7 +140,7 @@ export const mentoradosRouter = router({
         if (!isAdmin && !isOwnMentorado) {
           throw new TRPCError({
             code: "FORBIDDEN",
-            message: "Apenas administradores podem acessar dados de outros mentorados",
+            message: "Only administrators can access other mentees' data",
           });
         }
         targetId = input.mentoradoId;
@@ -150,7 +150,7 @@ export const mentoradosRouter = router({
       } else {
         throw new TRPCError({
           code: "FORBIDDEN",
-          message: "Perfil de mentorado não encontrado",
+          message: "Mentee profile not found",
         });
       }
 
@@ -355,7 +355,7 @@ export const mentoradosRouter = router({
       );
 
       if (Object.keys(cleanData).length === 0) {
-        throw new Error("Nenhum campo para atualizar");
+        throw new Error("No fields to update");
       }
 
       await db.update(mentorados).set(cleanData).where(eq(mentorados.id, id));
@@ -446,10 +446,10 @@ export const mentoradosRouter = router({
         )
         .where(eq(mentorados.turma, userMentorado.turma));
 
-      // Get total count of mentorados in turma
+      // Get total count of mentees in the cohort
       const totalMentorados = turmaMetrics.length;
 
-      // Filter out mentorados without metrics (null from leftJoin)
+      // Filter out mentees without metrics (null from leftJoin)
       const validMetrics = turmaMetrics.filter((m) => m.faturamento !== null);
       const mentoradosComDados = validMetrics.length;
 
@@ -463,7 +463,7 @@ export const mentoradosRouter = router({
         };
       }
 
-      // Calculate turma averages
+      // Calculate cohort averages
       const turmaAverage = {
         faturamento:
           validMetrics.reduce((acc, m) => acc + (m.faturamento || 0), 0) / mentoradosComDados,
@@ -476,7 +476,7 @@ export const mentoradosRouter = router({
         stories: validMetrics.reduce((acc, m) => acc + (m.stories || 0), 0) / mentoradosComDados,
       };
 
-      // Get user's metrics from the same query results
+      // Get the user's metrics from the same query results
       const userMetricData = validMetrics.find((m) => m.mentoradoId === userMentorado.id);
       const userMetrics = userMetricData
         ? {
@@ -548,7 +548,7 @@ export const mentoradosRouter = router({
         if (!isAdmin && !isOwnMentorado) {
           throw new TRPCError({
             code: "FORBIDDEN",
-            message: "Apenas administradores podem acessar dados de outros mentorados",
+            message: "Only administrators can access other mentees' data",
           });
         }
         mentoradoId = input.mentoradoId;
@@ -558,7 +558,7 @@ export const mentoradosRouter = router({
       } else {
         throw new TRPCError({
           code: "FORBIDDEN",
-          message: "Perfil de mentorado não encontrado",
+          message: "Mentee profile not found",
         });
       }
 
@@ -685,7 +685,7 @@ export const mentoradosRouter = router({
 
       const mentorado = mentoradoResult[0];
       if (!mentorado) {
-        throw new Error("Mentorado não encontrado");
+        throw new Error("Mentee not found");
       }
 
       // Update email
@@ -751,7 +751,7 @@ export const mentoradosRouter = router({
       if (ctx.user?.role !== "admin" && ctx.mentorado?.id !== input.mentoradoId) {
         throw new TRPCError({
           code: "FORBIDDEN",
-          message: "Você não tem permissão para conectar o Instagram deste mentorado",
+          message: "You do not have permission to connect this mentee's Instagram",
         });
       }
 
@@ -761,7 +761,7 @@ export const mentoradosRouter = router({
           throw new TRPCError({
             code: "PRECONDITION_FAILED",
             message:
-              "Instagram OAuth não está configurado. Configure INSTAGRAM_APP_ID e INSTAGRAM_APP_SECRET.",
+              "Instagram OAuth is not configured. Set up INSTAGRAM_APP_ID and INSTAGRAM_APP_SECRET.",
           });
         }
 
@@ -776,7 +776,7 @@ export const mentoradosRouter = router({
           message:
             error instanceof Error
               ? error.message
-              : "Erro ao gerar URL de autorização do Instagram",
+              : "Error generating Instagram authorization URL",
         });
       }
     }),
@@ -801,7 +801,7 @@ export const mentoradosRouter = router({
       if (ctx.user?.role !== "admin" && ctx.mentorado?.id !== input.mentoradoId) {
         throw new TRPCError({
           code: "FORBIDDEN",
-          message: "Você não tem permissão para conectar o Instagram deste mentorado",
+          message: "You do not have permission to connect this mentee's Instagram",
         });
       }
 
@@ -824,7 +824,7 @@ export const mentoradosRouter = router({
             code: "BAD_REQUEST",
             message:
               businessAccountInfo.errorMessage ??
-              "Conta do Instagram precisa ser Business ou Creator",
+              "Instagram account must be a Business or Creator account",
           });
         }
 
@@ -847,7 +847,7 @@ export const mentoradosRouter = router({
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message:
-            error instanceof Error ? error.message : "Erro ao processar callback do Instagram",
+            error instanceof Error ? error.message : "Error processing Instagram callback",
         });
       }
     }),
@@ -909,7 +909,7 @@ export const mentoradosRouter = router({
       if (ctx.user?.role !== "admin" && ctx.mentorado?.id !== input.mentoradoId) {
         throw new TRPCError({
           code: "FORBIDDEN",
-          message: "Você não tem permissão para desconectar o Instagram deste mentorado",
+          message: "You do not have permission to disconnect this mentee's Instagram",
         });
       }
 
@@ -919,7 +919,7 @@ export const mentoradosRouter = router({
       } catch (error) {
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
-          message: error instanceof Error ? error.message : "Erro ao desconectar Instagram",
+          message: error instanceof Error ? error.message : "Error disconnecting Instagram",
         });
       }
     }),

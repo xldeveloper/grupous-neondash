@@ -33,9 +33,9 @@ const PRIORITY_STYLES = {
 } as const;
 
 const PRIORITY_LABELS = {
-  alta: "Alta",
-  media: "Média",
-  baixa: "Baixa",
+  alta: "High",
+  media: "Medium",
+  baixa: "Low",
 } as const;
 
 export function TaskBoard({ mentoradoId }: { mentoradoId?: number }) {
@@ -100,7 +100,7 @@ export function TaskBoard({ mentoradoId }: { mentoradoId?: number }) {
       <div className="flex items-center justify-between">
         <h2 className="text-xl font-bold font-mono text-primary flex items-center gap-2">
           <CheckCircle2 className="w-5 h-5" />
-          TAREFAS [DBE]
+          TASKS [DBE]
         </h2>
       </div>
 
@@ -114,13 +114,13 @@ export function TaskBoard({ mentoradoId }: { mentoradoId?: number }) {
               value="todo"
               className="data-[state=active]:bg-primary/20 data-[state=active]:text-primary font-mono"
             >
-              A Fazer ({todoTasks.length})
+              To Do ({todoTasks.length})
             </TabsTrigger>
             <TabsTrigger
               value="done"
               className="data-[state=active]:bg-primary/20 data-[state=active]:text-primary font-mono"
             >
-              Concluídas ({doneTasks.length})
+              Done ({doneTasks.length})
             </TabsTrigger>
           </TabsList>
 
@@ -129,7 +129,7 @@ export function TaskBoard({ mentoradoId }: { mentoradoId?: number }) {
             <Input
               value={newTask}
               onChange={(e) => setNewTask(e.target.value)}
-              placeholder="Nova tarefa..."
+              placeholder="New task..."
               className="bg-background border-input focus:border-primary font-mono text-sm flex-1"
             />
             <Select
@@ -137,17 +137,17 @@ export function TaskBoard({ mentoradoId }: { mentoradoId?: number }) {
               onValueChange={(v) => setNewTaskPriority(v as "alta" | "media" | "baixa")}
             >
               <SelectTrigger className="w-[100px] bg-background border-input font-mono text-sm">
-                <SelectValue placeholder="Prioridade" />
+                <SelectValue placeholder="Priority" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="alta" className="font-mono text-amber-400">
-                  Alta
+                  High
                 </SelectItem>
                 <SelectItem value="media" className="font-mono text-blue-400">
-                  Média
+                  Medium
                 </SelectItem>
                 <SelectItem value="baixa" className="font-mono text-slate-400">
-                  Baixa
+                  Low
                 </SelectItem>
               </SelectContent>
             </Select>
@@ -220,7 +220,7 @@ export function TaskBoard({ mentoradoId }: { mentoradoId?: number }) {
                 ))}
                 {todoTasks.length === 0 && !noResults && (
                   <div className="text-center py-8 text-slate-500 font-mono text-sm">
-                    Nenhuma tarefa pendente
+                    No pending tasks
                   </div>
                 )}
               </div>

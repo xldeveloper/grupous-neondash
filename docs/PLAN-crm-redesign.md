@@ -13,7 +13,7 @@
 | 3 | COLUMNS are hardcoded in frontend with 6 statuses | 5/5 | `PipelineKanban.tsx` L26-63 | Need dynamic config |
 | 4 | Database uses `statusLeadEnum` with 7 values (including "perdido") | 5/5 | `drizzle/schema.ts` L52-60 | Keep enum, add config layer |
 | 5 | Current lead form has 6 fields (nome, email, telefone, empresa, origem, valorEstimado) | 5/5 | `CreateLeadDialog.tsx` | Expand to 15+ fields |
-| 6 | GPUS reference shows expanded form with temperatura, profissão, dor, desejo fields | 5/5 | Uploaded image | Match GPUS design |
+| 6 | GPUS reference shows expanded form with temperature, profession, pain, desire fields | 5/5 | Uploaded image | Match GPUS design |
 | 7 | KanbanColumn receives static props, no column editing capability | 5/5 | `KanbanColumn.tsx` L17-27 | Add edit buttons |
 
 ### Knowledge Gaps & Assumptions
@@ -96,10 +96,10 @@
 - **Action:** Expand form to match GPUS design
 - **Details:** 
   - Two-column layout for desktop
-  - Sections: Dados Básicos, Qualificação, Contexto
-  - Temperature selector with visual indicators (Frio ❄️, Morno 🌡️, Quente 🔥)
-  - Dropdown for Faturamento Mensal ranges
-  - Toggle for "Possui clínica?"
+  - Sections: Basic Data, Qualification, Context
+  - Temperature selector with visual indicators (Cold ❄️, Warm 🌡️, Hot 🔥)
+  - Dropdown for Monthly Revenue ranges
+  - Toggle for "Has a clinic?"
 
 ---
 
@@ -258,13 +258,13 @@
 - [ ] ST-005.2: Create two-column form layout
   - **File:** `client/src/components/crm/CreateLeadDialog.tsx`
   - **Validation:** Form renders in two columns on desktop
-- [ ] ST-005.3: Add Temperatura selector with visual indicators
+- [ ] ST-005.3: Add Temperature selector with visual indicators
   - **File:** `client/src/components/crm/CreateLeadDialog.tsx`
-  - **Validation:** Can select Frio/Morno/Quente with icons
-- [ ] ST-005.4: Add dropdown selects for Faturamento Mensal ranges
+  - **Validation:** Can select Cold/Warm/Hot with icons
+- [ ] ST-005.4: Add dropdown selects for Monthly Revenue ranges
   - **File:** `client/src/components/crm/CreateLeadDialog.tsx`
   - **Validation:** Dropdown shows predefined ranges
-- [ ] ST-005.5: Add toggle for "Possui clínica ou consultório próprio?"
+- [ ] ST-005.5: Add toggle for "Has a clinic or private practice?"
   - **File:** `client/src/components/crm/CreateLeadDialog.tsx`
   - **Validation:** Toggle works and submits correct value
 - [ ] ST-005.6: Style dialog to match GPUS dark theme
@@ -394,15 +394,15 @@ bun test           # Vitest unit tests (if any CRM tests exist)
 #### Phase 3 Verification:
 1. Open CreateLeadDialog
 2. Verify all new fields are present:
-   - Indicado por
-   - Profissão  
-   - Produto de Interesse
-   - Possui clínica?
-   - Anos na Estética
-   - Faturamento Mensal
-   - Dor Principal
-   - Principal Desejo
-   - Temperatura Inicial
+   - Referred By
+   - Profession
+   - Product of Interest
+   - Has a clinic?
+   - Years in Aesthetics
+   - Monthly Revenue
+   - Main Pain Point
+   - Main Desire
+   - Initial Temperature
 3. Fill and submit form
 4. Verify lead appears in Kanban
 5. Click lead card and verify detail modal shows new fields

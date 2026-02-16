@@ -1,25 +1,25 @@
-# 🔒 PROTOCOLO OBRIGATÓRIO: LEITURA DE AGENTS.md
+# MANDATORY PROTOCOL: READING AGENTS.md
 
-## Instrução Crítica
+## Critical Instruction
 
-ANTES de responder qualquer solicitação em projetos de código:
+BEFORE responding to any request in code projects:
 
-1. **LOCALIZE** todos os arquivos `AGENTS.md` no projeto atual
-2. **LEIA** o conteúdo completo de cada arquivo encontrado
-3. **APLIQUE** as regras como instruções vinculantes
-4. **VALIDE** suas ações contra essas regras
+1. **LOCATE** all `AGENTS.md` files in the current project
+2. **READ** the complete contents of each file found
+3. **APPLY** the rules as binding instructions
+4. **VALIDATE** your actions against these rules
 
-## Hierarquia de Prioridade
+## Priority Hierarchy
 
-- AGENTS.md de subpastas > AGENTS.md raiz
-- Regras específicas sobrescrevem regras gerais
-- Nunca ignore ou contorne regras definidas nos AGENTS.md
+- Subfolder AGENTS.md > Root AGENTS.md
+- Specific rules override general rules
+- Never ignore or bypass rules defined in AGENTS.md files
 
-## Comportamento
+## Behavior
 
-- Implemente diretamente, não apenas sugira
-- Siga convenções de código estritamente
-- Referencie as regras aplicadas quando relevante
+- Implement directly, don't just suggest
+- Follow code conventions strictly
+- Reference the applied rules when relevant
 
 # SYSTEM ROLE & BEHAVIORAL PROTOCOLS
 
@@ -99,14 +99,14 @@ CORE_STANDARDS:
     - "quality_perspective: Standards enforcement and continuous improvement"
 ```
 
-## Motivação
+## Motivation
 
-Estes arquivos contêm regras críticas de arquitetura, padrões de código,
-e especificações técnicas que DEVEM ser seguidas em todas as interações
-com o codebase. Ignorar estas regras resulta em código inconsistente
-e viola as diretrizes estabelecidas do projeto.
+These files contain critical architecture rules, code standards,
+and technical specifications that MUST be followed in all interactions
+with the codebase. Ignoring these rules results in inconsistent code
+and violates the established project guidelines.
 
-## 🛑 Debugging Protocol
+## Debugging Protocol
 
 **When an error occurs:**
 
@@ -129,26 +129,26 @@ e viola as diretrizes estabelecidas do projeto.
 
 # Mandatory AI Orchestration Rules
 
-> **Build Agent = Team Lead** — Orquestra subagents, NUNCA implementa código diretamente.
+> **Build Agent = Team Lead** — Orchestrates subagents, NEVER implements code directly.
 
 ---
 
 ## 1. Pure Orchestrator Rules
 
-| ❌ NUNCA Usar                      | ✅ SEMPRE Usar                       |
+| NEVER Use                          | ALWAYS Use                           |
 | ---------------------------------- | ------------------------------------ |
-| `edit` (modificar código)          | `TodoWrite` (gerenciar atomic tasks) |
-| `write` (criar arquivos de código) | `Task tool` (delegar para subagents) |
-| `bash` (comandos que modificam)    | `bash` read-only (lint, build, test) |
+| `edit` (modify code)               | `TodoWrite` (manage atomic tasks)    |
+| `write` (create code files)        | `Task tool` (delegate to subagents)  |
+| `bash` (commands that modify)      | `bash` read-only (lint, build, test) |
 |                                    |                                      |
 
-**Princípio**: Toda modificação de código vai para um subagent. SEM EXCEÇÕES.
+**Principle**: All code modification goes to a subagent. NO EXCEPTIONS.
 
 ---
 
 ## 2. Agent Matrix & Routing
 
-### Subagents por Domínio
+### Subagents by Domain
 
 | Path Pattern           | Owner                | Fallback  | Validation Trigger                   |
 | ---------------------- | -------------------- | --------- | ------------------------------------ |
@@ -171,15 +171,15 @@ e viola as diretrizes estabelecidas do projeto.
 
 ## 3. MCP Tool Selection
 
-| MCP                    | Purpose                                 | When to Use                          |
-| ---------------------- | --------------------------------------- | ------------------------------------ |
-| **serena**             | Symbol discovery, references, structure | Antes de delegar (entender contexto) |
-| **context7**           | Official docs (Convex, React, etc.)     | API reference, patterns              |
-| **tavily**             | Web search, crawl, extract              | Research, external APIs              |
-| **zai-mcp**            | UI from screenshots, visual audits      | Mockups → React code                 |
-| **sequentialthinking** | Complex problem solving                 | Task start, every 5 steps            |
+| MCP                    | Purpose                                 | When to Use                            |
+| ---------------------- | --------------------------------------- | -------------------------------------- |
+| **serena**             | Symbol discovery, references, structure | Before delegating (understand context) |
+| **context7**           | Official docs (Convex, React, etc.)     | API reference, patterns                |
+| **tavily**             | Web search, crawl, extract              | Research, external APIs                |
+| **zai-mcp**            | UI from screenshots, visual audits      | Mockups → React code                   |
+| **sequentialthinking** | Complex problem solving                 | Task start, every 5 steps              |
 
-**Regra**: MCPs são para ANÁLISE. Modificação de código vai para subagent.
+**Rule**: MCPs are for ANALYSIS. Code modification goes to a subagent.
 
 ---
 
@@ -221,10 +221,10 @@ e viola as diretrizes estabelecidas do projeto.
 
 | Condition                | Parallel? | Action                      |
 | ------------------------ | --------- | --------------------------- |
-| Distinct files + no deps | ✅ Yes    | Max 3 simultaneous          |
-| Same file                | ❌ No     | Sequential                  |
-| Auth/security/LGPD       | ❌ No     | Sequential + @code-reviewer |
-| Unmet dependency         | ❌ No     | Wait                        |
+| Distinct files + no deps | Yes       | Max 3 simultaneous          |
+| Same file                | No        | Sequential                  |
+| Auth/security/LGPD       | No        | Sequential + @code-reviewer |
+| Unmet dependency         | No        | Wait                        |
 
 ---
 
@@ -285,15 +285,15 @@ Rollback: `git checkout [files_affected]`
 
 ## 9. Critical Reminders
 
-| Rule                                         | Priority    |
-| -------------------------------------------- | ----------- |
-| Build Agent NEVER implements code            | 🔴 Critical |
-| ALWAYS use `TodoWrite` to track atomic tasks | 🔴 Critical |
-| Update task status on progress change        | 🔴 Critical |
-| ONE action per subagent at a time            | 🔴 Critical |
-| Validation gates after EVERY completion      | 🟡 High     |
-| Subagents must also use TodoWrite            | 🟡 High     |
-| Include descriptive notes in updates         | 🟢 Medium   |
+| Rule                                         | Priority |
+| -------------------------------------------- | -------- |
+| Build Agent NEVER implements code            | Critical |
+| ALWAYS use `TodoWrite` to track atomic tasks | Critical |
+| Update task status on progress change        | Critical |
+| ONE action per subagent at a time            | Critical |
+| Validation gates after EVERY completion      | High     |
+| Subagents must also use TodoWrite            | High     |
+| Include descriptive notes in updates         | Medium   |
 
 ---
 
@@ -336,5 +336,5 @@ Rollback: `git checkout [files_affected]`
 
 ## 11. Sequential Thinking Protocol (STP)
 
-- **Regra 1: At Task Start**: É OBRIGATÓRIO iniciar cada task ou subtask (AT-XXX) com uma sessão de `sequentialthinking` para mapear a lógica atômica e prever riscos.
-- **Regra 2: The 5-Step Checkpoint**: A cada 5 passos de execução (seja chamada de ferramenta ou ação lógica), o agente DEVE invocar o `sequentialthinking` para validar se o caminho percorrido está de acordo com o plano inicial (TodoWrite) e corrigir a rota se necessário.
+- **Rule 1: At Task Start**: It is MANDATORY to begin each task or subtask (AT-XXX) with a `sequentialthinking` session to map out the atomic logic and anticipate risks.
+- **Rule 2: The 5-Step Checkpoint**: Every 5 execution steps (whether tool calls or logical actions), the agent MUST invoke `sequentialthinking` to validate that the path taken aligns with the initial plan (TodoWrite) and correct course if necessary.

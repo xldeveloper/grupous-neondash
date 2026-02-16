@@ -1,4 +1,4 @@
-# Task: Redesign da Tela de Atividades
+# Task: Activities Screen Redesign
 
 ## Phase 1: Research & Setup
 - [x] AT-001: Research Components

@@ -35,9 +35,9 @@ import { trpc } from "@/lib/trpc";
 
 // Schema for template
 const templateSchema = z.object({
-  title: z.string().min(1, "Título é obrigatório"),
+  title: z.string().min(1, "Title is required"),
   type: z.enum(["whatsapp", "email", "ligacao", "reuniao", "nota"]),
-  content: z.string().min(1, "Conteúdo é obrigatório"),
+  content: z.string().min(1, "Content is required"),
 });
 
 type TemplateFormValues = z.infer<typeof templateSchema>;
@@ -72,31 +72,31 @@ export function InteractionTemplatesDialog({
 
   const createMutation = trpc.interactionTemplates.create.useMutation({
     onSuccess: () => {
-      toast.success("Template criado!");
+      toast.success("Template created!");
       trpcUtils.interactionTemplates.list.invalidate();
       setActiveTab("list");
       form.reset();
     },
-    onError: (err) => toast.error(`Erro ao criar: ${err.message}`),
+    onError: (err) => toast.error(`Error creating: ${err.message}`),
   });
 
   const updateMutation = trpc.interactionTemplates.update.useMutation({
     onSuccess: () => {
-      toast.success("Template atualizado!");
+      toast.success("Template updated!");
       trpcUtils.interactionTemplates.list.invalidate();
       setActiveTab("list");
       setEditingId(null);
       form.reset();
     },
-    onError: (err) => toast.error(`Erro ao atualizar: ${err.message}`),
+    onError: (err) => toast.error(`Error updating: ${err.message}`),
   });
 
   const deleteMutation = trpc.interactionTemplates.delete.useMutation({
     onSuccess: () => {
-      toast.success("Template excluído!");
+      toast.success("Template deleted!");
       trpcUtils.interactionTemplates.list.invalidate();
     },
-    onError: (err) => toast.error(`Erro ao excluir: ${err.message}`),
+    onError: (err) => toast.error(`Error deleting: ${err.message}`),
   });
 
   const onSubmit = (values: TemplateFormValues) => {
@@ -139,9 +139,9 @@ export function InteractionTemplatesDialog({
     >
       <DialogContent className="sm:max-w-lg h-[80vh] flex flex-col">
         <DialogHeader>
-          <DialogTitle>Templates de Interação</DialogTitle>
+          <DialogTitle>Interaction Templates</DialogTitle>
           <DialogDescription>
-            Gerencie seus templates de mensagens para uso rápido.
+            Manage your message templates for quick use.
           </DialogDescription>
         </DialogHeader>
 
@@ -153,17 +153,17 @@ export function InteractionTemplatesDialog({
           {activeTab === "list" && (
             <div className="flex justify-between items-center mb-4">
               <Button size="sm" onClick={handleCreate}>
-                <Plus className="h-4 w-4 mr-2" /> Novo Template
+                <Plus className="h-4 w-4 mr-2" /> New Template
               </Button>
             </div>
           )}
 
           <TabsContent value="list" className="flex-1 overflow-y-auto mt-0">
             {isLoading ? (
-              <div className="text-center py-8 text-muted-foreground">Carregando...</div>
+              <div className="text-center py-8 text-muted-foreground">Loading...</div>
             ) : templatesData?.templates.length === 0 ? (
               <div className="text-center py-8 text-muted-foreground">
-                Nenhum template encontrado.
+                No templates found.
               </div>
             ) : (
               <div className="space-y-3 p-1">
@@ -199,7 +199,7 @@ export function InteractionTemplatesDialog({
                             size="icon"
                             className="h-6 w-6 hover:text-destructive"
                             onClick={() => {
-                              if (confirm("Excluir template?"))
+                              if (confirm("Delete template?"))
                                 deleteMutation.mutate({ id: template.id });
                             }}
                           >
@@ -248,9 +248,9 @@ function TemplateForm({ form, onSubmit, isPending, onCancel, mode }: any) {
           name="title"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Título</FormLabel>
+              <FormLabel>Title</FormLabel>
               <FormControl>
-                <Input placeholder="Ex: Boas vindas" {...field} />
+                <Input placeholder="E.g.: Welcome" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -262,19 +262,19 @@ function TemplateForm({ form, onSubmit, isPending, onCancel, mode }: any) {
           name="type"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Canal</FormLabel>
+              <FormLabel>Channel</FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger>
-                    <SelectValue placeholder="Selecione o canal" />
+                    <SelectValue placeholder="Select channel" />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
                   <SelectItem value="whatsapp">WhatsApp</SelectItem>
                   <SelectItem value="email">Email</SelectItem>
-                  <SelectItem value="ligacao">Ligação</SelectItem>
-                  <SelectItem value="reuniao">Reunião</SelectItem>
-                  <SelectItem value="nota">Nota</SelectItem>
+                  <SelectItem value="ligacao">Phone Call</SelectItem>
+                  <SelectItem value="reuniao">Meeting</SelectItem>
+                  <SelectItem value="nota">Note</SelectItem>
                 </SelectContent>
               </Select>
               <FormMessage />
@@ -287,10 +287,10 @@ function TemplateForm({ form, onSubmit, isPending, onCancel, mode }: any) {
           name="content"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Conteúdo</FormLabel>
+              <FormLabel>Content</FormLabel>
               <FormControl>
                 <Textarea
-                  placeholder="Olá, gostaria de saber..."
+                  placeholder="Hello, I would like to know..."
                   className="min-h-[150px]"
                   {...field}
                 />
@@ -302,10 +302,10 @@ function TemplateForm({ form, onSubmit, isPending, onCancel, mode }: any) {
 
         <div className="flex justify-end gap-2 pt-4">
           <Button type="button" variant="ghost" onClick={onCancel}>
-            Cancelar
+            Cancel
           </Button>
           <Button type="submit" disabled={isPending}>
-            {mode === "create" ? "Criar Template" : "Salvar Alterações"}
+            {mode === "create" ? "Create Template" : "Save Changes"}
           </Button>
         </div>
       </form>

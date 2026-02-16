@@ -122,13 +122,13 @@ export function LeadsPage() {
               <div>
                 <h1 className="text-3xl font-bold tracking-tight">Leads</h1>
                 <p className="text-muted-foreground">
-                  Gerencie seus leads e acompanhe o funil de vendas.
+                  Manage your leads and track the sales funnel.
                 </p>
               </div>
               {isAdmin && (
                 <div className="ml-4 pl-4 border-l border-white/10">
                   <p className="text-xs text-muted-foreground font-semibold mb-2 uppercase tracking-wider">
-                    Visualização Admin
+                    Admin View
                   </p>
                   <AnimatedTooltipSelector
                     items={
@@ -163,7 +163,7 @@ export function LeadsPage() {
                 size="icon"
                 onClick={() => setColumnEditDialogOpen(true)}
                 disabled={isReadOnly}
-                title="Editar Colunas"
+                title="Edit Columns"
               >
                 <Settings className="h-4 w-4" />
               </Button>
@@ -192,11 +192,11 @@ export function LeadsPage() {
             <Alert className="mb-6 bg-amber-50 border-amber-200">
               <ShieldAlert className="h-4 w-4 text-amber-600" />
               <AlertTitle className="text-amber-800">
-                Modo de Visualização Administrativa
+                Administrative View Mode
               </AlertTitle>
               <AlertDescription className="text-amber-700">
-                Você está visualizando o CRM de um mentorado (ID: {viewMentoradoId}). Ações de
-                edição estão desabilitadas.
+                You are viewing a mentee's CRM (ID: {viewMentoradoId}). Editing actions are
+                disabled.
               </AlertDescription>
             </Alert>
           )}
@@ -205,13 +205,13 @@ export function LeadsPage() {
           <div className="grid gap-4 md:grid-cols-4 mb-6">
             <Card>
               <CardContent className="p-4 flex flex-col gap-1">
-                <span className="text-sm font-medium text-muted-foreground">Total Ativos</span>
+                <span className="text-sm font-medium text-muted-foreground">Total Active</span>
                 <span className="text-2xl font-bold">{stats?.totalAtivos || 0}</span>
               </CardContent>
             </Card>
             <Card>
               <CardContent className="p-4 flex flex-col gap-1">
-                <span className="text-sm font-medium text-muted-foreground">Valor no Pipeline</span>
+                <span className="text-sm font-medium text-muted-foreground">Pipeline Value</span>
                 <span className="text-2xl font-bold">
                   {new Intl.NumberFormat("pt-BR", {
                     style: "currency",
@@ -223,7 +223,7 @@ export function LeadsPage() {
             </Card>
             <Card>
               <CardContent className="p-4 flex flex-col gap-1">
-                <span className="text-sm font-medium text-muted-foreground">Conversão</span>
+                <span className="text-sm font-medium text-muted-foreground">Conversion</span>
                 <span className="text-2xl font-bold">
                   {(stats?.taxaConversao || 0).toFixed(1)}%
                 </span>
@@ -232,7 +232,7 @@ export function LeadsPage() {
             <Card>
               <CardContent className="p-4 flex flex-col gap-1">
                 <span className="text-sm font-medium text-muted-foreground">
-                  Tempo Médio (Dias)
+                  Avg. Time (Days)
                 </span>
                 <span className="text-2xl font-bold">{stats?.tempoMedioFechamento || 0}</span>
               </CardContent>

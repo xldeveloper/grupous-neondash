@@ -76,15 +76,15 @@ export function LeadChatWindow({ leadId, phone, leadName }: LeadChatWindowProps)
           <AlertCircle className="w-8 h-8 text-muted-foreground" />
         </div>
         <div className="text-center">
-          <h4 className="font-medium">WhatsApp não conectado</h4>
+          <h4 className="font-medium">WhatsApp not connected</h4>
           <p className="text-sm text-muted-foreground mt-1">
-            Conecte seu WhatsApp nas configurações para enviar mensagens
+            Connect your WhatsApp in settings to send messages
           </p>
         </div>
         <Button asChild variant="outline">
           <Link href="/configuracoes">
             <Settings className="w-4 h-4 mr-2" />
-            Ir para Configurações
+            Go to Settings
           </Link>
         </Button>
       </div>
@@ -99,9 +99,9 @@ export function LeadChatWindow({ leadId, phone, leadName }: LeadChatWindowProps)
           <MessageCircle className="w-8 h-8 text-muted-foreground" />
         </div>
         <div className="text-center">
-          <h4 className="font-medium">Sem telefone cadastrado</h4>
+          <h4 className="font-medium">No phone number registered</h4>
           <p className="text-sm text-muted-foreground mt-1">
-            Este lead não possui número de telefone cadastrado
+            This lead does not have a phone number registered
           </p>
         </div>
       </div>
@@ -159,9 +159,9 @@ export function LeadChatWindow({ leadId, phone, leadName }: LeadChatWindowProps)
                 <div className="p-4 rounded-full bg-slate-800 mb-3">
                   <MessageCircle className="w-8 h-8 text-slate-500" />
                 </div>
-                <p className="text-sm text-slate-400 font-medium">Nenhuma mensagem ainda</p>
+                <p className="text-sm text-slate-400 font-medium">No messages yet</p>
                 <p className="text-xs text-slate-500 mt-1">
-                  Envie a primeira mensagem para este lead
+                  Send the first message to this lead
                 </p>
               </motion.div>
             )}
@@ -177,7 +177,7 @@ export function LeadChatWindow({ leadId, phone, leadName }: LeadChatWindowProps)
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="Digite sua mensagem..."
+            placeholder="Type your message..."
             className="min-h-[44px] max-h-32 resize-none bg-slate-700/50 border-slate-600/50 text-slate-100 placeholder:text-slate-400 focus:ring-emerald-500/50 focus:border-emerald-500/50"
             rows={1}
           />
@@ -196,7 +196,7 @@ export function LeadChatWindow({ leadId, phone, leadName }: LeadChatWindowProps)
         </div>
         {sendMutation.isError && (
           <p className="text-xs text-red-400 mt-2 font-medium">
-            Erro ao enviar mensagem. Tente novamente.
+            Error sending message. Please try again.
           </p>
         )}
       </div>

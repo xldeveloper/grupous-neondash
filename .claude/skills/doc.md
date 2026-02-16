@@ -1,26 +1,26 @@
 # Antigravity Skills
 
-> **Hướng dẫn tạo và sử dụng Skills trong Antigravity Kit**
+> **Guide to creating and using Skills in Antigravity Kit**
 
 ---
 
-## 📋 Giới thiệu
+## Introduction
 
-Mặc dù các mô hình cơ bản của Antigravity (như Gemini) là những mô hình đa năng mạnh mẽ, nhưng chúng không biết ngữ cảnh dự án cụ thể hoặc các tiêu chuẩn của nhóm bạn. Việc tải từng quy tắc hoặc công cụ vào cửa sổ ngữ cảnh của tác nhân sẽ dẫn đến tình trạng "phình to công cụ", chi phí cao hơn, độ trễ và sự nhầm lẫn.
+Although the base models of Antigravity (such as Gemini) are powerful general-purpose models, they do not know the specific context of your project or your team's standards. Loading every rule or tool into the agent's context window would lead to "tool bloat", higher costs, latency, and confusion.
 
-**Antigravity Skills** giải quyết vấn đề này thông qua tính năng **Progressive Disclosure**. Kỹ năng là một gói kiến thức chuyên biệt, ở trạng thái không hoạt động cho đến khi cần. Thông tin này chỉ được tải vào ngữ cảnh của tác nhân khi yêu cầu cụ thể của bạn khớp với nội dung mô tả của kỹ năng.
+**Antigravity Skills** solve this problem through **Progressive Disclosure**. A skill is a specialized knowledge package that remains inactive until needed. This information is only loaded into the agent's context when your specific request matches the skill's description.
 
 ---
 
-## 📁 Cấu trúc và Phạm vi
+## Structure and Scope
 
-Kỹ năng là các gói dựa trên thư mục. Bạn có thể xác định các phạm vi này tuỳ thuộc vào nhu cầu:
+Skills are directory-based packages. You can define these scopes depending on your needs:
 
-| Phạm vi       | Đường dẫn                         | Mô tả                         |
-| ------------- | --------------------------------- | ----------------------------- |
-| **Workspace** | `<workspace-root>/.agent/skills/` | Chỉ có trong một dự án cụ thể |
+| Scope         | Path                              | Description                        |
+| ------------- | --------------------------------- | ---------------------------------- |
+| **Workspace** | `<workspace-root>/.agent/skills/` | Only within a specific project     |
 
-### Cấu trúc thư mục kỹ năng
+### Skill Directory Structure
 
 ```
 my-skill/
@@ -32,17 +32,17 @@ my-skill/
 
 ---
 
-## 🔍 Ví dụ 1: Code Review Skill
+## Example 1: Code Review Skill
 
-Đây là một kỹ năng chỉ có hướng dẫn (instruction-only), chỉ cần tạo file `SKILL.md`.
+This is an instruction-only skill; you just need to create the `SKILL.md` file.
 
-### Bước 1: Tạo thư mục
+### Step 1: Create the directory
 
 ```bash
 mkdir -p ~/.gemini/antigravity/skills/code-review
 ```
 
-### Bước 2: Tạo SKILL.md
+### Step 2: Create SKILL.md
 
 ```markdown
 ---
@@ -68,11 +68,11 @@ When reviewing code, follow these steps:
 - Suggest alternatives when possible
 ```
 
-> **Lưu ý**: File `SKILL.md` chứa siêu dữ liệu (name, description) ở trên cùng, sau đó là các chỉ dẫn. Agent sẽ chỉ đọc siêu dữ liệu và chỉ tải hướng dẫn khi cần.
+> **Note**: The `SKILL.md` file contains metadata (name, description) at the top, followed by instructions. The agent will only read the metadata and will only load the instructions when needed.
 
-### Dùng thử
+### Try It Out
 
-Tạo file `demo_bad_code.py`:
+Create the file `demo_bad_code.py`:
 
 ```python
 import time
@@ -108,21 +108,21 @@ if __name__ == "__main__":
 
 **Prompt**: `review the @demo_bad_code.py file`
 
-Agent sẽ tự động xác định kỹ năng `code-review`, tải thông tin và thực hiện theo hướng dẫn.
+The agent will automatically identify the `code-review` skill, load the information, and follow the instructions.
 
 ---
 
-## 📄 Ví dụ 2: License Header Skill
+## Example 2: License Header Skill
 
-Kỹ năng này sử dụng file tham chiếu (reference file) trong thư mục `resources/`.
+This skill uses a reference file in the `resources/` directory.
 
-### Bước 1: Tạo thư mục
+### Step 1: Create the directory
 
 ```bash
 mkdir -p .agent/skills/license-header-adder/resources
 ```
 
-### Bước 2: Tạo file template
+### Step 2: Create the template file
 
 **`.agent/skills/license-header-adder/resources/HEADER.txt`**:
 
@@ -134,7 +134,7 @@ mkdir -p .agent/skills/license-header-adder/resources
  */
 ```
 
-### Bước 3: Tạo SKILL.md
+### Step 3: Create SKILL.md
 
 **`.agent/skills/license-header-adder/SKILL.md`**:
 
@@ -157,21 +157,21 @@ This skill ensures that all new source files have the correct copyright header.
    - For Python/Shell, convert to `#` comments.
 ```
 
-### Dùng thử
+### Try It Out
 
 **Prompt**: `Create a new Python script named data_processor.py that prints 'Hello World'.`
 
-Agent sẽ đọc template, chuyển đổi comments theo kiểu Python và tự động thêm vào đầu file.
+The agent will read the template, convert the comments to Python style, and automatically prepend it to the file.
 
 ---
 
-## 🎯 Kết luận
+## Conclusion
 
-Bằng cách tạo Skills, bạn đã biến mô hình AI đa năng thành một chuyên gia cho dự án của mình:
+By creating Skills, you have turned a general-purpose AI model into a specialist for your project:
 
-- ✅ Hệ thống hoá các best practices
-- ✅ Tuân theo quy tắc đánh giá code
-- ✅ Tự động thêm license headers
-- ✅ Agent tự động biết cách làm việc với nhóm của bạn
+- Systematized best practices
+- Followed code review rules
+- Automatically added license headers
+- The agent automatically knows how to work with your team
 
-Thay vì liên tục nhắc AI "nhớ thêm license" hoặc "sửa format commit", giờ đây Agent sẽ tự động thực hiện!
+Instead of constantly reminding the AI to "remember to add the license" or "fix the commit format", the agent will now do it automatically!

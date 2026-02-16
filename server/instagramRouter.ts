@@ -35,7 +35,7 @@ export const instagramRouter = router({
       if (!instagramService.isInstagramConfigured()) {
         throw new TRPCError({
           code: "PRECONDITION_FAILED",
-          message: "Instagram OAuth não está configurado. Contate o administrador.",
+          message: "Instagram OAuth is not configured. Contact the administrator.",
         });
       }
 
@@ -80,7 +80,7 @@ export const instagramRouter = router({
     if (!mentoradoId) {
       throw new TRPCError({
         code: "NOT_FOUND",
-        message: "Nenhum perfil de mentorado encontrado para este usuário.",
+        message: "No mentee profile found for this user.",
       });
     }
 
@@ -93,7 +93,7 @@ export const instagramRouter = router({
       if (!success) {
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
-          message: "Erro ao remover dados do Instagram. Tente novamente.",
+          message: "Error removing Instagram data. Please try again.",
         });
       }
 
@@ -101,7 +101,7 @@ export const instagramRouter = router({
 
       return {
         success: true,
-        message: "Todos os dados do Instagram foram removidos com sucesso.",
+        message: "All Instagram data has been successfully removed.",
       };
     } catch (error) {
       logger.error("delete_data_failed", error, { mentoradoId });
@@ -112,7 +112,7 @@ export const instagramRouter = router({
 
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
-        message: "Erro ao processar solicitação de exclusão de dados.",
+        message: "Error processing data deletion request.",
       });
     }
   }),
@@ -168,7 +168,7 @@ export const instagramRouter = router({
         logger.error("save_token_failed", error, { mentoradoId: input.mentoradoId });
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
-          message: error instanceof Error ? error.message : "Erro ao salvar token do Instagram.",
+          message: error instanceof Error ? error.message : "Error saving Instagram token.",
         });
       }
     }),
@@ -183,7 +183,7 @@ export const instagramRouter = router({
 
       return {
         success,
-        message: success ? "Instagram desconectado com sucesso." : "Erro ao desconectar Instagram.",
+        message: success ? "Instagram disconnected successfully." : "Error disconnecting Instagram.",
       };
     }),
 
@@ -208,7 +208,7 @@ export const instagramRouter = router({
       if (!result.success) {
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
-          message: result.errorMessage ?? "Erro ao sincronizar métricas.",
+          message: result.errorMessage ?? "Error syncing metrics.",
         });
       }
 
@@ -230,17 +230,17 @@ export const instagramRouter = router({
       // Format with month labels
       const months = [
         "Jan",
-        "Fev",
+        "Feb",
         "Mar",
-        "Abr",
-        "Mai",
+        "Apr",
+        "May",
         "Jun",
         "Jul",
-        "Ago",
-        "Set",
-        "Out",
+        "Aug",
+        "Sep",
+        "Oct",
         "Nov",
-        "Dez",
+        "Dec",
       ];
 
       return history.map((h) => ({

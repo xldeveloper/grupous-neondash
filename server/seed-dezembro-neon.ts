@@ -1,19 +1,19 @@
-/* biome-ignore-all lint/suspicious/noConsole: Script CLI de seed - console é intencional */
+/* biome-ignore-all lint/suspicious/noConsole: Seed CLI script - console is intentional */
 /**
- * Seed de Dados de Dezembro 2025 para Neon PostgreSQL
+ * December 2025 Data Seed for Neon PostgreSQL
  *
- * Este script:
- * 1. Mapeia nomes similares entre seed e banco existente
- * 2. Insere métricas de dezembro 2025 para mentorados existentes
- * 3. Cria novos mentorados para os que ainda não estão cadastrados
- * 4. Insere feedbacks do mentor
+ * This script:
+ * 1. Maps similar names between seed and existing database
+ * 2. Inserts December 2025 metrics for existing mentees
+ * 3. Creates new mentees for those not yet registered
+ * 4. Inserts mentor feedbacks
  */
 
 import { eq, ilike } from "drizzle-orm";
 import { feedbacks, mentorados, metricasMensais } from "../drizzle/schema";
 import { getDb } from "./db";
 
-// Dados de dezembro 2025 do arquivo original
+// December 2025 data from the original file
 const dadosDezembro = {
   neon_estrutura: {
     "Ana Scaravate": {
@@ -25,10 +25,10 @@ const dadosDezembro = {
       procedimentos: 18,
       feedback: {
         analiseMes:
-          "Atingiu a meta de faturamento com consistência. Boa presença nas redes sociais.",
-        focoProximoMes: "Aumentar a conversão de leads em procedimentos",
+          "Hit the revenue goal consistently. Good social media presence.",
+        focoProximoMes: "Increase lead-to-procedure conversion",
         sugestaoMentor:
-          "Implemente a campanha de avaliação gratuita para atrair novos clientes e fortalecer o relacionamento com leads existentes.",
+          "Implement a free evaluation campaign to attract new clients and strengthen relationships with existing leads.",
       },
     },
     "Tamara Martins": {
@@ -39,10 +39,10 @@ const dadosDezembro = {
       leads: 15,
       procedimentos: 12,
       feedback: {
-        analiseMes: "Faturamento abaixo da meta. Necessita aumentar a produção de conteúdo.",
-        focoProximoMes: "Aumentar presença digital e captação de leads",
+        analiseMes: "Revenue below target. Needs to increase content production.",
+        focoProximoMes: "Increase digital presence and lead generation",
         sugestaoMentor:
-          "Foque na prospecção ativa e crie uma rotina de postagens mais frequente para aumentar a visibilidade.",
+          "Focus on active prospecting and create a more frequent posting routine to increase visibility.",
       },
     },
     "Élica Pires": {
@@ -53,10 +53,10 @@ const dadosDezembro = {
       leads: 30,
       procedimentos: 22,
       feedback: {
-        analiseMes: "Excelente performance! Superou a meta e manteve alta produtividade.",
-        focoProximoMes: "Manter o ritmo e explorar upsell",
+        analiseMes: "Excellent performance! Exceeded the goal and maintained high productivity.",
+        focoProximoMes: "Maintain the pace and explore upselling",
         sugestaoMentor:
-          "Continue com a estratégia atual e implemente pacotes premium para aumentar o ticket médio.",
+          "Continue with the current strategy and implement premium packages to increase average ticket.",
       },
     },
     "Ana Cláudia": {
@@ -67,10 +67,10 @@ const dadosDezembro = {
       leads: 20,
       procedimentos: 15,
       feedback: {
-        analiseMes: "Próximo da meta. Boa consistência operacional.",
-        focoProximoMes: "Aumentar ticket médio dos procedimentos",
+        analiseMes: "Close to the goal. Good operational consistency.",
+        focoProximoMes: "Increase average procedure ticket",
         sugestaoMentor:
-          "Trabalhe a venda de protocolos combinados e produtos complementares para aumentar o valor por atendimento.",
+          "Work on selling combined protocols and complementary products to increase value per visit.",
       },
     },
     "Iza Nunes": {
@@ -81,10 +81,10 @@ const dadosDezembro = {
       leads: 22,
       procedimentos: 16,
       feedback: {
-        analiseMes: "Atingiu a meta com margem de lucro saudável.",
-        focoProximoMes: "Escalar atendimentos sem perder qualidade",
+        analiseMes: "Hit the goal with a healthy profit margin.",
+        focoProximoMes: "Scale appointments without losing quality",
         sugestaoMentor:
-          "Otimize sua agenda e considere treinar uma assistente para aumentar a capacidade de atendimento.",
+          "Optimize your schedule and consider training an assistant to increase service capacity.",
       },
     },
   },
@@ -97,10 +97,10 @@ const dadosDezembro = {
       leads: 80,
       procedimentos: 60,
       feedback: {
-        analiseMes: "Performance excepcional! Liderança em faturamento e engajamento.",
-        focoProximoMes: "Consolidar processos para crescimento sustentável",
+        analiseMes: "Exceptional performance! Leadership in revenue and engagement.",
+        focoProximoMes: "Consolidate processes for sustainable growth",
         sugestaoMentor:
-          "Documente seus processos de vendas e atendimento para replicar o sucesso de forma escalável.",
+          "Document your sales and service processes to replicate success in a scalable way.",
       },
     },
     "Thaís Olímpia": {
@@ -111,10 +111,10 @@ const dadosDezembro = {
       leads: 100,
       procedimentos: 75,
       feedback: {
-        analiseMes: "Melhor performance do grupo! Excelência em todos os indicadores.",
-        focoProximoMes: "Manter liderança e explorar novos nichos",
+        analiseMes: "Best performance in the group! Excellence across all metrics.",
+        focoProximoMes: "Maintain leadership and explore new niches",
         sugestaoMentor:
-          "Explore parcerias estratégicas e considere lançar um produto digital para diversificar receita.",
+          "Explore strategic partnerships and consider launching a digital product to diversify revenue.",
       },
     },
     "Kleber Oliveira": {
@@ -125,10 +125,10 @@ const dadosDezembro = {
       leads: 70,
       procedimentos: 55,
       feedback: {
-        analiseMes: "Ótimo faturamento com boa margem de lucro.",
-        focoProximoMes: "Aumentar frequência de conteúdo",
+        analiseMes: "Great revenue with good profit margin.",
+        focoProximoMes: "Increase content frequency",
         sugestaoMentor:
-          "Aumente a produção de stories para 120+/mês para manter o engajamento e atrair novos leads.",
+          "Increase story production to 120+/month to maintain engagement and attract new leads.",
       },
     },
     "Jéssica Borges": {
@@ -139,10 +139,10 @@ const dadosDezembro = {
       leads: 35,
       procedimentos: 25,
       feedback: {
-        analiseMes: "Faturamento abaixo do potencial da turma Escala.",
-        focoProximoMes: "Intensificar prospecção e aumentar ticket médio",
+        analiseMes: "Revenue below the Escala cohort potential.",
+        focoProximoMes: "Intensify prospecting and increase average ticket",
         sugestaoMentor:
-          "Implemente a estratégia de geração de demanda com campanhas de avaliação e foque em procedimentos de maior valor.",
+          "Implement a demand generation strategy with evaluation campaigns and focus on higher-value procedures.",
       },
     },
     "Carmen Lúcia": {
@@ -153,10 +153,10 @@ const dadosDezembro = {
       leads: 75,
       procedimentos: 58,
       feedback: {
-        analiseMes: "Excelente performance com equilíbrio entre marketing e operação.",
-        focoProximoMes: "Escalar sem perder qualidade",
+        analiseMes: "Excellent performance with balance between marketing and operations.",
+        focoProximoMes: "Scale without losing quality",
         sugestaoMentor:
-          "Estruture uma equipe de apoio para aumentar a capacidade de atendimento mantendo o padrão de qualidade.",
+          "Build a support team to increase service capacity while maintaining quality standards.",
       },
     },
     "Alina Souza": {
@@ -167,10 +167,10 @@ const dadosDezembro = {
       leads: 18,
       procedimentos: 12,
       feedback: {
-        analiseMes: "Faturamento muito abaixo do esperado para a turma Escala.",
-        focoProximoMes: "Revisar estratégia completa de marketing e vendas",
+        analiseMes: "Revenue well below expectations for the Escala cohort.",
+        focoProximoMes: "Review full marketing and sales strategy",
         sugestaoMentor:
-          "Priorize a vitrine ativa com posts diários e stories constantes. Considere mentoria individual para ajuste de rota.",
+          "Prioritize active showcase with daily posts and consistent stories. Consider individual mentoring for course correction.",
       },
     },
     "Dra. Milena": {
@@ -181,10 +181,10 @@ const dadosDezembro = {
       leads: 55,
       procedimentos: 40,
       feedback: {
-        analiseMes: "Boa performance com espaço para crescimento.",
-        focoProximoMes: "Aumentar conversão de leads",
+        analiseMes: "Good performance with room for growth.",
+        focoProximoMes: "Increase lead conversion",
         sugestaoMentor:
-          "Implemente um funil de vendas estruturado com follow-up automatizado para melhorar a taxa de conversão.",
+          "Implement a structured sales funnel with automated follow-up to improve conversion rate.",
       },
     },
     "Dra. Bruna": {
@@ -195,10 +195,10 @@ const dadosDezembro = {
       leads: 45,
       procedimentos: 32,
       feedback: {
-        analiseMes: "Performance sólida com margem para otimização.",
-        focoProximoMes: "Aumentar ticket médio e frequência de atendimentos",
+        analiseMes: "Solid performance with room for optimization.",
+        focoProximoMes: "Increase average ticket and appointment frequency",
         sugestaoMentor:
-          "Trabalhe pacotes de tratamento e fidelização de clientes para aumentar o LTV (Lifetime Value).",
+          "Work on treatment packages and client retention to increase LTV (Lifetime Value).",
       },
     },
     "Dra. Jéssica": {
@@ -209,27 +209,27 @@ const dadosDezembro = {
       leads: 40,
       procedimentos: 28,
       feedback: {
-        analiseMes: "Performance mediana com potencial de crescimento.",
-        focoProximoMes: "Aumentar presença digital e otimizar conversão",
+        analiseMes: "Average performance with growth potential.",
+        focoProximoMes: "Increase digital presence and optimize conversion",
         sugestaoMentor:
-          "Crie uma estratégia de conteúdo educativo para posicionar-se como autoridade e atrair leads qualificados.",
+          "Create an educational content strategy to position yourself as an authority and attract qualified leads.",
       },
     },
   },
 };
 
-// Mapeamento de nomes (seed -> banco)
-// Baseado em similaridade de nomes entre o seed e os mentorados atuais
+// Name mapping (seed -> database)
+// Based on name similarity between seed and current mentees
 const nameMapping: Record<string, string> = {
   "Ana Scaravate": "Ana Mara Santos", // Similar (Ana)
   "Tamara Martins": "Enfa Tamara Dilma", // Similar (Tamara)
   "Élica Pires": "Elica Pereira", // Similar (Elica/Élica)
   "Iza Nunes": "Iza Rafaela Bezerra Pionório Freires", // Similar (Iza)
-  // Os demais serão criados como novos mentorados
+  // The remaining will be created as new mentees
 };
 
 async function findMentoradoByName(db: ReturnType<typeof getDb>, seedName: string) {
-  // Primeiro tenta mapeamento direto
+  // First try direct mapping
   const mappedName = nameMapping[seedName];
   if (mappedName) {
     const [found] = await db
@@ -240,7 +240,7 @@ async function findMentoradoByName(db: ReturnType<typeof getDb>, seedName: strin
     if (found) return found;
   }
 
-  // Tenta busca por similaridade
+  // Try similarity search
   const nameParts = seedName.split(" ");
   for (const part of nameParts) {
     if (part.length < 3) continue;
@@ -373,10 +373,10 @@ export async function seedDezembroData() {
     errors: [] as string[],
   };
 
-  console.log("🌱 Iniciando seed de dados de dezembro 2025...\n");
+  console.log("🌱 Starting December 2025 data seed...\n");
 
-  // Process Neon Estrutura (meta: 16000)
-  console.log("📊 Processando Neon Estrutura...");
+  // Process Neon Estrutura (goal: 16000)
+  console.log("📊 Processing Neon Estrutura...");
   for (const [nome, dados] of Object.entries(dadosDezembro.neon_estrutura)) {
     try {
       const existingMentorado = await findMentoradoByName(db, nome);
@@ -385,26 +385,26 @@ export async function seedDezembroData() {
       if (!existingMentorado) {
         mentoradoId = await createMentorado(db, nome, 16000);
         results.created.push(nome);
-        console.log(`  ✨ Criado: ${nome} (ID: ${mentoradoId})`);
+        console.log(`  ✨ Created: ${nome} (ID: ${mentoradoId})`);
       } else {
         mentoradoId = existingMentorado.id;
         results.mapped.push(`${nome} → ${existingMentorado.nomeCompleto}`);
         console.log(
-          `  🔗 Mapeado: ${nome} → ${existingMentorado.nomeCompleto} (ID: ${mentoradoId})`
+          `  🔗 Mapped: ${nome} → ${existingMentorado.nomeCompleto} (ID: ${mentoradoId})`
         );
       }
 
       await insertMetricas(db, mentoradoId, dados);
       await insertFeedback(db, mentoradoId, dados.feedback);
-      console.log(`  ✅ Métricas e feedback inseridos para ${nome}`);
+      console.log(`  ✅ Metrics and feedback inserted for ${nome}`);
     } catch (error) {
       results.errors.push(`${nome}: ${error}`);
-      console.error(`  ❌ Erro ao processar ${nome}:`, error);
+      console.error(`  ❌ Error processing ${nome}:`, error);
     }
   }
 
-  // Process Neon Escala (meta: 50000)
-  console.log("\n📊 Processando Neon Escala...");
+  // Process Neon Escala (goal: 50000)
+  console.log("\n📊 Processing Neon Escala...");
   for (const [nome, dados] of Object.entries(dadosDezembro.neon_escala)) {
     try {
       const existingMentorado = await findMentoradoByName(db, nome);
@@ -413,37 +413,37 @@ export async function seedDezembroData() {
       if (!existingMentorado) {
         mentoradoId = await createMentorado(db, nome, 50000);
         results.created.push(nome);
-        console.log(`  ✨ Criado: ${nome} (ID: ${mentoradoId})`);
+        console.log(`  ✨ Created: ${nome} (ID: ${mentoradoId})`);
       } else {
         mentoradoId = existingMentorado.id;
         results.mapped.push(`${nome} → ${existingMentorado.nomeCompleto}`);
         console.log(
-          `  🔗 Mapeado: ${nome} → ${existingMentorado.nomeCompleto} (ID: ${mentoradoId})`
+          `  🔗 Mapped: ${nome} → ${existingMentorado.nomeCompleto} (ID: ${mentoradoId})`
         );
       }
 
       await insertMetricas(db, mentoradoId, dados);
       await insertFeedback(db, mentoradoId, dados.feedback);
-      console.log(`  ✅ Métricas e feedback inseridos para ${nome}`);
+      console.log(`  ✅ Metrics and feedback inserted for ${nome}`);
     } catch (error) {
       results.errors.push(`${nome}: ${error}`);
-      console.error(`  ❌ Erro ao processar ${nome}:`, error);
+      console.error(`  ❌ Error processing ${nome}:`, error);
     }
   }
 
   console.log(`\n${"=".repeat(60)}`);
-  console.log("📋 RESUMO DA MIGRAÇÃO");
+  console.log("📋 MIGRATION SUMMARY");
   console.log("=".repeat(60));
-  console.log(`✅ Mentorados mapeados: ${results.mapped.length}`);
+  console.log(`✅ Mentees mapped: ${results.mapped.length}`);
   for (const m of results.mapped) {
     console.log(`   - ${m}`);
   }
-  console.log(`\n✨ Mentorados criados: ${results.created.length}`);
+  console.log(`\n✨ Mentees created: ${results.created.length}`);
   for (const m of results.created) {
     console.log(`   - ${m}`);
   }
   if (results.errors.length > 0) {
-    console.log(`\n❌ Erros: ${results.errors.length}`);
+    console.log(`\n❌ Errors: ${results.errors.length}`);
     for (const e of results.errors) {
       console.log(`   - ${e}`);
     }
@@ -457,11 +457,11 @@ export async function seedDezembroData() {
 if (process.argv[1]?.includes("seed-dezembro-neon")) {
   seedDezembroData()
     .then((results) => {
-      console.log("\n🎉 Migração concluída!");
+      console.log("\n🎉 Migration complete!");
       process.exit(0);
     })
     .catch((error) => {
-      console.error("💥 Erro fatal:", error);
+      console.error("💥 Fatal error:", error);
       process.exit(1);
     });
 }

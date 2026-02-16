@@ -1,85 +1,85 @@
-# Detecção Inteligente de Cabeçalhos em Planilhas
+# Intelligent Header Detection in Spreadsheets
 
-A detecção precisa da linha de cabeçalho é o primeiro passo crítico na importação de dados. Planilhas do mundo real raramente seguem o formato ideal "primeira linha = cabeçalho".
+Accurate header row detection is the first critical step in data import. Real-world spreadsheets rarely follow the ideal "first row = header" format.
 
-## Estratégias de Detecção
+## Detection Strategies
 
-### 1. Análise Semântica
+### 1. Semantic Analysis
 
-Não dependa apenas de correspondência exata. Use análise semântica para identificar candidatos a cabeçalho.
+Do not rely solely on exact matching. Use semantic analysis to identify header candidates.
 
-#### Normalização
+#### Normalization
 
-Antes de comparar, normalize o texto:
+Before comparing, normalize the text:
 
-- **Remove Acentos**: `comercial` == `comércial`
-- **Lowercase**: `NOME` == `nome`
-- **Trim**: `Nome` == `Nome`
-- **Caracteres Especiais**: `E-mail` == `Email`
+- **Remove Accents**: `comercial` == `comercial`
+- **Lowercase**: `NAME` == `name`
+- **Trim**: `Name` == `Name`
+- **Special Characters**: `E-mail` == `Email`
 
-#### Similaridade de Strings
+#### String Similarity
 
-Use algoritmos de distância para tolerar erros de digitação:
+Use distance algorithms to tolerate typos:
 
-- **Levenshtein**: Para erros de digitação (ex: "Telefome" vs "Telefone")
-- **Jaro-Winkler**: Melhor para strings curtas e prefixos comuns
-- **Threshold**: Recomenda-se aceitar similaridade > 0.85
+- **Levenshtein**: For typos (e.g., "Telefome" vs "Telefone")
+- **Jaro-Winkler**: Better for short strings and common prefixes
+- **Threshold**: Recommended to accept similarity > 0.85
 
-#### Sinônimos e Variações
+#### Synonyms and Variations
 
-Mantenha um dicionário de sinônimos comuns:
+Maintain a dictionary of common synonyms:
 
-- **CPF**: "Documento", "CPF/CNPJ", "Doc", "Id Fiscal"
-- **Telefone**: "Celular", "Móvel", "Zap", "WhatsApp", "Phone", "Tel"
-- **Email**: "Correio Eletrônico", "E-mail", "Mail"
-- **Nome**: "Cliente", "Aluno", "Lead", "Nome Completo"
+- **CPF**: "Document", "CPF/CNPJ", "Doc", "Tax ID"
+- **Phone**: "Cell Phone", "Mobile", "Zap", "WhatsApp", "Phone", "Tel"
+- **Email**: "Electronic Mail", "E-mail", "Mail"
+- **Name**: "Client", "Student", "Lead", "Full Name"
 
-### 2. Análise de Padrões de Dados
+### 2. Data Pattern Analysis
 
-Frequentemente, a linha de cabeçalho é a única linha de _texto_ seguida por linhas de _dados formatados_.
+Often, the header row is the only _text_ row followed by rows of _formatted data_.
 
-#### Padrões Regex Comuns
+#### Common Regex Patterns
 
-Analise as primeiras 5-10 linhas de dados abaixo de cada candidato a cabeçalho:
+Analyze the first 5-10 data rows below each header candidate:
 
 - **CPF**: `^\d{3}\.?\d{3}\.?\d{3}-?\d{2}$`
 - **Email**: `^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$`
-- **Telefone BR**: `^(\(?\d{2}\)?\s?)?(9\s?)?\d{4}-?\d{4}$`
-- **Data**: `^(\d{1,2})[/-](\d{1,2})[/-](\d{2,4})$` ou Serial Excel (float > 10000)
-- **Monetário**: `^R?\$?\s?\d{1,3}(\.?\d{3})*,\d{2}$`
+- **Brazilian Phone**: `^(\(?\d{2}\)?\s?)?(9\s?)?\d{4}-?\d{4}$`
+- **Date**: `^(\d{1,2})[/-](\d{1,2})[/-](\d{2,4})$` or Excel Serial (float > 10000)
+- **Monetary**: `^R?\$?\s?\d{1,3}(\.?\d{3})*,\d{2}$`
 
-#### Heurística de Tipo
+#### Type Heuristic
 
-Se a Linha X contém "Data Nasc" e as linhas X+1, X+2 contêm datas válidas (ou inteiros que parecem datas), a confiança de que X é o cabeçalho aumenta drasticamente.
+If Row X contains "Birth Date" and rows X+1, X+2 contain valid dates (or integers that look like dates), the confidence that X is the header increases drastically.
 
-### 3. Análise Contextual
+### 3. Contextual Analysis
 
-O contexto da planilha fornece pistas valiosas.
+The spreadsheet's context provides valuable clues.
 
-#### Densidade
+#### Density
 
-- Linhas de cabeçalho tendem a ter mais colunas preenchidas do que linhas de metadados (títulos, datas de geração).
-- Linhas de cabeçalho raramente têm células mescladas verticais (embora horizontais ocorram).
+- Header rows tend to have more filled columns than metadata rows (titles, generation dates).
+- Header rows rarely have vertically merged cells (although horizontal merges do occur).
 
-#### Consistência de Formato
+#### Format Consistency
 
-- Cabeçalhos são quase sempre Texto/String.
-- Colunas de dados tendem a ter tipos consistentes (apenas números, apenas datas).
-- Se uma linha contém números ou datas, provavelmente **não** é o cabeçalho.
+- Headers are almost always Text/String.
+- Data columns tend to have consistent types (only numbers, only dates).
+- If a row contains numbers or dates, it is probably **not** the header.
 
-#### Posição
+#### Position
 
-- Geralmente está no primeiro terço do arquivo.
-- Frequentemente precedida por linhas vazias ou linhas com apenas 1 coluna preenchida (título do relatório).
+- Usually located in the first third of the file.
+- Frequently preceded by empty rows or rows with only 1 filled column (report title).
 
-### Algoritmo de Scoring Sugerido
+### Suggested Scoring Algorithm
 
-Para cada linha `L` nas primeiras 20 linhas:
+For each row `L` in the first 20 rows:
 
-1.  **Score Base**: +10 se for a primeira linha não vazia.
-2.  **Densidade**: +1 por coluna não vazia.
-3.  **Tipo**: -50 se contiver datas ou floats complexos (provavelmente dados).
-4.  **Matches de Palavra-Chave**: +20 por cada match com cabeçalho conhecido (ex: "Nome", "Email").
-5.  **Dados Subsequentes**: +30 se a linha abaixo contiver dados que correspondem semanticamente aos tipos esperados (ex: coluna "Email" tem emails abaixo).
+1.  **Base Score**: +10 if it is the first non-empty row.
+2.  **Density**: +1 per non-empty column.
+3.  **Type**: -50 if it contains dates or complex floats (probably data).
+4.  **Keyword Matches**: +20 for each match with a known header keyword (e.g., "Name", "Email").
+5.  **Subsequent Data**: +30 if the row below contains data that semantically matches the expected types (e.g., "Email" column has emails below).
 
-A linha com maior score > Threshold é o cabeçalho.
+The row with the highest score > Threshold is the header.

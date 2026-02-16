@@ -24,7 +24,7 @@ function LoginSection() {
           size="lg"
           className="bg-neon-gold hover:bg-neon-gold/90 text-neon-blue-dark font-bold px-8"
         >
-          Área do Aluno (Dashboard)
+          Student Area (Dashboard)
         </Button>
       </Link>
     );
@@ -39,17 +39,17 @@ export function MentorshipContent() {
       {/* Hero / Intro Title for this page */}
       <section className="pt-12 md:pt-20 px-4 text-center">
         <h1 className="text-4xl md:text-5xl font-bold text-neon-blue-dark mb-6">
-          Mentoria na Prática
+          Mentorship in Practice
         </h1>
         <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-          Seu guia oficial para navegar pela Mentoria Black e extrair o máximo de resultados.
+          Your official guide to navigating Black Mentorship and getting maximum results.
         </p>
       </section>
 
       {/* PHASE 5: Onboarding Guide - Primeiros Passos */}
       <section className="container mx-auto px-4">
         <h2 className="text-3xl font-bold text-neon-blue-dark mb-8 text-center">
-          Primeiros Passos no Sistema
+          First Steps in the System
         </h2>
         <div className="max-w-4xl mx-auto bg-white rounded-2xl p-8 shadow-lg border border-neon-blue/10">
           <div className="grid gap-8 md:grid-cols-3 relative">
@@ -60,9 +60,9 @@ export function MentorshipContent() {
               <div className="w-16 h-16 rounded-full bg-neon-blue text-white flex items-center justify-center font-bold text-xl mb-4 shadow-md">
                 1
               </div>
-              <h3 className="font-bold text-lg mb-2">Login no Portal</h3>
+              <h3 className="font-bold text-lg mb-2">Portal Login</h3>
               <p className="text-sm text-muted-foreground">
-                Clique em "Entrar" abaixo. Use o e-mail cadastrado na compra.
+                Click "Sign In" below. Use the email registered at purchase.
               </p>
             </div>
 
@@ -71,9 +71,9 @@ export function MentorshipContent() {
               <div className="w-16 h-16 rounded-full bg-neon-blue text-white flex items-center justify-center font-bold text-xl mb-4 shadow-md">
                 2
               </div>
-              <h3 className="font-bold text-lg mb-2">Perfil & Dados</h3>
+              <h3 className="font-bold text-lg mb-2">Profile & Data</h3>
               <p className="text-sm text-muted-foreground">
-                Acesse seu dashboard e verifique se suas informações estão corretas.
+                Access your dashboard and verify that your information is correct.
               </p>
             </div>
 
@@ -82,9 +82,9 @@ export function MentorshipContent() {
               <div className="w-16 h-16 rounded-full bg-neon-gold text-white flex items-center justify-center font-bold text-xl mb-4 shadow-md animate-pulse">
                 3
               </div>
-              <h3 className="font-bold text-lg mb-2">Lançar Métricas</h3>
+              <h3 className="font-bold text-lg mb-2">Submit Metrics</h3>
               <p className="text-sm text-muted-foreground">
-                Vá em "Lançar Métricas" e preencha seus dados atuais do negócio.
+                Go to "Submit Metrics" and fill in your current business data.
               </p>
             </div>
           </div>
@@ -98,92 +98,91 @@ export function MentorshipContent() {
       {/* Como Funciona */}
       <section className="container mx-auto px-4">
         <h2 className="text-3xl font-bold text-neon-blue-dark mb-12 text-center">
-          Como Funciona a Mentoria?
+          How Does the Mentorship Work?
         </h2>
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
           <Card className="border-neon-blue/20 hover:border-neon-blue/50 transition-colors">
             <CardHeader>
               <PlayCircle className="w-10 h-10 text-neon-blue mb-2" />
-              <CardTitle>Aulas Gravadas</CardTitle>
+              <CardTitle>Recorded Lessons</CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-muted-foreground">
-                Acesse o conteúdo base na área de membros. Assista no seu ritmo, mas mantenha a
-                constância.
+                Access the core content in the members area. Watch at your own pace, but stay
+                consistent.
               </p>
             </CardContent>
           </Card>
           <Card className="border-neon-blue/20 hover:border-neon-blue/50 transition-colors">
             <CardHeader>
               <BookOpen className="w-10 h-10 text-neon-blue mb-2" />
-              <CardTitle>Ferramentas</CardTitle>
+              <CardTitle>Tools</CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-muted-foreground">
-                Planilhas, templates e scripts validados disponíveis para download e aplicação
-                imediata.
+                Spreadsheets, templates and validated scripts available for download and immediate
+                application.
               </p>
             </CardContent>
           </Card>
           <Card className="border-neon-blue/20 hover:border-neon-blue/50 transition-colors">
             <CardHeader>
               <Users className="w-10 h-10 text-neon-blue mb-2" />
-              <CardTitle>Encontros ao Vivo</CardTitle>
+              <CardTitle>Live Meetings</CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-muted-foreground">
-                Tire dúvidas, faça networking e receba direcionamento estratégico nos calls
-                semanais.
+                Ask questions, network and receive strategic guidance in weekly calls.
               </p>
             </CardContent>
           </Card>
           <Card className="border-neon-blue/20 hover:border-neon-blue/50 transition-colors">
             <CardHeader>
               <Award className="w-10 h-10 text-neon-blue mb-2" />
-              <CardTitle>Caderno Digital</CardTitle>
+              <CardTitle>Digital Notebook</CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-muted-foreground">
-                Use este sistema para registrar seu progresso, insights e tarefas. Sua evolução
-                documentada.
+                Use this system to record your progress, insights and tasks. Your evolution
+                documented.
               </p>
             </CardContent>
           </Card>
         </div>
       </section>
 
-      {/* O Que Espero de Você */}
+      {/* What I Expect From You */}
       <section className="bg-neon-gray/10 py-16">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold text-neon-blue-dark mb-12 text-center">
-            O Que Espero de Você
+            What I Expect from You
           </h2>
           <div className="grid md:grid-cols-3 gap-8">
             <div className="bg-white p-6 rounded-xl shadow-sm">
               <div className="mb-4 text-neon-gold">
                 <CheckCircle2 className="w-8 h-8" />
               </div>
-              <h3 className="font-bold text-xl mb-3">Execução Radical</h3>
+              <h3 className="font-bold text-xl mb-3">Radical Execution</h3>
               <p className="text-muted-foreground">
-                O conhecimento só tem poder quando aplicado. Não acumule teoria. Executed.
+                Knowledge only has power when applied. Do not accumulate theory. Execute.
               </p>
             </div>
             <div className="bg-white p-6 rounded-xl shadow-sm">
               <div className="mb-4 text-neon-gold">
                 <Clock className="w-8 h-8" />
               </div>
-              <h3 className="font-bold text-xl mb-3">Não Maratone</h3>
+              <h3 className="font-bold text-xl mb-3">Do Not Binge</h3>
               <p className="text-muted-foreground">
-                Respeite o processo. Implemente uma aula antes de passar para a próxima.
+                Respect the process. Implement one lesson before moving to the next.
               </p>
             </div>
             <div className="bg-white p-6 rounded-xl shadow-sm">
               <div className="mb-4 text-neon-gold">
                 <Coffee className="w-8 h-8" />
               </div>
-              <h3 className="font-bold text-xl mb-3">Constância</h3>
+              <h3 className="font-bold text-xl mb-3">Consistency</h3>
               <p className="text-muted-foreground">
-                O resultado vem do trabalho diário e consistente. Apareça todos os dias.
+                Results come from daily and consistent work. Show up every day.
               </p>
             </div>
           </div>
@@ -193,23 +192,23 @@ export function MentorshipContent() {
       {/* Apresente-se & Gerencie */}
       <section className="container mx-auto px-4 grid md:grid-cols-2 gap-12 items-center">
         <div>
-          <h2 className="text-3xl font-bold text-neon-blue-dark mb-4">Gerencie Seu Tempo</h2>
+          <h2 className="text-3xl font-bold text-neon-blue-dark mb-4">Manage Your Time</h2>
           <p className="text-lg text-muted-foreground mb-6">
-            Use este portal como seu HUB central. Organize sua agenda, defina blocos de tempo para
-            estudo e execução. A organização precede o crescimento.
+            Use this portal as your central HUB. Organize your schedule, set time blocks for
+            study and execution. Organization precedes growth.
           </p>
           <Button variant="outline" className="border-neon-blue text-neon-blue">
-            Ver Dicas de Produtividade
+            View Productivity Tips
           </Button>
         </div>
         <div className="bg-neon-blue-dark text-white p-10 rounded-3xl text-center">
-          <h3 className="text-2xl font-bold mb-4">Apresente-se</h3>
+          <h3 className="text-2xl font-bold mb-4">Introduce Yourself</h3>
           <p className="mb-8 text-neon-blue-light/80">
-            Queremos conhecer você e seu negócio a fundo. Preencha seu perfil completo para que
-            possamos personalizar sua experiência.
+            We want to know you and your business in depth. Fill out your complete profile so we
+            can personalize your experience.
           </p>
           <Button className="bg-neon-gold hover:bg-neon-gold/90 text-neon-blue-dark font-bold w-full py-6 text-lg">
-            Preencher Perfil Agora
+            Fill Profile Now
           </Button>
         </div>
       </section>
@@ -217,28 +216,28 @@ export function MentorshipContent() {
       {/* FAQ */}
       <section className="container mx-auto px-4 max-w-3xl">
         <h2 className="text-3xl font-bold text-neon-blue-dark mb-8 text-center">
-          Perguntas Frequentes
+          Frequently Asked Questions
         </h2>
         <Accordion type="single" collapsible className="w-full">
           <AccordionItem value="item-1">
-            <AccordionTrigger>Para que serve este Portal?</AccordionTrigger>
+            <AccordionTrigger>What is this Portal for?</AccordionTrigger>
             <AccordionContent>
-              É seu centro de comando. Aqui você encontra ferramentas, registra métricas, acompanha
-              seu progresso e acessa materiais de apoio complementar às aulas.
+              It is your command center. Here you find tools, record metrics, track
+              your progress and access support materials complementary to the lessons.
             </AccordionContent>
           </AccordionItem>
           <AccordionItem value="item-2">
-            <AccordionTrigger>Como usar este sistema?</AccordionTrigger>
+            <AccordionTrigger>How to use this system?</AccordionTrigger>
             <AccordionContent>
-              Acesse diariamente. Mantenha suas métricas atualizadas na aba de Dashboard. Use o
-              Caderno Digital para suas anotações de aula.
+              Access it daily. Keep your metrics updated in the Dashboard tab. Use the
+              Digital Notebook for your lesson notes.
             </AccordionContent>
           </AccordionItem>
           <AccordionItem value="item-3">
-            <AccordionTrigger>Onde estão as aulas gravadas?</AccordionTrigger>
+            <AccordionTrigger>Where are the recorded lessons?</AccordionTrigger>
             <AccordionContent>
-              As aulas estão hospedadas na nossa área de membros oficial. Este portal é focado na
-              GESTÃO e EXECUÇÃO do aprendizado.
+              The lessons are hosted in our official members area. This portal focuses on
+              MANAGEMENT and EXECUTION of learning.
             </AccordionContent>
           </AccordionItem>
         </Accordion>
@@ -248,7 +247,7 @@ export function MentorshipContent() {
       <section className="bg-white py-16 border-t border-neon-border/30">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold text-neon-blue-dark mb-12 text-center">
-            Conheça o Time
+            Meet the Team
           </h2>
           <div className="grid md:grid-cols-4 gap-8">
             {/* Sacha - Placeholder */}
@@ -260,7 +259,7 @@ export function MentorshipContent() {
                 </div>
               </div>
               <h3 className="font-bold text-lg">Sacha Gualberto</h3>
-              <p className="text-sm text-neon-blue-medium">Mentor Principal</p>
+              <p className="text-sm text-neon-blue-medium">Lead Mentor</p>
             </div>
             {/* Mauricio - Placeholder */}
             <div className="text-center group">
@@ -270,7 +269,7 @@ export function MentorshipContent() {
                 </div>
               </div>
               <h3 className="font-bold text-lg">Maurício Magalhães</h3>
-              <p className="text-sm text-neon-blue-medium">Financeiro & Tech</p>
+              <p className="text-sm text-neon-blue-medium">Finance & Tech</p>
             </div>
             {/* Support - Placeholder */}
             <div className="text-center group">
@@ -279,7 +278,7 @@ export function MentorshipContent() {
                   S
                 </div>
               </div>
-              <h3 className="font-bold text-lg">Suporte Neon</h3>
+              <h3 className="font-bold text-lg">Neon Support</h3>
               <p className="text-sm text-neon-blue-medium">Customer Success</p>
             </div>
           </div>

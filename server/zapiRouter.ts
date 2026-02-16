@@ -99,15 +99,15 @@ export const zapiRouter = router({
   configure: protectedProcedure
     .input(
       z.object({
-        instanceId: z.string().min(1, "Instance ID é obrigatório"),
-        token: z.string().min(1, "Token é obrigatório"),
+        instanceId: z.string().min(1, "Instance ID is required"),
+        token: z.string().min(1, "Token is required"),
         clientToken: z.string().optional(), // Account Security Token (optional)
       })
     )
     .mutation(async ({ ctx, input }) => {
       const mentorado = await getMentoradoWithZapi(ctx.user.id);
       if (!mentorado) {
-        throw new Error("Mentorado não encontrado");
+        throw new Error("Mentee not found");
       }
 
       // Encrypt tokens before storing
@@ -135,12 +135,12 @@ export const zapiRouter = router({
   getQRCode: protectedProcedure.query(async ({ ctx }) => {
     const mentorado = await getMentoradoWithZapi(ctx.user.id);
     if (!mentorado) {
-      throw new Error("Mentorado não encontrado");
+      throw new Error("Mentee not found");
     }
 
     const credentials = buildCredentials(mentorado);
     if (!credentials) {
-      throw new Error("Z-API não configurado. Configure as credenciais primeiro.");
+      throw new Error("Z-API not configured. Set up credentials first.");
     }
 
     const qrResponse = await zapiService.getQRCode(credentials);
@@ -154,7 +154,7 @@ export const zapiRouter = router({
           connected: true,
         };
       }
-      throw new Error("Z-API não retornou o QR Code. Verifique se a instância está ativa.");
+      throw new Error("Z-API did not return the QR Code. Check if the instance is active.");
     }
 
     return {
@@ -169,12 +169,12 @@ export const zapiRouter = router({
   disconnect: protectedProcedure.mutation(async ({ ctx }) => {
     const mentorado = await getMentoradoWithZapi(ctx.user.id);
     if (!mentorado) {
-      throw new Error("Mentorado não encontrado");
+      throw new Error("Mentee not found");
     }
 
     const credentials = buildCredentials(mentorado);
     if (!credentials) {
-      throw new Error("Z-API não configurado");
+      throw new Error("Z-API not configured");
     }
 
     await zapiService.disconnect(credentials);
@@ -197,20 +197,20 @@ export const zapiRouter = router({
   sendMessage: protectedProcedure
     .input(
       z.object({
-        phone: z.string().min(8, "Telefone inválido"),
-        message: z.string().min(1, "Mensagem não pode ser vazia"),
+        phone: z.string().min(8, "Invalid phone number"),
+        message: z.string().min(1, "Message cannot be empty"),
         leadId: z.number().optional(),
       })
     )
     .mutation(async ({ ctx, input }) => {
       const mentorado = await getMentoradoWithZapi(ctx.user.id);
       if (!mentorado) {
-        throw new Error("Mentorado não encontrado");
+        throw new Error("Mentee not found");
       }
 
       const credentials = buildCredentials(mentorado);
       if (!credentials) {
-        throw new Error("Z-API não configurado");
+        throw new Error("Z-API not configured");
       }
 
       // Send message via Z-API
@@ -265,7 +265,7 @@ export const zapiRouter = router({
       if (input.leadId) {
         conditions.push(eq(whatsappMessages.leadId, input.leadId));
       } else if (input.phone) {
-        // Normalize for comparison
+        // Normalize phone for comparison
         const normalizedPhone = zapiService.normalizePhoneNumber(input.phone);
         conditions.push(eq(whatsappMessages.phone, normalizedPhone));
       }
@@ -335,17 +335,17 @@ export const zapiRouter = router({
   createAndConnectInstance: protectedProcedure.mutation(async ({ ctx }) => {
     const mentorado = await getMentoradoWithZapi(ctx.user.id);
     if (!mentorado) {
-      throw new Error("Mentorado não encontrado");
+      throw new Error("Mentee not found");
     }
 
     // Check if already has an active instance
     if (mentorado.zapiInstanceId && mentorado.zapiManagedByIntegrator === "sim") {
-      throw new Error("Você já possui uma instância WhatsApp ativa");
+      throw new Error("You already have an active WhatsApp instance");
     }
 
     // Verify integrator mode is available
     if (!zapiService.isIntegratorModeAvailable()) {
-      throw new Error("Modo integrador não está configurado. Entre em contato com o suporte.");
+      throw new Error("Integrator mode is not configured. Contact support.");
     }
 
     // Create new instance via Integrator API
@@ -378,7 +378,7 @@ export const zapiRouter = router({
       instanceId: result.id,
       status: "trial",
       dueDate: dueDate?.toISOString() ?? null,
-      message: "Instância criada com sucesso! Agora escaneie o QR code para conectar.",
+      message: "Instance created successfully! Now scan the QR code to connect.",
     };
   }),
 
@@ -420,7 +420,7 @@ export const zapiRouter = router({
     .mutation(async ({ ctx, input }) => {
       // Admin-only: verify user role before proceeding
       if (ctx.user.role !== "admin") {
-        throw new Error("Apenas administradores podem ativar instâncias");
+        throw new Error("Only administrators can activate instances");
       }
 
       const db = getDb();
@@ -431,16 +431,16 @@ export const zapiRouter = router({
         .limit(1);
 
       if (!mentorado) {
-        throw new Error("Mentorado não encontrado");
+        throw new Error("Mentee not found");
       }
 
       if (!mentorado.zapiInstanceId || !mentorado.zapiToken) {
-        throw new Error("Mentorado não possui instância Z-API configurada");
+        throw new Error("Mentee does not have a Z-API instance configured");
       }
 
       const decryptedToken = safeDecrypt(mentorado.zapiToken);
       if (!decryptedToken) {
-        throw new Error("Erro ao descriptografar token");
+        throw new Error("Error decrypting token");
       }
 
       // Subscribe to the instance via Integrator API
@@ -455,7 +455,7 @@ export const zapiRouter = router({
         })
         .where(eq(mentorados.id, mentorado.id));
 
-      return { success: true, message: "Instância ativada com sucesso" };
+      return { success: true, message: "Instance activated successfully" };
     }),
 
   /**
@@ -471,7 +471,7 @@ export const zapiRouter = router({
     .mutation(async ({ ctx, input }) => {
       // Admin-only: verify user role before proceeding
       if (ctx.user.role !== "admin") {
-        throw new Error("Apenas administradores podem cancelar instâncias");
+        throw new Error("Only administrators can cancel instances");
       }
 
       const db = getDb();
@@ -482,16 +482,16 @@ export const zapiRouter = router({
         .limit(1);
 
       if (!mentorado) {
-        throw new Error("Mentorado não encontrado");
+        throw new Error("Mentee not found");
       }
 
       if (!mentorado.zapiInstanceId || !mentorado.zapiToken) {
-        throw new Error("Mentorado não possui instância Z-API configurada");
+        throw new Error("Mentee does not have a Z-API instance configured");
       }
 
       const decryptedToken = safeDecrypt(mentorado.zapiToken);
       if (!decryptedToken) {
-        throw new Error("Erro ao descriptografar token");
+        throw new Error("Error decrypting token");
       }
 
       // Cancel the instance via Integrator API
@@ -508,7 +508,7 @@ export const zapiRouter = router({
 
       return {
         success: true,
-        message: "Instância cancelada. Permanece ativa até o fim do período.",
+        message: "Instance canceled. It remains active until the end of the billing period.",
       };
     }),
 });

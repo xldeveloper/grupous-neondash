@@ -6,15 +6,15 @@
 **Stack:** React 19 + Vite 7 + tRPC 11 + Drizzle ORM + **Neon PostgreSQL** + Express + shadcn/ui
 **Runtime:** **Bun** (Package Manager + Runtime + Server Bundler)
 **Auth:** **Clerk** (`@clerk/clerk-react` + `@clerk/express`)
-**Purpose:** Track mentorados performance metrics, faturamento, and mentor feedback
+**Purpose:** Track mentee performance metrics, revenue, and mentor feedback
 **Note:** Sub-directories may have their own AGENTS.md files with detailed patterns
 
 ## Package Manager
 
-**⚠️ IMPORTANTE**: Este projeto **sempre usa `bun`** como package manager, runtime e bundler.
+**IMPORTANT**: This project **always uses `bun`** as the package manager, runtime, and bundler.
 
-- ✅ **Sempre use**: `bun install`, `bun run`, `bunx`, `bun test`
-- ❌ **Nunca use**: `npm`, `yarn`, `pnpm`
+- ALWAYS use: `bun install`, `bun run`, `bunx`, `bun test`
+- NEVER use: `npm`, `yarn`, `pnpm`
 
 # SYSTEM ROLE & BEHAVIORAL PROTOCOLS
 
@@ -173,36 +173,36 @@ Before creating a PR:
 
 ### MCP Activation Protocol (MANDATORY)
 
-> **Regra**: MCPs devem ser usados AUTOMATICAMENTE quando as condições abaixo forem satisfeitas.
+> **Rule**: MCPs MUST be used AUTOMATICALLY when the conditions below are met.
 
-#### Sequential Thinking - Raciocínio Estruturado
+#### Sequential Thinking - Structured Reasoning
 
-| Trigger                                        | Ação                                          |
-| ---------------------------------------------- | --------------------------------------------- |
-| Início de tarefa L4+ (complexidade média-alta) | `sequentialthinking` para quebrar em passos   |
-| Após qualquer erro de build/deploy/runtime     | `sequentialthinking` para analisar causa raiz |
-| A cada 5 passos de implementação               | `sequentialthinking` para verificar progresso |
-| Múltiplas abordagens possíveis                 | `sequentialthinking` para comparar trade-offs |
-| Decisões arquiteturais                         | `sequentialthinking` antes de implementar     |
+| Trigger                                            | Action                                              |
+| -------------------------------------------------- | --------------------------------------------------- |
+| Start of L4+ task (medium-high complexity)         | `sequentialthinking` to break down into steps       |
+| After any build/deploy/runtime error               | `sequentialthinking` to analyze root cause          |
+| Every 5 implementation steps                       | `sequentialthinking` to verify progress             |
+| Multiple possible approaches                       | `sequentialthinking` to compare trade-offs          |
+| Architectural decisions                            | `sequentialthinking` before implementing            |
 
-#### Context7 - Documentação Oficial
+#### Context7 - Official Documentation
 
-| Trigger                                        | Ação                                         |
+| Trigger                                        | Action                                       |
 | ---------------------------------------------- | -------------------------------------------- |
-| Código com Drizzle ORM (schema, queries)       | `context7 resolve-library-id` → `query-docs` |
-| Código com tRPC (routers, procedures)          | `context7 resolve-library-id` → `query-docs` |
-| Código com Clerk (auth, users, sessions)       | `context7 resolve-library-id` → `query-docs` |
-| Código com TanStack Query (mutations, queries) | `context7 resolve-library-id` → `query-docs` |
-| Código com shadcn/ui (components)              | `context7 resolve-library-id` → `query-docs` |
-| Código com Recharts (charts, visualization)    | `context7 resolve-library-id` → `query-docs` |
-| Qualquer API/biblioteca npm desconhecida       | `context7 resolve-library-id` → `query-docs` |
-| Configuração de Vite, Prettier, TypeScript     | `context7 resolve-library-id` → `query-docs` |
+| Code with Drizzle ORM (schema, queries)        | `context7 resolve-library-id` → `query-docs` |
+| Code with tRPC (routers, procedures)           | `context7 resolve-library-id` → `query-docs` |
+| Code with Clerk (auth, users, sessions)        | `context7 resolve-library-id` → `query-docs` |
+| Code with TanStack Query (mutations, queries)  | `context7 resolve-library-id` → `query-docs` |
+| Code with shadcn/ui (components)               | `context7 resolve-library-id` → `query-docs` |
+| Code with Recharts (charts, visualization)     | `context7 resolve-library-id` → `query-docs` |
+| Any unknown npm API/library                    | `context7 resolve-library-id` → `query-docs` |
+| Vite, Prettier, TypeScript configuration       | `context7 resolve-library-id` → `query-docs` |
 
-#### Tavily - Pesquisa Web
+#### Tavily - Web Search
 
-| Trigger                                    | Ação                                                |
-| ------------------------------------------ | --------------------------------------------------- |
-| context7 não retorna informação suficiente | `tavily-search` com query específica                |
-| Erro de deploy/runtime sem solução clara   | `tavily-search` → `tavily-extract` se URL promissor |
-| Best practices ou padrões modernos (2024+) | `tavily-search` para tendências atuais              |
-| Integrações não documentadas oficialmente  | `tavily-search` → `tavily-extract` se necessário    |
+| Trigger                                          | Action                                                  |
+| ------------------------------------------------ | ------------------------------------------------------- |
+| context7 does not return sufficient information  | `tavily-search` with specific query                     |
+| Deploy/runtime error with no clear solution      | `tavily-search` → `tavily-extract` if URL is promising  |
+| Best practices or modern patterns (2024+)        | `tavily-search` for current trends                      |
+| Integrations not officially documented           | `tavily-search` → `tavily-extract` if needed            |

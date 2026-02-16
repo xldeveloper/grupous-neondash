@@ -19,14 +19,14 @@ export function SubmitMetricsSheet() {
       <SheetTrigger asChild>
         <Button className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold">
           <PlusCircle className="mr-2 h-4 w-4" />
-          Enviar Métricas
+          Submit Metrics
         </Button>
       </SheetTrigger>
       <SheetContent className="overflow-y-auto sm:max-w-md">
         <SheetHeader>
-          <SheetTitle>Enviar Métricas Mensais</SheetTitle>
+          <SheetTitle>Submit Monthly Metrics</SheetTitle>
           <SheetDescription>
-            Preencha seus resultados do mês para acompanhamento de performance.
+            Fill in your monthly results for performance tracking.
           </SheetDescription>
         </SheetHeader>
 

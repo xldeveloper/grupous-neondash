@@ -1,138 +1,138 @@
-# Planos de Implementação - NeonDash
+# Implementation Plans - NeonDash
 
-Este diretório contém os planos de implementação detalhados para o desenvolvimento do projeto **NeonDash**, organizados em fases sequenciais e otimizados para execução no Antigravity IDE.
+This directory contains the detailed implementation plans for the development of the **NeonDash** project, organized in sequential phases and optimized for execution in the Antigravity IDE.
 
 ---
 
-## Estrutura de Fases
+## Phase Structure
 
-A implementação do NeonDash foi dividida em **6 fases principais**, cada uma com objetivos claros, atomic tasks e prompts prontos para uso.
+The NeonDash implementation was divided into **6 main phases**, each with clear objectives, atomic tasks, and ready-to-use prompts.
 
-### Fase 1: Fundação (Design System & Estilos)
+### Phase 1: Foundation (Design System & Styles)
 
-**Arquivo:** [`PLAN-fase-1-fundacao.md`](./PLAN-fase-1-fundacao.md)
+**File:** [`PLAN-fase-1-fundacao.md`](./PLAN-fase-1-fundacao.md)
 
-**Objetivo:** Estabelecer a identidade visual consistente do projeto, ajustando cores, contraste e limpando elementos desnecessários da UI.
+**Objective:** Establish a consistent visual identity for the project, adjusting colors, contrast, and cleaning up unnecessary UI elements.
 
-**Tempo Estimado:** ~3 horas
+**Estimated Time:** ~3 hours
 
 **Issues:** GPU-25, GPU-29, GPU-26
 
-**Status:** ⚡ Todas as tarefas são paralelas
+**Status:** All tasks are parallel
 
 ---
 
-### Fase 2: Componentes UI Core
+### Phase 2: Core UI Components
 
-**Arquivo:** [`PLAN-fase-2-componentes-ui.md`](./PLAN-fase-2-componentes-ui.md)
+**File:** [`PLAN-fase-2-componentes-ui.md`](./PLAN-fase-2-componentes-ui.md)
 
-**Objetivo:** Refatorar componentes essenciais da interface (Tabs e Floating Dock) para alinhá-los com a nova identidade visual Neon.
+**Objective:** Refactor essential interface components (Tabs and Floating Dock) to align them with the new Neon visual identity.
 
-**Tempo Estimado:** ~6 horas
+**Estimated Time:** ~6 hours
 
 **Issues:** GPU-24, GPU-27
 
-**Dependências:** Conclusão da Fase 1
+**Dependencies:** Completion of Phase 1
 
 ---
 
-### Fase 3: Estrutura de Dados (Módulos)
+### Phase 3: Data Structure (Modules)
 
-**Arquivo:** [`PLAN-fase-3-estrutura-dados.md`](./PLAN-fase-3-estrutura-dados.md)
+**File:** [`PLAN-fase-3-estrutura-dados.md`](./PLAN-fase-3-estrutura-dados.md)
 
-**Objetivo:** Popular o sistema de atividades com o conteúdo real dos programas Neon Estrutura e Neon Escala.
+**Objective:** Populate the activities system with the actual content from the Neon Estrutura and Neon Escala programs.
 
-**Tempo Estimado:** ~6 horas+
+**Estimated Time:** ~6 hours+
 
 **Issues:** GPU-9, GPU-10, GPU-50, GPU-51
 
-**Status:** ⚡ GPU-9 e GPU-10 podem ser executados em paralelo
+**Status:** GPU-9 and GPU-10 can be executed in parallel
 
 ---
 
-### Fase 4: Lógica de Progresso
+### Phase 4: Progress Logic
 
-**Arquivo:** [`PLAN-fase-4-logica-progresso.md`](./PLAN-fase-4-logica-progresso.md)
+**File:** [`PLAN-fase-4-logica-progresso.md`](./PLAN-fase-4-logica-progresso.md)
 
-**Objetivo:** Sincronizar o estado real das atividades concluídas com a UI, fornecendo feedback visual preciso.
+**Objective:** Synchronize the real state of completed activities with the UI, providing accurate visual feedback.
 
-**Tempo Estimado:** ~3 horas
+**Estimated Time:** ~3 hours
 
 **Issues:** GPU-52
 
-**Dependências:** Conclusão da Fase 3
+**Dependencies:** Completion of Phase 3
 
 ---
 
-### Fase 5: Onboarding
+### Phase 5: Onboarding
 
-**Arquivo:** [`PLAN-fase-5-onboarding.md`](./PLAN-fase-5-onboarding.md)
+**File:** [`PLAN-fase-5-onboarding.md`](./PLAN-fase-5-onboarding.md)
 
-**Objetivo:** Criar uma experiência de primeiro acesso guiada e envolvente para novos mentorados.
+**Objective:** Create a guided and engaging first-access experience for new mentees.
 
-**Tempo Estimado:** ~6 horas
+**Estimated Time:** ~6 hours
 
 **Issues:** GPU-12
 
-**Dependências:** Conclusão da Fase 1 e Fase 2
+**Dependencies:** Completion of Phase 1 and Phase 2
 
 ---
 
-### Fase 6: Funcionalidades Avançadas
+### Phase 6: Advanced Features
 
-**Arquivo:** [`PLAN-fase-6-funcionalidades-avancadas.md`](./PLAN-fase-6-funcionalidades-avancadas.md)
+**File:** [`PLAN-fase-6-funcionalidades-avancadas.md`](./PLAN-fase-6-funcionalidades-avancadas.md)
 
-**Objetivo:** Aprimorar a produtividade do mentorado com ferramentas robustas de gestão de tarefas e integração com Google Calendar.
+**Objective:** Enhance mentee productivity with robust task management tools and Google Calendar integration.
 
-**Tempo Estimado:** ~12 horas
+**Estimated Time:** ~12 hours
 
 **Issues:** GPU-43, GPU-18
 
-**Dependências:** GPU-43 depende da Fase 1 e Fase 2. GPU-18 é independente (baixa prioridade).
+**Dependencies:** GPU-43 depends on Phase 1 and Phase 2. GPU-18 is independent (low priority).
 
 ---
 
-## Como Utilizar os Planos
+## How to Use the Plans
 
-Cada arquivo de plano contém:
+Each plan file contains:
 
-1.  **Objetivo da Fase:** Descrição clara do que será alcançado.
-2.  **Atomic Tasks:** Tarefas granulares e sequenciais para implementação.
-3.  **Antigravity Prompts:** Blocos de texto prontos para copiar e colar no Antigravity IDE, garantindo execução precisa.
-4.  **Dependências:** Indicação de quais fases ou tarefas devem ser concluídas antes de iniciar.
+1.  **Phase Objective:** Clear description of what will be achieved.
+2.  **Atomic Tasks:** Granular and sequential tasks for implementation.
+3.  **Antigravity Prompts:** Ready-to-use text blocks to copy and paste into the Antigravity IDE, ensuring precise execution.
+4.  **Dependencies:** Indication of which phases or tasks must be completed before starting.
 
-### Fluxo de Trabalho Recomendado
+### Recommended Workflow
 
-1.  Abra o arquivo de plano da fase que deseja implementar.
-2.  Leia o objetivo e as atomic tasks para entender o escopo.
-3.  Copie o **Antigravity Prompt** correspondente.
-4.  Cole o prompt no Antigravity IDE e execute.
-5.  Valide a implementação conforme as instruções de cada atomic task.
-6.  Avance para a próxima fase após a conclusão.
+1.  Open the plan file for the phase you want to implement.
+2.  Read the objective and atomic tasks to understand the scope.
+3.  Copy the corresponding **Antigravity Prompt**.
+4.  Paste the prompt in the Antigravity IDE and execute.
+5.  Validate the implementation following the instructions of each atomic task.
+6.  Proceed to the next phase after completion.
 
 ---
 
-## Tempo Total de Implementação
+## Total Implementation Time
 
-**~36 horas** de desenvolvimento distribuídas em 6 fases.
+**~36 hours** of development distributed across 6 phases.
 
 ---
 
 ## Design System
 
-O projeto segue o **Design System Master** definido em [`DESIGN_SYSTEM_MASTER.md`](./DESIGN_SYSTEM_MASTER.md), que inclui:
+The project follows the **Design System Master** defined in [`DESIGN_SYSTEM_MASTER.md`](./DESIGN_SYSTEM_MASTER.md), which includes:
 
-- **Paleta de Cores:** Ouro (`#F59E0B`), Roxo (`#8B5CF6`), Azul Claro (`#0ea5e9`), Azul Petróleo (`#0d4f5a`), Fundo Escuro (`#0F172A`), Texto Claro (`#F8FAFC`).
-- **Tipografia:** Plus Jakarta Sans (Heading e Body).
-- **Efeitos:** Minimal glow, transições suaves, foco visível.
-- **Acessibilidade:** Contraste WCAG AAA para elementos críticos.
+- **Color Palette:** Gold (`#F59E0B`), Purple (`#8B5CF6`), Light Blue (`#0ea5e9`), Teal Blue (`#0d4f5a`), Dark Background (`#0F172A`), Light Text (`#F8FAFC`).
+- **Typography:** Plus Jakarta Sans (Heading and Body).
+- **Effects:** Minimal glow, smooth transitions, visible focus.
+- **Accessibility:** WCAG AAA contrast for critical elements.
 
 ---
 
-## Suporte
+## Support
 
-Para dúvidas ou suporte durante a implementação, consulte os issues correspondentes no Linear ou entre em contato com a equipe de desenvolvimento.
+For questions or support during implementation, consult the corresponding issues on Linear or contact the development team.
 
-**Projeto:** NEONDASH  
-**Organização:** Grupo US  
-**Última Atualização:** 30 de Janeiro de 2026
+**Project:** NEONDASH
+**Organization:** Grupo US
+**Last Updated:** January 30, 2026

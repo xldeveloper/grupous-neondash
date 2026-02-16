@@ -48,8 +48,8 @@ export function AITasksCard({ mentoradoId, isAdmin }: AITasksCardProps) {
 
   const archiveMutation = trpc.tasks.archivePlanTasks.useMutation({
     onSuccess: (data) => {
-      toast.success("Tarefas Arquivadas! 📦", {
-        description: `${data.count} tarefas foram movidas para Concluídas.`,
+      toast.success("Tasks Archived! 📦", {
+        description: `${data.count} tasks were moved to Completed.`,
         duration: 3000,
       });
       refetch();
@@ -58,8 +58,8 @@ export function AITasksCard({ mentoradoId, isAdmin }: AITasksCardProps) {
 
   const generateMutation = trpc.tasks.generateFromAI.useMutation({
     onSuccess: (data) => {
-      toast.success("Plano Tático Gerado! ✨", {
-        description: `${data.count} novas missões foram adicionadas ao seu painel.`,
+      toast.success("Tactical Plan Generated! ✨", {
+        description: `${data.count} new missions were added to your dashboard.`,
         duration: 5000,
       });
       refetch();
@@ -67,30 +67,30 @@ export function AITasksCard({ mentoradoId, isAdmin }: AITasksCardProps) {
     },
     onError: (err) => {
       // Map error codes to user-friendly messages
-      let title = "Erro ao gerar plano";
+      let title = "Error generating plan";
       let description = err.message;
 
       // Check for specific error patterns
       const errorMessage = err.message?.toLowerCase() || "";
 
-      if (errorMessage.includes("timeout") || errorMessage.includes("demorou")) {
-        title = "⏱️ Tempo Excedido";
-        description = "A IA demorou muito para responder. Tente novamente em alguns segundos.";
-      } else if (errorMessage.includes("configuração") || errorMessage.includes("administrador")) {
-        title = "⚙️ Configuração Pendente";
-        description = "A integração com a IA ainda não foi configurada. Contate o administrador.";
-      } else if (errorMessage.includes("rate limit") || errorMessage.includes("limite")) {
-        title = "🚦 Limite de Requisições";
-        description = "Muitas requisições enviadas. Aguarde um momento e tente novamente.";
-      } else if (errorMessage.includes("conexão") || errorMessage.includes("network")) {
-        title = "📡 Erro de Conexão";
-        description = "Verifique sua conexão com a internet e tente novamente.";
-      } else if (errorMessage.includes("indisponível") || errorMessage.includes("unavailable")) {
-        title = "🔧 Serviço Temporariamente Indisponível";
-        description = "O serviço de IA está em manutenção. Tente novamente em alguns minutos.";
-      } else if (errorMessage.includes("model") || errorMessage.includes("não encontrado")) {
-        title = "🤖 Modelo de IA Indisponível";
-        description = "O modelo de IA não foi encontrado. Contate o administrador.";
+      if (errorMessage.includes("timeout") || errorMessage.includes("too long")) {
+        title = "⏱️ Time Exceeded";
+        description = "The AI took too long to respond. Please try again in a few seconds.";
+      } else if (errorMessage.includes("configuration") || errorMessage.includes("administrator")) {
+        title = "⚙️ Pending Configuration";
+        description = "The AI integration has not been configured yet. Contact the administrator.";
+      } else if (errorMessage.includes("rate limit") || errorMessage.includes("limit reached")) {
+        title = "🚦 Request Limit";
+        description = "Too many requests sent. Please wait a moment and try again.";
+      } else if (errorMessage.includes("connection") || errorMessage.includes("network")) {
+        title = "📡 Connection Error";
+        description = "Check your internet connection and try again.";
+      } else if (errorMessage.includes("unavailable")) {
+        title = "🔧 Service Temporarily Unavailable";
+        description = "The AI service is under maintenance. Please try again in a few minutes.";
+      } else if (errorMessage.includes("model") || errorMessage.includes("not found")) {
+        title = "🤖 AI Model Unavailable";
+        description = "The AI model was not found. Contact the administrator.";
       }
 
       toast.error(title, {
@@ -113,9 +113,9 @@ export function AITasksCard({ mentoradoId, isAdmin }: AITasksCardProps) {
             setShowConfetti(false);
             confettiTimeoutRef.current = null;
           }, 5000);
-          toast.success("Missão Cumprida! 🚀");
+          toast.success("Mission Accomplished! 🚀");
         } else {
-          toast.success("Tarefa concluída!");
+          toast.success("Task completed!");
         }
       }
       refetch();
@@ -189,14 +189,14 @@ export function AITasksCard({ mentoradoId, isAdmin }: AITasksCardProps) {
             <span
               className={`inline-block h-2 w-2 rounded-full ${progress === 100 ? "bg-green-500 shadow-[0_0_8px_theme(colors.green.500)]" : "bg-[#D4AF37] shadow-[0_0_8px_#D4AF37]"}`}
             />
-            {progress}% do Plano IA Completo
+            {progress}% of AI Plan Complete
           </div>
         </div>
 
         {generateMutation.isPending || archiveMutation.isPending ? (
           <Button disabled variant="outline" className="border-primary/20 bg-primary/5">
             <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-            {archiveMutation.isPending ? "Arquivando..." : "Gerando..."}
+            {archiveMutation.isPending ? "Archiving..." : "Generating..."}
           </Button>
         ) : totalAiTasks === 0 ? (
           <Button
@@ -206,7 +206,7 @@ export function AITasksCard({ mentoradoId, isAdmin }: AITasksCardProps) {
             className="bg-gradient-to-r from-primary to-[#D4AF37] hover:from-primary/90 hover:to-[#D4AF37]/90 text-white shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5"
           >
             <Sparkles className="w-4 h-4 mr-2" />
-            Gerar Plano
+            Generate Plan
           </Button>
         ) : progress === 100 ? (
           <Button
@@ -216,7 +216,7 @@ export function AITasksCard({ mentoradoId, isAdmin }: AITasksCardProps) {
             className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5"
           >
             <CheckCircle2 className="w-4 h-4 mr-2" />
-            Novo Plano
+            New Plan
           </Button>
         ) : isAdmin ? (
           <Button
@@ -226,7 +226,7 @@ export function AITasksCard({ mentoradoId, isAdmin }: AITasksCardProps) {
             className="border-primary/20 hover:bg-primary/5"
           >
             <Sparkles className="w-4 h-4 mr-2" />
-            Regenerar
+            Regenerate
           </Button>
         ) : null}
       </CardHeader>
@@ -239,21 +239,21 @@ export function AITasksCard({ mentoradoId, isAdmin }: AITasksCardProps) {
               className="data-[state=active]:bg-background data-[state=active]:text-primary data-[state=active]:shadow-sm"
             >
               <BrainCircuit className="w-4 h-4 mr-2" />
-              Plano IA
+              AI Plan
             </TabsTrigger>
             <TabsTrigger
               value="manual"
               className="data-[state=active]:bg-background data-[state=active]:text-blue-500 data-[state=active]:shadow-sm"
             >
               <ListTodo className="w-4 h-4 mr-2" />
-              Manuais
+              Manual
             </TabsTrigger>
             <TabsTrigger
               value="archived"
               className="data-[state=active]:bg-background data-[state=active]:text-muted-foreground data-[state=active]:shadow-sm"
             >
               <Archive className="w-4 h-4 mr-2" />
-              Concluídas
+              Completed
               {archivedTasks.length > 0 && (
                 <span className="ml-1 text-[10px] bg-muted px-1.5 py-0.5 rounded-full">
                   {archivedTasks.length}
@@ -277,9 +277,9 @@ export function AITasksCard({ mentoradoId, isAdmin }: AITasksCardProps) {
                   <Sparkles className="w-5 h-5 text-primary/60" />
                 </div>
                 <div className="space-y-1">
-                  <p className="text-sm font-medium text-foreground">Sem plano ativo</p>
+                  <p className="text-sm font-medium text-foreground">No active plan</p>
                   <p className="text-xs text-muted-foreground max-w-[200px] mx-auto">
-                    Solicite ao Neon Coach um novo plano tático para esta semana.
+                    Ask the Neon Coach for a new tactical plan for this week.
                   </p>
                 </div>
               </div>
@@ -296,7 +296,7 @@ export function AITasksCard({ mentoradoId, isAdmin }: AITasksCardProps) {
             {manualTasks.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-8 text-center text-muted-foreground">
                 <ListTodo className="w-8 h-8 opacity-20 mb-2" />
-                <p className="text-sm">Nenhuma tarefa manual encontrada.</p>
+                <p className="text-sm">No manual tasks found.</p>
               </div>
             ) : (
               manualTasks.map((task) => (
@@ -309,9 +309,9 @@ export function AITasksCard({ mentoradoId, isAdmin }: AITasksCardProps) {
             {archivedTasks.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-8 text-center text-muted-foreground">
                 <Archive className="w-8 h-8 opacity-20 mb-2" />
-                <p className="text-sm">Nenhuma tarefa arquivada ainda.</p>
+                <p className="text-sm">No archived tasks yet.</p>
                 <p className="text-xs text-muted-foreground/60 mt-1">
-                  Complete um plano IA para ver suas conquistas aqui.
+                  Complete an AI plan to see your achievements here.
                 </p>
               </div>
             ) : (
@@ -327,7 +327,7 @@ export function AITasksCard({ mentoradoId, isAdmin }: AITasksCardProps) {
                         {task.title}
                       </p>
                       <span className="text-[10px] text-muted-foreground/50">
-                        {task.updatedAt ? new Date(task.updatedAt).toLocaleDateString("pt-BR") : ""}
+                        {task.updatedAt ? new Date(task.updatedAt).toLocaleDateString("en-US") : ""}
                       </span>
                     </div>
                   </div>

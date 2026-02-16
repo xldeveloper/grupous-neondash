@@ -21,19 +21,19 @@ export function LinkEmailsView() {
   const { data: mentorados, isLoading } = trpc.mentorados.list.useQuery();
   const linkEmailMutation = trpc.mentorados.linkEmail.useMutation({
     onSuccess: () => {
-      toast.success("Email vinculado com sucesso!");
+      toast.success("Email linked successfully!");
       setSelectedMentorado("");
       setEmail("");
     },
     onError: (error) => {
-      toast.error(`Erro ao vincular email: ${error.message}`);
+      toast.error(`Error linking email: ${error.message}`);
     },
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedMentorado || !email) {
-      toast.error("Selecione um mentorado e informe o email");
+      toast.error("Select a mentee and enter the email");
       return;
     }
     linkEmailMutation.mutate({
@@ -45,7 +45,7 @@ export function LinkEmailsView() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="text-muted-foreground">Carregando...</div>
+        <div className="text-muted-foreground">Loading...</div>
       </div>
     );
   }
@@ -53,24 +53,24 @@ export function LinkEmailsView() {
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Formulário de Vinculação */}
+        {/* Link Form */}
         <Card className="border-neon-blue/20">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-neon-blue-dark">
               <Link2 className="w-5 h-5" />
-              Novo Vínculo
+              New Link
             </CardTitle>
             <CardDescription>
-              Selecione um mentorado e informe o email que ele usa para fazer login
+              Select a mentee and enter the email they use to log in
             </CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="mentorado">Mentorado</Label>
+                <Label htmlFor="mentorado">Mentee</Label>
                 <Select value={selectedMentorado} onValueChange={setSelectedMentorado}>
                   <SelectTrigger id="mentorado">
-                    <SelectValue placeholder="Selecione um mentorado" />
+                    <SelectValue placeholder="Select a mentee" />
                   </SelectTrigger>
                   <SelectContent>
                     {mentorados?.map((m) => (
@@ -84,17 +84,17 @@ export function LinkEmailsView() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="email">Email de Login</Label>
+                <Label htmlFor="email">Login Email</Label>
                 <Input
                   id="email"
                   type="email"
-                  placeholder="exemplo@email.com"
+                  placeholder="example@email.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
                 />
                 <p className="text-xs text-muted-foreground">
-                  Este deve ser o email que o mentorado usa para fazer login no sistema
+                  This must be the email the mentee uses to log in to the system
                 </p>
               </div>
 
@@ -103,20 +103,20 @@ export function LinkEmailsView() {
                 className="w-full bg-neon-blue-dark hover:bg-neon-blue"
                 disabled={linkEmailMutation.isPending}
               >
-                {linkEmailMutation.isPending ? "Vinculando..." : "Vincular Email"}
+                {linkEmailMutation.isPending ? "Linking..." : "Link Email"}
               </Button>
             </form>
           </CardContent>
         </Card>
 
-        {/* Lista de Mentorados */}
+        {/* Mentees List */}
         <Card className="border-neon-blue/20">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-neon-blue-dark">
               <Mail className="w-5 h-5" />
-              Status dos Vínculos
+              Link Status
             </CardTitle>
-            <CardDescription>Mentorados e seus emails vinculados</CardDescription>
+            <CardDescription>Mentees and their linked emails</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-3 max-h-[400px] overflow-y-auto">
@@ -149,25 +149,25 @@ export function LinkEmailsView() {
         </Card>
       </div>
 
-      {/* Instruções */}
+      {/* Instructions */}
       <Card className="border-neon-gold/30 bg-neon-gold/5">
         <CardHeader>
-          <CardTitle className="text-neon-blue-dark">Como funciona?</CardTitle>
+          <CardTitle className="text-neon-blue-dark">How does it work?</CardTitle>
         </CardHeader>
         <CardContent className="space-y-2 text-sm text-muted-foreground">
           <p>
-            <strong>1.</strong> Selecione o mentorado que deseja vincular
+            <strong>1.</strong> Select the mentee you want to link
           </p>
           <p>
-            <strong>2.</strong> Informe o email que ele usa para fazer login (Google, Microsoft,
+            <strong>2.</strong> Enter the email they use to log in (Google, Microsoft,
             etc.)
           </p>
           <p>
-            <strong>3.</strong> Após vincular, quando o mentorado fizer login, ele verá
-            automaticamente apenas seus dados
+            <strong>3.</strong> After linking, when the mentee logs in, they will
+            automatically see only their own data
           </p>
           <p className="text-xs mt-4 text-amber-700">
-            ⚠️ Atenção: O email deve ser exatamente o mesmo usado no login OAuth
+            Warning: The email must be exactly the same one used for OAuth login
           </p>
         </CardContent>
       </Card>

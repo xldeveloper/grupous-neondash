@@ -28,18 +28,18 @@ import { Textarea } from "@/components/ui/textarea";
 import { trpc } from "@/lib/trpc";
 
 const MONTHS = [
-  "Janeiro",
-  "Fevereiro",
-  "Março",
-  "Abril",
-  "Maio",
-  "Junho",
-  "Julho",
-  "Agosto",
-  "Setembro",
-  "Outubro",
-  "Novembro",
-  "Dezembro",
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
 ];
 
 function getWeekOfMonth(date: Date) {
@@ -122,7 +122,7 @@ export function WeeklyPlanningAdmin() {
       setTitulo(currentPlan.titulo);
       setConteudo(currentPlan.conteudo);
     } else {
-      setTitulo(`Planejamento Semana ${semana} - ${MONTHS[mes - 1]} ${ano}`);
+      setTitulo(`Planning Week ${semana} - ${MONTHS[mes - 1]} ${ano}`);
       setConteudo("");
     }
   }, [currentPlan, semana, mes, ano]);
@@ -155,7 +155,7 @@ export function WeeklyPlanningAdmin() {
 
   const selectedMentorado =
     selectedMentoradoId === "all"
-      ? { nomeCompleto: "Todos os Mentorados" }
+      ? { nomeCompleto: "All Mentees" }
       : mentorados?.find((m) => m.id === selectedMentoradoId);
 
   const isPending = upsertMutation.isPending || upsertAllMutation.isPending;
@@ -177,8 +177,8 @@ export function WeeklyPlanningAdmin() {
               <ClipboardList className="w-5 h-5 text-primary" />
             </div>
             <div>
-              <CardTitle className="text-lg">Planejamento Semanal</CardTitle>
-              <CardDescription>Crie ou edite o planejamento para um mentorado</CardDescription>
+              <CardTitle className="text-lg">Weekly Planning</CardTitle>
+              <CardDescription>Create or edit the planning for a mentee</CardDescription>
             </div>
           </div>
         </CardHeader>
@@ -187,7 +187,7 @@ export function WeeklyPlanningAdmin() {
           <div className="space-y-2">
             <Label className="flex items-center gap-2 text-muted-foreground">
               <Users className="w-4 h-4" />
-              Selecionar Mentorado
+              Select Mentee
             </Label>
             {isLoadingMentorados ? (
               <Skeleton className="h-10 w-full" />
@@ -197,11 +197,11 @@ export function WeeklyPlanningAdmin() {
                 onValueChange={(v) => setSelectedMentoradoId(v === "all" ? "all" : Number(v))}
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="Escolha um mentorado..." />
+                  <SelectValue placeholder="Choose a mentee..." />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all" className="font-semibold text-primary">
-                    ✨ Todos os Mentorados
+                    All Mentees
                   </SelectItem>
                   {mentorados?.map((m) => (
                     <SelectItem key={m.id} value={m.id.toString()}>
@@ -216,7 +216,7 @@ export function WeeklyPlanningAdmin() {
           {/* Week Selection */}
           <div className="grid grid-cols-3 gap-3">
             <div className="space-y-2">
-              <Label className="text-muted-foreground">Semana</Label>
+              <Label className="text-muted-foreground">Week</Label>
               <Select value={semana.toString()} onValueChange={(v) => setSemana(Number(v))}>
                 <SelectTrigger>
                   <SelectValue />
@@ -224,14 +224,14 @@ export function WeeklyPlanningAdmin() {
                 <SelectContent>
                   {[1, 2, 3, 4, 5].map((w) => (
                     <SelectItem key={w} value={w.toString()}>
-                      Semana {w}
+                      Week {w}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
             <div className="space-y-2">
-              <Label className="text-muted-foreground">Mês</Label>
+              <Label className="text-muted-foreground">Month</Label>
               <Select value={mes.toString()} onValueChange={(v) => setMes(Number(v))}>
                 <SelectTrigger>
                   <SelectValue />
@@ -246,7 +246,7 @@ export function WeeklyPlanningAdmin() {
               </Select>
             </div>
             <div className="space-y-2">
-              <Label className="text-muted-foreground">Ano</Label>
+              <Label className="text-muted-foreground">Year</Label>
               <Select value={ano.toString()} onValueChange={(v) => setAno(Number(v))}>
                 <SelectTrigger>
                   <SelectValue />
@@ -266,12 +266,12 @@ export function WeeklyPlanningAdmin() {
           <div className="space-y-2">
             <Label className="flex items-center gap-2 text-muted-foreground">
               <StickyNote className="w-4 h-4" />
-              Título
+              Title
             </Label>
             <Input
               value={titulo}
               onChange={(e) => setTitulo(e.target.value)}
-              placeholder="Ex: Planejamento Semana 1 - Janeiro 2024"
+              placeholder="E.g.: Planning Week 1 - January 2024"
             />
           </div>
 
@@ -279,19 +279,19 @@ export function WeeklyPlanningAdmin() {
           <div className="space-y-2">
             <Label className="flex items-center gap-2 text-muted-foreground">
               <CalendarDays className="w-4 h-4" />
-              Conteúdo do Planejamento
+              Planning Content
             </Label>
             <Textarea
               value={conteudo}
               onChange={(e) => setConteudo(e.target.value)}
-              placeholder={`Cole aqui o planejamento no formato:
+              placeholder={`Paste the planning here in the format:
 
-DIA 1
-- (G) Verificar métricas do CRM
-- (R) Responder mensagens pendentes
-- (V) Fazer 3 stories de vendas
+DAY 1
+- (G) Check CRM metrics
+- (R) Reply to pending messages
+- (V) Create 3 sales stories
 
-DIA 2
+DAY 2
 ...`}
               className="min-h-[300px] font-mono text-sm"
             />
@@ -305,11 +305,11 @@ DIA 2
             size="lg"
           >
             {isPending ? (
-              "Salvando..."
+              "Saving..."
             ) : (
               <>
                 <Save className="w-4 h-4 mr-2" />
-                {selectedMentoradoId === "all" ? "Salvar para Todos" : "Salvar Planejamento"}
+                {selectedMentoradoId === "all" ? "Save for All" : "Save Planning"}
               </>
             )}
           </Button>
@@ -322,8 +322,8 @@ DIA 2
             >
               <CheckCircle className="w-4 h-4" />
               {selectedMentoradoId === "all"
-                ? `Planejamento enviado para ${mentorados?.length ?? 0} mentorados!`
-                : "Planejamento salvo com sucesso!"}
+                ? `Planning sent to ${mentorados?.length ?? 0} mentees!`
+                : "Planning saved successfully!"}
             </motion.div>
           )}
 
@@ -334,7 +334,7 @@ DIA 2
               className="flex items-center gap-2 text-red-500 text-sm"
             >
               <AlertCircle className="w-4 h-4" />
-              Erro ao salvar. Tente novamente.
+              Error saving. Please try again.
             </motion.div>
           )}
         </CardContent>
@@ -350,7 +350,7 @@ DIA 2
               </div>
               <div>
                 <CardTitle className="text-lg">Preview</CardTitle>
-                <CardDescription>Como o mentorado verá o planejamento</CardDescription>
+                <CardDescription>How the mentee will see the planning</CardDescription>
               </div>
             </div>
             {selectedMentorado && (
@@ -373,7 +373,7 @@ DIA 2
           {!selectedMentoradoId && (
             <div className="flex flex-col items-center justify-center py-16 text-center text-muted-foreground">
               <Users className="w-12 h-12 mb-4 opacity-30" />
-              <p>Selecione um mentorado para visualizar o preview</p>
+              <p>Select a mentee to view the preview</p>
             </div>
           )}
 
@@ -388,7 +388,7 @@ DIA 2
                   className="flex flex-col items-center justify-center py-16 text-center text-muted-foreground"
                 >
                   <ClipboardList className="w-12 h-12 mb-4 opacity-30" />
-                  <p>Cole o conteúdo do planejamento para ver o preview</p>
+                  <p>Paste the planning content to see the preview</p>
                 </motion.div>
               ) : (
                 <motion.div
@@ -430,8 +430,8 @@ DIA 2
           {currentPlan && (
             <div className="mt-6 pt-4 border-t border-border/20">
               <p className="text-xs text-muted-foreground">
-                Planejamento existente • Última atualização:{" "}
-                {new Date(currentPlan.updatedAt).toLocaleDateString("pt-BR")}
+                Existing planning -- Last updated:{" "}
+                {new Date(currentPlan.updatedAt).toLocaleDateString("en-US")}
               </p>
             </div>
           )}

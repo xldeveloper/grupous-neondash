@@ -49,7 +49,7 @@ export function AdminMentoradoSelector({
           ) : (
             <span className="text-muted-foreground flex items-center gap-2">
               <User className="h-4 w-4" />
-              Filtrar por Mentorado...
+              Filter by Mentee...
             </span>
           )}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
@@ -57,8 +57,8 @@ export function AdminMentoradoSelector({
       </PopoverTrigger>
       <PopoverContent className="w-[250px] p-0">
         <Command>
-          <CommandInput placeholder="Buscar mentorado..." />
-          <CommandEmpty>Nenhum mentorado encontrado.</CommandEmpty>
+          <CommandInput placeholder="Search mentee..." />
+          <CommandEmpty>No mentees found.</CommandEmpty>
           <CommandGroup className="max-h-[300px] overflow-auto">
             <CommandItem
               value="todos"
@@ -71,7 +71,7 @@ export function AdminMentoradoSelector({
                 className={cn("mr-2 h-4 w-4", !selectedMentoradoId ? "opacity-100" : "opacity-0")}
               />
               <span className="font-medium text-muted-foreground">
-                Remover Filtro (Ver Leads Próprios)
+                Remove Filter (View Own Leads)
               </span>
             </CommandItem>
             {mentorados?.map((mentorado) => (

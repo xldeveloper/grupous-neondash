@@ -87,10 +87,10 @@ export default function GestaoMentorados() {
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
             <div className="space-y-2">
               <h1 className="text-4xl font-bold tracking-tight bg-gradient-to-r from-foreground to-muted-foreground bg-clip-text text-transparent">
-                Painel Administrativo
+                Admin Panel
               </h1>
               <p className="text-muted-foreground text-lg">
-                Visão estratégica e gestão de alta performance.
+                Strategic vision and high-performance management.
               </p>
             </div>
             <MonthYearFilter
@@ -109,27 +109,27 @@ export default function GestaoMentorados() {
               tabs={[
                 {
                   value: "overview",
-                  label: "Visão Geral",
+                  label: "Overview",
                   icon: LayoutDashboard,
                 },
                 {
                   value: "ranking",
-                  label: "Ranking Global",
+                  label: "Global Ranking",
                   icon: Trophy,
                 },
                 {
                   value: "conquistas",
-                  label: "Badges & Conquistas",
+                  label: "Badges & Achievements",
                   icon: Medal,
                 },
                 {
                   value: "gestao",
-                  label: "Gestão",
+                  label: "Management",
                   icon: Users,
                 },
                 {
                   value: "planejamento",
-                  label: "Planejamento",
+                  label: "Planning",
                   icon: ClipboardList,
                 },
               ]}
@@ -144,7 +144,7 @@ export default function GestaoMentorados() {
                   className="grid grid-cols-1 md:grid-cols-3 gap-6"
                   variants={staggerContainer}
                 >
-                  {/* Faturamento */}
+                  {/* Revenue */}
                   <motion.div variants={slideUp}>
                     <Card className="relative overflow-hidden border-none bg-gradient-to-br from-card to-card/50 shadow-xl ring-1 ring-white/10 dark:ring-white/5 transition-all hover:scale-[1.02] hover:shadow-2xl">
                       <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-50" />
@@ -152,7 +152,7 @@ export default function GestaoMentorados() {
 
                       <CardHeader className="relative pb-2">
                         <CardTitle className="flex items-center gap-2 text-sm font-medium text-muted-foreground uppercase tracking-wider">
-                          <DollarSign className="w-4 h-4 text-primary" /> Faturamento Total
+                          <DollarSign className="w-4 h-4 text-primary" /> Total Revenue
                         </CardTitle>
                       </CardHeader>
                       <CardContent className="relative">
@@ -172,14 +172,14 @@ export default function GestaoMentorados() {
                         <div className="flex items-center gap-2 mt-3 p-2 rounded-lg bg-primary/5 w-fit border border-primary/10">
                           <TrendingUp className="w-4 h-4 text-emerald-500" />
                           <span className="text-xs font-medium text-primary">
-                            +12.5% vs mês anterior
+                            +12.5% vs previous month
                           </span>
                         </div>
                       </CardContent>
                     </Card>
                   </motion.div>
 
-                  {/* Mentorados */}
+                  {/* Mentees */}
                   <motion.div variants={slideUp}>
                     <Card className="relative overflow-hidden border-none bg-gradient-to-br from-card to-card/50 shadow-xl ring-1 ring-white/10 dark:ring-white/5 transition-all hover:scale-[1.02] hover:shadow-2xl">
                       <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-transparent to-transparent opacity-50" />
@@ -187,7 +187,7 @@ export default function GestaoMentorados() {
 
                       <CardHeader className="relative pb-2">
                         <CardTitle className="flex items-center gap-2 text-sm font-medium text-muted-foreground uppercase tracking-wider">
-                          <Users className="w-4 h-4 text-blue-500" /> Mentorados Ativos
+                          <Users className="w-4 h-4 text-blue-500" /> Active Mentees
                         </CardTitle>
                       </CardHeader>
                       <CardContent className="relative">
@@ -197,7 +197,7 @@ export default function GestaoMentorados() {
                         <div className="flex items-center gap-2 mt-3 p-2 rounded-lg bg-blue-500/5 w-fit border border-blue-500/10 dark:border-blue-500/20">
                           <Activity className="w-4 h-4 text-blue-500" />
                           <span className="text-xs font-medium text-blue-600 dark:text-blue-400">
-                            100% Taxa de Engajamento
+                            100% Engagement Rate
                           </span>
                         </div>
                       </CardContent>
@@ -212,7 +212,7 @@ export default function GestaoMentorados() {
 
                       <CardHeader className="relative pb-2">
                         <CardTitle className="flex items-center gap-2 text-sm font-medium text-muted-foreground uppercase tracking-wider">
-                          <Award className="w-4 h-4 text-amber-500" /> Score Médio (Top 5)
+                          <Award className="w-4 h-4 text-amber-500" /> Average Score (Top 5)
                         </CardTitle>
                       </CardHeader>
                       <CardContent className="relative">
@@ -226,7 +226,7 @@ export default function GestaoMentorados() {
                         <div className="flex items-center gap-2 mt-3 p-2 rounded-lg bg-amber-500/5 w-fit border border-amber-500/10 dark:border-amber-500/20">
                           <Target className="w-4 h-4 text-amber-500" />
                           <span className="text-xs font-medium text-amber-600 dark:text-amber-400">
-                            Alta performance
+                            High performance
                           </span>
                         </div>
                       </CardContent>
@@ -242,11 +242,11 @@ export default function GestaoMentorados() {
                       <div>
                         <CardTitle className="text-xl font-semibold">Top Performance</CardTitle>
                         <p className="text-sm text-muted-foreground">
-                          Faturamento vs. Meta (Dezembro 2025)
+                          Revenue vs. Goal (December 2025)
                         </p>
                       </div>
                       <Button variant="outline" size="sm" className="hidden sm:flex">
-                        <Calendar className="w-4 h-4 mr-2" /> Exportar Relatório
+                        <Calendar className="w-4 h-4 mr-2" /> Export Report
                       </Button>
                     </CardHeader>
                     <CardContent className="h-[400px] mt-4">
@@ -309,7 +309,7 @@ export default function GestaoMentorados() {
                                 style: "currency",
                                 currency: "BRL",
                               }).format(value),
-                              "Faturamento",
+                              "Revenue",
                             ]}
                           />
                           <Bar
@@ -328,9 +328,9 @@ export default function GestaoMentorados() {
                     <CardHeader>
                       <CardTitle className="flex items-center gap-2">
                         <Trophy className="w-5 h-5 text-amber-500" />
-                        Líderes do Mês
+                        Leaders of the Month
                       </CardTitle>
-                      <p className="text-sm text-muted-foreground">Baseado em score de metas</p>
+                      <p className="text-sm text-muted-foreground">Based on goal score</p>
                     </CardHeader>
                     <CardContent>
                       <AnimatedList
@@ -380,7 +380,7 @@ export default function GestaoMentorados() {
                         variant="ghost"
                         className="w-full mt-6 text-xs text-muted-foreground hover:text-primary"
                       >
-                        Ver Ranking Completo
+                        View Full Ranking
                       </Button>
                     </CardContent>
                   </Card>
@@ -398,13 +398,13 @@ export default function GestaoMentorados() {
               <AchievementsView />
             </FloatingDockTabsContent>
 
-            {/* GESTÃO TAB */}
+            {/* MANAGEMENT TAB */}
             <FloatingDockTabsContent value="gestao" className="mt-0" asChild>
               <motion.div variants={fadeIn}>
                 <Tabs defaultValue="cadastros" className="w-full">
                   <TabsList className="grid w-[400px] grid-cols-2 mb-6">
-                    <TabsTrigger value="cadastros">Cadastros</TabsTrigger>
-                    <TabsTrigger value="acessos">Acessos</TabsTrigger>
+                    <TabsTrigger value="cadastros">Records</TabsTrigger>
+                    <TabsTrigger value="acessos">Access</TabsTrigger>
                   </TabsList>
                   <TabsContent value="cadastros" className="mt-0">
                     <MenteeManagementView />
@@ -416,7 +416,7 @@ export default function GestaoMentorados() {
               </motion.div>
             </FloatingDockTabsContent>
 
-            {/* PLANEJAMENTO TAB */}
+            {/* PLANNING TAB */}
             <FloatingDockTabsContent value="planejamento" className="mt-0">
               <MonthlyGoalsAdmin />
               <WeeklyPlanningAdmin />

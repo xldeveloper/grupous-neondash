@@ -81,13 +81,13 @@ export function WhatsAppConnectionCard(_props: WhatsAppConnectionCardProps) {
   // Track QR code errors
   useEffect(() => {
     if (qrQueryError) {
-      const errorMessage = qrQueryError.message || "Erro desconhecido";
+      const errorMessage = qrQueryError.message || "Unknown error";
       if (errorMessage.includes("Instance not found")) {
-        setQrError("Instância Z-API não encontrada. Verifique o Instance ID.");
+        setQrError("Z-API instance not found. Check the Instance ID.");
       } else if (errorMessage.includes("Unauthorized") || errorMessage.includes("401")) {
-        setQrError("Token Z-API inválido. Verifique suas credenciais.");
+        setQrError("Invalid Z-API token. Check your credentials.");
       } else {
-        setQrError(`Falha ao obter QR Code: ${errorMessage}`);
+        setQrError(`Failed to get QR Code: ${errorMessage}`);
       }
     }
   }, [qrQueryError]);
@@ -100,7 +100,7 @@ export function WhatsAppConnectionCard(_props: WhatsAppConnectionCardProps) {
       refetchQr();
     },
     onError: (error) => {
-      setConfigError(error.message || "Erro ao salvar credenciais");
+      setConfigError(error.message || "Error saving credentials");
     },
   });
 
@@ -113,7 +113,7 @@ export function WhatsAppConnectionCard(_props: WhatsAppConnectionCardProps) {
       refetchQr();
     },
     onError: (error) => {
-      setConfigError(error.message || "Erro ao criar instância");
+      setConfigError(error.message || "Error creating instance");
     },
   });
 
@@ -175,7 +175,7 @@ export function WhatsAppConnectionCard(_props: WhatsAppConnectionCardProps) {
             className="border-green-500 text-green-600 bg-green-50 dark:bg-green-950/30"
           >
             <CheckCircle2 className="w-3 h-3 mr-1" />
-            Conectado
+            Connected
           </Badge>
         );
       case "connecting":
@@ -185,7 +185,7 @@ export function WhatsAppConnectionCard(_props: WhatsAppConnectionCardProps) {
             className="border-yellow-500 text-yellow-600 bg-yellow-50 dark:bg-yellow-950/30"
           >
             <Loader2 className="w-3 h-3 mr-1 animate-spin" />
-            Conectando
+            Connecting
           </Badge>
         );
       default:
@@ -195,7 +195,7 @@ export function WhatsAppConnectionCard(_props: WhatsAppConnectionCardProps) {
             className="border-red-500 text-red-600 bg-red-50 dark:bg-red-950/30"
           >
             <XCircle className="w-3 h-3 mr-1" />
-            Desconectado
+            Disconnected
           </Badge>
         );
     }
@@ -212,17 +212,17 @@ export function WhatsAppConnectionCard(_props: WhatsAppConnectionCardProps) {
         className: "border-blue-500 text-blue-600 bg-blue-50 dark:bg-blue-950/30",
       },
       active: {
-        label: "Ativo",
+        label: "Active",
         icon: CheckCircle2,
         className: "border-green-500 text-green-600 bg-green-50 dark:bg-green-950/30",
       },
       suspended: {
-        label: "Suspenso",
+        label: "Suspended",
         icon: AlertCircle,
         className: "border-orange-500 text-orange-600 bg-orange-50 dark:bg-orange-950/30",
       },
       canceled: {
-        label: "Cancelado",
+        label: "Canceled",
         icon: XCircle,
         className: "border-red-500 text-red-600 bg-red-50 dark:bg-red-950/30",
       },
@@ -238,7 +238,7 @@ export function WhatsAppConnectionCard(_props: WhatsAppConnectionCardProps) {
         {config.label}
         {lifecycle.dueDate && (
           <span className="ml-1 text-xs opacity-75">
-            (até {new Date(lifecycle.dueDate).toLocaleDateString("pt-BR")})
+            (until {new Date(lifecycle.dueDate).toLocaleDateString("en-US")})
           </span>
         )}
       </Badge>
@@ -255,7 +255,7 @@ export function WhatsAppConnectionCard(_props: WhatsAppConnectionCardProps) {
             </div>
             <div>
               <CardTitle className="text-lg">WhatsApp</CardTitle>
-              <CardDescription>Integração via Z-API</CardDescription>
+              <CardDescription>Integration via Z-API</CardDescription>
             </div>
           </div>
           {getStatusBadge()}
@@ -277,7 +277,7 @@ export function WhatsAppConnectionCard(_props: WhatsAppConnectionCardProps) {
                 <Wifi className="w-5 h-5 text-green-600" />
                 <div className="flex-1">
                   <p className="font-medium text-green-700 dark:text-green-400">
-                    WhatsApp conectado
+                    WhatsApp connected
                   </p>
                   {connectionStatus?.phone && (
                     <p className="text-sm text-green-600 dark:text-green-500">
@@ -295,20 +295,20 @@ export function WhatsAppConnectionCard(_props: WhatsAppConnectionCardProps) {
                     className="w-full border-red-200 hover:bg-red-50 hover:text-red-600"
                   >
                     <Unlink className="w-4 h-4 mr-2" />
-                    Desconectar WhatsApp
+                    Disconnect WhatsApp
                   </Button>
                 </DialogTrigger>
                 <DialogContent>
                   <DialogHeader>
-                    <DialogTitle>Desconectar WhatsApp?</DialogTitle>
+                    <DialogTitle>Disconnect WhatsApp?</DialogTitle>
                     <DialogDescription>
-                      Você precisará escanear o QR code novamente para reconectar. Mensagens não
-                      serão recebidas enquanto desconectado.
+                      You will need to scan the QR code again to reconnect. Messages will not
+                      be received while disconnected.
                     </DialogDescription>
                   </DialogHeader>
                   <DialogFooter>
                     <Button variant="outline" onClick={() => setShowDisconnectDialog(false)}>
-                      Cancelar
+                      Cancel
                     </Button>
                     <Button
                       variant="destructive"
@@ -318,7 +318,7 @@ export function WhatsAppConnectionCard(_props: WhatsAppConnectionCardProps) {
                       {disconnectMutation.isPending && (
                         <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                       )}
-                      Desconectar
+                      Disconnect
                     </Button>
                   </DialogFooter>
                 </DialogContent>
@@ -343,20 +343,20 @@ export function WhatsAppConnectionCard(_props: WhatsAppConnectionCardProps) {
                       <XCircle className="w-5 h-5 text-red-600 flex-shrink-0" />
                       <div className="flex-1">
                         <p className="font-medium text-red-700 dark:text-red-400">
-                          Erro de Conexão
+                          Connection Error
                         </p>
                         <p className="text-sm text-red-600 dark:text-red-500">{qrError}</p>
                       </div>
                     </div>
                     <Button variant="outline" onClick={handleReconfigure} className="w-full">
                       <RefreshCw className="w-4 h-4 mr-2" />
-                      Reconfigurar Credenciais
+                      Reconfigure Credentials
                     </Button>
                   </>
                 ) : (
                   <>
                     <p className="text-sm text-muted-foreground text-center">
-                      Escaneie o QR code com o WhatsApp do seu celular
+                      Scan the QR code with WhatsApp on your phone
                     </p>
 
                     <div className="relative p-4 bg-white rounded-xl shadow-inner border">
@@ -396,10 +396,10 @@ export function WhatsAppConnectionCard(_props: WhatsAppConnectionCardProps) {
                         <RefreshCw
                           className={`w-4 h-4 mr-2 ${isLoadingQr ? "animate-spin" : ""}`}
                         />
-                        Atualizar QR Code
+                        Refresh QR Code
                       </Button>
                       <Button variant="outline" size="sm" onClick={handleReconfigure}>
-                        Alterar Credenciais
+                        Change Credentials
                       </Button>
                     </div>
                   </>
@@ -421,7 +421,7 @@ export function WhatsAppConnectionCard(_props: WhatsAppConnectionCardProps) {
               {configError && (
                 <Alert variant="destructive">
                   <XCircle className="h-4 w-4" />
-                  <AlertTitle>Erro</AlertTitle>
+                  <AlertTitle>Error</AlertTitle>
                   <AlertDescription>{configError}</AlertDescription>
                 </Alert>
               )}
@@ -434,12 +434,12 @@ export function WhatsAppConnectionCard(_props: WhatsAppConnectionCardProps) {
                       <Zap className="w-8 h-8 text-primary" />
                     </div>
                     <div className="text-center">
-                      <h3 className="font-semibold text-lg">Conexão Rápida</h3>
+                      <h3 className="font-semibold text-lg">Quick Connect</h3>
                       <p className="text-sm text-muted-foreground mt-1">
-                        Conecte seu WhatsApp em poucos segundos.
+                        Connect your WhatsApp in seconds.
                         <br />
-                        <span className="text-primary font-medium">Grátis por 2 dias</span>, depois
-                        incluído na sua mentoria.
+                        <span className="text-primary font-medium">Free for 2 days</span>, then
+                        included in your mentorship.
                       </p>
                     </div>
                     <Button
@@ -452,7 +452,7 @@ export function WhatsAppConnectionCard(_props: WhatsAppConnectionCardProps) {
                         <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                       )}
                       <Smartphone className="w-4 h-4 mr-2" />
-                      Conectar meu WhatsApp
+                      Connect my WhatsApp
                     </Button>
                   </div>
 
@@ -475,8 +475,8 @@ export function WhatsAppConnectionCard(_props: WhatsAppConnectionCardProps) {
                   >
                     <span className="text-sm">
                       {isIntegratorAvailable
-                        ? "Já possui uma conta Z-API? Configurar manualmente"
-                        : "Configurar credenciais Z-API"}
+                        ? "Already have a Z-API account? Configure manually"
+                        : "Configure Z-API credentials"}
                     </span>
                     <ChevronDown
                       className={`w-4 h-4 transition-transform ${showManualMode ? "rotate-180" : ""}`}
@@ -487,11 +487,11 @@ export function WhatsAppConnectionCard(_props: WhatsAppConnectionCardProps) {
                   {/* Setup Instructions */}
                   <Alert className="border-primary/20 bg-primary/5">
                     <AlertCircle className="h-4 w-4" />
-                    <AlertTitle>Como configurar o Z-API</AlertTitle>
+                    <AlertTitle>How to configure Z-API</AlertTitle>
                     <AlertDescription className="mt-2 space-y-3">
                       <ol className="list-decimal list-inside text-sm space-y-2">
                         <li>
-                          <strong>Crie sua conta:</strong> Acesse{" "}
+                          <strong>Create your account:</strong> Go to{" "}
                           <a
                             href="https://www.z-api.io/"
                             target="_blank"
@@ -500,18 +500,18 @@ export function WhatsAppConnectionCard(_props: WhatsAppConnectionCardProps) {
                           >
                             www.z-api.io <ExternalLink className="w-3 h-3" />
                           </a>{" "}
-                          e clique em "Criar conta grátis"
+                          and click "Create free account"
                         </li>
                         <li>
-                          <strong>Faça login:</strong> Após cadastrar, acesse o painel Z-API
+                          <strong>Log in:</strong> After registering, access the Z-API dashboard
                         </li>
                         <li>
-                          <strong>Crie uma instância:</strong> No menu lateral, clique em "Minhas
-                          Instâncias" → "Nova Instância"
+                          <strong>Create an instance:</strong> In the sidebar menu, click "My
+                          Instances" then "New Instance"
                         </li>
                         <li>
-                          <strong>Copie as credenciais:</strong> Na tela da instância, copie o{" "}
-                          <strong>Instance ID</strong> e o <strong>Token</strong>
+                          <strong>Copy the credentials:</strong> On the instance screen, copy the{" "}
+                          <strong>Instance ID</strong> and the <strong>Token</strong>
                         </li>
                       </ol>
                     </AlertDescription>
@@ -530,7 +530,7 @@ export function WhatsAppConnectionCard(_props: WhatsAppConnectionCardProps) {
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="token">Token da Instância</Label>
+                      <Label htmlFor="token">Instance Token</Label>
                       <Input
                         id="token"
                         type="password"
@@ -542,9 +542,9 @@ export function WhatsAppConnectionCard(_props: WhatsAppConnectionCardProps) {
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="clientToken">
-                        Token de Segurança{" "}
+                        Security Token{" "}
                         <span className="text-muted-foreground text-xs">
-                          (obrigatório se ativado no Z-API)
+                          (required if enabled in Z-API)
                         </span>
                       </Label>
                       <Input
@@ -566,7 +566,7 @@ export function WhatsAppConnectionCard(_props: WhatsAppConnectionCardProps) {
                         <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                       )}
                       <QrCode className="w-4 h-4 mr-2" />
-                      Conectar WhatsApp
+                      Connect WhatsApp
                     </Button>
                   </div>
                 </CollapsibleContent>

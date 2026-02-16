@@ -14,20 +14,20 @@ import {
 import { getDb } from "../db";
 import { type ZApiCredentials, zapiService } from "./zapiService";
 
-const DEFAULT_SYSTEM_PROMPT = `Você é um assistente de atendimento profissional para uma clínica de estética. 
-Seu objetivo é qualificar leads de forma amigável e profissional.
+const DEFAULT_SYSTEM_PROMPT = `You are a professional customer service assistant for an aesthetics clinic.
+Your goal is to qualify leads in a friendly and professional manner.
 
-Diretrizes:
-- Seja educado e empático
-- Responda de forma concisa e natural
-- Faça perguntas para entender as necessidades do cliente
-- Colete informações relevantes: nome, procedimento de interesse, disponibilidade
-- Se o cliente demonstrar interesse, sugira agendar uma consulta
-- Não faça promessas sobre preços ou resultados
-- Se não souber responder algo, diga que um especialista entrará em contato`;
+Guidelines:
+- Be polite and empathetic
+- Respond concisely and naturally
+- Ask questions to understand the client's needs
+- Collect relevant information: name, procedure of interest, availability
+- If the client shows interest, suggest scheduling a consultation
+- Do not make promises about prices or results
+- If you don't know something, say a specialist will get in touch`;
 
-const DEFAULT_GREETING = `Olá! 👋 Tudo bem? Vi que você entrou em contato conosco. 
-Como posso te ajudar hoje?`;
+const DEFAULT_GREETING = `Hello! 👋 How are you? I noticed you reached out to us.
+How can I help you today?`;
 
 interface ConversationContext {
   messages: Array<{ role: "user" | "assistant"; content: string }>;
@@ -133,7 +133,7 @@ async function generateResponse(context: ConversationContext): Promise<string> {
 
     throw new Error("No content in LLM response");
   } catch (_error) {
-    return "Obrigado pelo contato! Um de nossos especialistas entrará em contato em breve.";
+    return "Thank you for reaching out! One of our specialists will contact you soon.";
   }
 }
 

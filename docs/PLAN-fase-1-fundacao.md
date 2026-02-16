@@ -1,97 +1,97 @@
-# Plano de Implementação: Fase 1 - Fundação (Design System & Estilos)
+# Implementation Plan: Phase 1 - Foundation (Design System & Styles)
 
-**Objetivo:** Estabelecer a identidade visual consistente do NeonDash, ajustando cores, contraste e limpando a UI de elementos desnecessários. Esta fase é a base para todas as outras e garante que os componentes futuros sigam o mesmo padrão.
+**Objective:** Establish a consistent visual identity for NeonDash, adjusting colors, contrast, and cleaning up unnecessary UI elements. This phase is the foundation for all others and ensures that future components follow the same standard.
 
-**Tempo Total Estimado:** ~3 horas
+**Total Estimated Time:** ~3 hours
 
-**Complexidade Média:** L1.6
+**Average Complexity:** L1.6
 
-**Issues Envolvidos:** GPU-25, GPU-29, GPU-26
+**Issues Involved:** GPU-25, GPU-29, GPU-26
 
 ---
 
-## ⚡ Tarefas Paralelas
+## Parallel Tasks
 
-Todas as tarefas desta fase são independentes e podem ser executadas em paralelo.
+All tasks in this phase are independent and can be executed in parallel.
 
-### 1. GPU-25: Trocar Cores da Escrita no Modo Claro
+### 1. GPU-25: Change Text Colors in Light Mode
 
-**Objetivo:** Melhorar o contraste e alinhar o modo claro com a identidade visual do projeto (azul petróleo).
+**Objective:** Improve contrast and align light mode with the project's visual identity (teal blue).
 
 #### Atomic Tasks
 
-- **AT-001:** Identificar as variáveis de cor de texto para o modo claro no arquivo `client/src/index.css` (dentro do seletor `:root`).
-- **AT-002:** Atualizar a variável `--foreground` para o tom principal de azul petróleo (`#0d4f5a`) e ajustar variáveis secundárias (`--muted-foreground`, etc.) para tons complementares que garantam a hierarquia visual.
-- **AT-003:** Validar o contraste de todas as alterações com uma ferramenta de acessibilidade para garantir a conformidade com o padrão WCAG AA (mínimo 4.5:1).
+- **AT-001:** Identify the text color variables for light mode in the `client/src/index.css` file (inside the `:root` selector).
+- **AT-002:** Update the `--foreground` variable to the main teal blue tone (`#0d4f5a`) and adjust secondary variables (`--muted-foreground`, etc.) to complementary tones that ensure visual hierarchy.
+- **AT-003:** Validate the contrast of all changes with an accessibility tool to ensure compliance with the WCAG AA standard (minimum 4.5:1).
 
 #### Antigravity Prompt
 
 ```markdown
 # ROLE: UI Developer
 
-# CONTEXT: Projeto NeonDash (React + Tailwind CSS)
+# CONTEXT: NeonDash Project (React + Tailwind CSS)
 
-# TASK: Atualizar cores de texto do modo claro para Azul Petróleo
+# TASK: Update light mode text colors to Teal Blue
 
-1.  Abra o arquivo `client/src/index.css`.
-2.  No seletor `:root`, localize as variáveis de cor de texto (`--foreground`, `--muted-foreground`, etc.).
-3.  Altere a cor principal de texto para o Azul Petróleo do projeto: `#0d4f5a`.
-4.  Ajuste as cores secundárias para garantir uma hierarquia visual clara e legível.
-5.  Verifique se o contraste de todos os textos sobre o fundo claro atende ao padrão WCAG AA (mínimo 4.5:1).
-6.  Navegue por todas as páginas no modo claro para confirmar a consistência visual.
+1.  Open the file `client/src/index.css`.
+2.  In the `:root` selector, locate the text color variables (`--foreground`, `--muted-foreground`, etc.).
+3.  Change the main text color to the project's Teal Blue: `#0d4f5a`.
+4.  Adjust secondary colors to ensure a clear and readable visual hierarchy.
+5.  Verify that the contrast of all text on the light background meets the WCAG AA standard (minimum 4.5:1).
+6.  Navigate through all pages in light mode to confirm visual consistency.
 ```
 
 ---
 
-### 2. GPU-29: Trocar Letra do Modo Escuro
+### 2. GPU-29: Change Dark Mode Font
 
-**Objetivo:** Melhorar a legibilidade e o apelo visual do modo escuro, utilizando cores mais vibrantes para textos e elementos de destaque.
+**Objective:** Improve readability and visual appeal of dark mode, using more vibrant colors for text and highlight elements.
 
 #### Atomic Tasks
 
-- **AT-001:** Localizar as variáveis de cor de texto para o modo escuro no arquivo `client/src/index.css` (dentro do seletor `.dark`).
-- **AT-002:** Atualizar a variável `--foreground` para um branco suave (`#F8FAFC`) para textos corridos, garantindo conforto visual.
-- **AT-003:** Aplicar as cores de destaque Neon (Dourado: `#F59E0B` ou Azul Claro: `#0ea5e9`) em títulos, links e elementos interativos para criar contraste e hierarquia.
+- **AT-001:** Locate the text color variables for dark mode in the `client/src/index.css` file (inside the `.dark` selector).
+- **AT-002:** Update the `--foreground` variable to a soft white (`#F8FAFC`) for body text, ensuring visual comfort.
+- **AT-003:** Apply the Neon highlight colors (Gold: `#F59E0B` or Light Blue: `#0ea5e9`) to headings, links, and interactive elements to create contrast and hierarchy.
 
 #### Antigravity Prompt
 
 ```markdown
 # ROLE: UI Engineer
 
-# CONTEXT: Projeto NeonDash (React + Tailwind CSS)
+# CONTEXT: NeonDash Project (React + Tailwind CSS)
 
-# TASK: Otimizar contraste e cores do modo escuro
+# TASK: Optimize dark mode contrast and colors
 
-1.  Abra o arquivo `client/src/index.css`.
-2.  No seletor `.dark`, atualize a variável de cor de primeiro plano (`--foreground`) para `#F8FAFC`.
-3.  Para títulos e elementos de destaque (links, botões secundários), utilize a cor Dourado Neon: `#F59E0B`.
-4.  Garanta que o contraste em relação ao fundo escuro (`#0F172A`) seja de pelo menos 7:1 (WCAG AAA) para textos importantes.
-5.  Revise todos os componentes de texto no modo escuro para garantir consistência.
+1.  Open the file `client/src/index.css`.
+2.  In the `.dark` selector, update the foreground color variable (`--foreground`) to `#F8FAFC`.
+3.  For headings and highlight elements (links, secondary buttons), use the Neon Gold color: `#F59E0B`.
+4.  Ensure the contrast against the dark background (`#0F172A`) is at least 7:1 (WCAG AAA) for important text.
+5.  Review all text components in dark mode to ensure consistency.
 ```
 
 ---
 
-### 3. GPU-26: Tirar Card de Sistema Online
+### 3. GPU-26: Remove System Online Card
 
-**Objetivo:** Simplificar a interface do dashboard, removendo um elemento visualmente redundante.
+**Objective:** Simplify the dashboard interface by removing a visually redundant element.
 
 #### Atomic Tasks
 
-- **AT-001:** Localizar o componente ou trecho de código JSX que renderiza o indicador "Sistema Online" no arquivo `client/src/pages/MyDashboard.tsx`.
-- **AT-002:** Remover completamente o código JSX do indicador.
-- **AT-003:** Verificar se existem estados (`useState`) ou efeitos (`useEffect`) associados exclusivamente a este indicador e removê-los para limpar o código.
+- **AT-001:** Locate the component or JSX code snippet that renders the "System Online" indicator in the `client/src/pages/MyDashboard.tsx` file.
+- **AT-002:** Completely remove the indicator's JSX code.
+- **AT-003:** Check if there are states (`useState`) or effects (`useEffect`) associated exclusively with this indicator and remove them to clean up the code.
 
 #### Antigravity Prompt
 
 ```markdown
 # ROLE: Frontend Developer
 
-# CONTEXT: Projeto NeonDash (React)
+# CONTEXT: NeonDash Project (React)
 
-# TASK: Remover indicador "Sistema Online" do MyDashboard
+# TASK: Remove "System Online" indicator from MyDashboard
 
-1.  Abra o arquivo `client/src/pages/MyDashboard.tsx`.
-2.  Localize e remova o elemento JSX que renderiza o indicador de status "Sistema Online" (provavelmente um `div` com texto e uma animação de pulso).
-3.  Inspecione o componente em busca de qualquer estado ou lógica que era usada apenas por esse indicador e remova-os.
-4.  Execute `bun run build` para garantir que a remoção não introduziu erros.
+1.  Open the file `client/src/pages/MyDashboard.tsx`.
+2.  Locate and remove the JSX element that renders the "System Online" status indicator (likely a `div` with text and a pulse animation).
+3.  Inspect the component for any state or logic that was used only by this indicator and remove them.
+4.  Run `bun run build` to ensure the removal did not introduce errors.
 ```

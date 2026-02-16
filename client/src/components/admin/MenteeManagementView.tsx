@@ -18,7 +18,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { trpc } from "@/lib/trpc";
 
-// Mentorado list item type (matches tRPC output)
+// Mentee list item type (matches tRPC output)
 interface MentoradoListItem {
   id: number;
   nomeCompleto: string;
@@ -70,37 +70,37 @@ export function MenteeManagementView() {
 
   const createMutation = trpc.mentorados.createNew.useMutation({
     onSuccess: () => {
-      toast.success("Mentorado criado com sucesso!");
+      toast.success("Mentee created successfully!");
       utils.mentorados.list.invalidate();
       setIsCreateOpen(false);
       setForm(defaultForm);
     },
     onError: (error) => {
-      toast.error(`Erro ao criar: ${error.message}`);
+      toast.error(`Error creating: ${error.message}`);
     },
   });
 
   const updateMutation = trpc.mentorados.update.useMutation({
     onSuccess: () => {
-      toast.success("Mentorado atualizado com sucesso!");
+      toast.success("Mentee updated successfully!");
       utils.mentorados.list.invalidate();
       setIsEditOpen(false);
       setSelectedMentorado(null);
     },
     onError: (error) => {
-      toast.error(`Erro ao atualizar: ${error.message}`);
+      toast.error(`Error updating: ${error.message}`);
     },
   });
 
   const deleteMutation = trpc.mentorados.delete.useMutation({
     onSuccess: () => {
-      toast.success("Mentorado removido com sucesso!");
+      toast.success("Mentee removed successfully!");
       utils.mentorados.list.invalidate();
       setIsDeleteOpen(false);
       setSelectedMentorado(null);
     },
     onError: (error) => {
-      toast.error(`Erro ao remover: ${error.message}`);
+      toast.error(`Error removing: ${error.message}`);
     },
   });
 
@@ -187,20 +187,20 @@ export function MenteeManagementView() {
           <DialogTrigger asChild>
             <Button className="bg-neon-blue hover:bg-neon-blue-dark">
               <Plus className="w-4 h-4 mr-2" />
-              Novo Mentorado
+              New Mentee
             </Button>
           </DialogTrigger>
           <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
             <DialogHeader>
-              <DialogTitle>Criar Novo Mentorado</DialogTitle>
+              <DialogTitle>Create New Mentee</DialogTitle>
             </DialogHeader>
             <div className="space-y-4 py-4">
               <div className="space-y-2">
-                <Label>Nome Completo *</Label>
+                <Label>Full Name *</Label>
                 <Input
                   value={form.nomeCompleto}
                   onChange={(e) => setForm({ ...form, nomeCompleto: e.target.value })}
-                  placeholder="Nome do mentorado"
+                  placeholder="Mentee name"
                 />
               </div>
               <div className="space-y-2">
@@ -209,11 +209,11 @@ export function MenteeManagementView() {
                   type="email"
                   value={form.email}
                   onChange={(e) => setForm({ ...form, email: e.target.value })}
-                  placeholder="email@exemplo.com"
+                  placeholder="email@example.com"
                 />
               </div>
               <div className="space-y-2">
-                <Label>URL da Foto</Label>
+                <Label>Photo URL</Label>
                 <Input
                   value={form.fotoUrl}
                   onChange={(e) => setForm({ ...form, fotoUrl: e.target.value })}
@@ -224,11 +224,11 @@ export function MenteeManagementView() {
               <div className="border-t pt-4">
                 <h4 className="font-medium text-sm text-slate-700 mb-3 flex items-center gap-2">
                   <Target className="w-4 h-4" />
-                  Metas Personalizadas
+                  Custom Goals
                 </h4>
                 <div className="grid grid-cols-2 gap-3">
                   <div className="space-y-1">
-                    <Label className="text-xs">Meta Faturamento (R$)</Label>
+                    <Label className="text-xs">Revenue Goal (R$)</Label>
                     <Input
                       type="number"
                       value={form.metaFaturamento}
@@ -241,7 +241,7 @@ export function MenteeManagementView() {
                     />
                   </div>
                   <div className="space-y-1">
-                    <Label className="text-xs">Meta Leads</Label>
+                    <Label className="text-xs">Leads Goal</Label>
                     <Input
                       type="number"
                       value={form.metaLeads}
@@ -254,7 +254,7 @@ export function MenteeManagementView() {
                     />
                   </div>
                   <div className="space-y-1">
-                    <Label className="text-xs">Meta Procedimentos</Label>
+                    <Label className="text-xs">Procedures Goal</Label>
                     <Input
                       type="number"
                       value={form.metaProcedimentos}
@@ -267,7 +267,7 @@ export function MenteeManagementView() {
                     />
                   </div>
                   <div className="space-y-1">
-                    <Label className="text-xs">Meta Posts</Label>
+                    <Label className="text-xs">Posts Goal</Label>
                     <Input
                       type="number"
                       value={form.metaPosts}
@@ -275,7 +275,7 @@ export function MenteeManagementView() {
                     />
                   </div>
                   <div className="space-y-1">
-                    <Label className="text-xs">Meta Stories</Label>
+                    <Label className="text-xs">Stories Goal</Label>
                     <Input
                       type="number"
                       value={form.metaStories}
@@ -292,14 +292,14 @@ export function MenteeManagementView() {
             </div>
             <DialogFooter>
               <DialogClose asChild>
-                <Button variant="outline">Cancelar</Button>
+                <Button variant="outline">Cancel</Button>
               </DialogClose>
               <Button
                 onClick={handleCreate}
                 disabled={!form.nomeCompleto || createMutation.isPending}
                 className="bg-neon-blue hover:bg-neon-blue-dark"
               >
-                {createMutation.isPending ? "Criando..." : "Criar Mentorado"}
+                {createMutation.isPending ? "Creating..." : "Create Mentee"}
               </Button>
             </DialogFooter>
           </DialogContent>
@@ -330,24 +330,24 @@ export function MenteeManagementView() {
               </div>
               <div>
                 <p className="text-2xl font-bold text-slate-900">{stats.comEmail}</p>
-                <p className="text-xs text-slate-500">Com Email</p>
+                <p className="text-xs text-slate-500">With Email</p>
               </div>
             </div>
           </CardContent>
         </Card>
       </div>
 
-      {/* Mentorados List */}
+      {/* Mentees List */}
       <div className="space-y-4">
-        <h2 className="text-xl font-bold text-slate-900 tracking-tight">Lista de Mentorados</h2>
+        <h2 className="text-xl font-bold text-slate-900 tracking-tight">Mentees List</h2>
 
         {isLoading ? (
           <div className="text-center py-12 text-slate-500 bg-slate-50 rounded-lg">
-            Carregando...
+            Loading...
           </div>
         ) : filteredMentorados?.length === 0 ? (
           <div className="text-center py-12 text-slate-500 bg-slate-50 rounded-lg">
-            Nenhum mentorado encontrado
+            No mentees found
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -357,12 +357,12 @@ export function MenteeManagementView() {
                 name={mentorado.nomeCompleto}
                 email={mentorado.email || undefined}
                 imageUrl={mentorado.fotoUrl || undefined}
-                jobTitle="Mentorado"
+                jobTitle="Mentee"
                 turma={mentorado.turma}
                 badges={[]} // Could add active/inactive here if needed
                 stats={[
                   {
-                    label: "Faturamento",
+                    label: "Revenue",
                     value: `R$ ${(mentorado.metaFaturamento || 0).toLocaleString("pt-BR")}`,
                   },
                   { label: "Leads", value: mentorado.metaLeads || 0 },
@@ -376,7 +376,7 @@ export function MenteeManagementView() {
                       className="flex-1 text-xs h-8"
                       onClick={() => openEditDialog(mentorado)}
                     >
-                      <Pencil className="w-3 h-3 mr-1.5" /> Editar
+                      <Pencil className="w-3 h-3 mr-1.5" /> Edit
                     </Button>
                     <Link href={`/leads?mentoradoId=${mentorado.id}`} className="flex-1">
                       <Button variant="outline" size="sm" className="w-full text-xs h-8">
@@ -403,11 +403,11 @@ export function MenteeManagementView() {
       <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
         <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>Editar Mentorado</DialogTitle>
+            <DialogTitle>Edit Mentee</DialogTitle>
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div className="space-y-2">
-              <Label>Nome Completo *</Label>
+              <Label>Full Name *</Label>
               <Input
                 value={form.nomeCompleto}
                 onChange={(e) => setForm({ ...form, nomeCompleto: e.target.value })}
@@ -422,7 +422,7 @@ export function MenteeManagementView() {
               />
             </div>
             <div className="space-y-2">
-              <Label>URL da Foto</Label>
+              <Label>Photo URL</Label>
               <Input
                 value={form.fotoUrl}
                 onChange={(e) => setForm({ ...form, fotoUrl: e.target.value })}
@@ -432,11 +432,11 @@ export function MenteeManagementView() {
             <div className="border-t pt-4">
               <h4 className="font-medium text-sm text-slate-700 mb-3 flex items-center gap-2">
                 <Target className="w-4 h-4" />
-                Metas Personalizadas
+                Custom Goals
               </h4>
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-1">
-                  <Label className="text-xs">Meta Faturamento (R$)</Label>
+                  <Label className="text-xs">Revenue Goal (R$)</Label>
                   <Input
                     type="number"
                     value={form.metaFaturamento}
@@ -449,7 +449,7 @@ export function MenteeManagementView() {
                   />
                 </div>
                 <div className="space-y-1">
-                  <Label className="text-xs">Meta Leads</Label>
+                  <Label className="text-xs">Leads Goal</Label>
                   <Input
                     type="number"
                     value={form.metaLeads}
@@ -457,7 +457,7 @@ export function MenteeManagementView() {
                   />
                 </div>
                 <div className="space-y-1">
-                  <Label className="text-xs">Meta Procedimentos</Label>
+                  <Label className="text-xs">Procedures Goal</Label>
                   <Input
                     type="number"
                     value={form.metaProcedimentos}
@@ -470,7 +470,7 @@ export function MenteeManagementView() {
                   />
                 </div>
                 <div className="space-y-1">
-                  <Label className="text-xs">Meta Posts</Label>
+                  <Label className="text-xs">Posts Goal</Label>
                   <Input
                     type="number"
                     value={form.metaPosts}
@@ -478,7 +478,7 @@ export function MenteeManagementView() {
                   />
                 </div>
                 <div className="space-y-1">
-                  <Label className="text-xs">Meta Stories</Label>
+                  <Label className="text-xs">Stories Goal</Label>
                   <Input
                     type="number"
                     value={form.metaStories}
@@ -495,14 +495,14 @@ export function MenteeManagementView() {
           </div>
           <DialogFooter>
             <DialogClose asChild>
-              <Button variant="outline">Cancelar</Button>
+              <Button variant="outline">Cancel</Button>
             </DialogClose>
             <Button
               onClick={handleEdit}
               disabled={!form.nomeCompleto || updateMutation.isPending}
               className="bg-neon-blue hover:bg-neon-blue-dark"
             >
-              {updateMutation.isPending ? "Salvando..." : "Salvar Alterações"}
+              {updateMutation.isPending ? "Saving..." : "Save Changes"}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -512,22 +512,22 @@ export function MenteeManagementView() {
       <Dialog open={isDeleteOpen} onOpenChange={setIsDeleteOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Confirmar Exclusão</DialogTitle>
+            <DialogTitle>Confirm Deletion</DialogTitle>
           </DialogHeader>
           <p className="text-slate-600">
-            Tem certeza que deseja remover <strong>{selectedMentorado?.nomeCompleto}</strong>? Esta
-            ação não pode ser desfeita.
+            Are you sure you want to remove <strong>{selectedMentorado?.nomeCompleto}</strong>? This
+            action cannot be undone.
           </p>
           <DialogFooter>
             <DialogClose asChild>
-              <Button variant="outline">Cancelar</Button>
+              <Button variant="outline">Cancel</Button>
             </DialogClose>
             <Button
               variant="destructive"
               onClick={handleDelete}
               disabled={deleteMutation.isPending}
             >
-              {deleteMutation.isPending ? "Removendo..." : "Remover"}
+              {deleteMutation.isPending ? "Removing..." : "Remove"}
             </Button>
           </DialogFooter>
         </DialogContent>

@@ -19,27 +19,27 @@ interface InstagramOnboardingModalProps {
 
 const steps = [
   {
-    title: "Conecte seu Instagram",
+    title: "Connect your Instagram",
     description:
-      "Conecte sua conta do Instagram para sincronizar automaticamente seus posts e stories com o dashboard.",
+      "Connect your Instagram account to automatically sync your posts and stories with the dashboard.",
     benefits: [
-      "Métricas automáticas de posts e stories",
-      "Comparação com meses anteriores",
-      "Economia de tempo no preenchimento",
+      "Automatic post and story metrics",
+      "Comparison with previous months",
+      "Time savings on data entry",
     ],
   },
   {
-    title: "Requisitos",
-    description: "Para conectar o Instagram, sua conta precisa atender aos seguintes requisitos:",
+    title: "Requirements",
+    description: "To connect Instagram, your account must meet the following requirements:",
     requirements: [
-      "Conta Business ou Creator (não pessoal)",
-      "Conectada a uma página do Facebook",
-      "Acesso de administrador à página",
+      "Business or Creator account (not personal)",
+      "Connected to a Facebook page",
+      "Admin access to the page",
     ],
   },
   {
-    title: "Autorizar Acesso",
-    description: "Clique no botão abaixo para autorizar o Portal NEON a acessar suas métricas.",
+    title: "Authorize Access",
+    description: "Click the button below to authorize NEON Portal to access your metrics.",
   },
 ];
 
@@ -124,12 +124,12 @@ export function InstagramOnboardingModal({
                   {isConnecting ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Conectando...
+                      Connecting...
                     </>
                   ) : (
                     <>
                       <Instagram className="mr-2 h-4 w-4" />
-                      Conectar Instagram
+                      Connect Instagram
                     </>
                   )}
                 </Button>
@@ -143,10 +143,10 @@ export function InstagramOnboardingModal({
         {/* Navigation */}
         <div className="flex justify-between pt-4 border-t">
           <Button variant="ghost" onClick={handleBack} disabled={currentStep === 0}>
-            Voltar
+            Back
           </Button>
 
-          {currentStep < steps.length - 1 ? <Button onClick={handleNext}>Próximo</Button> : null}
+          {currentStep < steps.length - 1 ? <Button onClick={handleNext}>Next</Button> : null}
         </div>
 
         {/* Step indicators */}

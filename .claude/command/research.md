@@ -1,18 +1,18 @@
 ---
-description: Pesquisa multi-fonte com validação cruzada e geração de atomic tasks (>=95% accuracy)
+description: Multi-source research with cross-validation and atomic task generation (>=95% accuracy)
 ---
 
 # /research: $ARGUMENTS
 
-Este comando roda em **Plan Mode** (pesquisa + planejamento). Ele **não** implementa sem aprovação explícita.
+This command runs in **Plan Mode** (research + planning). It does **not** implement without explicit approval.
 
-Sempre use a Skill planning (.agent\skills\planning\SKILL.md)
+Always use the Skill planning (.agent\skills\planning\SKILL.md)
 
-## Fluxo de Orquestração Nativo Antigravity
+## Native Antigravity Orchestration Flow
 
 ```mermaid
 flowchart TD
-    A[Início /research] --> B[Phase 1: Discovery (Parallel)]
+    A[Start /research] --> B[Phase 1: Discovery (Parallel)]
     B --> C1[Explore: EXP-STRUCT]
     B --> C2[Explore: EXP-TRACE]
     B --> C3[Librarian: LIB-DOCS]
@@ -21,9 +21,9 @@ flowchart TD
     C1 & C2 & C3 & C4 & C5 --> D[Barrier: Synthesis]
     D --> E[Phase 2: Targeted Follow-up]
     E --> F[Oracle: Architecture Review (L4+)]
-    F --> G[Gerar implementation_plan.md]
-    G --> H[Gerar task.md]
-    H --> I[notify_user: Requisição de Aprovação]
+    F --> G[Generate implementation_plan.md]
+    G --> H[Generate task.md]
+    H --> I[notify_user: Approval Request]
 ```
 
 ## Task
@@ -35,93 +35,93 @@ Follow this systematic approach to create a new feature: $ARGUMENTS
    - Define feature requirements and acceptance criteria.
    - Break down feature into `task.md` using the `[ ]`, `[/]`, `[x]` convention.
    - Identify affected components and potential impact areas.
-   - Matriz de Requisitos
-     | Categoria | Requisito | Prioridade | Método de Validação |
+   - Requirements Matrix
+     | Category | Requirement | Priority | Validation Method |
      |-----------|-----------|------------|---------------------|
-     | Funcional | [REQ_1] | Must | [COMO_TESTAR] |
-     | Non-Funcional | [PERF_REQ] | Must | [BENCHMARK] |
-   - Avaliação de Estado Atual
+     | Functional | [REQ_1] | Must | [HOW_TO_TEST] |
+     | Non-Functional | [PERF_REQ] | Must | [BENCHMARK] |
+   - Current State Assessment
 
 ```yaml
-existing_architecture: "[DESCREVA_ESTADO_ATUAL]"
-integration_points: ["[SISTEMA_1]", "[SISTEMA_2]"]
-technical_debt: "[DÉBITO_RELEVANTE]"
+existing_architecture: "[DESCRIBE_CURRENT_STATE]"
+integration_points: ["[SYSTEM_1]", "[SYSTEM_2]"]
+technical_debt: "[RELEVANT_DEBT]"
 ```
 
 2. **Research and Analysis (Background Tasks)**
    - **Explore Agent**: Contextual grep for codebase patterns and implementations.
    - **Librarian Agent**: Reference grep for official documentation via `context7`.
    - **Sequential Thinking**: Structured problem-solving for architectural decisions.
-   - Avaliação de Tecnologias
-     | Opção | Prós | Contras | Fit Score |
+   - Technology Assessment
+     | Option | Pros | Cons | Fit Score |
      |-------|------|---------|-----------|
-     | [OPÇÃO_1] | [VANTAGENS] | [DESVANTAGENS] | [1-5] |
-   - Padrões a Considerar
+     | [OPTION_1] | [ADVANTAGES] | [DISADVANTAGES] | [1-5] |
+   - Patterns to Consider
 
 ```yaml
 recommended_patterns:
-  - pattern: "[NOME_PADRÃO]"
-    rationale: "[PORQUE_SE_ENCAIXA]"
-    tradeoffs: "[O_QUE_ABRIMOS_MÃO]"
+  - pattern: "[PATTERN_NAME]"
+    rationale: "[WHY_IT_FITS]"
+    tradeoffs: "[WHAT_WE_GIVE_UP]"
 ```
 
 3. **Architecture Design**
    - Design feature architecture and data flow.
    - Plan database schema changes if needed (Convex).
    - Define API endpoints and contracts.
-   - Arquitetura da Solução
+   - Solution Architecture
 
 ```
 ┌─────────────┐     ┌─────────────┐     ┌─────────────┐
-│ Componente  │────▶│ Componente  │────▶│ Componente  │
+│ Component   │────▶│ Component   │────▶│ Component   │
 │      A      │     │      B      │     │      C      │
 └─────────────┘     └─────────────┘     └─────────────┘
 ```
 
-- Registros de Decisão (ADRs)
+- Decision Records (ADRs)
 
 ```yaml
 decision_1:
-  context: "[SITUAÇÃO_REQUERENDO_DECISÃO]"
+  context: "[SITUATION_REQUIRING_DECISION]"
   options_considered: ["[OPT_1]", "[OPT_2]"]
-  decision: "[ABORDAGEM_ESCOLHIDA]"
-  rationale: "[PORQUE_ESSA_ESCOLHA]"
-  consequences: "[IMPLICAÇÕES]"
+  decision: "[CHOSEN_APPROACH]"
+  rationale: "[WHY_THIS_CHOICE]"
+  consequences: "[IMPLICATIONS]"
 ```
 
 4. **Implementation Strategy**
    - Generate `implementation_plan.md` in `<appDataDir>/brain/<conversation-id>/`.
    - Follow the official schema: Goal Description, User Review Required, Proposed Changes, Verification Plan.
    - Plan validation with atomic tasks and subtasks (Phase 5).
-   - Roadmap de Implementação
+   - Implementation Roadmap
 
 ```yaml
 phase_1_foundation:
-  duration: "[ESTIMATIVA]"
+  duration: "[ESTIMATE]"
   deliverables:
-    - "[ENTREGÁVEL_1]"
-    - "[ENTREGÁVEL_2]"
+    - "[DELIVERABLE_1]"
+    - "[DELIVERABLE_2]"
 
 phase_2_core:
-  duration: "[ESTIMATIVA]"
+  duration: "[ESTIMATE]"
   deliverables:
-    - "[ENTREGÁVEL_3]"
+    - "[DELIVERABLE_3]"
   dependencies: ["phase_1_foundation"]
 ```
 
-    - Estrutura de Arquivos
+    - File Structure
 
 ```
 src/
 ├── [module_1]/
-│   ├── [component].ts       # [PROPÓSITO]
-│   ├── [service].ts         # [PROPÓSITO]
-│   └── [types].ts           # [PROPÓSITO]
+│   ├── [component].ts       # [PURPOSE]
+│   ├── [service].ts         # [PURPOSE]
+│   └── [types].ts           # [PURPOSE]
 └── shared/
     └── ...
 ```
 
-## 📄 ANTAGRAVITY-NATIVE PROMPT TEMPLATE
+## ANTIGRAVITY-NATIVE PROMPT TEMPLATE
 
 ```yaml
 role: "[SPECIFIC EXPERTISE] Developer"
@@ -206,17 +206,17 @@ orchestration:
     - action: "background_cancel(all=true)"
 ```
 
-## Instruções para @apex-researcher
+## Instructions for @apex-researcher
 
-1. **Detecte complexidade (L1-L10)** com justificativa.
-2. **Priorize repo-first** usando `find_by_name` e `grep_search`.
-3. **Use context7** para documentação oficial de frameworks (Convex, Clerk, etc.).
-4. **Coordenação**: Use `task_boundary` para refletir o status da pesquisa para o usuário.
-5. **Output**: Gere o `implementation_plan.md` seguindo rigorosamente o formato oficial.
-6. **Task List**: Crie o `task.md` com as tarefas atômicas (Phase 1-5).
-7. **NOTIFY**: Chame `notify_user` para travar a execução até a aprovação do plano.
+1. **Detect complexity (L1-L10)** with justification.
+2. **Prioritize repo-first** using `find_by_name` and `grep_search`.
+3. **Use context7** for official framework documentation (Convex, Clerk, etc.).
+4. **Coordination**: Use `task_boundary` to reflect research status to the user.
+5. **Output**: Generate the `implementation_plan.md` strictly following the official format.
+6. **Task List**: Create the `task.md` with atomic tasks (Phase 1-5).
+7. **NOTIFY**: Call `notify_user` to block execution until the plan is approved.
 
-## Referências
+## References
 
-- Princípios: `code-principles.md`
-- Implementação: `implement.md`
+- Principles: `code-principles.md`
+- Implementation: `implement.md`

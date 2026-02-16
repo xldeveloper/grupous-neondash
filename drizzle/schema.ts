@@ -434,10 +434,10 @@ export const leads = pgTable(
     empresa: text("empresa"),
     origem: origemLeadEnum("origem").notNull(),
     status: statusLeadEnum("status").notNull().default("novo"),
-    valorEstimado: integer("valor_estimado"), // em centavos
+    valorEstimado: integer("valor_estimado"), // in cents
     tags: text("tags").array(),
     
-    // Novos campos
+    // New fields
     indicadoPor: text("indicado_por"),
     profissao: text("profissao"),
     produtoInteresse: text("produto_interesse"),
@@ -448,7 +448,7 @@ export const leads = pgTable(
     desejoPrincipal: text("desejo_principal"),
     temperatura: temperaturaLeadEnum("temperatura"),
 
-    // Campos Aesthetic (B2C)
+    // Aesthetic fields (B2C)
     dataNascimento: date("data_nascimento"),
     genero: text("genero"),
     procedimentosInteresse: text("procedimentos_interesse").array(),
@@ -487,7 +487,7 @@ export const interacoes = pgTable(
       .references(() => mentorados.id, { onDelete: "cascade" }),
     tipo: tipoInteracaoEnum("tipo").notNull(),
     notas: text("notas"),
-    duracao: integer("duracao"), // minutos, para ligações
+    duracao: integer("duracao"), // minutes, for phone calls
     createdAt: timestamp("created_at").defaultNow().notNull(),
   },
   (table) => [
@@ -689,7 +689,7 @@ export const atividadeProgress = pgTable(
     stepCodigo: varchar("step_codigo", { length: 100 }).notNull(),
     completed: simNaoEnum("completed").default("nao").notNull(),
     completedAt: timestamp("completed_at"),
-    notes: text("notes"), // Notas do mentorado para este passo
+    notes: text("notes"), // Mentee notes for this step
     createdAt: timestamp("created_at").defaultNow().notNull(),
   },
   (table) => [
@@ -740,31 +740,31 @@ export const diagnosticos = pgTable(
       .notNull()
       .references(() => mentorados.id, { onDelete: "cascade" }),
 
-    // 1. Ponto de Partida (Context)
+    // 1. Starting Point (Context)
     atuacaoSaude: text("atuacao_saude"),
     tempoLivre: text("tempo_livre"),
     jaAtuaEstetica: text("ja_atua_estetica"),
     temClinica: text("tem_clinica"),
 
-    // 2. Realidade Financeira (Financial Reality)
+    // 2. Financial Reality
     rendaMensal: text("renda_mensal"),
     faturaEstetica: text("fatura_estetica"),
     contas: text("contas"),
     custoVida: text("custo_vida"),
     capacidadeInvestimento: text("capacidade_investimento"), // NEW: Investment capacity
 
-    // 3. Desafios Atuais (Current Challenges)
+    // 3. Current Challenges
     incomodaRotina: text("incomoda_rotina"),
     dificuldadeCrescer: text("dificuldade_crescer"),
     tentativasAnteriores: text("tentativas_anteriores"), // NEW: Previous attempts
 
-    // 4. Visão de Sucesso (Success Vision)
+    // 4. Success Vision
     objetivo6Meses: text("objetivo_6_meses"),
     resultadoTransformador: text("resultado_transformador"),
     visaoUmAno: text("visao_um_ano"), // NEW: 1-year vision
     porqueAgora: text("porque_agora"), // NEW: Why now?
 
-    // 5. Compromisso (Commitment)
+    // 5. Commitment
     horasDisponiveis: text("horas_disponiveis"), // NEW: Available hours/week
     nivelPrioridade: text("nivel_prioridade"), // NEW: Priority level 1-10
     redeApoio: text("rede_apoio"), // NEW: Support network

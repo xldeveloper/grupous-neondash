@@ -27,7 +27,7 @@ export function PlaybookView({ turma }: PlaybookViewProps) {
   const toggleMutation = trpc.playbook.toggleItem.useMutation({
     onSuccess: () => refetch(),
     onError: (err) => {
-      toast.error("Erro ao atualizar progresso", { description: err.message });
+      toast.error("Error updating progress", { description: err.message });
     },
   });
 
@@ -52,14 +52,14 @@ export function PlaybookView({ turma }: PlaybookViewProps) {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Card className="bg-black/40 border-white/10 md:col-span-2">
           <CardHeader className="pb-2">
-            <CardTitle className="text-lg text-white">Seu Progresso</CardTitle>
-            <CardDescription>Complete as etapas para avançar na jornada</CardDescription>
+            <CardTitle className="text-lg text-white">Your Progress</CardTitle>
+            <CardDescription>Complete the steps to advance on the journey</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-2">
               <div className="flex justify-between text-sm">
                 <span className="text-gray-400">
-                  {completedItems} de {totalItems} concluídos
+                  {completedItems} of {totalItems} completed
                 </span>
                 <span className="text-primary font-bold">{Math.round(progressPercentage)}%</span>
               </div>
@@ -178,7 +178,7 @@ export function PlaybookView({ turma }: PlaybookViewProps) {
                                 ) : (
                                   <ExternalLink className="w-3 h-3 mr-2" />
                                 )}
-                                {item.type === "video" ? "Assistir" : "Acessar Conteúdo"}
+                                {item.type === "video" ? "Watch" : "Access Content"}
                               </Button>
                             </div>
                           )}
@@ -188,7 +188,7 @@ export function PlaybookView({ turma }: PlaybookViewProps) {
 
                     {module.items.length === 0 && (
                       <div className="text-sm text-gray-500 italic py-2">
-                        Nenhum item nesta etapa.
+                        No items in this step.
                       </div>
                     )}
                   </div>

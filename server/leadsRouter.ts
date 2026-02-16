@@ -27,7 +27,7 @@ export const leadsRouter = router({
 
       if (input.mentoradoId) {
         if (ctx.user.role !== "admin") {
-          throw new TRPCError({ code: "FORBIDDEN", message: "Acesso negado" });
+          throw new TRPCError({ code: "FORBIDDEN", message: "Access denied" });
         }
         targetMentoradoId = input.mentoradoId;
       }
@@ -35,7 +35,7 @@ export const leadsRouter = router({
       if (!targetMentoradoId) {
         throw new TRPCError({
           code: "FORBIDDEN",
-          message: "Perfil de mentorado necessário",
+          message: "Mentee profile required",
         });
       }
 
@@ -116,7 +116,7 @@ export const leadsRouter = router({
     if (!lead) {
       throw new TRPCError({
         code: "NOT_FOUND",
-        message: "Lead não encontrado",
+        message: "Lead not found",
       });
     }
 
@@ -125,7 +125,7 @@ export const leadsRouter = router({
     const isAdmin = ctx.user.role === "admin";
 
     if (!isOwner && !isAdmin) {
-      throw new TRPCError({ code: "FORBIDDEN", message: "Acesso negado" });
+      throw new TRPCError({ code: "FORBIDDEN", message: "Access denied" });
     }
 
     return { lead, interacoes: lead.interacoes };
@@ -134,13 +134,13 @@ export const leadsRouter = router({
   create: mentoradoProcedure
     .input(
       z.object({
-        nome: z.string().min(2, "Nome deve ter no mínimo 2 caracteres"),
-        email: z.string().email("Email inválido"),
+        nome: z.string().min(2, "Name must have at least 2 characters"),
+        email: z.string().email("Invalid email"),
         telefone: z.string().optional(),
         empresa: z.string().optional(),
         origem: z.enum(["instagram", "whatsapp", "google", "indicacao", "site", "outro"]),
         valorEstimado: z.number().optional(),
-        // Novos campos
+        // New fields
         indicadoPor: z.string().optional(),
         profissao: z.string().optional(),
         produtoInteresse: z.string().optional(),
@@ -174,7 +174,7 @@ export const leadsRouter = router({
           origem: input.origem,
           valorEstimado: input.valorEstimado,
           status: "novo",
-          // Novos campos
+          // New fields
           indicadoPor: input.indicadoPor,
           profissao: input.profissao,
           produtoInteresse: input.produtoInteresse,
@@ -208,7 +208,7 @@ export const leadsRouter = router({
         empresa: z.string().optional(),
         valorEstimado: z.number().optional(),
         tags: z.array(z.string()).optional(),
-        // Novos campos
+        // New fields
         indicadoPor: z.string().optional(),
         profissao: z.string().optional(),
         produtoInteresse: z.string().optional(),
@@ -237,13 +237,13 @@ export const leadsRouter = router({
       if (!lead) {
         throw new TRPCError({
           code: "NOT_FOUND",
-          message: "Lead não encontrado",
+          message: "Lead not found",
         });
       }
 
       // 2. Strict Ownership
       if (lead.mentoradoId !== ctx.mentorado.id) {
-        throw new TRPCError({ code: "FORBIDDEN", message: "Acesso negado" });
+        throw new TRPCError({ code: "FORBIDDEN", message: "Access denied" });
       }
 
       // 3. Update
@@ -256,7 +256,7 @@ export const leadsRouter = router({
           empresa: input.empresa,
           valorEstimado: input.valorEstimado,
           tags: input.tags,
-          // Novos campos
+          // New fields
           indicadoPor: input.indicadoPor,
           profissao: input.profissao,
           produtoInteresse: input.produtoInteresse,
@@ -305,13 +305,13 @@ export const leadsRouter = router({
       if (!lead) {
         throw new TRPCError({
           code: "NOT_FOUND",
-          message: "Lead não encontrado",
+          message: "Lead not found",
         });
       }
 
       // 2. Strict Ownership
       if (lead.mentoradoId !== ctx.mentorado.id) {
-        throw new TRPCError({ code: "FORBIDDEN", message: "Acesso negado" });
+        throw new TRPCError({ code: "FORBIDDEN", message: "Access denied" });
       }
 
       // 3. Update status
@@ -328,7 +328,7 @@ export const leadsRouter = router({
         leadId: lead.id,
         mentoradoId: ctx.mentorado.id,
         tipo: "nota",
-        notas: `Status alterado de "${lead.status}" para "${input.status}"`,
+        notas: `Status changed from "${lead.status}" to "${input.status}"`,
       });
 
       return { success: true };
@@ -345,14 +345,14 @@ export const leadsRouter = router({
       if (!lead) {
         throw new TRPCError({
           code: "NOT_FOUND",
-          message: "Lead não encontrado",
+          message: "Lead not found",
         });
       }
 
       // 2. Strict Ownership (Admin exception removed as per request to have strict separation here)
       // If admin needs delete, use admin router or separate procedure
       if (lead.mentoradoId !== ctx.mentorado.id) {
-        throw new TRPCError({ code: "FORBIDDEN", message: "Acesso negado" });
+        throw new TRPCError({ code: "FORBIDDEN", message: "Access denied" });
       }
 
       await db.delete(leads).where(eq(leads.id, input.id));
@@ -378,13 +378,13 @@ export const leadsRouter = router({
       if (!lead) {
         throw new TRPCError({
           code: "NOT_FOUND",
-          message: "Lead não encontrado",
+          message: "Lead not found",
         });
       }
 
       // 2. ownership
       if (lead.mentoradoId !== ctx.mentorado.id) {
-        throw new TRPCError({ code: "FORBIDDEN", message: "Acesso negado" });
+        throw new TRPCError({ code: "FORBIDDEN", message: "Access denied" });
       }
 
       const [newInteraction] = await db

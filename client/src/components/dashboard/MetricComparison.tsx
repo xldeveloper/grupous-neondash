@@ -14,7 +14,7 @@ interface MetricComparisonProps {
 export function MetricComparison({
   currentValue,
   previousValue,
-  label = "Mês passado",
+  label = "Last month",
   type = "number",
 }: MetricComparisonProps) {
   if (previousValue === undefined || previousValue === 0) {

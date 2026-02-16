@@ -129,12 +129,12 @@ export function LeadDetailModal({
   // Delete mutation
   const deleteMutation = trpc.leads.delete.useMutation({
     onSuccess: () => {
-      toast.success("Lead excluído com sucesso");
+      toast.success("Lead deleted successfully");
       utils.leads.list.invalidate();
       onClose();
     },
     onError: (error) => {
-      toast.error(`Erro ao excluir lead: ${error.message}`);
+      toast.error(`Error deleting lead: ${error.message}`);
     },
   });
 
@@ -175,19 +175,19 @@ export function LeadDetailModal({
 
   const updateMutation = trpc.leads.update.useMutation({
     onSuccess: () => {
-      toast.success("Lead atualizado com sucesso");
+      toast.success("Lead updated successfully");
       setIsEditing(false);
       utils.leads.getById.invalidate({ id: leadId! });
       utils.leads.list.invalidate();
     },
     onError: (error) => {
-      toast.error(`Erro ao atualizar lead: ${error.message}`);
+      toast.error(`Error updating lead: ${error.message}`);
     },
   });
 
   const handleSave = () => {
     if (!editData.nome || !editData.email) {
-      toast.error("Nome e Email são obrigatórios");
+      toast.error("Name and Email are required");
       return;
     }
     updateMutation.mutate({
@@ -223,42 +223,42 @@ export function LeadDetailModal({
       case "novo":
         return {
           color: "bg-amber-500/15 text-amber-400 border-amber-500/30 ring-amber-500/20",
-          label: "Novo",
+          label: "New",
         };
       case "primeiro_contato":
         return {
           color: "bg-orange-500/15 text-orange-400 border-orange-500/30 ring-orange-500/20",
-          label: "Primeiro Contato",
+          label: "First Contact",
         };
       case "qualificado":
         return {
           color: "bg-violet-500/15 text-violet-400 border-violet-500/30 ring-violet-500/20",
-          label: "Qualificado",
+          label: "Qualified",
         };
       case "proposta":
         return {
           color: "bg-blue-500/15 text-blue-400 border-blue-500/30 ring-blue-500/20",
-          label: "Proposta",
+          label: "Proposal",
         };
       case "negociacao":
         return {
           color: "bg-pink-500/15 text-pink-400 border-pink-500/30 ring-pink-500/20",
-          label: "Negociação",
+          label: "Negotiation",
         };
       case "fechado":
         return {
           color: "bg-emerald-500/15 text-emerald-400 border-emerald-500/30 ring-emerald-500/20",
-          label: "Fechado",
+          label: "Closed",
         };
       case "perdido":
         return {
           color: "bg-red-500/15 text-red-400 border-red-500/30 ring-red-500/20",
-          label: "Perdido",
+          label: "Lost",
         };
       default:
         return {
           color: "bg-muted text-muted-foreground border-border",
-          label: "Novo",
+          label: "New",
         };
     }
   };
@@ -325,7 +325,7 @@ export function LeadDetailModal({
               >
                 <div className="flex flex-col items-center gap-4">
                   <Loader2 className="h-8 w-8 animate-spin text-primary" />
-                  <span className="text-sm text-muted-foreground">Carregando...</span>
+                  <span className="text-sm text-muted-foreground">Loading...</span>
                 </div>
               </motion.div>
             ) : data ? (
@@ -388,13 +388,13 @@ export function LeadDetailModal({
                                   <SelectValue />
                                 </SelectTrigger>
                                 <SelectContent>
-                                  <SelectItem value="novo">Novo</SelectItem>
-                                  <SelectItem value="primeiro_contato">Primeiro Contato</SelectItem>
-                                  <SelectItem value="qualificado">Qualificado</SelectItem>
-                                  <SelectItem value="proposta">Proposta</SelectItem>
-                                  <SelectItem value="negociacao">Negociação</SelectItem>
-                                  <SelectItem value="fechado">Fechado</SelectItem>
-                                  <SelectItem value="perdido">Perdido</SelectItem>
+                                  <SelectItem value="novo">New</SelectItem>
+                                  <SelectItem value="primeiro_contato">First Contact</SelectItem>
+                                  <SelectItem value="qualificado">Qualified</SelectItem>
+                                  <SelectItem value="proposta">Proposal</SelectItem>
+                                  <SelectItem value="negociacao">Negotiation</SelectItem>
+                                  <SelectItem value="fechado">Closed</SelectItem>
+                                  <SelectItem value="perdido">Lost</SelectItem>
                                 </SelectContent>
                               </Select>
                             ) : (
@@ -412,7 +412,7 @@ export function LeadDetailModal({
                                 onChange={(e) =>
                                   setEditData({ ...editData, empresa: e.target.value })
                                 }
-                                placeholder="Empresa"
+                                placeholder="Company"
                                 className="h-7 text-xs bg-transparent border-muted-foreground/20 w-24"
                               />
                               <Input
@@ -518,7 +518,7 @@ export function LeadDetailModal({
                         onClick={() => handleQuickAction("ligacao")}
                       >
                         <Phone className="h-4 w-4" />
-                        <span className="hidden sm:inline">Ligar</span>
+                        <span className="hidden sm:inline">Call</span>
                       </Button>
                       <Button
                         variant="outline"
@@ -546,7 +546,7 @@ export function LeadDetailModal({
                           onClick={() => onSchedule(data?.lead?.nome || "Procedimento")}
                         >
                           <CalendarPlus className="h-4 w-4" />
-                          <span className="hidden sm:inline">Agendar</span>
+                          <span className="hidden sm:inline">Schedule</span>
                         </Button>
                       )}
                       <Button
@@ -555,7 +555,7 @@ export function LeadDetailModal({
                         onClick={() => handleQuickAction("nota")}
                       >
                         <FileText className="h-4 w-4" />
-                        <span>Nota</span>
+                        <span>Note</span>
                       </Button>
                     </motion.div>
                   </div>
@@ -570,8 +570,8 @@ export function LeadDetailModal({
                   <div className="px-6 border-b border-border/30 bg-card/30">
                     <TabsList className="w-full justify-start h-auto p-0 bg-transparent gap-8">
                       {[
-                        { value: "detalhes", label: "Detalhes" },
-                        { value: "historico", label: "Histórico" },
+                        { value: "detalhes", label: "Details" },
+                        { value: "historico", label: "History" },
                         { value: "chat", label: "Chat" },
                       ].map((tab) => (
                         <TabsTrigger
@@ -594,17 +594,17 @@ export function LeadDetailModal({
                         initial="hidden"
                         animate="visible"
                       >
-                        {/* Section: Dados Pessoais */}
+                        {/* Section: Personal Data */}
                         <motion.div variants={sectionVariants} className="space-y-4">
                           <div className="flex items-center gap-2 pb-2 border-b border-border/30">
                             <User className="h-4 w-4 text-primary" />
                             <h4 className="text-sm font-semibold text-foreground">
-                              Dados Pessoais
+                              Personal Data
                             </h4>
                           </div>
                           <div className="grid grid-cols-2 gap-x-6 gap-y-4">
                             <FieldDisplay
-                              label="Data Nasc."
+                              label="Date of Birth"
                               value={
                                 data.lead.dataNascimento
                                   ? new Date(data.lead.dataNascimento).toLocaleDateString("pt-BR")
@@ -623,7 +623,7 @@ export function LeadDetailModal({
                               }
                             />
                             <FieldDisplay
-                              label="Gênero"
+                              label="Gender"
                               value={data.lead.genero || "—"}
                               isEditing={isEditing}
                               editComponent={
@@ -635,15 +635,15 @@ export function LeadDetailModal({
                                     <SelectValue placeholder="—" />
                                   </SelectTrigger>
                                   <SelectContent>
-                                    <SelectItem value="Feminino">Feminino</SelectItem>
-                                    <SelectItem value="Masculino">Masculino</SelectItem>
-                                    <SelectItem value="Outro">Outro</SelectItem>
+                                    <SelectItem value="Feminino">Female</SelectItem>
+                                    <SelectItem value="Masculino">Male</SelectItem>
+                                    <SelectItem value="Outro">Other</SelectItem>
                                   </SelectContent>
                                 </Select>
                               }
                             />
                             <FieldDisplay
-                              label="Profissão"
+                              label="Profession"
                               value={data.lead.profissao || "—"}
                               isEditing={isEditing}
                               editComponent={
@@ -657,7 +657,7 @@ export function LeadDetailModal({
                               }
                             />
                             <FieldDisplay
-                              label="Telefone"
+                              label="Phone"
                               value={data.lead.telefone || "—"}
                               icon={
                                 data.lead.telefone ? (
@@ -678,17 +678,17 @@ export function LeadDetailModal({
                           </div>
                         </motion.div>
 
-                        {/* Section: Anamnese & Interesse */}
+                        {/* Section: Anamnesis & Interest */}
                         <motion.div variants={sectionVariants} className="space-y-4">
                           <div className="flex items-center gap-2 pb-2 border-b border-border/30">
                             <Heart className="h-4 w-4 text-primary" />
                             <h4 className="text-sm font-semibold text-foreground">
-                              Anamnese & Interesse
+                              Anamnesis & Interest
                             </h4>
                           </div>
                           <div className="grid grid-cols-2 gap-x-6 gap-y-4">
                             <FieldDisplay
-                              label="Queixa Principal"
+                              label="Main Complaint"
                               value={data.lead.dorPrincipal || "—"}
                               isEditing={isEditing}
                               editComponent={
@@ -702,7 +702,7 @@ export function LeadDetailModal({
                               }
                             />
                             <FieldDisplay
-                              label="Desejo Principal"
+                              label="Main Desire"
                               value={data.lead.desejoPrincipal || "—"}
                               isEditing={isEditing}
                               editComponent={
@@ -720,7 +720,7 @@ export function LeadDetailModal({
                           {/* Procedures of Interest */}
                           <div className="space-y-2">
                             <Label className="text-xs text-muted-foreground uppercase tracking-wider font-semibold">
-                              Interesse em
+                              Interested In
                             </Label>
                             {isEditing ? (
                               <Input
@@ -737,7 +737,7 @@ export function LeadDetailModal({
                                       .map((s: string) => s.trim()),
                                   })
                                 }
-                                placeholder="Botox, Preenchimento, etc (separar por vírgula)"
+                                placeholder="Botox, Filler, etc (separate by comma)"
                                 className="bg-background/50 border-border/50 h-9"
                               />
                             ) : (
@@ -764,7 +764,7 @@ export function LeadDetailModal({
 
                           <div className="grid grid-cols-2 gap-x-6 gap-y-4">
                             <FieldDisplay
-                              label="Histórico Estético"
+                              label="Aesthetic History"
                               value={data.lead.historicoEstetico || "—"}
                               isEditing={isEditing}
                               editComponent={
@@ -778,7 +778,7 @@ export function LeadDetailModal({
                               }
                             />
                             <FieldDisplay
-                              label="Alergias"
+                              label="Allergies"
                               value={data.lead.alergias || "—"}
                               valueClassName={data.lead.alergias ? "text-destructive" : ""}
                               isEditing={isEditing}
@@ -795,16 +795,16 @@ export function LeadDetailModal({
                           </div>
                         </motion.div>
 
-                        {/* Section: Qualificação */}
+                        {/* Section: Qualification */}
                         <motion.div variants={sectionVariants} className="space-y-4">
                           <div className="flex items-center gap-2 pb-2 border-b border-border/30">
                             <Target className="h-4 w-4 text-primary" />
-                            <h4 className="text-sm font-semibold text-foreground">Qualificação</h4>
+                            <h4 className="text-sm font-semibold text-foreground">Qualification</h4>
                           </div>
                           <div className="grid grid-cols-2 gap-x-6 gap-y-4">
                             <div className="space-y-2">
                               <Label className="text-xs text-muted-foreground uppercase tracking-wider font-semibold">
-                                Temperatura
+                                Temperature
                               </Label>
                               {isEditing ? (
                                 <Select
@@ -817,9 +817,9 @@ export function LeadDetailModal({
                                     <SelectValue placeholder="—" />
                                   </SelectTrigger>
                                   <SelectContent>
-                                    <SelectItem value="frio">❄️ Frio</SelectItem>
-                                    <SelectItem value="morno">🌤️ Morno</SelectItem>
-                                    <SelectItem value="quente">🔥 Quente</SelectItem>
+                                    <SelectItem value="frio">❄️ Cold</SelectItem>
+                                    <SelectItem value="morno">🌤️ Warm</SelectItem>
+                                    <SelectItem value="quente">🔥 Hot</SelectItem>
                                   </SelectContent>
                                 </Select>
                               ) : (
@@ -836,7 +836,7 @@ export function LeadDetailModal({
                               )}
                             </div>
                             <FieldDisplay
-                              label="Disponibilidade"
+                              label="Availability"
                               value={data.lead.disponibilidade || "—"}
                               isEditing={isEditing}
                               editComponent={
@@ -845,13 +845,13 @@ export function LeadDetailModal({
                                   onChange={(e) =>
                                     setEditData({ ...editData, disponibilidade: e.target.value })
                                   }
-                                  placeholder="Ex: Seg a Sex, manhã"
+                                  placeholder="E.g.: Mon to Fri, morning"
                                   className="bg-background/50 border-border/50 h-9"
                                 />
                               }
                             />
                             <FieldDisplay
-                              label="Valor Proposta"
+                              label="Proposal Value"
                               value={new Intl.NumberFormat("pt-BR", {
                                 style: "currency",
                                 currency: "BRL",
@@ -873,7 +873,7 @@ export function LeadDetailModal({
                               }
                             />
                             <FieldDisplay
-                              label="Indicado Por"
+                              label="Referred By"
                               value={data.lead.indicadoPor || "—"}
                               isEditing={isEditing}
                               editComponent={
@@ -889,17 +889,17 @@ export function LeadDetailModal({
                           </div>
                         </motion.div>
 
-                        {/* Section: Próximo Acompanhamento */}
+                        {/* Section: Next Follow-up */}
                         <motion.div variants={sectionVariants} className="space-y-4">
                           <div className="flex items-center gap-2 pb-2 border-b border-border/30">
                             <Bell className="h-4 w-4 text-primary" />
                             <h4 className="text-sm font-semibold text-foreground">
-                              Acompanhamento
+                              Follow-up
                             </h4>
                           </div>
                           <div className="p-4 rounded-xl bg-card/50 border border-border/30 space-y-3">
                             <div className="flex items-center justify-between">
-                              <span className="text-sm text-muted-foreground">Próximo contato</span>
+                              <span className="text-sm text-muted-foreground">Next contact</span>
                               <Button
                                 variant="ghost"
                                 size="sm"
@@ -907,11 +907,11 @@ export function LeadDetailModal({
                                 onClick={() => onSchedule?.(data.lead.nome)}
                               >
                                 <CalendarPlus className="h-3.5 w-3.5 mr-1" />
-                                Agendar
+                                Schedule
                               </Button>
                             </div>
                             <Textarea
-                              placeholder="Adicione uma nota rápida sobre o próximo passo..."
+                              placeholder="Add a quick note about the next step..."
                               className="min-h-[80px] bg-background/50 border-border/50 resize-none text-sm"
                               disabled={isReadOnly}
                             />
@@ -931,9 +931,9 @@ export function LeadDetailModal({
                         <motion.div variants={sectionVariants} className="relative pl-6">
                           <div className="absolute -left-[9px] top-1 h-4 w-4 rounded-full bg-primary ring-4 ring-background shadow-md" />
                           <div className="space-y-1">
-                            <p className="text-sm font-medium text-foreground">Lead criado</p>
+                            <p className="text-sm font-medium text-foreground">Lead created</p>
                             <span className="text-xs text-muted-foreground">
-                              {format(new Date(data.lead.createdAt), "dd/MM/yyyy 'às' HH:mm")}
+                              {format(new Date(data.lead.createdAt), "dd/MM/yyyy 'at' HH:mm")}
                             </span>
                           </div>
                         </motion.div>
@@ -968,7 +968,7 @@ export function LeadDetailModal({
                                   <span className="text-xs text-muted-foreground">
                                     {format(
                                       new Date(interaction.createdAt),
-                                      "dd/MM/yyyy 'às' HH:mm"
+                                      "dd/MM/yyyy 'at' HH:mm"
                                     )}
                                   </span>
                                 </div>
@@ -1022,15 +1022,15 @@ export function LeadDetailModal({
           <AlertDialogHeader>
             <AlertDialogTitle className="flex items-center gap-2 text-destructive">
               <AlertTriangle className="h-5 w-5" />
-              Excluir Lead
+              Delete Lead
             </AlertDialogTitle>
             <AlertDialogDescription>
-              Tem certeza que deseja excluir este lead? Esta ação não pode ser desfeita. Todas as
-              interações e notas associadas serão perdidas.
+              Are you sure you want to delete this lead? This action cannot be undone. All
+              associated interactions and notes will be lost.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDelete}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
@@ -1039,10 +1039,10 @@ export function LeadDetailModal({
               {deleteMutation.isPending ? (
                 <>
                   <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  Excluindo...
+                  Deleting...
                 </>
               ) : (
-                "Excluir Lead"
+                "Delete Lead"
               )}
             </AlertDialogAction>
           </AlertDialogFooter>

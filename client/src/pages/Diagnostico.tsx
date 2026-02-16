@@ -52,18 +52,18 @@ export default function DiagnosticoPage() {
       // Mark onboarding as complete and redirect to dashboard
       completeOnboarding(undefined, {
         onSuccess: () => {
-          toast.success("Diagnóstico salvo! Bem-vindo à Mentoria NEON.");
+          toast.success("Diagnosis saved! Welcome to NEON Mentorship.");
           navigate("/meu-dashboard");
         },
         onError: () => {
           // Even if completeOnboarding fails, still show success for diagnostico
-          toast.success("Diagnóstico salvo com sucesso!");
+          toast.success("Diagnosis saved successfully!");
           refetch();
         },
       });
     },
     onError: (err) => {
-      toast.error(`Erro ao salvar: ${err.message}`);
+      toast.error(`Error saving: ${err.message}`);
     },
   });
 
@@ -122,20 +122,20 @@ export default function DiagnosticoPage() {
     <div className="container mx-auto max-w-4xl py-8 space-y-8 animate-in fade-in duration-500">
       <div className="space-y-2">
         <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-primary to-teal-600 bg-clip-text text-transparent">
-          Diagnóstico Inicial
+          Initial Diagnosis
         </h1>
         <p className="text-muted-foreground">
-          Preencha as informações para personalizarmos sua jornada na Mentoria Black NEON.
+          Fill in the information so we can personalize your journey in the NEON Black Mentorship.
         </p>
       </div>
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-          {/* SEÇÃO 1 */}
+          {/* SECTION 1 */}
           <Card className="border-l-4 border-l-blue-500 shadow-md">
             <CardHeader>
-              <CardTitle className="text-xl">1. Sobre o Momento Atual Profissional</CardTitle>
-              <CardDescription>Entendendo sua rotina e infraestrutura.</CardDescription>
+              <CardTitle className="text-xl">1. About Your Current Professional Situation</CardTitle>
+              <CardDescription>Understanding your routine and infrastructure.</CardDescription>
             </CardHeader>
             <CardContent className="grid gap-6 md:grid-cols-2">
               <FormField
@@ -143,9 +143,9 @@ export default function DiagnosticoPage() {
                 name="atuacaoSaude"
                 render={({ field }) => (
                   <FormItem className="col-span-2">
-                    <FormLabel>Qual sua atuação na saúde hoje? Carga horária?</FormLabel>
+                    <FormLabel>What is your current role in healthcare? Working hours?</FormLabel>
                     <FormControl>
-                      <Input placeholder="Ex: Enfermeira, esteta, 10h às 19h..." {...field} />
+                      <Input placeholder="E.g.: Nurse, esthetician, 10am to 7pm..." {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -156,9 +156,9 @@ export default function DiagnosticoPage() {
                 name="tempoLivre"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Quanto tempo livre tem para o negócio?</FormLabel>
+                    <FormLabel>How much free time do you have for the business?</FormLabel>
                     <FormControl>
-                      <Input placeholder="Ex: Não tem..." {...field} />
+                      <Input placeholder="E.g.: None..." {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -169,9 +169,9 @@ export default function DiagnosticoPage() {
                 name="jaAtuaEstetica"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Você já atua na saúde estética?</FormLabel>
+                    <FormLabel>Do you already work in aesthetic healthcare?</FormLabel>
                     <FormControl>
-                      <Input placeholder="Ex: 1 ano aproximadamente..." {...field} />
+                      <Input placeholder="E.g.: About 1 year..." {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -182,10 +182,10 @@ export default function DiagnosticoPage() {
                 name="temClinica"
                 render={({ field }) => (
                   <FormItem className="col-span-2">
-                    <FormLabel>Tem clínica própria ou atende em outro espaço?</FormLabel>
+                    <FormLabel>Do you have your own clinic or work in another space?</FormLabel>
                     <FormControl>
                       <Textarea
-                        placeholder="Ex: 3 meses, dentro de espaço de beleza..."
+                        placeholder="E.g.: 3 months, inside a beauty salon..."
                         {...field}
                       />
                     </FormControl>
@@ -196,11 +196,11 @@ export default function DiagnosticoPage() {
             </CardContent>
           </Card>
 
-          {/* SEÇÃO 2 */}
+          {/* SECTION 2 */}
           <Card className="border-l-4 border-l-green-500 shadow-md">
             <CardHeader>
-              <CardTitle className="text-xl">2. Resultados Atuais</CardTitle>
-              <CardDescription>Mapeamento financeiro e de performance.</CardDescription>
+              <CardTitle className="text-xl">2. Current Results</CardTitle>
+              <CardDescription>Financial and performance mapping.</CardDescription>
             </CardHeader>
             <CardContent className="grid gap-6 md:grid-cols-2">
               <FormField
@@ -208,9 +208,9 @@ export default function DiagnosticoPage() {
                 name="rendaMensal"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Como está sua renda média mensal hoje?</FormLabel>
+                    <FormLabel>What is your average monthly income today?</FormLabel>
                     <FormControl>
-                      <Input placeholder="Ex: R$ 5.000,00..." {...field} />
+                      <Input placeholder="E.g.: R$ 5,000.00..." {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -221,9 +221,9 @@ export default function DiagnosticoPage() {
                 name="faturaEstetica"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Já fatura na Estética ou mistura com outra área?</FormLabel>
+                    <FormLabel>Do you already earn in Aesthetics or mix with another area?</FormLabel>
                     <FormControl>
-                      <Input placeholder="Ex: Não atua em outro local..." {...field} />
+                      <Input placeholder="E.g.: Does not work elsewhere..." {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -234,9 +234,9 @@ export default function DiagnosticoPage() {
                 name="contas"
                 render={({ field }) => (
                   <FormItem className="col-span-2">
-                    <FormLabel>Tem conta PJ? PF? Investimentos?</FormLabel>
+                    <FormLabel>Do you have a business account? Personal? Investments?</FormLabel>
                     <FormControl>
-                      <Input placeholder="Ex: Tem PJ e PF, não investe..." {...field} />
+                      <Input placeholder="E.g.: Has business and personal accounts, no investments..." {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -247,9 +247,9 @@ export default function DiagnosticoPage() {
                 name="custoVida"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Qual seu custo médio de vida mensal?</FormLabel>
+                    <FormLabel>What is your average monthly cost of living?</FormLabel>
                     <FormControl>
-                      <Input placeholder="Ex: 5 mil..." {...field} />
+                      <Input placeholder="E.g.: 5 thousand..." {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -258,11 +258,11 @@ export default function DiagnosticoPage() {
             </CardContent>
           </Card>
 
-          {/* SEÇÃO 3 */}
+          {/* SECTION 3 */}
           <Card className="border-l-4 border-l-orange-500 shadow-md">
             <CardHeader>
-              <CardTitle className="text-xl">3. Dores e Desafios</CardTitle>
-              <CardDescription>O que te impede de crescer hoje.</CardDescription>
+              <CardTitle className="text-xl">3. Pain Points and Challenges</CardTitle>
+              <CardDescription>What prevents you from growing today.</CardDescription>
             </CardHeader>
             <CardContent className="grid gap-6">
               <FormField
@@ -270,10 +270,10 @@ export default function DiagnosticoPage() {
                 name="incomodaRotina"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>O que mais te incomoda na sua rotina hoje?</FormLabel>
+                    <FormLabel>What bothers you most about your routine today?</FormLabel>
                     <FormControl>
                       <Textarea
-                        placeholder="Ex: Falta de pacientes, vendas..."
+                        placeholder="E.g.: Lack of patients, sales..."
                         className="min-h-[100px]"
                         {...field}
                       />
@@ -287,10 +287,10 @@ export default function DiagnosticoPage() {
                 name="dificuldadeCrescer"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Qual sua maior dificuldade em crescer?</FormLabel>
+                    <FormLabel>What is your biggest difficulty in growing?</FormLabel>
                     <FormControl>
                       <Textarea
-                        placeholder="Ex: Não sabe vender, posicionamento..."
+                        placeholder="E.g.: Doesn't know how to sell, positioning..."
                         className="min-h-[100px]"
                         {...field}
                       />
@@ -302,11 +302,11 @@ export default function DiagnosticoPage() {
             </CardContent>
           </Card>
 
-          {/* SEÇÃO 4 */}
+          {/* SECTION 4 */}
           <Card className="border-l-4 border-l-teal-500 shadow-md">
             <CardHeader>
-              <CardTitle className="text-xl">4. Objetivos e Sonhos</CardTitle>
-              <CardDescription>Onde queremos chegar.</CardDescription>
+              <CardTitle className="text-xl">4. Goals and Dreams</CardTitle>
+              <CardDescription>Where we want to get to.</CardDescription>
             </CardHeader>
             <CardContent className="grid gap-6">
               <FormField
@@ -314,10 +314,10 @@ export default function DiagnosticoPage() {
                 name="objetivo6Meses"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Onde você gostaria de estar daqui a 6 meses?</FormLabel>
+                    <FormLabel>Where would you like to be in 6 months?</FormLabel>
                     <FormControl>
                       <Textarea
-                        placeholder="Ex: Agenda cheia, independência..."
+                        placeholder="E.g.: Full schedule, independence..."
                         className="min-h-[100px]"
                         {...field}
                       />
@@ -331,10 +331,10 @@ export default function DiagnosticoPage() {
                 name="resultadoTransformador"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>O que seria um resultado transformador para você?</FormLabel>
+                    <FormLabel>What would be a transformative result for you?</FormLabel>
                     <FormControl>
                       <Textarea
-                        placeholder="Ex: Visão de empresária..."
+                        placeholder="E.g.: Entrepreneur mindset..."
                         className="min-h-[100px]"
                         {...field}
                       />
@@ -351,12 +351,12 @@ export default function DiagnosticoPage() {
               {isSaving ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Salvando...
+                  Saving...
                 </>
               ) : (
                 <>
                   <Save className="mr-2 h-4 w-4" />
-                  Salvar Respostas
+                  Save Answers
                 </>
               )}
             </Button>

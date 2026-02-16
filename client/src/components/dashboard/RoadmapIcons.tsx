@@ -19,11 +19,11 @@ export const getModuleIcon = (order: number, title: string) => {
   // Try to match based on title keywords first
   const lowerTitle = title.toLowerCase();
 
-  // Phase 1: Fundamentos
+  // Phase 1: Fundamentals
   if (lowerTitle.includes("fundamentos")) return LayoutDashboard;
   if (lowerTitle.includes("fase 1")) return LayoutDashboard;
 
-  // Phase 2: Posicionamento
+  // Phase 2: Positioning
   if (lowerTitle.includes("posicionamento")) return Target;
   if (lowerTitle.includes("fase 2")) return Target;
 
@@ -31,11 +31,11 @@ export const getModuleIcon = (order: number, title: string) => {
   if (lowerTitle.includes("marketing")) return Megaphone;
   if (lowerTitle.includes("fase 3")) return Megaphone;
 
-  // Phase 4: Vendas
+  // Phase 4: Sales
   if (lowerTitle.includes("vendas")) return Handshake;
   if (lowerTitle.includes("fase 4")) return Handshake;
 
-  // Phase 5: Gestão
+  // Phase 5: Management
   if (lowerTitle.includes("gestão")) return Users;
   if (lowerTitle.includes("fase 5")) return Users;
 
@@ -54,11 +54,11 @@ export const getModuleIcon = (order: number, title: string) => {
 
   // Fallback map based on typical order
   const iconMap: Record<number, React.ElementType> = {
-    1: LayoutDashboard, // Fundamentos
-    2: Target, // Posicionamento
+    1: LayoutDashboard, // Fundamentals
+    2: Target, // Positioning
     3: Megaphone, // Marketing
-    4: Handshake, // Vendas
-    5: Users, // Gestão
+    4: Handshake, // Sales
+    5: Users, // Management
     6: Brain, // Mindset
   };
 

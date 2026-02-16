@@ -1,6 +1,6 @@
 # PLAN-merge-metrics-input: Merge Metrics Input into Evolution Tab
 
-> **Goal:** Incorporate the "Lançar Métrica" functionality directly into the "Evolução" tab within a structured shadcn/ui card, removing the separate tab.
+> **Goal:** Incorporate the "Submit Metric" functionality directly into the "Evolution" tab within a structured shadcn/ui card, removing the separate tab.
 
 ## 0. Research Findings
 
@@ -29,7 +29,7 @@
 - **Action:** Import `SubmitMetricsForm`.
 - **Action:** Add a new `Card` component containing `SubmitMetricsForm`.
 - **Details:** Place the form card likely below the chart or in a grid layout alongside data. I will place it effectively to ensure good UX (e.g., inside a collapsible card or just a standard card if it fits well).
-- **Details:** Ensure the `Card` has a clear title like "Lançar Métricas Mensais" and description.
+- **Details:** Ensure the `Card` has a clear title like "Submit Monthly Metrics" and description.
 
 ---
 
@@ -71,10 +71,10 @@
 - `bun run lint` - Code formatting.
 
 ### Manual Verification
-1. Open "Meu Dashboard" (or Admin view).
-2. Click "Evolução" tab.
-3. Verify "Lançar Métricas" form is present and styled correctly.
-4. Verify "Lançar Métricas" tab is gone from the top menu.
+1. Open "My Dashboard" (or Admin view).
+2. Click "Evolution" tab.
+3. Verify "Submit Metrics" form is present and styled correctly.
+4. Verify "Submit Metrics" tab is gone from the top menu.
 5. Try submitting a metric and ensure it still works (it uses tRPC mutation so location shouldn't matter).
 
 ---

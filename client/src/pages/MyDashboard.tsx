@@ -51,7 +51,7 @@ function LockedTab({
           </span>
         </TooltipTrigger>
         <TooltipContent>
-          <p>Complete o diagnóstico primeiro</p>
+          <p>Complete the diagnosis first</p>
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>
@@ -67,7 +67,7 @@ export default function MyDashboard() {
   const { data: user, isLoading: isLoadingUser, error: userError } = trpc.auth.me.useQuery();
   const isAdmin = user?.role === "admin";
 
-  // DEBUG: Log estado do user
+  // DEBUG: Log user state
   // biome-ignore lint/suspicious/noConsole: debug logging for dashboard
   console.log("[DASHBOARD] Estado auth.me:", {
     hasUser: !!user,
@@ -94,7 +94,7 @@ export default function MyDashboard() {
     retry: false,
   });
 
-  // DEBUG: Log estado do mentorado
+  // DEBUG: Log mentee state
   // biome-ignore lint/suspicious/noConsole: debug logging for dashboard
   console.log("[DASHBOARD] Estado mentorados.me:", {
     isAdmin,
@@ -119,7 +119,7 @@ export default function MyDashboard() {
   const isLoading = isAdmin ? (selectedMentoradoId ? isLoadingById : !allMentorados) : isLoadingMe;
   const error = isAdmin ? errorById : errorMe;
 
-  // DEBUG: Log estado final
+  // DEBUG: Log final state
   // biome-ignore lint/suspicious/noConsole: debug logging for dashboard
   console.log("[DASHBOARD] Estado final:", {
     isAdmin,
@@ -213,25 +213,25 @@ export default function MyDashboard() {
             className="bg-destructive/10 border-destructive/20 text-destructive max-w-lg"
           >
             <AlertCircle className="h-4 w-4" />
-            <AlertTitle>Perfil não encontrado</AlertTitle>
+            <AlertTitle>Profile not found</AlertTitle>
             <AlertDescription className="space-y-4">
               <p>
-                Não conseguimos carregar seu perfil de mentorado. Isso pode acontecer se você acabou
-                de fazer login ou se houve um problema temporário.
+                We could not load your mentee profile. This can happen if you just
+                logged in or if there was a temporary issue.
               </p>
               <div className="flex flex-wrap gap-3 pt-2">
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={async () => {
-                    toast.loading("Tentando novamente...", { id: "retry" });
+                    toast.loading("Trying again...", { id: "retry" });
                     await refetchMentorado();
                     toast.dismiss("retry");
                   }}
                   className="gap-2"
                 >
                   <RefreshCw className="h-4 w-4" />
-                  Tentar novamente
+                  Try again
                 </Button>
                 <Button
                   variant="ghost"
@@ -241,7 +241,7 @@ export default function MyDashboard() {
                   }}
                   className="gap-2"
                 >
-                  Contatar suporte
+                  Contact support
                 </Button>
               </div>
             </AlertDescription>
@@ -249,7 +249,7 @@ export default function MyDashboard() {
 
           {/* Hidden legacy message for debugging */}
           <p className="text-xs text-muted-foreground">
-            Código: {error ? "MENTORADO_ERROR" : "MENTORADO_NOT_FOUND"}
+            Code: {error ? "MENTORADO_ERROR" : "MENTORADO_NOT_FOUND"}
           </p>
         </div>
       </DashboardLayout>
@@ -262,12 +262,12 @@ export default function MyDashboard() {
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
           <div>
             <h1 className="text-3xl font-bold text-foreground">
-              {isAdmin ? "Visão Admin" : "Meu Dashboard"}
+              {isAdmin ? "Admin View" : "My Dashboard"}
             </h1>
             <p className="text-muted-foreground mt-1">
               {isAdmin
-                ? "Selecione um mentorado para visualizar os dados"
-                : "Acompanhe seu progresso e metas em tempo real"}
+                ? "Select a mentee to view their data"
+                : "Track your progress and goals in real time"}
             </p>
           </div>
 
@@ -309,20 +309,20 @@ export default function MyDashboard() {
           <div className="flex justify-center mb-6">
             <NeonTabsList>
               <LockedTab value="visao-geral" isLocked={!isAdmin && !isDiagnosticoCompleted}>
-                Visão Geral
+                Overview
               </LockedTab>
-              <NeonTabsTrigger value="diagnostico">Diagnóstico</NeonTabsTrigger>
+              <NeonTabsTrigger value="diagnostico">Diagnosis</NeonTabsTrigger>
               <LockedTab value="evolucao" isLocked={!isAdmin && !isDiagnosticoCompleted}>
-                Evolução
+                Progress
               </LockedTab>
               <LockedTab value="atividades" isLocked={!isAdmin && !isDiagnosticoCompleted}>
-                Atividades
+                Activities
               </LockedTab>
               <LockedTab value="instagram" isLocked={!isAdmin && !isDiagnosticoCompleted}>
                 Instagram
               </LockedTab>
               <LockedTab value="planejamento" isLocked={!isAdmin && !isDiagnosticoCompleted}>
-                Planejamento
+                Planning
               </LockedTab>
             </NeonTabsList>
           </div>

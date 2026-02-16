@@ -1,6 +1,6 @@
 # PLAN-whatsapp-zapi: WhatsApp Integration via Z-API
 
-> **Goal:** Enable mentorados to connect their individual WhatsApp accounts, chat with leads inside the CRM, and configure an AI agent as SDR for automated lead qualification.
+> **Goal:** Enable mentees to connect their individual WhatsApp accounts, chat with leads inside the CRM, and configure an AI agent as SDR for automated lead qualification.
 
 ---
 
@@ -12,7 +12,7 @@
 | 2 | QR code authentication via `GET /qr-code/image` returns base64 image. QR expires every 20 seconds | 5/5 | [Z-API QR Code](https://developer.z-api.io/en/instance/qrcode) | Connection UX |
 | 3 | Messages sent via `POST /send-message-text` to `https://api.z-api.io/instances/{id}/token/{token}/send-message-text` | 5/5 | [Z-API Send Text](https://developer.z-api.io/message/send-message-text) | Messaging API |
 | 4 | Webhooks: `on-message-received`, `delivery`, `message-status`, `disconnected` - All use POST to configured URL | 5/5 | Z-API Docs | Real-time events |
-| 5 | Cost: R$99.99/month per instance (or R$54.99-89.99 for partners with volume) | 5/5 | [Z-API Pricing](https://www.z-api.io) | Cost per mentorado |
+| 5 | Cost: R$99.99/month per instance (or R$54.99-89.99 for partners with volume) | 5/5 | [Z-API Pricing](https://www.z-api.io) | Cost per mentee |
 | 6 | Z-API uses `Client-Token` header for webhook authentication | 4/5 | Z-API Docs | Security |
 | 7 | Current schema has `leads` table with `telefone` field and `interacoes` with `tipo: whatsapp` enum | 5/5 | `drizzle/schema.ts` | Extend existing |
 | 8 | AI SDR agents with WhatsApp achieve 5x lead generation and 45-60% higher conversion | 4/5 | Industry research | Business value |
@@ -23,49 +23,49 @@
 
 - **Gap:** Z-API webhook exact payload structure for each event type
   - *Action:* Test with real instance or mock during implementation
-  
+
 - **Gap:** Z-API rate limits (if any) for message sending
   - *Action:* Implement queue with conservative delays, monitor in production
 
-- **Assumption:** Each mentorado will subscribe to their own Z-API instance
-  - *Rationale:* Multi-tenant model, each mentorado owns their WhatsApp number
+- **Assumption:** Each mentee will subscribe to their own Z-API instance
+  - *Rationale:* Multi-tenant model, each mentee owns their WhatsApp number
 
-- **Assumption:** Mentorados must acquire Z-API subscription separately
-  - *Rationale:* R$99.99/month cost should be borne by each mentorado
+- **Assumption:** Mentees must acquire Z-API subscription separately
+  - *Rationale:* R$99.99/month cost should be borne by each mentee
 
 ### Edge Cases (10 Identified)
 
-1. **Unknown phone contact** → Store message with phone only, link to lead later
-2. **WhatsApp disconnection** → Update status, notify mentorado, show QR code
-3. **Duplicate messages** → Dedupe by Z-API message ID
-4. **AI response spam prevention** → Rate limit responses, respect working hours
-5. **Token security** → Encrypt at rest, never expose to frontend
-6. **Conversation context overflow** → Keep last N messages, summarize older
-7. **Lead qualification handoff** → Mark as "quente", notify human
-8. **Multiple leads with same phone** → Use first match or most recent
-9. **Media messages (images, audio)** → Phase 2 enhancement, text-only initially
-10. **LGPD compliance** → Message retention policy, encryption, delete capability
+1. **Unknown phone contact** -> Store message with phone only, link to lead later
+2. **WhatsApp disconnection** -> Update status, notify mentee, show QR code
+3. **Duplicate messages** -> Dedupe by Z-API message ID
+4. **AI response spam prevention** -> Rate limit responses, respect working hours
+5. **Token security** -> Encrypt at rest, never expose to frontend
+6. **Conversation context overflow** -> Keep last N messages, summarize older
+7. **Lead qualification handoff** -> Mark as "hot", notify human
+8. **Multiple leads with same phone** -> Use first match or most recent
+9. **Media messages (images, audio)** -> Phase 2 enhancement, text-only initially
+10. **LGPD compliance** -> Message retention policy, encryption, delete capability
 
 ---
 
 ## 1. User Review Required
 
 > [!IMPORTANT]
-> **Cost Model:** Each mentorado must subscribe to Z-API separately (R$99.99/month).
+> **Cost Model:** Each mentee must subscribe to Z-API separately (R$99.99/month).
 > This plan assumes the CRM provides the integration, not the subscription.
 
 > [!WARNING]
 > **Multi-tenant Security:** All Z-API tokens will be stored encrypted.
-> Webhook endpoint routes messages to correct mentorado by instance ID lookup.
+> Webhook endpoint routes messages to correct mentee by instance ID lookup.
 
 > [!CAUTION]
-> **WhatsApp Policy Compliance:** Mentorados must follow WhatsApp Terms of Service.
+> **WhatsApp Policy Compliance:** Mentees must follow WhatsApp Terms of Service.
 > AI agent should have clear opt-out mechanism and respect working hours.
 
 **Questions for User:**
 1. Should we auto-create a lead when receiving a message from an unknown phone?
 2. What message retention period is required for LGPD compliance? (30/60/90 days?)
-3. Should the AI agent be enabled by default or opt-in for each mentorado?
+3. Should the AI agent be enabled by default or opt-in for each mentee?
 
 ---
 
@@ -146,7 +146,7 @@
 > [!CAUTION]
 > Each task MUST have subtasks. No single-line tasks allowed.
 
-### AT-001: Extend Mentorados Schema with Z-API Fields ⚡
+### AT-001: Extend Mentorados Schema with Z-API Fields
 **Goal:** Add Z-API connection tracking fields to mentorados table
 **Dependencies:** None
 
@@ -163,7 +163,7 @@
 
 ---
 
-### AT-002: Create WhatsApp Messages Table ⚡
+### AT-002: Create WhatsApp Messages Table
 **Goal:** Create table for storing WhatsApp message history
 **Dependencies:** None
 
@@ -187,7 +187,7 @@
 ---
 
 ### AT-003: Create AI Agent Config Table
-**Goal:** Create table for AI SDR configuration per mentorado
+**Goal:** Create table for AI SDR configuration per mentee
 **Dependencies:** AT-001
 
 #### Subtasks:
@@ -241,13 +241,13 @@
   - **File:** `server/webhooks/zapiWebhook.ts`
   - **Validation:** File compiles
 - [ ] ST-005.2: Implement `onMessageReceived` handler
-  - **Action:** Parse payload, find mentorado by instance ID, store message
+  - **Action:** Parse payload, find mentee by instance ID, store message
   - **Validation:** Message stored in DB
 - [ ] ST-005.3: Implement `onMessageStatus` handler
   - **Action:** Update message status (delivered/read)
   - **Validation:** Status updated in DB
 - [ ] ST-005.4: Implement `onDisconnected` handler
-  - **Action:** Update mentorado `zapiConnected` to false
+  - **Action:** Update mentee `zapiConnected` to false
   - **Validation:** Connection status updated
 - [ ] ST-005.5: Register webhook route in Express app
   - **File:** `server/_core/index.ts`
@@ -464,7 +464,7 @@
 
 ---
 
-### AT-014: Add WhatsApp Settings Section to Settings Page ⚡
+### AT-014: Add WhatsApp Settings Section to Settings Page
 **Goal:** Create settings section for WhatsApp integration
 **Dependencies:** AT-009, AT-012
 
@@ -476,7 +476,7 @@
   - **Validation:** QR code displays
 - [ ] ST-014.3: Mount AIAgentSettingsCard
   - **Validation:** AI config editable
-- [ ] ST-014.4: Add "Conectar WhatsApp" link in sidebar
+- [ ] ST-014.4: Add "Connect WhatsApp" link in sidebar
   - **Validation:** Navigation works
 
 **Rollback:** Remove settings section
@@ -620,7 +620,7 @@ agent-browser get text "[data-testid=qr-code-image]"
 ### Database Rollback
 ```sql
 -- Rollback AT-001
-ALTER TABLE mentorados 
+ALTER TABLE mentorados
 DROP COLUMN IF EXISTS zapi_instance_id,
 DROP COLUMN IF EXISTS zapi_token,
 DROP COLUMN IF EXISTS zapi_connected,
@@ -670,8 +670,8 @@ if (!FEATURES.WHATSAPP_INTEGRATION) {
 
 **Total Estimated Duration:** 2-3 weeks
 
-**Cost per Mentorado:**
-- Z-API subscription: R$99.99/month (paid by mentorado)
+**Cost per Mentee:**
+- Z-API subscription: R$99.99/month (paid by mentee)
 - Gemini API: Usage-based (existing integration)
 
 ---
@@ -689,5 +689,5 @@ if (!FEATURES.WHATSAPP_INTEGRATION) {
 - [x] Each subtask has validation criteria
 - [x] Dependencies mapped between tasks
 - [x] Rollback steps defined (DB + Code)
-- [x] Parallel-safe tasks marked with ⚡ (AT-001, AT-002, AT-010, AT-014)
+- [x] Parallel-safe tasks marked (AT-001, AT-002, AT-010, AT-014)
 - [x] Verification plan with automated + manual tests

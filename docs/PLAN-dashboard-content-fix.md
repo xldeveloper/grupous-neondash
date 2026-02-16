@@ -1,24 +1,24 @@
 # PLAN-dashboard-content-fix: Fix Dashboard Display After Diagnostico
 
-> **Goal:** After filling the diagnostico, show meaningful content in "Visão Geral" and "Evolução" tabs instead of welcome screen or empty states.
+> **Goal:** After filling the diagnostico, show meaningful content in "Overview" and "Evolution" tabs instead of welcome screen or empty states.
 
 ## 0. Research Findings
 
 | # | Finding | Confidence | Source | Impact |
 |---|---------|------------|--------|--------|
 | 1 | MenteeOverview shows welcome screen if `chartData.length === 0` | 5/5 | MenteeOverview.tsx:64-72 | High - blocks overview even with diagnostico |
-| 2 | EvolucaoView shows "Nenhum dado encontrado" when no metrics | 5/5 | EvolucaoView.tsx:115-120 | Medium - expected empty state |
+| 2 | EvolucaoView shows "No data found" when no metrics | 5/5 | EvolucaoView.tsx:115-120 | Medium - expected empty state |
 | 3 | DiagnosticoSummaryCard exists but not integrated | 5/5 | DiagnosticoSummaryCard.tsx | Can be used for overview |
 | 4 | No diagnostico context passed to MenteeOverview | 5/5 | MyDashboard.tsx | Need to add prop or fetch |
 | 5 | User completed diagnostico but has zero metrics | 5/5 | Screenshots | This is expected UX flow |
 
 ### Knowledge Gaps
-- Should "Visão Geral" show just the DiagnosticoSummary until metrics exist?
-- Should "Evolução" show the metrics form prominently for first-time users?
+- Should "Overview" show just the DiagnosticoSummary until metrics exist?
+- Should "Evolution" show the metrics form prominently for first-time users?
 
 ### Assumptions
 - After diagnostico, user should see their diagnostico summary + empty metrics placeholder
-- "Evolução" should guide user to fill first metrics
+- "Evolution" should guide user to fill first metrics
 
 ---
 
@@ -29,12 +29,12 @@
 > After filling diagnostico (no metrics yet), what should each tab show?
 >
 > **Option A - Minimal:**
-> - Visão Geral: DiagnosticoSummaryCard + "Aguardando primeiras métricas" card
-> - Evolução: SubmitMetricsForm (prominent) + empty table
+> - Overview: DiagnosticoSummaryCard + "Awaiting first metrics" card
+> - Evolution: SubmitMetricsForm (prominent) + empty table
 >
 > **Option B - Guided:**
-> - Visão Geral: DiagnosticoSummaryCard + "Complete suas métricas" call-to-action
-> - Evolução: Highlighted "Preencha suas primeiras métricas" section
+> - Overview: DiagnosticoSummaryCard + "Complete your metrics" call-to-action
+> - Evolution: Highlighted "Fill in your first metrics" section
 
 ---
 
@@ -47,7 +47,7 @@
 - **Details:**
   - Add `trpc.diagnostico.get.useQuery()`
   - Modify `hasNoData` logic: show welcome ONLY if no diagnostico
-  - If diagnostico exists but no metrics: show DiagnosticoSummaryCard + "Aguardando métricas" card
+  - If diagnostico exists but no metrics: show DiagnosticoSummaryCard + "Awaiting metrics" card
 
 ### Phase 2: Improve EvolucaoView
 
@@ -114,9 +114,9 @@
 
 ### Manual Verification
 1. Login as mentorado with diagnostico filled, no metrics
-2. Navigate to "Visão Geral" tab
+2. Navigate to "Overview" tab
 3. ✅ Verify: Shows DiagnosticoSummaryCard (not welcome screen)
-4. Navigate to "Evolução" tab
+4. Navigate to "Evolution" tab
 5. ✅ Verify: Shows metrics form prominently with helpful message
 6. Fill and save first metric
 7. ✅ Verify: Both tabs now show data

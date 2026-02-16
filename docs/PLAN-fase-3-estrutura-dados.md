@@ -1,31 +1,31 @@
-# PRP: Fase 3 - Estrutura de Dados (Módulos)
+# PRP: Phase 3 - Data Structure (Modules)
 
 ## Metadata
 
-| Campo              | Valor                                                      |
+| Field              | Value                                                      |
 | ------------------ | ---------------------------------------------------------- |
 | **Complexity**     | L4 — Multi-file, data population, frontend rendering       |
-| **Estimated Time** | 4-6 horas                                                  |
-| **Parallel Safe**  | Sim (GPU-9/GPU-50 e GPU-10/GPU-51 podem rodar em paralelo) |
-| **Risk Level**     | Baixo (sem migração de dados, apenas adição de conteúdo)   |
+| **Estimated Time** | 4-6 hours                                                  |
+| **Parallel Safe**  | Yes (GPU-9/GPU-50 and GPU-10/GPU-51 can run in parallel)   |
+| **Risk Level**     | Low (no data migration, content addition only)             |
 | **Issues**         | GPU-9, GPU-10, GPU-50, GPU-51                              |
 
 ---
 
-## 1. Objetivo e Contexto
+## 1. Objective and Context
 
-Popular o sistema de atividades com o conteúdo real dos programas Neon, estabelecendo a base para o acompanhamento de progresso do mentorado.
+Populate the activities system with the actual content from the Neon programs, establishing the foundation for mentee progress tracking.
 
-O arquivo `client/src/data/atividades-data.ts` atualmente contém:
+The file `client/src/data/atividades-data.ts` currently contains:
 
-- **Módulo 2**: Atividades Primordiais (checklist CNPJ, organização)
-- **Atividades 01-12**: Posicionamento, Mindset, Planejamento, Vendas
-- **Rotineiros + Estratégias**: Leitura, Conteúdo, Audiência, Follow-up
+- **Module 2**: Primordial Activities (CNPJ checklist, organization)
+- **Activities 01-12**: Positioning, Mindset, Planning, Sales
+- **Routine + Strategies**: Reading, Content, Audience, Follow-up
 
-A tarefa é adicionar:
+The task is to add:
 
-- **Módulo 1**: "Comece Aqui" - fundação da jornada (Neon Estrutura)
-- **Módulo 2 Avançado**: Gestão, Processos, KPIs, Automação (Neon Escala)
+- **Module 1**: "Start Here" - journey foundation (Neon Estrutura)
+- **Module 2 Advanced**: Management, Processes, KPIs, Automation (Neon Escala)
 
 ---
 
@@ -33,96 +33,96 @@ A tarefa é adicionar:
 
 | #   | Finding                                                             | Confidence | Source                     | Impact |
 | --- | ------------------------------------------------------------------- | ---------- | -------------------------- | ------ |
-| 1   | Interface `Atividade` requer: codigo, titulo, etapa, icone, steps[] | 5/5        | atividades-data.ts:14-21   | High   |
-| 2   | Interface `AtividadeStep` requer: codigo, label, descricao?         | 5/5        | atividades-data.ts:8-12    | High   |
-| 3   | `AtividadesContent.tsx` usa `getAtividadesByEtapa()` para agrupar   | 5/5        | AtividadesContent.tsx:35   | Medium |
-| 4   | Cada step deve ter `codigo` único no formato `{prefix}-{n}`         | 5/5        | atividades-data.ts:36-78   | High   |
-| 5   | Progresso calculado via `calcularProgresso(progressMap)`            | 4/5        | atividades-data.ts:360-383 | Medium |
-| 6   | Não existem testes unitários no projeto (apenas node_modules)       | 5/5        | find_by_name search        | Low    |
-| 7   | Validação via `bun run check` (TypeScript) é padrão do projeto      | 5/5        | package.json:13            | High   |
+| 1   | Interface `Atividade` requires: codigo, titulo, etapa, icone, steps[] | 5/5        | atividades-data.ts:14-21   | High   |
+| 2   | Interface `AtividadeStep` requires: codigo, label, descricao?       | 5/5        | atividades-data.ts:8-12    | High   |
+| 3   | `AtividadesContent.tsx` uses `getAtividadesByEtapa()` to group      | 5/5        | AtividadesContent.tsx:35   | Medium |
+| 4   | Each step must have a unique `codigo` in the format `{prefix}-{n}`  | 5/5        | atividades-data.ts:36-78   | High   |
+| 5   | Progress calculated via `calcularProgresso(progressMap)`            | 4/5        | atividades-data.ts:360-383 | Medium |
+| 6   | No unit tests exist in the project (only node_modules)              | 5/5        | find_by_name search        | Low    |
+| 7   | Validation via `bun run check` (TypeScript) is the project standard | 5/5        | package.json:13            | High   |
 
 ---
 
 ## 3. Knowledge Gaps
 
-| Gap                                       | Mitigation                                          |
-| ----------------------------------------- | --------------------------------------------------- |
-| Conteúdo exato do programa Neon Estrutura | Usuário deve fornecer lista de módulos/seções/steps |
-| Conteúdo exato do programa Neon Escala    | Usuário deve fornecer lista de módulos/seções/steps |
-| Ícones ideais para cada seção             | Usar emojis baseados no contexto semântico          |
-| Ordem correta das atividades na jornada   | Assumir ordem sequencial; validar com usuário       |
+| Gap                                          | Mitigation                                             |
+| -------------------------------------------- | ------------------------------------------------------ |
+| Exact content of the Neon Estrutura program  | User must provide list of modules/sections/steps       |
+| Exact content of the Neon Escala program     | User must provide list of modules/sections/steps       |
+| Ideal icons for each section                 | Use emojis based on semantic context                   |
+| Correct order of activities in the journey   | Assume sequential order; validate with user            |
 
 ---
 
 ## 4. Assumptions to Validate
 
-1. **Módulo 1** é para iniciantes (fundação) e **Módulo 2** para escala (avançado)
-2. Os `steps` podem ser marcados como concluídos independentemente da ordem
-3. O campo `etapa` deve ser único por módulo ("Módulo 1", "Módulo 2")
-4. Não há limite de `steps` por atividade
-5. A estrutura existente de dados estáticos é suficiente (não precisa de banco)
+1. **Module 1** is for beginners (foundation) and **Module 2** is for scaling (advanced)
+2. Steps can be marked as completed regardless of order
+3. The `etapa` field must be unique per module ("Module 1", "Module 2")
+4. There is no limit on steps per activity
+5. The existing static data structure is sufficient (no database needed)
 
 ---
 
 ## 5. Edge Cases
 
-| #   | Edge Case                                        | Handling                                                  |
-| --- | ------------------------------------------------ | --------------------------------------------------------- |
-| 1   | Código duplicado entre atividades                | Usar prefixo único por atividade (ex: `m1-boas-1`)        |
-| 2   | Accordion não expande com muitos itens           | Testar com 20+ steps; verificar scroll                    |
-| 3   | Progresso não atualiza após adicionar novas ativ | Limpar cache ou recarregar; verificar `calcularProgresso` |
-| 4   | TypeScript reclama de tipo ausente               | Garantir que todos campos obrigatórios estão presentes    |
-| 5   | Renderização lenta com muitas atividades         | Usar virtualização se necessário (fora do escopo)         |
+| #   | Edge Case                                        | Handling                                                     |
+| --- | ------------------------------------------------ | ------------------------------------------------------------ |
+| 1   | Duplicate code between activities                | Use unique prefix per activity (e.g., `m1-boas-1`)          |
+| 2   | Accordion does not expand with many items        | Test with 20+ steps; verify scroll                           |
+| 3   | Progress does not update after adding new activities | Clear cache or reload; verify `calcularProgresso`        |
+| 4   | TypeScript complains about missing type          | Ensure all required fields are present                       |
+| 5   | Slow rendering with many activities              | Use virtualization if needed (out of scope)                  |
 
 ---
 
-## 6. Tarefas Atômicas
+## 6. Atomic Tasks
 
-### ⚡ Parallel Track A: GPU-9 + GPU-50 (Módulo 1)
+### Parallel Track A: GPU-9 + GPU-50 (Module 1)
 
-#### AT-001: Criar Estrutura do Módulo 1
+#### AT-001: Create Module 1 Structure
 
-**Dependências:** Nenhuma
-**Parallel Safe:** Sim
+**Dependencies:** None
+**Parallel Safe:** Yes
 
-**Arquivo:** `client/src/data/atividades-data.ts`
+**File:** `client/src/data/atividades-data.ts`
 
-**Ação:** Adicionar novo bloco de atividades para "Módulo 1" no array `ATIVIDADES`.
+**Action:** Add a new activity block for "Module 1" in the `ATIVIDADES` array.
 
-**Estrutura proposta:**
+**Proposed structure:**
 
 ```typescript
 // ═══════════════════════════════════════════════════════════════════════════
-// MÓDULO 1 - COMECE AQUI (NEON ESTRUTURA)
+// MODULE 1 - START HERE (NEON ESTRUTURA)
 // ═══════════════════════════════════════════════════════════════════════════
 {
   codigo: "m1-boas-vindas",
-  titulo: "Boas-Vindas à Jornada NEON",
-  etapa: "Módulo 1",
+  titulo: "Welcome to the NEON Journey",
+  etapa: "Module 1",
   icone: "👋",
-  descricao: "Seu primeiro passo na metodologia NEON.",
+  descricao: "Your first step in the NEON methodology.",
   steps: [
-    { codigo: "m1-bv-1", label: "Assistir vídeo de boas-vindas" },
-    { codigo: "m1-bv-2", label: "Ler guia de navegação da plataforma" },
-    { codigo: "m1-bv-3", label: "Configurar foto de perfil" },
+    { codigo: "m1-bv-1", label: "Watch the welcome video" },
+    { codigo: "m1-bv-2", label: "Read the platform navigation guide" },
+    { codigo: "m1-bv-3", label: "Set up profile picture" },
   ],
 },
-// ... demais seções
+// ... remaining sections
 ```
 
-**Seções a incluir (baseado no plano original):**
+**Sections to include (based on the original plan):**
 
-1. Boas-vindas (vídeo, guia)
-2. Diagnóstico (formulário, faturamento atual)
-3. Jurídico (CNPJ, alvará)
-4. Financeiro (contas, fluxo)
-5. Precificação
+1. Welcome (video, guide)
+2. Diagnostic (form, current revenue)
+3. Legal (CNPJ, business license)
+4. Financial (accounts, cash flow)
+5. Pricing
 
-**Validação:**
+**Validation:**
 
 ```bash
 bun run check
-# Deve passar sem erros
+# Should pass without errors
 ```
 
 **Rollback:**
@@ -133,82 +133,82 @@ git checkout client/src/data/atividades-data.ts
 
 ---
 
-#### AT-002: Popular Steps Detalhados do Módulo 1
+#### AT-002: Populate Detailed Steps for Module 1
 
-**Dependências:** `[AT-001]`
-**Parallel Safe:** Não
+**Dependencies:** `[AT-001]`
+**Parallel Safe:** No
 
-**Ação:** Expandir cada seção do Módulo 1 com steps específicos conforme documentação do Neon Estrutura.
+**Action:** Expand each section of Module 1 with specific steps according to the Neon Estrutura documentation.
 
 > [!IMPORTANT]
-> O conteúdo exato dos steps deve ser fornecido pelo usuário ou extraído da documentação do programa Neon Estrutura.
+> The exact step content must be provided by the user or extracted from the Neon Estrutura program documentation.
 
-**Exemplo de expansão para seção Diagnóstico:**
+**Example expansion for the Diagnostic section:**
 
 ```typescript
 {
   codigo: "m1-diagnostico",
-  titulo: "Diagnóstico do Negócio",
-  etapa: "Módulo 1",
+  titulo: "Business Diagnostic",
+  etapa: "Module 1",
   icone: "📊",
-  descricao: "Entenda sua situação atual para traçar o caminho.",
+  descricao: "Understand your current situation to chart the path forward.",
   steps: [
-    { codigo: "m1-diag-1", label: "Preencher formulário de diagnóstico" },
-    { codigo: "m1-diag-2", label: "Calcular faturamento dos últimos 3 meses" },
-    { codigo: "m1-diag-3", label: "Identificar principais despesas fixas" },
-    { codigo: "m1-diag-4", label: "Definir margem de lucro atual" },
-    { codigo: "m1-diag-5", label: "Mapear pontos de melhoria identificados" },
+    { codigo: "m1-diag-1", label: "Fill in the diagnostic form" },
+    { codigo: "m1-diag-2", label: "Calculate revenue for the last 3 months" },
+    { codigo: "m1-diag-3", label: "Identify main fixed expenses" },
+    { codigo: "m1-diag-4", label: "Define current profit margin" },
+    { codigo: "m1-diag-5", label: "Map identified improvement areas" },
   ],
 },
 ```
 
-**Validação:**
+**Validation:**
 
 ```bash
 bun run check
-bun dev # Verificar renderização visual
+bun dev # Verify visual rendering
 ```
 
 ---
 
-### ⚡ Parallel Track B: GPU-10 + GPU-51 (Módulo 2 Avançado)
+### Parallel Track B: GPU-10 + GPU-51 (Advanced Module 2)
 
-#### AT-003: Criar Estrutura do Módulo 2 Avançado
+#### AT-003: Create Advanced Module 2 Structure
 
-**Dependências:** Nenhuma
-**Parallel Safe:** Sim (paralelo com AT-001)
+**Dependencies:** None
+**Parallel Safe:** Yes (parallel with AT-001)
 
-**Arquivo:** `client/src/data/atividades-data.ts`
+**File:** `client/src/data/atividades-data.ts`
 
-**Ação:** Adicionar seções avançadas ao "Módulo 2" para o programa Neon Escala.
+**Action:** Add advanced sections to "Module 2" for the Neon Escala program.
 
-**Seções a incluir:**
+**Sections to include:**
 
-1. Gestão de Equipe (mapeamento, recrutamento)
-2. Processos/SOPs (documentação)
-3. KPIs (faturamento, marketing)
-4. Automação (agendamento, CRM)
-5. Financeiro Avançado (DRE, fluxo)
+1. Team Management (mapping, recruitment)
+2. Processes/SOPs (documentation)
+3. KPIs (revenue, marketing)
+4. Automation (scheduling, CRM)
+5. Advanced Financial (P&L, cash flow)
 
-**Estrutura proposta:**
+**Proposed structure:**
 
 ```typescript
 {
   codigo: "m2-gestao-equipe",
-  titulo: "Gestão de Equipe",
-  etapa: "Módulo 2",
+  titulo: "Team Management",
+  etapa: "Module 2",
   icone: "👥",
-  descricao: "Construa e gerencie sua equipe de alta performance.",
+  descricao: "Build and manage your high-performance team.",
   steps: [
-    { codigo: "m2-eq-1", label: "Mapear cargos necessários" },
-    { codigo: "m2-eq-2", label: "Criar descritivo de funções" },
-    { codigo: "m2-eq-3", label: "Definir processo seletivo" },
-    { codigo: "m2-eq-4", label: "Estruturar onboarding de colaboradores" },
+    { codigo: "m2-eq-1", label: "Map required positions" },
+    { codigo: "m2-eq-2", label: "Create job descriptions" },
+    { codigo: "m2-eq-3", label: "Define hiring process" },
+    { codigo: "m2-eq-4", label: "Structure employee onboarding" },
   ],
 },
 ```
 
-**Validação:**
+**Validation:**
 
 ```bash
 bun run check
@@ -216,37 +216,37 @@ bun run check
 
 ---
 
-#### AT-004: Popular Steps Detalhados do Módulo 2
+#### AT-004: Populate Detailed Steps for Module 2
 
-**Dependências:** `[AT-003]`
-**Parallel Safe:** Não
+**Dependencies:** `[AT-003]`
+**Parallel Safe:** No
 
-**Ação:** Expandir cada seção com steps específicos do Neon Escala.
+**Action:** Expand each section with specific steps from Neon Escala.
 
 > [!IMPORTANT]
-> O conteúdo exato deve ser fornecido pelo usuário ou extraído da documentação do Neon Escala.
+> The exact content must be provided by the user or extracted from the Neon Escala documentation.
 
 ---
 
-### Sequential: Validação Final
+### Sequential: Final Validation
 
-#### AT-005: Validação Visual e Funcional
+#### AT-005: Visual and Functional Validation
 
-**Dependências:** `[AT-002, AT-004]`
-**Parallel Safe:** Não
+**Dependencies:** `[AT-002, AT-004]`
+**Parallel Safe:** No
 
-**Ação:** Verificar que todas as novas atividades renderizam corretamente.
+**Action:** Verify that all new activities render correctly.
 
 **Checklist:**
 
-1. Executar `bun dev`
-2. Navegar para Dashboard → Atividades
-3. Verificar que Módulo 1 aparece expandível
-4. Verificar que Módulo 2 (avançado) aparece
-5. Marcar alguns steps como concluídos
-6. Verificar que progresso geral atualiza
+1. Run `bun dev`
+2. Navigate to Dashboard -> Activities
+3. Verify that Module 1 appears and is expandable
+4. Verify that Module 2 (advanced) appears
+5. Mark some steps as completed
+6. Verify that overall progress updates
 
-**Validação:**
+**Validation:**
 
 ```bash
 bun run check  # TypeScript
@@ -267,20 +267,20 @@ bun run format # Prettier
 
 ### Manual Verification
 
-1. **Navegação para Atividades:**
-   - Abrir `http://localhost:5000`
-   - Fazer login
-   - Clicar em "Atividades" no dashboard
-   - Verificar que accordion expande corretamente
+1. **Navigate to Activities:**
+   - Open `http://localhost:5000`
+   - Log in
+   - Click on "Activities" in the dashboard
+   - Verify that the accordion expands correctly
 
-2. **Marcar Step como Concluído:**
-   - Clicar em um checkbox de step
-   - Verificar que o estado persiste (se implementado)
-   - Verificar que barra de progresso atualiza
+2. **Mark a Step as Completed:**
+   - Click on a step checkbox
+   - Verify that the state persists (if implemented)
+   - Verify that the progress bar updates
 
-3. **Responsividade:**
-   - Testar em viewport mobile (375px)
-   - Verificar que texto não quebra layout
+3. **Responsiveness:**
+   - Test on mobile viewport (375px)
+   - Verify that text does not break the layout
 
 ---
 
@@ -288,9 +288,9 @@ bun run format # Prettier
 
 ```mermaid
 graph TD
-    AT001[AT-001: Estrutura Módulo 1] --> AT002[AT-002: Steps Módulo 1]
-    AT003[AT-003: Estrutura Módulo 2] --> AT004[AT-004: Steps Módulo 2]
-    AT002 --> AT005[AT-005: Validação Final]
+    AT001[AT-001: Module 1 Structure] --> AT002[AT-002: Module 1 Steps]
+    AT003[AT-003: Module 2 Structure] --> AT004[AT-004: Module 2 Steps]
+    AT002 --> AT005[AT-005: Final Validation]
     AT004 --> AT005
 
     style AT001 fill:#4ade80
@@ -302,23 +302,23 @@ graph TD
 ## 9. User Review Required
 
 > [!WARNING]
-> **Conteúdo Necessário:** Antes de implementar, o usuário deve fornecer:
+> **Content Required:** Before implementing, the user must provide:
 >
-> 1. Lista completa de seções/atividades do programa **Neon Estrutura** (Módulo 1)
-> 2. Lista completa de seções/atividades do programa **Neon Escala** (Módulo 2)
-> 3. Ordem correta das atividades na jornada do mentorado
-> 4. Qualquer link/vídeo/recurso associado a cada step
+> 1. Complete list of sections/activities from the **Neon Estrutura** program (Module 1)
+> 2. Complete list of sections/activities from the **Neon Escala** program (Module 2)
+> 3. Correct order of activities in the mentee's journey
+> 4. Any links/videos/resources associated with each step
 
-Sem este conteúdo, serão usados placeholders baseados nas descrições existentes no plano original.
+Without this content, placeholders based on the existing descriptions in the original plan will be used.
 
 ---
 
 ## 10. Next Steps
 
-Após revisão e aprovação:
+After review and approval:
 
 ```bash
-# Execute /implement para iniciar a implementação
+# Execute /implement to start the implementation
 ```
 
 ---

@@ -1,6 +1,6 @@
 # PLAN-ai-agent-tools: AI Agent with Database Access & Tool Calling
 
-> **Goal:** Implement an intelligent AI agent using Vercel AI SDK that can access mentorado data (metrics, CRM, agenda, notes) and interact via tool calling with Gemini Flash model.
+> **Goal:** Implement an intelligent AI agent using Vercel AI SDK that can access mentee data (metrics, CRM, agenda, notes) and interact via tool calling with Gemini Flash model.
 
 ## 0. Research Findings
 
@@ -24,14 +24,14 @@
 
 ### Edge Cases
 
-1. User without mentorado profile → Return helpful message, no tools available
-2. Empty metrics → Return "no data yet" response
-3. No Google Calendar connected → Skip calendar tools gracefully
-4. Rate limiting on Gemini API → Implement retry with backoff
-5. Context window overflow → Trim conversation history intelligently
-6. Concurrent requests → Session-based state management
-7. Tool execution failure → Graceful degradation with error message
-8. Network timeout → Retry logic with user feedback
+1. User without mentee profile -> Return helpful message, no tools available
+2. Empty metrics -> Return "no data yet" response
+3. No Google Calendar connected -> Skip calendar tools gracefully
+4. Rate limiting on Gemini API -> Implement retry with backoff
+5. Context window overflow -> Trim conversation history intelligently
+6. Concurrent requests -> Session-based state management
+7. Tool execution failure -> Graceful degradation with error message
+8. Network timeout -> Retry logic with user feedback
 
 ---
 
@@ -39,24 +39,24 @@
 
 > [!IMPORTANT]
 > **Decision Required: AI SDK Choice**
-> 
+>
 > The plan recommends **Vercel AI SDK** over continuing OpenClaw Gateway because:
 > - No external process dependency (MoltBot gateway)
 > - Native Google Gemini provider support
 > - Clean tool calling abstraction
 > - Active maintenance and community
-> 
+>
 > **Alternative:** Continue with OpenClaw + MoltBot if external gateway is preferred for SDR subagents.
 
 > [!WARNING]
 > **Breaking Change: LLM Wrapper Replacement**
-> 
+>
 > The new implementation will replace `invokeLLM()` from `_core/llm.ts` with Vercel AI SDK.
 > The old wrapper will be kept as fallback but marked as deprecated.
 
 > [!CAUTION]
 > **Environment Variables Required**
-> 
+>
 > ```env
 > GOOGLE_GENERATIVE_AI_API_KEY=your_gemini_api_key
 > ```
@@ -81,7 +81,7 @@
 - Core AI agent service using Vercel AI SDK
 - Tool definitions for database access
 - Streaming response handling
-- Context building from mentorado data
+- Context building from mentee data
 
 **Tools to implement:**
 
@@ -162,7 +162,7 @@
 
 ---
 
-### AT-002: Create AI Provider Configuration ⚡
+### AT-002: Create AI Provider Configuration
 **Goal:** Set up Google Gemini provider with Vercel AI SDK
 **Dependencies:** AT-001
 
@@ -181,7 +181,7 @@
 
 ---
 
-### AT-003: Create AI Assistant Service with Tools ⚡
+### AT-003: Create AI Assistant Service with Tools
 **Goal:** Implement core AI service with database access tools
 **Dependencies:** AT-002
 
@@ -203,7 +203,7 @@
   - **Validation:** Tool queries `tasks` table
 - [ ] ST-003.6: Implement `getMyGoals` tool
   - **File:** `server/services/aiAssistantService.ts`
-  - **Validation:** Tool returns mentorado meta fields
+  - **Validation:** Tool returns mentee meta fields
 - [ ] ST-003.7: Implement `getDiagnostico` tool
   - **File:** `server/services/aiAssistantService.ts`
   - **Validation:** Tool queries `diagnosticos` table
@@ -297,9 +297,9 @@ bun test
    - Open dashboard at `http://localhost:3000`
    - Login as test user
    - Open AI chat widget
-   - Ask: "Quais são minhas métricas dos últimos 3 meses?"
+   - Ask: "What are my metrics for the last 3 months?"
    - Verify: AI uses `getMyMetrics` tool and returns data
-   - Ask: "Quantos leads tenho no status novo?"
+   - Ask: "How many leads do I have with status new?"
    - Verify: AI uses `getMyLeads` tool correctly
 
 3. **Error Handling Test:**
@@ -318,7 +318,7 @@ bun test
 agent-browser open http://localhost:3000/dashboard
 agent-browser snapshot -i --json
 agent-browser click @[chat-widget-fab]
-agent-browser fill @[chat-input] "Qual meu faturamento do mês passado?"
+agent-browser fill @[chat-input] "What was my revenue last month?"
 agent-browser click @[send-button]
 agent-browser get text @[chat-messages]
 agent-browser screenshot /tmp/ai-chat-test.png
@@ -353,9 +353,9 @@ Then check in code before using new service.
 ## 6. Future Phases (Out of Scope)
 
 ### Phase 2: SDR Subagents
-- Per-mentorado AI SDR agents
+- Per-mentee AI SDR agents
 - WhatsApp integration via Z-API
-- Custom prompts per mentorado
+- Custom prompts per mentee
 - Lead qualification workflows
 
 ### Phase 3: Voice & Multi-modal
@@ -403,18 +403,18 @@ const getMyMetrics = tool({
 ### System Prompt Template
 
 ```typescript
-const SYSTEM_PROMPT = `Você é o Assistente NEON, um assistente de IA para mentoria de negócios.
+const SYSTEM_PROMPT = `You are the NEON Assistant, an AI assistant for business mentorship.
 
-Você tem acesso às seguintes ferramentas:
-- getMyMetrics: Ver métricas mensais (faturamento, leads, procedimentos)
-- getMyLeads: Ver leads do CRM
-- searchLeads: Buscar leads por nome/email
-- getLatestFeedback: Ver feedback do mentor
-- getMyTasks: Ver tarefas pendentes
-- getMyGoals: Ver metas atuais
-- getMyAgenda: Ver eventos do calendário
-- getDiagnostico: Ver diagnóstico de onboarding
-- searchWeb: Pesquisar na internet
+You have access to the following tools:
+- getMyMetrics: View monthly metrics (revenue, leads, procedures)
+- getMyLeads: View CRM leads
+- searchLeads: Search leads by name/email
+- getLatestFeedback: View mentor feedback
+- getMyTasks: View pending tasks
+- getMyGoals: View current goals
+- getMyAgenda: View calendar events
+- getDiagnostico: View onboarding diagnostic
+- searchWeb: Search the internet
 
-Seja objetivo e forneça insights acionáveis. Responda sempre em português brasileiro.`;
+Be objective and provide actionable insights. Always respond in Brazilian Portuguese.`;
 ```

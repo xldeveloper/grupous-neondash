@@ -15,8 +15,8 @@ const seedData = async () => {
     const [modEstrutura1] = await db
       .insert(playbookModules)
       .values({
-        title: "Fase 1: Onboarding e Diagnóstico",
-        description: "Primeiros passos na metodologia Neon Estrutura.",
+        title: "Phase 1: Onboarding and Diagnosis",
+        description: "First steps in the Neon Estrutura methodology.",
         order: 1,
         turma: "neon",
       })
@@ -25,27 +25,27 @@ const seedData = async () => {
     await db.insert(playbookItems).values([
       {
         moduleId: modEstrutura1.id,
-        title: "Assistir Aula Inaugural",
+        title: "Watch Inaugural Class",
         type: "video",
         order: 1,
         contentUrl: "https://vimeo.com/",
       },
       {
         moduleId: modEstrutura1.id,
-        title: "Preencher Diagnóstico Inicial",
+        title: "Complete Initial Diagnosis",
         type: "link",
         order: 2,
         contentUrl: "https://typeform.com/",
       },
       {
         moduleId: modEstrutura1.id,
-        title: "Definir Metas de Faturamento",
+        title: "Set Revenue Goals",
         type: "task",
         order: 3,
       },
       {
         moduleId: modEstrutura1.id,
-        title: "Configurar Redes Sociais",
+        title: "Set Up Social Media",
         type: "task",
         order: 4,
       },
@@ -54,8 +54,8 @@ const seedData = async () => {
     const [modEstrutura2] = await db
       .insert(playbookModules)
       .values({
-        title: "Fase 2: Gestão Financeira",
-        description: "Organizando a casa para crescer.",
+        title: "Phase 2: Financial Management",
+        description: "Getting organized to grow.",
         order: 2,
         turma: "neon",
       })
@@ -64,19 +64,19 @@ const seedData = async () => {
     await db.insert(playbookItems).values([
       {
         moduleId: modEstrutura2.id,
-        title: "Separar Contas PF e PJ",
+        title: "Separate Personal and Business Accounts",
         type: "task",
         order: 1,
       },
       {
         moduleId: modEstrutura2.id,
-        title: "Planilha de Precificação",
+        title: "Pricing Spreadsheet",
         type: "link",
         order: 2,
       },
       {
         moduleId: modEstrutura2.id,
-        title: "Definir Pró-labore",
+        title: "Define Owner's Salary",
         type: "task",
         order: 3,
       },
@@ -86,8 +86,8 @@ const seedData = async () => {
     const [modEscala1] = await db
       .insert(playbookModules)
       .values({
-        title: "Fase 1: Auditoria de Processos",
-        description: "Onde estão os gargalos do seu crescimento?",
+        title: "Phase 1: Process Audit",
+        description: "Where are the bottlenecks in your growth?",
         order: 1,
         turma: "neon",
       })
@@ -96,19 +96,19 @@ const seedData = async () => {
     await db.insert(playbookItems).values([
       {
         moduleId: modEscala1.id,
-        title: "Mapeamento da Jornada do Cliente",
+        title: "Customer Journey Mapping",
         type: "task",
         order: 1,
       },
       {
         moduleId: modEscala1.id,
-        title: "Análise de LTV e CAC",
+        title: "LTV and CAC Analysis",
         type: "task",
         order: 2,
       },
       {
         moduleId: modEscala1.id,
-        title: "Revisão de Scripts de Vendas",
+        title: "Sales Scripts Review",
         type: "task",
         order: 3,
       },

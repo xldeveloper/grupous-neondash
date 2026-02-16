@@ -44,7 +44,7 @@ async function createMentoradoForUser(
       .insert(mentorados)
       .values({
         userId: user.id,
-        nomeCompleto: user.name || "Novo Usuário",
+        nomeCompleto: user.name || "New User",
         email: user.email,
         fotoUrl: user.imageUrl,
         ...DEFAULT_MENTORADO_VALUES,

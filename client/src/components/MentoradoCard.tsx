@@ -82,7 +82,7 @@ export default function MentoradoCard({ nome, data, rank }: MentoradoCardProps) 
         <div className="grid grid-cols-2 gap-4 mb-4">
           <div className="bg-muted/50 p-3 rounded-lg">
             <div className="flex items-center gap-2 text-slate-500 text-xs mb-1">
-              <DollarSign className="w-3 h-3" /> Faturamento
+              <DollarSign className="w-3 h-3" /> Revenue
             </div>
             <div className="font-bold text-slate-900 dark:text-slate-100">
               {new Intl.NumberFormat("pt-BR", {
@@ -105,11 +105,11 @@ export default function MentoradoCard({ nome, data, rank }: MentoradoCardProps) 
 
           <div className="bg-muted/50 p-3 rounded-lg">
             <div className="flex items-center gap-2 text-slate-500 text-xs mb-1">
-              <Activity className="w-3 h-3" /> Procedimentos
+              <Activity className="w-3 h-3" /> Procedures
             </div>
             <div className="font-bold text-slate-900 dark:text-slate-100">
               {data.dados.procedimentos}{" "}
-              <span className="text-xs font-normal text-slate-400">realizados</span>
+              <span className="text-xs font-normal text-slate-400">completed</span>
             </div>
             <div className="mt-2 h-1.5 w-full bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
               <div
@@ -169,7 +169,7 @@ export default function MentoradoCard({ nome, data, rank }: MentoradoCardProps) 
                   <div>
                     <div className="flex justify-between text-xs mb-1">
                       <span className="flex items-center gap-1 text-slate-500">
-                        <Users className="w-3 h-3" /> Leads Captados
+                        <Users className="w-3 h-3" /> Leads Captured
                       </span>
                       <span className="font-medium">
                         {data.dados.leads} / {data.detalhes.leads.esperado}
@@ -184,7 +184,7 @@ export default function MentoradoCard({ nome, data, rank }: MentoradoCardProps) 
 
                 <div className="bg-slate-50 p-3 rounded-lg text-xs text-slate-600 dark:bg-slate-900/50 dark:text-slate-400">
                   <div className="flex justify-between mb-1">
-                    <span>Lucro do Mês:</span>
+                    <span>Monthly Profit:</span>
                     <span className="font-bold text-slate-900 dark:text-slate-100">
                       {new Intl.NumberFormat("pt-BR", {
                         style: "currency",
@@ -193,7 +193,7 @@ export default function MentoradoCard({ nome, data, rank }: MentoradoCardProps) 
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span>Margem Estimada:</span>
+                    <span>Estimated Margin:</span>
                     <span
                       className={cn(
                         "font-bold",
@@ -212,13 +212,13 @@ export default function MentoradoCard({ nome, data, rank }: MentoradoCardProps) 
                 {data.feedback && (
                   <div className="space-y-3 mt-4 bg-primary/5 p-4 rounded-xl border border-primary/10">
                     <div className="flex items-center gap-2 text-primary font-bold text-sm">
-                      <Target className="w-4 h-4" /> Plano de Ação Janeiro
+                      <Target className="w-4 h-4" /> January Action Plan
                     </div>
 
                     <div className="space-y-3">
                       <div>
                         <p className="text-xs font-semibold text-slate-500 uppercase mb-1">
-                          Análise Dezembro
+                          December Analysis
                         </p>
                         <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
                           {data.feedback.analise_dezembro}
@@ -227,7 +227,7 @@ export default function MentoradoCard({ nome, data, rank }: MentoradoCardProps) 
 
                       <div>
                         <p className="text-xs font-semibold text-slate-500 uppercase mb-1">
-                          Foco Principal
+                          Main Focus
                         </p>
                         <div className="flex items-start gap-2">
                           <ArrowRight className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
@@ -239,7 +239,7 @@ export default function MentoradoCard({ nome, data, rank }: MentoradoCardProps) 
 
                       <div className="bg-white p-3 rounded-lg border border-slate-100 shadow-sm dark:bg-slate-800 dark:border-slate-700">
                         <div className="flex items-center gap-2 text-neon-green-dark font-bold text-xs mb-2">
-                          <Lightbulb className="w-3 h-3" /> Sugestão do Mentor
+                          <Lightbulb className="w-3 h-3" /> Mentor's Suggestion
                         </div>
                         <p className="text-sm text-slate-600 dark:text-slate-400 italic leading-relaxed">
                           "{data.feedback.sugestao}"

@@ -94,7 +94,7 @@ export function HeroSection() {
               <span className="relative inline-flex rounded-full h-2 w-2 bg-primary" />
             </span>
             <span className="text-xs font-semibold text-primary tracking-widest uppercase">
-              Mentoria Black • Grupo de Elite
+              Black Mentorship • Elite Group
             </span>
           </div>
         </motion.div>
@@ -104,9 +104,9 @@ export function HeroSection() {
           variants={heroText}
           className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight leading-[0.95] mb-8"
         >
-          <span className="block text-foreground">Transforme sua</span>
+          <span className="block text-foreground">Transform your</span>
           <span className="block bg-gradient-to-r from-primary via-primary/80 to-primary bg-clip-text text-transparent">
-            clínica em referência
+            clinic into a reference
           </span>
         </motion.h1>
 
@@ -115,9 +115,9 @@ export function HeroSection() {
           variants={heroText}
           className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-12 leading-relaxed"
         >
-          Metodologia exclusiva de <span className="font-semibold text-foreground">6 meses</span>{" "}
-          para escalar sua clínica com previsibilidade, gestão inteligente e{" "}
-          <span className="font-semibold text-primary">lucro real</span>.
+          Exclusive <span className="font-semibold text-foreground">6-month</span> methodology{" "}
+          to scale your clinic with predictability, smart management and{" "}
+          <span className="font-semibold text-primary">real profit</span>.
         </motion.p>
 
         {/* CTA Buttons */}
@@ -134,7 +134,7 @@ export function HeroSection() {
             size="lg"
             className="text-muted-foreground hover:text-foreground group"
           >
-            Conhecer Metodologia
+            Explore Methodology
             <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </Button>
         </motion.div>
@@ -142,9 +142,9 @@ export function HeroSection() {
         {/* Stats Strip */}
         <motion.div variants={heroText} className="flex flex-wrap justify-center gap-8 md:gap-16">
           {[
-            { value: 500, suffix: "+", label: "Clínicas" },
-            { value: 6, suffix: " meses", label: "Jornada" },
-            { value: 2, suffix: "M+", label: "Em faturamento" },
+            { value: 500, suffix: "+", label: "Clinics" },
+            { value: 6, suffix: " months", label: "Journey" },
+            { value: 2, suffix: "M+", label: "In revenue" },
           ].map((stat) => (
             <div key={stat.label} className="text-center">
               <div className="text-3xl md:text-4xl font-bold text-foreground">
@@ -179,26 +179,26 @@ export function HeroSection() {
 export function BenefitsSection() {
   const benefits = [
     {
-      title: "Calls Individuais",
-      desc: "Acompanhamento estratégico personalizado para o seu momento de negócio. Direcionamento assertivo.",
+      title: "Individual Calls",
+      desc: "Personalized strategic follow-up for your current business stage. Assertive direction.",
       icon: Users,
       accent: "bg-primary/10 text-primary",
     },
     {
-      title: "Gestão 360º",
-      desc: "Administrativo, Financeiro, Marketing e Vendas integrados em uma metodologia única.",
+      title: "360-Degree Management",
+      desc: "Administrative, Financial, Marketing and Sales integrated into a single methodology.",
       icon: BarChart3,
       accent: "bg-chart-2/10 text-chart-2",
     },
     {
-      title: "Ferramentas Validadas",
-      desc: "Templates, planilhas e scripts que funcionam. Aplique imediatamente no seu negócio.",
+      title: "Validated Tools",
+      desc: "Templates, spreadsheets and scripts that work. Apply immediately to your business.",
       icon: Target,
       accent: "bg-chart-5/10 text-chart-5",
     },
     {
-      title: "Comunidade Elite",
-      desc: "Networking com profissionais que pensam grande. Conexões que geram oportunidades.",
+      title: "Elite Community",
+      desc: "Networking with professionals who think big. Connections that generate opportunities.",
       icon: Award,
       accent: "bg-primary/10 text-primary",
     },
@@ -221,11 +221,11 @@ export function BenefitsSection() {
           className="text-center max-w-2xl mx-auto mb-16"
         >
           <span className="text-sm font-semibold text-primary tracking-widest uppercase mb-4 block">
-            Por que a Neon?
+            Why Neon?
           </span>
-          <h2 className="text-3xl md:text-5xl font-bold text-foreground mb-6">O que você recebe</h2>
+          <h2 className="text-3xl md:text-5xl font-bold text-foreground mb-6">What you receive</h2>
           <p className="text-muted-foreground text-lg">
-            Uma experiência completa para transformar sua clínica e sua mentalidade empreendedora.
+            A complete experience to transform your clinic and your entrepreneurial mindset.
           </p>
         </motion.div>
 
@@ -264,26 +264,26 @@ export function MethodologySection() {
   const steps = [
     {
       number: "01",
-      title: "Consumo",
-      desc: "Assista às aulas na plataforma de membros. Conteúdo direto ao ponto.",
+      title: "Consumption",
+      desc: "Watch the lessons on the members platform. Content straight to the point.",
       icon: BookOpen,
     },
     {
       number: "02",
-      title: "Execução",
-      desc: "Aplique as ferramentas aqui no Portal NEON. Ação gera resultado.",
+      title: "Execution",
+      desc: "Apply the tools here in the NEON Portal. Action generates results.",
       icon: Zap,
     },
     {
       number: "03",
-      title: "Análise",
-      desc: "Monitore seus dados no Dashboard. Números não mentem.",
+      title: "Analysis",
+      desc: "Monitor your data in the Dashboard. Numbers don't lie.",
       icon: TrendingUp,
     },
     {
       number: "04",
-      title: "Mentoria",
-      desc: "Tire dúvidas nos encontros ao vivo. Ajuste a rota com suporte real.",
+      title: "Mentorship",
+      desc: "Ask questions in live meetings. Adjust course with real support.",
       icon: Sparkles,
     },
   ];
@@ -302,13 +302,13 @@ export function MethodologySection() {
           className="text-center max-w-2xl mx-auto mb-20"
         >
           <span className="text-sm font-semibold text-primary tracking-widest uppercase mb-4 block">
-            A Metodologia
+            The Methodology
           </span>
           <h2 className="text-3xl md:text-5xl font-bold text-foreground mb-6">
-            Protocolo da <span className="text-primary">Elite</span>
+            <span className="text-primary">Elite</span> Protocol
           </h2>
           <p className="text-muted-foreground text-lg">
-            O segredo não é a velocidade, é a direção. Siga o método.
+            The secret is not speed, it is direction. Follow the method.
           </p>
         </motion.div>
 
@@ -352,22 +352,22 @@ export function MethodologySection() {
 export function SocialProofSection() {
   const testimonials = [
     {
-      quote: "Em 4 meses, aumentei meu faturamento em 47%. A metodologia é clara e funciona.",
-      name: "Dra. Ana Carolina",
-      role: "Dermatologista",
+      quote: "In 4 months, I increased my revenue by 47%. The methodology is clear and it works.",
+      name: "Dr. Ana Carolina",
+      role: "Dermatologist",
       avatar: "AC",
     },
     {
       quote:
-        "Saí do caos financeiro para ter previsibilidade. Hoje sei exatamente para onde minha clínica vai.",
+        "I went from financial chaos to predictability. Today I know exactly where my clinic is going.",
       name: "Dr. Rafael Mendes",
-      role: "Clínica de Estética",
+      role: "Aesthetics Clinic",
       avatar: "RM",
     },
     {
-      quote: "O suporte individualizado faz toda diferença. Sinto que tenho um sócio estratégico.",
-      name: "Dra. Juliana Santos",
-      role: "Harmonização Facial",
+      quote: "The individualized support makes all the difference. I feel like I have a strategic partner.",
+      name: "Dr. Juliana Santos",
+      role: "Facial Harmonization",
       avatar: "JS",
     },
   ];
@@ -386,10 +386,10 @@ export function SocialProofSection() {
           className="text-center max-w-2xl mx-auto mb-16"
         >
           <span className="text-sm font-semibold text-primary tracking-widest uppercase mb-4 block">
-            Resultados Reais
+            Real Results
           </span>
           <h2 className="text-3xl md:text-5xl font-bold text-foreground mb-6">
-            Quem já passou pela Neon
+            Those who have been through Neon
           </h2>
         </motion.div>
 
@@ -436,8 +436,8 @@ export function SocialProofSection() {
           <div className="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-card border border-border/50">
             <CheckCircle2 className="w-5 h-5 text-chart-2" />
             <span className="text-sm text-muted-foreground">
-              <span className="font-semibold text-foreground">98%</span> de satisfação entre os
-              mentorados
+              <span className="font-semibold text-foreground">98%</span> satisfaction among
+              mentees
             </span>
           </div>
         </motion.div>
@@ -470,7 +470,7 @@ export function SimpleFooter() {
 
           {/* Copyright */}
           <p className="text-sm text-muted-foreground">
-            © 2026 Neon Mentoria Black. Grupo US. Todos os direitos reservados.
+            &copy; 2026 Neon Black Mentorship. Grupo US. All rights reserved.
           </p>
         </div>
       </div>

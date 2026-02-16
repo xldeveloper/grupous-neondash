@@ -46,7 +46,7 @@ export function UserButton() {
       <DropdownMenuContent className="w-56" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
-            <p className="text-sm font-medium leading-none">{user.name ?? "Usuário"}</p>
+            <p className="text-sm font-medium leading-none">{user.name ?? "User"}</p>
             <p className="text-xs leading-none text-muted-foreground">{user.email}</p>
           </div>
         </DropdownMenuLabel>
@@ -54,13 +54,13 @@ export function UserButton() {
         <DropdownMenuItem asChild>
           <a href="/meu-dashboard" className="flex items-center">
             <User className="mr-2 h-4 w-4" />
-            Meu Dashboard
+            My Dashboard
           </a>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem className="text-destructive focus:text-destructive" onClick={logout}>
           <LogOut className="mr-2 h-4 w-4" />
-          Sair
+          Sign Out
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

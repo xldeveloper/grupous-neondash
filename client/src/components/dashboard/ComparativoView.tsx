@@ -26,18 +26,18 @@ import {
 import { trpc } from "@/lib/trpc";
 
 const MESES = [
-  "Janeiro",
-  "Fevereiro",
-  "Março",
-  "Abril",
-  "Maio",
-  "Junho",
-  "Julho",
-  "Agosto",
-  "Setembro",
-  "Outubro",
-  "Novembro",
-  "Dezembro",
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
 ];
 
 export function ComparativoView() {
@@ -78,16 +78,16 @@ export function ComparativoView() {
       };
     if (percentile >= 50)
       return {
-        label: "Acima da Média",
+        label: "Above Average",
         color: "bg-amber-100 text-amber-700 border-amber-300",
       };
     if (percentile >= 25)
       return {
-        label: "Abaixo da Média",
+        label: "Below Average",
         color: "bg-orange-100 text-orange-700 border-orange-300",
       };
     return {
-      label: "Precisa Melhorar",
+      label: "Needs Improvement",
       color: "bg-red-100 text-red-700 border-red-300",
     };
   };
@@ -103,12 +103,12 @@ export function ComparativoView() {
     stats?.userMetrics && stats?.turmaAverage
       ? [
           {
-            metric: "Faturamento",
+            metric: "Revenue",
             voce: stats.userMetrics.faturamento / 1000,
             turma: stats.turmaAverage.faturamento / 1000,
           },
           {
-            metric: "Lucro",
+            metric: "Profit",
             voce: stats.userMetrics.lucro / 1000,
             turma: stats.turmaAverage.lucro / 1000,
           },
@@ -118,7 +118,7 @@ export function ComparativoView() {
             turma: stats.turmaAverage.leads,
           },
           {
-            metric: "Procedimentos",
+            metric: "Procedures",
             voce: stats.userMetrics.procedimentos,
             turma: stats.turmaAverage.procedimentos,
           },
@@ -129,7 +129,7 @@ export function ComparativoView() {
     stats?.userMetrics && stats?.turmaAverage
       ? [
           {
-            subject: "Faturamento",
+            subject: "Revenue",
             voce: Math.min(
               (stats.userMetrics.faturamento / (stats.turmaAverage.faturamento * 1.5)) * 100,
               100
@@ -137,7 +137,7 @@ export function ComparativoView() {
             turma: 66.67,
           },
           {
-            subject: "Lucro",
+            subject: "Profit",
             voce: Math.min((stats.userMetrics.lucro / (stats.turmaAverage.lucro * 1.5)) * 100, 100),
             turma: 66.67,
           },
@@ -147,7 +147,7 @@ export function ComparativoView() {
             turma: 66.67,
           },
           {
-            subject: "Procedimentos",
+            subject: "Procedures",
             voce: Math.min(
               (stats.userMetrics.procedimentos / (stats.turmaAverage.procedimentos * 1.5)) * 100,
               100
@@ -178,9 +178,9 @@ export function ComparativoView() {
       <div className="flex items-center justify-center p-8 bg-slate-50 rounded-lg">
         <div className="text-center">
           <BarChart3 className="w-12 h-12 text-slate-300 mx-auto mb-2" />
-          <h2 className="text-lg font-semibold text-slate-700">Perfil não encontrado</h2>
+          <h2 className="text-lg font-semibold text-slate-700">Profile not found</h2>
           <p className="text-slate-500">
-            Você precisa ter um perfil de mentorado vinculado para acessar o dashboard comparativo.
+            You need to have a linked mentee profile to access the comparative dashboard.
           </p>
         </div>
       </div>
@@ -192,9 +192,9 @@ export function ComparativoView() {
       {/* Header & Filters */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
-          <h2 className="text-xl font-bold text-slate-900">Dashboard Comparativo</h2>
+          <h2 className="text-xl font-bold text-slate-900">Comparative Dashboard</h2>
           <p className="text-sm text-slate-500">
-            Compare sua performance com a média da turma Neon
+            Compare your performance with the Neon class average
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -224,14 +224,14 @@ export function ComparativoView() {
       </div>
 
       {isLoading ? (
-        <div className="text-center py-12 text-slate-500">Carregando dados comparativos...</div>
+        <div className="text-center py-12 text-slate-500">Loading comparative data...</div>
       ) : !stats?.userMetrics ? (
         <Card className="border-none shadow-sm bg-slate-50">
           <CardContent className="py-8 text-center">
             <Target className="w-10 h-10 text-slate-300 mx-auto mb-3" />
-            <h3 className="text-base font-medium text-slate-700">Sem dados para este período</h3>
+            <h3 className="text-base font-medium text-slate-700">No data for this period</h3>
             <p className="text-sm text-slate-500 mt-1">
-              Envie suas métricas de {MESES[selectedMonth - 1]} para ver o comparativo.
+              Submit your metrics for {MESES[selectedMonth - 1]} to view the comparison.
             </p>
           </CardContent>
         </Card>
@@ -252,7 +252,7 @@ export function ComparativoView() {
                     >
                       Top {100 - stats.percentiles.faturamento}%
                     </div>
-                    <div className="text-xs text-slate-400 mt-1">em faturamento</div>
+                    <div className="text-xs text-slate-400 mt-1">in revenue</div>
                   </>
                 )}
               </CardContent>
@@ -262,7 +262,7 @@ export function ComparativoView() {
               <CardContent className="pt-4 p-4">
                 <div className="flex items-center justify-between mb-1">
                   <span className="text-xs text-slate-500 uppercase tracking-wider">
-                    Faturamento
+                    Revenue
                   </span>
                   <TrendingUp className="w-4 h-4 text-neon-blue/50" />
                 </div>
@@ -271,7 +271,7 @@ export function ComparativoView() {
                 </div>
                 <div className="text-xs text-slate-400 mt-1 flex items-center gap-1">
                   {getTrendIcon(stats.userMetrics.faturamento, stats.turmaAverage?.faturamento)}
-                  vs média {formatCurrency(stats.turmaAverage?.faturamento)}
+                  vs avg {formatCurrency(stats.turmaAverage?.faturamento)}
                 </div>
               </CardContent>
             </Card>
@@ -285,7 +285,7 @@ export function ComparativoView() {
                 <div className="text-xl font-bold text-slate-900">{stats.userMetrics.leads}</div>
                 <div className="text-xs text-slate-400 mt-1 flex items-center gap-1">
                   {getTrendIcon(stats.userMetrics.leads, stats.turmaAverage?.leads)}
-                  vs média {Math.round(stats.turmaAverage?.leads)}
+                  vs avg {Math.round(stats.turmaAverage?.leads)}
                 </div>
               </CardContent>
             </Card>
@@ -294,7 +294,7 @@ export function ComparativoView() {
               <CardContent className="pt-4 p-4">
                 <div className="flex items-center justify-between mb-1">
                   <span className="text-xs text-slate-500 uppercase tracking-wider">
-                    Participantes
+                    Participants
                   </span>
                   <BarChart3 className="w-4 h-4 text-slate-300" />
                 </div>
@@ -304,7 +304,7 @@ export function ComparativoView() {
                     / {stats.totalMentorados}
                   </span>
                 </div>
-                <div className="text-xs text-slate-400 mt-1">dados contabilizados</div>
+                <div className="text-xs text-slate-400 mt-1">data accounted for</div>
               </CardContent>
             </Card>
           </div>
@@ -313,7 +313,7 @@ export function ComparativoView() {
           <div className="grid md:grid-cols-2 gap-6">
             <Card className="border-none shadow-sm">
               <CardHeader className="pb-2">
-                <CardTitle className="text-base">Comparativo Geral</CardTitle>
+                <CardTitle className="text-base">Overall Comparison</CardTitle>
               </CardHeader>
               <CardContent>
                 <ResponsiveContainer width="100%" height={250}>
@@ -349,14 +349,14 @@ export function ComparativoView() {
                     <Legend iconSize={8} wrapperStyle={{ fontSize: "11px" }} />
                     <Bar
                       dataKey="voce"
-                      name="Você"
+                      name="You"
                       fill="var(--color-neon-blue)"
                       radius={[0, 4, 4, 0]}
                       barSize={12}
                     />
                     <Bar
                       dataKey="turma"
-                      name="Média"
+                      name="Average"
                       fill="var(--color-neon-gold)"
                       radius={[0, 4, 4, 0]}
                       barSize={12}
@@ -383,14 +383,14 @@ export function ComparativoView() {
                     />
                     <PolarRadiusAxis angle={30} domain={[0, 100]} tick={false} axisLine={false} />
                     <Radar
-                      name="Você"
+                      name="You"
                       dataKey="voce"
                       stroke="var(--color-neon-blue)"
                       fill="var(--color-neon-blue)"
                       fillOpacity={0.4}
                     />
                     <Radar
-                      name="Média"
+                      name="Average"
                       dataKey="turma"
                       stroke="var(--color-neon-gold)"
                       fill="var(--color-neon-gold)"

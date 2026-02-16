@@ -77,7 +77,7 @@ function MetricCard({
         </div>
       </div>
       <span className="text-xs text-muted-foreground">
-        Anterior: {isCurrency ? formatCurrency(previous) : previous}
+        Previous: {isCurrency ? formatCurrency(previous) : previous}
       </span>
     </div>
   );
@@ -91,17 +91,17 @@ export function MonthComparison({ currentMonth, previousMonth, className }: Mont
   const getMesNome = (m: number) => {
     const meses = [
       "Jan",
-      "Fev",
+      "Feb",
       "Mar",
-      "Abr",
-      "Mai",
+      "Apr",
+      "May",
       "Jun",
       "Jul",
-      "Ago",
-      "Set",
-      "Out",
+      "Aug",
+      "Sep",
+      "Oct",
       "Nov",
-      "Dez",
+      "Dec",
     ];
     return meses[m - 1];
   };
@@ -123,7 +123,7 @@ export function MonthComparison({ currentMonth, previousMonth, className }: Mont
       <CardHeader className="pb-2">
         <CardTitle className="flex items-center gap-2 text-lg">
           <span className="text-primary">📊</span>
-          Comparação Mês-a-Mês
+          Month-over-Month Comparison
         </CardTitle>
         <CardDescription>
           {getMesNome(currentMonth.mes)}/{currentMonth.ano} vs {getMesNome(previousMonth.mes)}/
@@ -133,14 +133,14 @@ export function MonthComparison({ currentMonth, previousMonth, className }: Mont
       <CardContent>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <MetricCard
-            title="Faturamento"
+            title="Revenue"
             current={currentMonth.faturamento}
             previous={previousMonth.faturamento}
             variation={variations.faturamento}
             isCurrency
           />
           <MetricCard
-            title="Lucro"
+            title="Profit"
             current={currentMonth.lucro}
             previous={previousMonth.lucro}
             variation={variations.lucro}
@@ -153,7 +153,7 @@ export function MonthComparison({ currentMonth, previousMonth, className }: Mont
             variation={variations.leads}
           />
           <MetricCard
-            title="Procedimentos"
+            title="Procedures"
             current={currentMonth.procedimentos}
             previous={previousMonth.procedimentos}
             variation={variations.procedimentos}

@@ -27,29 +27,29 @@ import { Textarea } from "@/components/ui/textarea";
 import { trpc } from "@/lib/trpc";
 
 const DAYS_OF_WEEK = [
-  { value: "0", label: "Dom" },
-  { value: "1", label: "Seg" },
-  { value: "2", label: "Ter" },
-  { value: "3", label: "Qua" },
-  { value: "4", label: "Qui" },
-  { value: "5", label: "Sex" },
-  { value: "6", label: "Sáb" },
+  { value: "0", label: "Sun" },
+  { value: "1", label: "Mon" },
+  { value: "2", label: "Tue" },
+  { value: "3", label: "Wed" },
+  { value: "4", label: "Thu" },
+  { value: "5", label: "Fri" },
+  { value: "6", label: "Sat" },
 ];
 
-const DEFAULT_SYSTEM_PROMPT = `Você é um assistente de atendimento profissional para uma clínica de estética. 
-Seu objetivo é qualificar leads de forma amigável e profissional.
+const DEFAULT_SYSTEM_PROMPT = `You are a professional customer service assistant for an aesthetics clinic.
+Your goal is to qualify leads in a friendly and professional manner.
 
-Diretrizes:
-- Seja educado e empático
-- Responda de forma concisa e natural
-- Faça perguntas para entender as necessidades do cliente
-- Colete informações: nome, procedimento de interesse, disponibilidade
-- Se o cliente demonstrar interesse, sugira agendar uma consulta
-- Não faça promessas sobre preços ou resultados
-- Se não souber responder algo, diga que um especialista entrará em contato`;
+Guidelines:
+- Be polite and empathetic
+- Respond concisely and naturally
+- Ask questions to understand the client's needs
+- Collect information: name, procedure of interest, availability
+- If the client shows interest, suggest scheduling a consultation
+- Do not make promises about prices or results
+- If you cannot answer something, say that a specialist will get in touch`;
 
-const DEFAULT_GREETING = `Olá! 👋 Tudo bem? Vi que você entrou em contato conosco. 
-Como posso te ajudar hoje?`;
+const DEFAULT_GREETING = `Hello! How are you? I saw that you reached out to us.
+How can I help you today?`;
 
 type AIAgentSettingsCardProps = Record<string, never>;
 
@@ -157,8 +157,8 @@ export function AIAgentSettingsCard(_props: AIAgentSettingsCardProps) {
               <Bot className="w-5 h-5" />
             </motion.div>
             <div>
-              <CardTitle className="text-lg">Agente IA</CardTitle>
-              <CardDescription>Respostas automáticas de qualificação</CardDescription>
+              <CardTitle className="text-lg">AI Agent</CardTitle>
+              <CardDescription>Automatic qualification responses</CardDescription>
             </div>
           </div>
           <Switch
@@ -183,8 +183,8 @@ export function AIAgentSettingsCard(_props: AIAgentSettingsCardProps) {
             className={`text-sm ${enabled ? "text-teal-700 dark:text-teal-400" : "text-muted-foreground"}`}
           >
             {enabled
-              ? "Agente ativo e respondendo automaticamente"
-              : "Agente desativado - mensagens não serão respondidas"}
+              ? "Agent active and responding automatically"
+              : "Agent disabled - messages will not be answered"}
           </span>
         </div>
 
@@ -192,7 +192,7 @@ export function AIAgentSettingsCard(_props: AIAgentSettingsCardProps) {
         <div className="space-y-2">
           <Label htmlFor="greeting" className="flex items-center gap-2">
             <MessageSquare className="w-4 h-4" />
-            Mensagem de Saudação
+            Greeting Message
           </Label>
           <Textarea
             id="greeting"
@@ -201,11 +201,11 @@ export function AIAgentSettingsCard(_props: AIAgentSettingsCardProps) {
               setGreetingMessage(e.target.value);
               setIsDirty(true);
             }}
-            placeholder="Mensagem enviada automaticamente no primeiro contato..."
+            placeholder="Message sent automatically on first contact..."
             className="min-h-[80px]"
           />
           <p className="text-xs text-muted-foreground">
-            Enviada automaticamente quando um novo contato envia a primeira mensagem
+            Sent automatically when a new contact sends the first message
           </p>
         </div>
 
@@ -213,7 +213,7 @@ export function AIAgentSettingsCard(_props: AIAgentSettingsCardProps) {
         <div className="space-y-4">
           <Label className="flex items-center gap-2">
             <Clock className="w-4 h-4" />
-            Horário de Funcionamento
+            Working Hours
           </Label>
 
           <div className="flex flex-wrap gap-2">
@@ -234,7 +234,7 @@ export function AIAgentSettingsCard(_props: AIAgentSettingsCardProps) {
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2">
               <Label htmlFor="start-time" className="text-sm whitespace-nowrap">
-                Das
+                From
               </Label>
               <Input
                 id="start-time"
@@ -249,7 +249,7 @@ export function AIAgentSettingsCard(_props: AIAgentSettingsCardProps) {
             </div>
             <div className="flex items-center gap-2">
               <Label htmlFor="end-time" className="text-sm whitespace-nowrap">
-                até
+                to
               </Label>
               <Input
                 id="end-time"
@@ -273,7 +273,7 @@ export function AIAgentSettingsCard(_props: AIAgentSettingsCardProps) {
             <Button variant="ghost" className="w-full justify-between">
               <span className="flex items-center gap-2">
                 <Settings2 className="w-4 h-4" />
-                Configurações Avançadas
+                Advanced Settings
               </span>
               <motion.span
                 animate={{ rotate: isAdvancedOpen ? 180 : 0 }}
@@ -286,7 +286,7 @@ export function AIAgentSettingsCard(_props: AIAgentSettingsCardProps) {
           <CollapsibleContent className="space-y-4 pt-4">
             {/* System Prompt */}
             <div className="space-y-2">
-              <Label htmlFor="system-prompt">Prompt do Sistema</Label>
+              <Label htmlFor="system-prompt">System Prompt</Label>
               <Textarea
                 id="system-prompt"
                 value={systemPrompt}
@@ -294,17 +294,17 @@ export function AIAgentSettingsCard(_props: AIAgentSettingsCardProps) {
                   setSystemPrompt(e.target.value);
                   setIsDirty(true);
                 }}
-                placeholder="Instruções para o comportamento do agente..."
+                placeholder="Instructions for agent behavior..."
                 className="min-h-[200px] font-mono text-sm"
               />
               <p className="text-xs text-muted-foreground">
-                Define a personalidade e diretrizes do agente de IA
+                Defines the AI agent's personality and guidelines
               </p>
             </div>
 
             {/* Response Delay */}
             <div className="space-y-2">
-              <Label htmlFor="delay">Delay de Resposta (ms)</Label>
+              <Label htmlFor="delay">Response Delay (ms)</Label>
               <Input
                 id="delay"
                 type="number"
@@ -319,7 +319,7 @@ export function AIAgentSettingsCard(_props: AIAgentSettingsCardProps) {
                 className="w-32"
               />
               <p className="text-xs text-muted-foreground">
-                Tempo de espera antes de enviar resposta automática (1000-10000ms)
+                Wait time before sending automatic response (1000-10000ms)
               </p>
             </div>
 
@@ -331,7 +331,7 @@ export function AIAgentSettingsCard(_props: AIAgentSettingsCardProps) {
               disabled={resetMutation.isPending}
             >
               <RotateCcw className="w-4 h-4 mr-2" />
-              Restaurar Padrões
+              Restore Defaults
             </Button>
           </CollapsibleContent>
         </Collapsible>
@@ -347,7 +347,7 @@ export function AIAgentSettingsCard(_props: AIAgentSettingsCardProps) {
           ) : (
             <Save className="w-4 h-4 mr-2" />
           )}
-          Salvar Configurações
+          Save Settings
         </Button>
       </CardContent>
     </Card>

@@ -50,12 +50,12 @@ To provide a unified entry point for all design-related tasks, ensuring that eve
 
 - **NEVER** use generic Inter/Arial fonts or purple gradients by default.
 - **ALWAYS** use `templates/viewer.html` for p5.js art.
-- **ALWAYS** ensure Portuguese interface for user-facing text.
+- **ALWAYS** ensure English interface for user-facing text.
 - **ALWAYS** validate WCAG 2.1 AA compliance.
 - **ALWAYS** use `bun` for any package operations.
 
 ## Usage Examples
 
-- `/design "Crie uma dashboard brutalista para métricas de vendas"`
-- `/design "Identidade visual minimalista para clínica de estética"`
-- `/design "Background generativo de partículas para a landing page"`
+- `/design "Create a brutalist dashboard for sales metrics"`
+- `/design "Minimalist visual identity for an aesthetics clinic"`
+- `/design "Generative particle background for the landing page"`

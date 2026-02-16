@@ -1,81 +1,81 @@
-# Mapeamento Inteligente de Colunas
+# Intelligent Column Mapping
 
-Após identificar a linha de cabeçalho, o próximo desafio é mapear as colunas da planilha (Source) para os campos do sistema (Target).
+After identifying the header row, the next challenge is mapping the spreadsheet columns (Source) to the system fields (Target).
 
-## Sistema de Pontuação Multi-Fator
+## Multi-Factor Scoring System
 
-Não use uma decisão binária (match/no-match). Calcule um **Score de Confiança** (0-100%) para cada possível mapeamento baseada em múltiplos fatores.
+Do not use a binary decision (match/no-match). Calculate a **Confidence Score** (0-100%) for each possible mapping based on multiple factors.
 
-### Pesos Sugeridos
+### Suggested Weights
 
-| Fator                      | Peso | Descrição                                         |
-| -------------------------- | ---- | ------------------------------------------------- |
-| **Similaridade Semântica** | 40%  | O nome da coluna parece com o campo alvo?         |
-| **Padrão de Dados**        | 30%  | Os dados na coluna correspondem ao tipo esperado? |
-| **Posição Contextual**     | 15%  | A ordem das colunas faz sentido?                  |
-| **Frequência de Uso**      | 15%  | Esse nome de coluna é comum para esse campo?      |
+| Factor                      | Weight | Description                                           |
+| -------------------------- | ------ | ----------------------------------------------------- |
+| **Semantic Similarity**    | 40%    | Does the column name resemble the target field?       |
+| **Data Pattern**           | 30%    | Does the data in the column match the expected type?  |
+| **Contextual Position**    | 15%    | Does the column order make sense?                     |
+| **Usage Frequency**        | 15%    | Is this column name common for this field?            |
 
-### Fator 1: Similaridade Semântica (0-100)
+### Factor 1: Semantic Similarity (0-100)
 
-Compare o nome da coluna normalizado com a lista de palavras-chave do campo.
+Compare the normalized column name with the field's keyword list.
 
-- Match exato (normalizado): 100 pontos
-- Sinônimo conhecido: 90 pontos
-- Levenshtein > 0.8: 70-80 pontos
-- Contém a palavra (ex: "Telefone Residencial" contém "Telefone"): 60 pontos
+- Exact match (normalized): 100 points
+- Known synonym: 90 points
+- Levenshtein > 0.8: 70-80 points
+- Contains the word (e.g., "Home Phone" contains "Phone"): 60 points
 
-### Fator 2: Padrão de Dados (0-100)
+### Factor 2: Data Pattern (0-100)
 
-Amostre 5 valores não-vazios da coluna.
+Sample 5 non-empty values from the column.
 
-- Regex exato (ex: CPF válido): 100 pontos
-- Formato compatível (ex: é numérico para campo Idade): 50 pontos
-- Formato incompatível (ex: texto para campo Numérico): -100 pontos (fator de veto)
+- Exact regex match (e.g., valid CPF): 100 points
+- Compatible format (e.g., numeric for an Age field): 50 points
+- Incompatible format (e.g., text for a Numeric field): -100 points (veto factor)
 
-### Fator 3: Posição (0-100)
+### Factor 3: Position (0-100)
 
-Se "Nome" foi encontrado na Coluna A e "Sobrenome" na Coluna B, a probabilidade da Coluna C ser "Email" aumenta se esse for um padrão comum.
+If "Name" was found in Column A and "Last Name" in Column B, the probability that Column C is "Email" increases if that is a common pattern.
 
-### Fator 4: Frequência (0-100)
+### Factor 4: Frequency (0-100)
 
-Baseado no histórico de importações. Se 90% dos usuários usam "Cel" para "Telefone Celular", esse match ganha pontos extras.
+Based on import history. If 90% of users use "Cel" for "Cell Phone", that match gets extra points.
 
-## Decisão e Fallback
+## Decision and Fallback
 
-### Classificação de Confiança
+### Confidence Classification
 
-1.  **Alta (Score > 85)**: Mapeamento Automático. Não precisa perguntar ao usuário.
-2.  **Média (Score 60-85)**: Sugestão Fortemente Recomendada. "Achamos que X é Y, confirmar?"
-3.  **Ambígua (Scores próximos)**: Se "Tel 1" e "Tel 2" ambos podem ser "Telefone Principal", peça desambiguação clara.
-4.  **Baixa (Score < 60)**: Não mapear automaticamente. Sugerir "Ignorar" ou marcar como desconhecido.
+1.  **High (Score > 85)**: Automatic Mapping. No need to ask the user.
+2.  **Medium (Score 60-85)**: Strongly Recommended Suggestion. "We think X is Y, confirm?"
+3.  **Ambiguous (Close scores)**: If "Phone 1" and "Phone 2" could both be "Main Phone", request clear disambiguation.
+4.  **Low (Score < 60)**: Do not map automatically. Suggest "Ignore" or mark as unknown.
 
-## Base de Conhecimento Expandida
+## Expanded Knowledge Base
 
-Para máxima eficácia, o sistema deve conhecer variações.
+For maximum effectiveness, the system must know variations.
 
-### Exemplo: Campo "Telefone"
+### Example: "Phone" Field
 
 - **EN**: Phone, Mobile, Cell, Cellphone, Tel
 - **PT-BR**: Telefone, Celular, Tel, Fone, Movel, Contato, Wpp, Whats, WhatsApp, Zap
-- **Erros Comuns**: Telefome, Celuar, Tlf
-- **Abreviações**: Cel, Tel, T.
+- **Common Errors**: Telefome, Celuar, Tlf
+- **Abbreviations**: Cel, Tel, T.
 
-### Exemplo: Campo "Valor"
+### Example: "Value" Field
 
-- **Keywords**: Preço, Valor, Custo, Total, R$, Amount, Price
-- **Variações**: Valor Total, Valor Unit., Custo Final
+- **Keywords**: Price, Value, Cost, Total, R$, Amount, Price
+- **Variations**: Total Value, Unit Value, Final Cost
 
-## Estratégias de Desambiguação
+## Disambiguation Strategies
 
-### Colunas Duplicadas
+### Duplicate Columns
 
-Se a planilha tem "Telefone" e "Celular", e o sistema só tem 1 campo "telefone":
+If the spreadsheet has "Phone" and "Cell Phone", and the system only has 1 "phone" field:
 
-1.  Verifique qual tem mais dados preenchidos (densidade).
-2.  Verifique qual tem dados mais recentes (se houver datas).
-3.  Combine-os se o sistema permitir múltiplos telefones.
-4.  Caso contrário, priorize "Celular" sobre "Telefone" em contextos B2C.
+1.  Check which has more filled data (density).
+2.  Check which has more recent data (if dates exist).
+3.  Combine them if the system allows multiple phone numbers.
+4.  Otherwise, prioritize "Cell Phone" over "Phone" in B2C contexts.
 
-### Colunas Não Mapeadas
+### Unmapped Columns
 
-Sempre alerte o usuário sobre colunas na planilha que **não** foram mapeadas para nada, para evitar perda de dados acidental.
+Always alert the user about columns in the spreadsheet that were **not** mapped to anything, to avoid accidental data loss.

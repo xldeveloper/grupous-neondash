@@ -1,6 +1,6 @@
-# PLAN-progress-card-real-time: Conectar Card de Progresso Geral às Atividades
+# PLAN-progress-card-real-time: Connect Overall Progress Card to Activities
 
-> **Goal:** Configurar o card "Progresso Geral" na aba Visão Geral do dashboard para exibir em tempo real o progresso das atividades executadas pelos mentorados.
+> **Goal:** Configure the "Overall Progress" card in the Overview tab of the dashboard to display in real time the progress of activities executed by mentees.
 
 ---
 
@@ -8,53 +8,53 @@
 
 | #   | Finding                                                       | Confidence | Source                         | Impact    |
 | --- | ------------------------------------------------------------- | ---------- | ------------------------------ | --------- |
-| 1   | Card "Progresso Geral" exibe **75% hardcoded**                | 5/5        | MyDashboard.tsx:247-250        | ❌ Bug     |
-| 2   | Backend `atividades.getProgress` retorna mapa de progresso    | 5/5        | atividadesRouter.ts:17-33      | ✅ Pronto  |
-| 3   | `calcularProgresso()` já calcula total/completed/percentage   | 5/5        | atividades-data.ts:516-539     | ✅ Reusável|
-| 4   | `AtividadesContent.tsx` usa padrão correto de fetch + cálculo | 5/5        | AtividadesContent.tsx:71-99    | ✅ Modelo  |
-| 5   | Admin pode ver progresso de qualquer mentorado via ID         | 5/5        | atividadesRouter.ts:39-57      | ✅ Pronto  |
-| 6   | `targetMentoradoId` já está disponível no dashboard           | 5/5        | MyDashboard.tsx:67-68          | ✅ Pronto  |
-| 7   | shadcn `Progress` component disponível                        | 5/5        | components/ui/progress.tsx     | ✅ Usar    |
+| 1   | "Overall Progress" card displays **75% hardcoded**            | 5/5        | MyDashboard.tsx:247-250        | Bug       |
+| 2   | Backend `atividades.getProgress` returns progress map         | 5/5        | atividadesRouter.ts:17-33      | Ready     |
+| 3   | `calcularProgresso()` already calculates total/completed/percentage | 5/5   | atividades-data.ts:516-539     | Reusable  |
+| 4   | `AtividadesContent.tsx` uses correct fetch + calculation pattern | 5/5     | AtividadesContent.tsx:71-99    | Model     |
+| 5   | Admin can view any mentee's progress via ID                   | 5/5        | atividadesRouter.ts:39-57      | Ready     |
+| 6   | `targetMentoradoId` is already available in the dashboard     | 5/5        | MyDashboard.tsx:67-68          | Ready     |
+| 7   | shadcn `Progress` component available                         | 5/5        | components/ui/progress.tsx     | Use it    |
 
 ### Knowledge Gaps
 
-- **Nenhum**: Toda a infraestrutura backend está implementada.
+- **None**: All backend infrastructure is implemented.
 
 ### Assumptions to Validate
 
-1. O refetch será automático quando mentorado marcar um step como concluído (deve funcionar via cache invalidation do React Query)
-2. A variação de progresso (ex: +5%) requer dados do mês anterior (opcional, pode ser implementado depois)
+1. Refetch will be automatic when a mentee marks a step as completed (should work via React Query cache invalidation)
+2. Progress variation (e.g.: +5%) requires previous month data (optional, can be implemented later)
 
 ---
 
 ## 1. User Review Required
 
 > [!IMPORTANT]
-> **Decisão de Design**: A variação percentual (`+5%`, mostrada atualmente como hardcoded) requer comparação com mês anterior. 
-> 
-> **Opções:**
-> - **A) Simples**: Mostrar apenas progresso atual sem variação (implementação imediata)
-> - **B) Completa**: Calcular variação vs. mês anterior (requer lógica adicional de snapshot)
+> **Design Decision**: The percentage variation (`+5%`, currently shown as hardcoded) requires comparison with previous month.
 >
-> **Recomendação**: Opção A para MVP, adicionar B posteriormente se necessário.
+> **Options:**
+> - **A) Simple**: Show only current progress without variation (immediate implementation)
+> - **B) Complete**: Calculate variation vs. previous month (requires additional snapshot logic)
+>
+> **Recommendation**: Option A for MVP, add B later if needed.
 
 ---
 
 ## 2. Proposed Changes
 
-### Componente Dashboard
+### Dashboard Component
 
 #### [MODIFY] [MyDashboard.tsx](file:///home/mauricio/neondash/client/src/pages/MyDashboard.tsx)
 
-**Linhas 240-257**: Substituir valores hardcoded por query real
+**Lines 240-257**: Replace hardcoded values with real query
 
-**Mudanças:**
-1. Adicionar query `trpc.atividades.getProgress` (ou `getProgressById` para admin)
-2. Importar e usar `calcularProgresso` de `atividades-data.ts`
-3. Exibir `percentage`, `completed` e `total` reais
-4. Tratar estado de loading com Skeleton
+**Changes:**
+1. Add `trpc.atividades.getProgress` query (or `getProgressById` for admin)
+2. Import and use `calcularProgresso` from `atividades-data.ts`
+3. Display real `percentage`, `completed` and `total`
+4. Handle loading state with Skeleton
 
-**Código atual (hardcoded):**
+**Current code (hardcoded):**
 ```tsx
 <span className="text-4xl font-bold text-primary">75%</span>
 <span className="text-green-500 flex items-center text-sm">
@@ -62,9 +62,9 @@
 </span>
 ```
 
-**Código proposto (dinâmico):**
+**Proposed code (dynamic):**
 ```tsx
-// Query de progresso (dentro do componente)
+// Progress query (inside the component)
 const progressQuery = isAdmin && selectedMentoradoId
   ? trpc.atividades.getProgressById.useQuery({ mentoradoId: parseInt(selectedMentoradoId, 10) })
   : trpc.atividades.getProgress.useQuery();
@@ -75,7 +75,7 @@ const { percentage, completed, total } = calcularProgresso(
   )
 );
 
-// No JSX
+// In JSX
 {progressQuery.isLoading ? (
   <Skeleton className="h-10 w-20" />
 ) : (
@@ -90,54 +90,54 @@ const { percentage, completed, total } = calcularProgresso(
 > [!CAUTION]
 > Each task MUST have subtasks. No single-line tasks allowed.
 
-### AT-001: Adicionar Query de Progresso no MyDashboard ⚡
+### AT-001: Add Progress Query to MyDashboard
 
-**Goal:** Fetch de dados reais de progresso de atividades
+**Goal:** Fetch real activity progress data
 **Dependencies:** None
 
 #### Subtasks:
-- [ ] ST-001.1: Importar `calcularProgresso` de `@/data/atividades-data`
+- [ ] ST-001.1: Import `calcularProgresso` from `@/data/atividades-data`
   - **File:** `client/src/pages/MyDashboard.tsx`
-  - **Validation:** Sem erros de import no TypeScript
-- [ ] ST-001.2: Adicionar query condicional (getProgress vs getProgressById)
+  - **Validation:** No import errors in TypeScript
+- [ ] ST-001.2: Add conditional query (getProgress vs getProgressById)
   - **File:** `client/src/pages/MyDashboard.tsx`
-  - **Validation:** `bun run check` passa
+  - **Validation:** `bun run check` passes
 
 **Rollback:** `git checkout client/src/pages/MyDashboard.tsx`
 
 ---
 
-### AT-002: Atualizar Card de Progresso com Dados Reais ⚡
+### AT-002: Update Progress Card with Real Data
 
-**Goal:** Exibir progresso real no lugar do valor hardcoded
+**Goal:** Display real progress instead of hardcoded value
 **Dependencies:** AT-001
 
 #### Subtasks:
-- [ ] ST-002.1: Substituir `75%` hardcoded por `{percentage}%`
-  - **File:** `client/src/pages/MyDashboard.tsx` (linha 247)
-  - **Validation:** UI exibe valor dinâmico
-- [ ] ST-002.2: Adicionar mensagem de loading com Skeleton
+- [ ] ST-002.1: Replace hardcoded `75%` with `{percentage}%`
+  - **File:** `client/src/pages/MyDashboard.tsx` (line 247)
+  - **Validation:** UI displays dynamic value
+- [ ] ST-002.2: Add loading message with Skeleton
   - **File:** `client/src/pages/MyDashboard.tsx`
-  - **Validation:** Skeleton aparece durante fetch
-- [ ] ST-002.3: Atualizar texto descritivo baseado no progresso
-  - **File:** `client/src/pages/MyDashboard.tsx` (linha 252-254)
-  - **Validation:** Mensagem muda conforme progresso
+  - **Validation:** Skeleton appears during fetch
+- [ ] ST-002.3: Update descriptive text based on progress
+  - **File:** `client/src/pages/MyDashboard.tsx` (line 252-254)
+  - **Validation:** Message changes according to progress
 
 **Rollback:** `git checkout client/src/pages/MyDashboard.tsx`
 
 ---
 
-### AT-003: Remover Indicador de Variação (MVP)
+### AT-003: Remove Variation Indicator (MVP)
 
-**Goal:** Remover "+5%" hardcoded temporariamente
+**Goal:** Remove hardcoded "+5%" temporarily
 **Dependencies:** AT-002
 
 #### Subtasks:
-- [ ] ST-003.1: Ocultar ou remover span de variação
-  - **File:** `client/src/pages/MyDashboard.tsx` (linhas 248-250)
-  - **Validation:** Não há mais "+5%" hardcoded
+- [ ] ST-003.1: Hide or remove variation span
+  - **File:** `client/src/pages/MyDashboard.tsx` (lines 248-250)
+  - **Validation:** No more hardcoded "+5%"
 
-**Rollback:** Restaurar linhas 248-250
+**Rollback:** Restore lines 248-250
 
 ---
 
@@ -153,32 +153,32 @@ const { percentage, completed, total } = calcularProgresso(
 
 ### Manual Verification
 
-1. **Verificar progresso zerado:**
-   - Login como mentorado **sem** atividades marcadas
-   - Acessar `/meu-dashboard`
-   - Card deve mostrar `0%` e mensagem adequada
+1. **Verify zero progress:**
+   - Login as a mentee **without** completed activities
+   - Access `/meu-dashboard`
+   - Card should show `0%` and appropriate message
 
-2. **Verificar progresso parcial:**
-   - Ir para aba "Atividades"
-   - Marcar 2-3 steps como concluídos
-   - Voltar para aba "Visão Geral"
-   - Card deve atualizar automaticamente (via React Query cache)
+2. **Verify partial progress:**
+   - Go to "Activities" tab
+   - Mark 2-3 steps as completed
+   - Return to "Overview" tab
+   - Card should update automatically (via React Query cache)
 
-3. **Verificar admin view:**
-   - Login como admin
-   - Selecionar um mentorado pelo FloatingDock
-   - Card deve mostrar progresso do mentorado selecionado
+3. **Verify admin view:**
+   - Login as admin
+   - Select a mentee via FloatingDock
+   - Card should show the selected mentee's progress
 
-4. **Verificar loading state:**
-   - Acessar dashboard
-   - Skeleton deve aparecer brevemente antes dos dados
+4. **Verify loading state:**
+   - Access dashboard
+   - Skeleton should appear briefly before data loads
 
 ---
 
 ## 5. Rollback Plan
 
 ```bash
-# Reverter todas as mudanças
+# Revert all changes
 git checkout client/src/pages/MyDashboard.tsx
 ```
 

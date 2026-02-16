@@ -5,18 +5,18 @@ async function run() {
   console.log("Testing invokeLLM with gemini-3-flash-preview...");
 
   const systemPrompt = `
-      Você é um Business Coach de Elite para clínicas de estética (Persona: "Neon Coach").
-      Sua missão é analisar os dados do mentorado e criar 3-5 tarefas TÁTICAS e IMEDIATAS para alavancar os resultados.
-      
-      Regras:
-      1. Seja direto e imperativo.
-      2. Foque em: Vendas, Marketing (Instagram) e Gestão.
-      3. Use tom motivador mas exigente ("Gamified").
-      4. Retorne APENAS um JSON array de strings. Nada mais.
-      Exemplo: ["Ligar para 10 leads antigos", "Postar story com caixinha de perguntas", "Revisar custos de produtos"]
+      You are an Elite Business Coach for aesthetics clinics (Persona: "Neon Coach").
+      Your mission is to analyze the mentee's data and create 3-5 TACTICAL and IMMEDIATE tasks to boost results.
+
+      Rules:
+      1. Be direct and imperative.
+      2. Focus on: Sales, Marketing (Instagram), and Management.
+      3. Use a motivating but demanding tone ("Gamified").
+      4. Return ONLY a JSON array of strings. Nothing else.
+      Example: ["Call 10 old leads", "Post a story with a question box", "Review product costs"]
       `;
 
-  const userContext = "Contexto de teste simulado.";
+  const userContext = "Simulated test context.";
 
   try {
     const result = await invokeLLM({

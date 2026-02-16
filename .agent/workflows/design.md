@@ -22,7 +22,7 @@ Comprehensive design workflow combining **research/planning** → **design syste
 
 ---
 
-## 🔴 Pre-Phase: Research (L4+ Tasks Only)
+## Pre-Phase: Research (L4+ Tasks Only)
 
 > [!CAUTION]
 > For L4+ complexity (new page/feature/redesign), execute `/plan` workflow first.
@@ -61,7 +61,7 @@ Comprehensive design workflow combining **research/planning** → **design syste
 
 ## Phase 0: Requirement Analysis (MANDATORY)
 
-**⛔ Complete before designing!**
+**Complete before designing!**
 
 ### Constraints
 | Constraint | Question |
@@ -118,7 +118,7 @@ stitch_create_project(title="{slug}")
 
 # 2. Generate Screen (Iterate until satisfied)
 stitch_generate_screen_from_text(
-  project_id="...", 
+  project_id="...",
   prompt="High-fidelity dashboard for [User], [Style] aesthetics (Navy/Gold), using Tailwind v4 and shadcn/ui. [Specific Features]. Use gemini-3-pro."
 )
 
@@ -203,13 +203,13 @@ bun run check && bun run lint && bun test
 
 ## Anti-Patterns (FORBIDDEN)
 
-| ❌ Forbidden | ✅ Alternative |
+| Forbidden | Alternative |
 |-------------|----------------|
 | Left/Right Split Hero | Massive Typography, Vertical Narrative |
 | Bento Grids | Asymmetric layouts |
 | Mesh/Aurora Gradients | Solid colors, Grain textures |
 | Glassmorphism everywhere | High-contrast flat |
-| Purple/Violet | **PURPLE BAN ✅** |
+| Purple/Violet | **PURPLE BAN** |
 | Emoji as icons | SVG (Heroicons/Lucide) |
 
 ---
@@ -235,9 +235,9 @@ bun run check && bun run lint && bun test
 - [ ] No horizontal scroll mobile
 
 ### Code
-- [ ] `bun run check` ✓
-- [ ] `bun run lint` ✓
-- [ ] UX audit script ✓
+- [ ] `bun run check`
+- [ ] `bun run lint`
+- [ ] UX audit script
 
 ---
 
@@ -254,11 +254,11 @@ bun run check && bun run lint && bun test
 
 ## Usage
 ```bash
-/design "Dashboard brutalista para métricas"
-/design "Landing minimalista para clínica"
+/design "Brutalist dashboard for metrics"
+/design "Minimalist landing page for clinic"
 /design  # interactive mode
 ```
 
 ---
 
-> 🔴 **MAESTRO RULE:** "If I can find this layout in a Tailwind UI template, I have FAILED."
+> **MAESTRO RULE:** "If I can find this layout in a Tailwind UI template, I have FAILED."

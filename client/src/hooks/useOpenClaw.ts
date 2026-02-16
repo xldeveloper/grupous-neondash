@@ -65,23 +65,23 @@ export function useOpenClaw(): UseOpenClawReturn {
       const welcomeMessage: ChatMessage = {
         id: Date.now(),
         role: "assistant",
-        content: `Olá! Como **Assistente NEON**, sou especializado em mentoria de negócios para profissionais de estética. Tenho acesso a diversas ferramentas para te ajudar a acompanhar seu progresso e tomar decisões estratégicas:
+        content: `Hello! As the **NEON Assistant**, I specialize in business mentorship for aesthetics professionals. I have access to several tools to help you track your progress and make strategic decisions:
 
-**🛠️ Ferramentas disponíveis:**
+**🛠️ Available tools:**
 
-- 📊 **Métricas mensais** - faturamento, lucro, leads, procedimentos, posts, stories
-- 📋 **CRM de Leads** - consultar e filtrar por status (novo, qualificado, proposta, fechado, etc.)
-- 🔍 **Busca de leads** - pesquisar por nome, email ou telefone
-- 💬 **Feedback da Dra. Sacha** - ver análises e sugestões do mentor
-- ✅ **Tarefas pendentes** - acompanhar status e progresso
-- 🎯 **Metas e objetivos** - verificar progresso atual
-- 📝 **Diagnóstico inicial** - consultar seu onboarding
-- 📅 **Google Calendar** - ver próximos eventos
-- 🌐 **Pesquisa web** - informações atualizadas e tendências
+- 📊 **Monthly metrics** - revenue, profit, leads, procedures, posts, stories
+- 📋 **Lead CRM** - query and filter by status (new, qualified, proposal, closed, etc.)
+- 🔍 **Lead search** - search by name, email, or phone
+- 💬 **Dr. Sacha's feedback** - view mentor analyses and suggestions
+- ✅ **Pending tasks** - track status and progress
+- 🎯 **Goals and objectives** - check current progress
+- 📝 **Initial assessment** - view your onboarding
+- 📅 **Google Calendar** - view upcoming events
+- 🌐 **Web search** - up-to-date information and trends
 
-Com essas ferramentas, posso te ajudar a analisar seus dados, identificar oportunidades e sugerir os próximos passos para o crescimento do seu negócio! 🚀
+With these tools, I can help you analyze your data, identify opportunities, and suggest the next steps for growing your business! 🚀
 
-**Como posso te ajudar hoje?**`,
+**How can I help you today?**`,
         createdAt: new Date(),
       };
 

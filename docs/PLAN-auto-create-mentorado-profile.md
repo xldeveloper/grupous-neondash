@@ -1,18 +1,18 @@
-# Plan: Auto-Criação de Perfil de Mentorado no Primeiro Login
+# Plan: Auto-Creation of Mentee Profile on First Login
 
 ## Metadata
-- **complexity**: L6 — Envolve alterações no middleware de contexto tRPC, cache de sessão, sincronização entre Clerk e NeonDB, e múltiplos cenários de edge cases
+- **complexity**: L6 — Involves changes to tRPC context middleware, session cache, synchronization between Clerk and NeonDB, and multiple edge case scenarios
 - **estimated_time**: 4-6 hours
-- **parallel_safe**: false (alterações no contexto afetam toda a aplicação)
+- **parallel_safe**: false (context changes affect the entire application)
 
 ---
 
 ## Objective
-**task**: Implementar mecanismo robusto de auto-criação de perfil de mentorado no primeiro login, garantindo que novos usuários vejam a dashboard funcional imediatamente sem telas de loading infinito.
+**task**: Implement a robust mechanism for auto-creating a mentee profile on first login, ensuring that new users see a functional dashboard immediately without infinite loading screens.
 
-**context**: Neon Dashboard (React 19 + Vite 7 + tRPC 11 + Drizzle ORM + Neon PostgreSQL + Clerk Auth). O sistema atual possui auto-criação básica no `createContext`, mas sofre de race conditions com cache de sessão.
+**context**: Neon Dashboard (React 19 + Vite 7 + tRPC 11 + Drizzle ORM + Neon PostgreSQL + Clerk Auth). The current system has basic auto-creation in `createContext`, but suffers from race conditions with the session cache.
 
-**why_this_matters**: Novos mentorados atualmente veem placeholders/skeletons carregando indefinidamente porque o contexto cacheado pode não conter o mentorado recém-criado, ou ocorrem falhas silenciosas na criação.
+**why_this_matters**: New mentees currently see placeholder/skeletons loading indefinitely because the cached context may not contain the newly created mentee, or silent failures occur during creation.
 
 ---
 
@@ -34,66 +34,66 @@
 
 | # | Finding | Confidence (1-5) | Source | Impact |
 |---|---------|------------------|--------|--------|
-| 1 | Auto-criação de mentorado JÁ EXISTE em `server/_core/context.ts` linhas 113-148 | 5 | Code audit | A lógica existe mas tem problemas de race condition |
-| 2 | Cache de sessão em `sessionCache.ts` pode retornar contexto sem mentorado | 5 | Code audit | Causa loading infinito quando cache hit sem mentorado |
-| 3 | `mentorados.me` query retorna `ctx.mentorado` diretamente | 5 | `server/mentoradosRouter.ts:63-65` | Se contexto não tem mentorado, query falha |
-| 4 | `getOverviewStats` lança FORBIDDEN se `ctx.mentorado` é null | 5 | `server/mentoradosRouter.ts:474-479` | Dashboard falha silenciosamente para novos usuários |
-| 5 | `AuthSync.tsx` chama `syncUser` apenas uma vez via `useRef` | 5 | Code audit | Se falha, não há retry automático |
-| 6 | `upsertUserFromClerk` cria/atualiza usuário mas não garante mentorado | 4 | `server/db.ts:90-137` | Separação de concerns entre user e mentorado |
-| 7 | Tabela `mentorados` possui campos obrigatórios: `nomeCompleto`, `turma` | 5 | `drizzle/schema.ts:115-161` | Valores padrão devem ser fornecidos na criação |
-| 8 | Dashboard espera `stats.financials.chartData` - array vazio é válido | 4 | `MenteeOverview.tsx:46-54` | NewMentoradoWelcome é exibido quando não há dados |
-| 9 | Relação `users` → `mentorados` é 1:1 via `userId` FK | 5 | `drizzle/relations.ts:25-30` | Constraint importante para integridade |
-| 10 | `mentoradoProcedure` middleware exige `ctx.mentorado` | 5 | `server/_core/trpc.ts:30-53` | Proteção em nível de procedure |
-| 11 | Drizzle suporta `onConflictDoNothing()` para upsert idempotente | 5 | Context7 - Drizzle ORM Docs | Elimina race conditions em INSERT |
-| 12 | Clerk webhooks são assíncronos e NÃO garantidos | 5 | Context7 - Clerk Docs | Não devem ser usados para onboarding síncrono |
-| 13 | Neon HTTP driver é stateless, ideal para serverless | 4 | Context7 - Drizzle Docs | Limitações com transações interativas |
-| 14 | `SELECT FOR UPDATE` previne race conditions em PostgreSQL | 4 | Tavily Research | Lock pessimista para concorrência |
+| 1 | Auto-creation of mentee ALREADY EXISTS in `server/_core/context.ts` lines 113-148 | 5 | Code audit | Logic exists but has race condition issues |
+| 2 | Session cache in `sessionCache.ts` can return context without mentee | 5 | Code audit | Causes infinite loading on cache hit without mentee |
+| 3 | `mentorados.me` query returns `ctx.mentorado` directly | 5 | `server/mentoradosRouter.ts:63-65` | If context has no mentee, query fails |
+| 4 | `getOverviewStats` throws FORBIDDEN if `ctx.mentorado` is null | 5 | `server/mentoradosRouter.ts:474-479` | Dashboard fails silently for new users |
+| 5 | `AuthSync.tsx` calls `syncUser` only once via `useRef` | 5 | Code audit | If it fails, there is no automatic retry |
+| 6 | `upsertUserFromClerk` creates/updates user but does not guarantee mentee | 4 | `server/db.ts:90-137` | Separation of concerns between user and mentee |
+| 7 | `mentorados` table has required fields: `nomeCompleto`, `turma` | 5 | `drizzle/schema.ts:115-161` | Default values must be provided during creation |
+| 8 | Dashboard expects `stats.financials.chartData` - empty array is valid | 4 | `MenteeOverview.tsx:46-54` | NewMentoradoWelcome is displayed when there is no data |
+| 9 | `users` -> `mentorados` relationship is 1:1 via `userId` FK | 5 | `drizzle/relations.ts:25-30` | Important constraint for integrity |
+| 10 | `mentoradoProcedure` middleware requires `ctx.mentorado` | 5 | `server/_core/trpc.ts:30-53` | Procedure-level protection |
+| 11 | Drizzle supports `onConflictDoNothing()` for idempotent upsert | 5 | Context7 - Drizzle ORM Docs | Eliminates race conditions on INSERT |
+| 12 | Clerk webhooks are asynchronous and NOT guaranteed | 5 | Context7 - Clerk Docs | Should not be used for synchronous onboarding |
+| 13 | Neon HTTP driver is stateless, ideal for serverless | 4 | Context7 - Drizzle Docs | Limitations with interactive transactions |
+| 14 | `SELECT FOR UPDATE` prevents race conditions in PostgreSQL | 4 | Tavily Research | Pessimistic lock for concurrency |
 
 ### Knowledge Gaps
 
-1. **Taxa de falha real**: Não temos métricas de quantos usuários encontram este problema
-2. **Tempo de expiração do cache**: O TTL do `sessionCache` não está claro no código
-3. **Concorrência**: Comportamento quando múltiplas requisições simultâneas tentam criar o mesmo mentorado
-4. **Dados iniciais necessários**: Quais tabelas além de `mentorados` precisam ser populadas?
-5. **Webhook Clerk**: O sistema usa webhooks para sincronização? (não encontrado no codebase)
+1. **Actual failure rate**: We have no metrics on how many users encounter this issue
+2. **Cache expiration time**: The TTL of the `sessionCache` is unclear in the code
+3. **Concurrency**: Behavior when multiple simultaneous requests attempt to create the same mentee
+4. **Required initial data**: Which tables besides `mentorados` need to be populated?
+5. **Clerk Webhook**: Does the system use webhooks for synchronization? (not found in the codebase)
 
 ### Assumptions to Validate
 
-1. **Assumption**: O problema ocorre apenas quando o usuário existe mas mentorado não foi criado
-   - **Validation**: Verificar logs de `mentorado_creation_failed`
-   
-2. **Assumption**: Cache de sessão é a causa principal do loading infinito
-   - **Validation**: Adicionar logging para distinguir cache hit vs miss
-   
-3. **Assumption**: Um mentorado com dados mínimos é suficiente para dashboard funcionar
-   - **Validation**: Testar dashboard com mentorado sem métricas/diagnóstico
+1. **Assumption**: The problem only occurs when the user exists but the mentee was not created
+   - **Validation**: Check logs for `mentorado_creation_failed`
+
+2. **Assumption**: Session cache is the main cause of infinite loading
+   - **Validation**: Add logging to distinguish cache hit vs miss
+
+3. **Assumption**: A mentee with minimal data is sufficient for the dashboard to work
+   - **Validation**: Test dashboard with a mentee without metrics/diagnostic
 
 ---
 
 ## MCP Research Insights
 
 ### Clerk Best Practices (Context7)
-- **Webhook Limitations**: Webhooks são assíncronos, eventualmente consistentes, e NÃO garantidos. Não devem ser usados para fluxos de onboarding síncronos.
-- **Sincronização Recomendada**: Criar/atualizar perfil durante o fluxo de autenticação (em `createContext` ou endpoint dedicado), não depender de webhooks.
-- **Verificação de Webhooks**: Se implementar webhooks futuramente, usar `verifyWebhook` do `@clerk/backend/webhooks` com signing secret.
+- **Webhook Limitations**: Webhooks are asynchronous, eventually consistent, and NOT guaranteed. They should not be used for synchronous onboarding flows.
+- **Recommended Synchronization**: Create/update profile during the authentication flow (in `createContext` or a dedicated endpoint), do not depend on webhooks.
+- **Webhook Verification**: If implementing webhooks in the future, use `verifyWebhook` from `@clerk/backend/webhooks` with a signing secret.
 
 ### Drizzle ORM Patterns (Context7)
-- **Upsert Idempotente**: Usar `onConflictDoNothing()` ou `onConflictDoUpdate()` para operações idempotentes:
+- **Idempotent Upsert**: Use `onConflictDoNothing()` or `onConflictDoUpdate()` for idempotent operations:
   ```typescript
   await db.insert(mentorados).values(data).onConflictDoNothing();
   ```
-- **Transações**: Neon HTTP driver tem limitações com transações interativas. Usar `onConflict` pattern para atomicidade em operações simples.
-- **Constraints**: Adicionar UNIQUE constraint em `mentorados.userId` permite upsert seguro.
+- **Transactions**: Neon HTTP driver has limitations with interactive transactions. Use `onConflict` pattern for atomicity in simple operations.
+- **Constraints**: Adding a UNIQUE constraint on `mentorados.userId` enables safe upsert.
 
 ### Race Condition Prevention (Tavily Research)
-- **Database-Level Locks**: Usar `SELECT FOR UPDATE` para lock pessimista quando necessário.
-- **Cache Patterns**: Implementar versioned keys ou compare-and-swap para cache.
-- **Distributed Locks**: Pattern Redlock para operações críticas (usar Redis ou similar).
+- **Database-Level Locks**: Use `SELECT FOR UPDATE` for pessimistic locking when needed.
+- **Cache Patterns**: Implement versioned keys or compare-and-swap for cache.
+- **Distributed Locks**: Redlock pattern for critical operations (use Redis or similar).
 
 ### tRPC Middleware (Context7)
-- **Composition**: Usar `t.procedure.use(middleware)` para composição.
-- **Context Enrichment**: Passar dados enriquecidos via `return next({ ctx: { ...ctx, user } })`.
-- **Error Handling**: Usar `TRPCError` com códigos apropriados.
+- **Composition**: Use `t.procedure.use(middleware)` for composition.
+- **Context Enrichment**: Pass enriched data via `return next({ ctx: { ...ctx, user } })`.
+- **Error Handling**: Use `TRPCError` with appropriate codes.
 
 ---
 
@@ -101,112 +101,112 @@
 
 ### Must Read
 - **path**: `server/_core/context.ts`
-  - **relevance**: Contém lógica de auto-criação de mentorado e cache de sessão
+  - **relevance**: Contains mentee auto-creation logic and session cache
 - **path**: `server/_core/sessionCache.ts`
-  - **relevance**: Gerencia cache de sessão que causa race condition
+  - **relevance**: Manages session cache that causes race condition
 - **path**: `server/routers/auth.ts`
-  - **relevance**: Endpoint `syncUser` chamado pelo frontend
+  - **relevance**: `syncUser` endpoint called by the frontend
 - **path**: `server/mentoradosRouter.ts`
-  - **relevance**: Queries `me` e `getOverviewStats` usadas pelo dashboard
+  - **relevance**: `me` and `getOverviewStats` queries used by the dashboard
 - **path**: `client/src/components/auth/AuthSync.tsx`
-  - **relevance**: Componente que dispara sincronização no login
+  - **relevance**: Component that triggers synchronization on login
 
 ### May Reference
 - **path**: `client/src/pages/MyDashboard.tsx`
-  - **relevance**: Página que exibe loading skeletons
+  - **relevance**: Page that displays loading skeletons
 - **path**: `client/src/components/dashboard/MenteeOverview.tsx`
-  - **relevance**: Componente que decide entre dashboard ou welcome screen
+  - **relevance**: Component that decides between dashboard or welcome screen
 - **path**: `server/_core/trpc.ts`
-  - **relevance**: Definição de `protectedProcedure` e `mentoradoProcedure`
+  - **relevance**: Definition of `protectedProcedure` and `mentoradoProcedure`
 - **path**: `server/db.ts`
-  - **relevance**: Função `upsertUserFromClerk`
+  - **relevance**: `upsertUserFromClerk` function
 - **path**: `drizzle/schema.ts`
-  - **relevance**: Schema completo das tabelas
+  - **relevance**: Complete table schema
 
 ---
 
 ## Existing Patterns
 
 ### naming
-- Procedures tRPC: camelCase (ex: `getOverviewStats`, `syncUser`)
-- Tabelas Drizzle: snake_case no DB, camelCase no código
-- Variáveis de contexto: `ctx.user`, `ctx.mentorado`
+- tRPC procedures: camelCase (e.g.: `getOverviewStats`, `syncUser`)
+- Drizzle tables: snake_case in DB, camelCase in code
+- Context variables: `ctx.user`, `ctx.mentorado`
 
 ### file_structure
-- Routers tRPC: `server/*Router.ts` ou `server/routers/*.ts`
-- Componentes React: `client/src/components/**/*.tsx`
-- Páginas: `client/src/pages/*.tsx`
-- Core/Utils: `client/src/_core/` e `server/_core/`
+- tRPC routers: `server/*Router.ts` or `server/routers/*.ts`
+- React components: `client/src/components/**/*.tsx`
+- Pages: `client/src/pages/*.tsx`
+- Core/Utils: `client/src/_core/` and `server/_core/`
 
 ### error_handling
-- TRPCError com códigos específicos: `UNAUTHORIZED`, `FORBIDDEN`, `NOT_FOUND`
-- Mensagens em português para usuário final
-- Logging via `createLogger` em `_core/logger.ts`
+- TRPCError with specific codes: `UNAUTHORIZED`, `FORBIDDEN`, `NOT_FOUND`
+- User-facing messages in Portuguese
+- Logging via `createLogger` in `_core/logger.ts`
 
 ### state_management
-- TanStack Query (React Query) para cache de dados no frontend
-- tRPC como camada de transporte
-- Contexto tRPC com `user` e `mentorado` resolvidos por request
+- TanStack Query (React Query) for data caching on the frontend
+- tRPC as transport layer
+- tRPC context with `user` and `mentorado` resolved per request
 
 ---
 
 ## Constraints
 
 ### non_negotiable
-- NÃO quebrar autenticação existente
-- Manter compatibilidade com usuários admin
-- Preservar cache de sessão para performance
-- Auto-criação deve ser transacional (user + mentorado)
-- Respeitar rate limits do Clerk
+- DO NOT break existing authentication
+- Maintain compatibility with admin users
+- Preserve session cache for performance
+- Auto-creation must be transactional (user + mentee)
+- Respect Clerk rate limits
 
 ### preferences
-- Logging detalhado para debugging
-- Retry automático com backoff exponencial
-- Métricas/alertas para falhas de criação
-- Fallback gracioso quando mentorado não existe
+- Detailed logging for debugging
+- Automatic retry with exponential backoff
+- Metrics/alerts for creation failures
+- Graceful fallback when mentee does not exist
 
 ---
 
 ## Chain of Thought
 
 ### Research
-- **Codebase patterns**: Auto-criação existe em `context.ts` mas é vulnerável a race conditions
+- **Codebase patterns**: Auto-creation exists in `context.ts` but is vulnerable to race conditions
 - **Docs consulted**: Clerk Express SDK, Drizzle ORM docs (implicit knowledge)
-- **Security**: Contexto protege rotas, mas cache pode expor dados stale
-- **Edge cases**: Cache hit sem mentorado, múltiplas requisições simultâneas, falha no DB
+- **Security**: Context protects routes, but cache may expose stale data
+- **Edge cases**: Cache hit without mentee, multiple simultaneous requests, DB failure
 
 ### Analyze
-- **Core requirement**: Garantir que todo usuário autenticado tenha um mentorado válido
-- **Technical constraints**: Cache de sessão é necessário para performance
-- **Integration points**: Clerk ↔ tRPC context ↔ Drizzle ORM ↔ NeonDB
+- **Core requirement**: Ensure every authenticated user has a valid mentee
+- **Technical constraints**: Session cache is necessary for performance
+- **Integration points**: Clerk <-> tRPC context <-> Drizzle ORM <-> NeonDB
 
 ### Think
 **step_by_step**:
-1. First: Corrigir race condition no cache de sessão (invalidar/refresh quando mentorado criado)
-2. Then: Adicionar retry no `AuthSync` para lidar com falhas transitórias
-3. Then: Criar endpoint dedicado `ensureMentorado` para verificação explícita
-4. Then: Adicionar fallback no frontend para estado "sem mentorado"
-5. Finally: Implementar métricas e monitoramento
+1. First: Fix race condition in session cache (invalidate/refresh when mentee is created)
+2. Then: Add retry in `AuthSync` to handle transient failures
+3. Then: Create dedicated `ensureMentorado` endpoint for explicit verification
+4. Then: Add frontend fallback for "no mentee" state
+5. Finally: Implement metrics and monitoring
 
 **tree_of_thoughts**:
 
-**approach_a**: Modificar `createContext` para sempre verificar/criar mentorado (atual)
-- **pros**: Simples, centralizado
-- **cons**: Race condition com cache, performance impacta todas as requests
+**approach_a**: Modify `createContext` to always verify/create mentee (current)
+- **pros**: Simple, centralized
+- **cons**: Race condition with cache, performance impacts all requests
 - **score**: 6/10
 
-**approach_b**: Endpoint dedicado `auth.ensureMentorado` chamado pelo frontend
-- **pros**: Controle explícito, melhor error handling, pode retry
-- **cons**: Requer mudança no frontend, uma chamada extra no login
+**approach_b**: Dedicated `auth.ensureMentorado` endpoint called by the frontend
+- **pros**: Explicit control, better error handling, can retry
+- **cons**: Requires frontend change, one extra call on login
 - **score**: 8/10
 
-**approach_c**: Webhook Clerk + background job
-- **pros**: Assíncrono, não afeta login
-- **cons**: Complexo, requer infra de jobs, delay no primeiro acesso
+**approach_c**: Clerk Webhook + background job
+- **pros**: Asynchronous, does not affect login
+- **cons**: Complex, requires job infrastructure, delay on first access
 - **score**: 5/10
 
-**selected**: approach_b com melhorias no contexto existente
-**rationale**: Balanceia simplicidade com robustez, permite retry no frontend, e resolve o problema de race condition sem reescrever tudo
+**selected**: approach_b with improvements to existing context
+**rationale**: Balances simplicity with robustness, allows retry on the frontend, and resolves the race condition issue without rewriting everything
 
 ---
 
@@ -214,16 +214,16 @@
 
 | # | Edge Case | Impact | Mitigation |
 |---|-----------|--------|------------|
-| 1 | Usuário faz múltiplos logins simultâneos (diferentes devices) | Race condition na criação de mentorado | Usar `ON CONFLICT` ou transação com `SELECT FOR UPDATE` |
-| 2 | Cache de sessão retorna user sem mentorado | Loading infinito no dashboard | Invalidar cache quando mentorado é criado; adicionar verificação no cache hit |
-| 3 | Falha de rede durante criação do mentorado | Usuário sem mentorado, retries falham | Retry exponencial no frontend; endpoint idempotente |
-| 4 | Clerk retorna usuário sem email | Não é possível fazer link por email | Criar mentorado sem email, associar apenas por userId |
-| 5 | Banco de dados indisponível | Erro 500, usuário não consegue usar app | Fallback para modo "read-only" ou mensagem apropriada |
-| 6 | Usuário existe, mentorado existe mas com `userId` null | Link não foi feito | Detectar e auto-link no `syncUser` |
-| 7 | Múltiplos mentorados com mesmo email | Ambiguidade no link | Logar alerta, não fazer link automático |
-| 8 | `syncUser` chamado antes de `createContext` completar | Estado inconsistente | Garantir ordem de execução via dependências React |
-| 9 | Admin cria mentorado manualmente enquanto usuário loga | Conflito de criação | Verificar existência antes de inserir |
-| 10 | Session cache expira entre criação e primeiro uso | Re-criação desnecessária | TTL adequado, idempotência na criação |
+| 1 | User performs multiple simultaneous logins (different devices) | Race condition on mentee creation | Use `ON CONFLICT` or transaction with `SELECT FOR UPDATE` |
+| 2 | Session cache returns user without mentee | Infinite loading on dashboard | Invalidate cache when mentee is created; add verification on cache hit |
+| 3 | Network failure during mentee creation | User without mentee, retries fail | Exponential retry on frontend; idempotent endpoint |
+| 4 | Clerk returns user without email | Cannot link by email | Create mentee without email, associate only by userId |
+| 5 | Database unavailable | 500 error, user cannot use app | Fallback to "read-only" mode or appropriate message |
+| 6 | User exists, mentee exists but with `userId` null | Link was not made | Detect and auto-link in `syncUser` |
+| 7 | Multiple mentees with the same email | Ambiguity in linking | Log alert, do not auto-link |
+| 8 | `syncUser` called before `createContext` completes | Inconsistent state | Ensure execution order via React dependencies |
+| 9 | Admin creates mentee manually while user logs in | Creation conflict | Check existence before inserting |
+| 10 | Session cache expires between creation and first use | Unnecessary re-creation | Adequate TTL, idempotency in creation |
 
 ---
 
@@ -231,9 +231,9 @@
 
 ### Phase 1: Foundation (Fix Core Logic)
 
-#### AT-001: Corrigir race condition no session cache
+#### AT-001: Fix race condition in session cache
 - **id**: AT-001
-- **title**: Invalidar session cache quando mentorado é criado
+- **title**: Invalidate session cache when mentee is created
 - **phase**: 1
 - **priority**: critical
 - **dependencies**: []
@@ -242,51 +242,51 @@
   - `server/_core/context.ts`
   - `server/_core/sessionCache.ts`
 - **implementation_notes**: |
-  Após criar mentorado em `context.ts`, invalidar o cache da sessão:
+  After creating the mentee in `context.ts`, invalidate the session cache:
   ```typescript
-  // Após db.insert(mentorados)...
+  // After db.insert(mentorados)...
   await invalidateCachedSession(auth.userId);
   ```
-  
-  Adicionar função em `sessionCache.ts`:
+
+  Add function in `sessionCache.ts`:
   ```typescript
   export async function invalidateCachedSession(clerkId: string): Promise<void> {
     await redis.del(`session:${clerkId}`);
   }
   ```
 - **validation**:
-  - Testar login com usuário novo
-  - Verificar que cache é invalidado após criação
-  - Confirmar que segunda request tem mentorado
-- **rollback**: Reverter para versão anterior do context.ts
+  - Test login with a new user
+  - Verify that cache is invalidated after creation
+  - Confirm that the second request has the mentee
+- **rollback**: Revert to previous version of context.ts
 - **acceptance_criteria**:
-  - [ ] Após criação de mentorado, cache é invalidado ou atualizado
-  - [ ] Próxima requisição retorna mentorado correto
-  - [ ] Não há race condition em testes de carga
+  - [ ] After mentee creation, cache is invalidated or updated
+  - [ ] Next request returns the correct mentee
+  - [ ] No race conditions in load tests
 
-#### AT-002: Adicionar verificação de mentorado em cache hit
+#### AT-002: Add mentee verification on cache hit
 - **id**: AT-002
-- **title**: Verificar mentorado mesmo quando cache hit
+- **title**: Verify mentee even on cache hit
 - **phase**: 1
 - **priority**: high
 - **dependencies**: [AT-001]
 - **parallel_safe**: false
-- **files_to_modify**: 
+- **files_to_modify**:
   - `server/_core/context.ts`
-- **validation**: 
-  - Simular cache com user sem mentorado
-  - Verificar que sistema detecta e cria mentorado
-- **rollback**: Remover verificação adicional
+- **validation**:
+  - Simulate cache with user without mentee
+  - Verify that the system detects and creates the mentee
+- **rollback**: Remove additional verification
 - **acceptance_criteria**:
-  - [ ] Cache hit com user sem mentorado dispara criação
-  - [ ] Não há degradação de performance >100ms
-  - [ ] Logs indicam "cache hit but mentorado missing"
+  - [ ] Cache hit with user without mentee triggers creation
+  - [ ] No performance degradation >100ms
+  - [ ] Logs indicate "cache hit but mentorado missing"
 
 ### Phase 2: API & Frontend (Explicit Control)
 
-#### AT-003: Criar procedure `auth.ensureMentorado`
+#### AT-003: Create `auth.ensureMentorado` procedure
 - **id**: AT-003
-- **title**: Criar endpoint dedicado para verificação/criação de mentorado
+- **title**: Create dedicated endpoint for mentee verification/creation
 - **phase**: 2
 - **priority**: critical
 - **dependencies**: [AT-001, AT-002]
@@ -295,22 +295,22 @@
   - `server/routers/auth.ts`
 - **files_to_create**: []
 - **implementation_notes**: |
-  Usar padrão upsert idempotente com `onConflictDoNothing`:
-  
+  Use idempotent upsert pattern with `onConflictDoNothing`:
+
   ```typescript
   ensureMentorado: protectedProcedure.mutation(async ({ ctx }) => {
     if (ctx.mentorado) {
       return { success: true, mentorado: ctx.mentorado, created: false };
     }
-    
+
     const user = ctx.user!;
     const db = getDb();
-    
-    // Tentar inserir, ignorar se já existe (race condition safe)
+
+    // Try to insert, ignore if already exists (race condition safe)
     await db.insert(mentorados)
       .values({
         userId: user.id,
-        nomeCompleto: user.name || "Novo Usuário",
+        nomeCompleto: user.name || "New User",
         email: user.email,
         fotoUrl: user.imageUrl,
         turma: "neon",
@@ -322,34 +322,34 @@
         metaStories: 60,
       })
       .onConflictDoNothing({ target: mentorados.userId });
-    
-    // Buscar o mentorado (existente ou recém-criado)
+
+    // Fetch the mentee (existing or newly created)
     const mentorado = await db.query.mentorados.findFirst({
       where: eq(mentorados.userId, user.id),
     });
-    
-    // Invalidar cache para próximas requisições
+
+    // Invalidate cache for subsequent requests
     await invalidateCachedSession(user.clerkId);
-    
+
     return { success: true, mentorado, created: true };
   }),
   ```
-  
-  **Nota**: Requer constraint UNIQUE em `mentorados.userId` (AT-006).
-- **validation**:
-  - Testar com usuário sem mentorado → deve criar
-  - Testar com usuário com mentorado → deve retornar existente
-  - Testar idempotência (múltiplas chamadas simultâneas)
-- **rollback**: Remover procedure
-- **acceptance_criteria**:
-  - [ ] Endpoint cria mentorado se não existir
-  - [ ] Retorna mentorado existente se já houver
-  - [ ] É idempotente (100 chamadas simultâneas = 1 mentorado)
-  - [ ] Usa `onConflictDoNothing` para race condition safety
 
-#### AT-004: Atualizar `AuthSync` para usar `ensureMentorado`
+  **Note**: Requires UNIQUE constraint on `mentorados.userId` (AT-006).
+- **validation**:
+  - Test with user without mentee -> should create
+  - Test with user with mentee -> should return existing
+  - Test idempotency (multiple simultaneous calls)
+- **rollback**: Remove procedure
+- **acceptance_criteria**:
+  - [ ] Endpoint creates mentee if it does not exist
+  - [ ] Returns existing mentee if one already exists
+  - [ ] Is idempotent (100 simultaneous calls = 1 mentee)
+  - [ ] Uses `onConflictDoNothing` for race condition safety
+
+#### AT-004: Update `AuthSync` to use `ensureMentorado`
 - **id**: AT-004
-- **title**: Modificar componente AuthSync para usar novo endpoint com retry
+- **title**: Modify AuthSync component to use new endpoint with retry
 - **phase**: 2
 - **priority**: high
 - **dependencies**: [AT-003]
@@ -357,80 +357,80 @@
 - **files_to_modify**:
   - `client/src/components/auth/AuthSync.tsx`
 - **implementation_notes**: |
-  Usar TanStack Query's built-in retry com exponential backoff:
-  
+  Use TanStack Query's built-in retry with exponential backoff:
+
   ```typescript
   export function AuthSync() {
     const { isAuthenticated } = useAuth();
     const hasSynced = useRef(false);
     const utils = trpc.useUtils();
-    
+
     const { mutate: ensureMentorado, isPending } = trpc.auth.ensureMentorado.useMutation({
       retry: 3,
       retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 10000), // 1s, 2s, 4s
       onSuccess: (data) => {
         if (data.created) {
-          toast.success("Perfil criado com sucesso!");
+          toast.success("Profile created successfully!");
         }
-        // Invalidar queries para forçar refetch
+        // Invalidate queries to force refetch
         utils.mentorados.me.invalidate();
         utils.auth.me.invalidate();
       },
       onError: (error) => {
-        toast.error("Erro ao preparar seu perfil. Tente recarregar a página.");
+        toast.error("Error preparing your profile. Try reloading the page.");
         console.error("ensureMentorado failed:", error);
       },
     });
-    
+
     useEffect(() => {
       if (isAuthenticated && !hasSynced.current) {
         hasSynced.current = true;
         ensureMentorado();
       }
     }, [isAuthenticated, ensureMentorado]);
-    
-    // Opcional: Mostrar loading indicator
+
+    // Optional: Show loading indicator
     if (isPending) {
-      return <LoadingToast message="Preparando seu perfil..." />;
+      return <LoadingToast message="Preparing your profile..." />;
     }
-    
+
     return null;
   }
   ```
 - **validation**:
-  - Testar login com usuário novo
-  - Verificar retry em caso de falha simulada
-  - Confirmar que toast aparece apenas quando apropriado
-- **rollback**: Reverter para `syncUser`
+  - Test login with a new user
+  - Verify retry on simulated failure
+  - Confirm that toast appears only when appropriate
+- **rollback**: Revert to `syncUser`
 - **acceptance_criteria**:
-  - [ ] Usa `ensureMentorado` em vez de `syncUser`
-  - [ ] Implementa retry com exponential backoff (3 tentativas: 1s, 2s, 4s)
-  - [ ] Invalida queries do TanStack em sucesso
-  - [ ] Mostra feedback visual durante criação
+  - [ ] Uses `ensureMentorado` instead of `syncUser`
+  - [ ] Implements retry with exponential backoff (3 attempts: 1s, 2s, 4s)
+  - [ ] Invalidates TanStack queries on success
+  - [ ] Shows visual feedback during creation
 
-#### AT-005: Adicionar query invalidation após criação
+#### AT-005: Add query invalidation after creation
 - **id**: AT-005
-- **title**: Invalidar queries de mentorado após criação bem-sucedida
+- **title**: Invalidate mentee queries after successful creation
 - **phase**: 2
 - **priority**: medium
 - **dependencies**: [AT-004]
 - **parallel_safe**: true
-- **files_to_modify**: 
+- **files_to_modify**:
   - `client/src/components/auth/AuthSync.tsx`
-- **validation**: 
-  - Verificar que dashboard carrega dados após criação
-  - Confirmar que não há loading indefinido
-- **rollback**: Remover invalidation
+- **validation**:
+  - Verify that dashboard loads data after creation
+  - Confirm there is no indefinite loading
+- **rollback**: Remove invalidation
 - **acceptance_criteria**:
-  - [ ] Query `mentorados.me` é invalidada após criação
-  - [ ] Query `auth.me` é invalidada após criação
-  - [ ] Dashboard recarrega automaticamente
+  - [ ] Query `mentorados.me` is invalidated after creation
+  - [ ] Query `auth.me` is invalidated after creation
+  - [ ] Dashboard reloads automatically
 
 ### Phase 3: Data Integrity & Validation
 
-#### AT-006: Criar índice único em mentorados.userId
+#### AT-006: Create unique index on mentorados.userId
 - **id**: AT-006
-- **title**: Adicionar constraint único para prevenir duplicados
+- **title**: Add unique constraint to prevent duplicates
 - **phase**: 3
 - **priority**: high
 - **dependencies**: [AT-003]
@@ -438,8 +438,8 @@
 - **files_to_modify**:
   - `drizzle/schema.ts`
 - **implementation_notes**: |
-  Modificar schema em `drizzle/schema.ts`:
-  
+  Modify schema in `drizzle/schema.ts`:
+
   ```typescript
   export const mentorados = pgTable(
     "mentorados",
@@ -448,158 +448,158 @@
       userId: integer("user_id")
         .references(() => users.id, { onDelete: "set null" })
         .unique(), // ADD THIS
-      // ... resto dos campos
+      // ... rest of fields
     },
     (table) => [
       index("mentorados_user_id_idx").on(table.userId),
       uniqueIndex("mentorados_user_id_unique_idx").on(table.userId), // EXPLICIT INDEX
-      // ... outros índices
+      // ... other indexes
     ]
   );
   ```
-  
-  **Antes de aplicar em produção:**
+
+  **Before applying in production:**
   ```sql
-  -- Verificar duplicados existentes
+  -- Check for existing duplicates
   SELECT user_id, COUNT(*)
   FROM mentorados
   WHERE user_id IS NOT NULL
   GROUP BY user_id
   HAVING COUNT(*) > 1;
   ```
-  
-  Gerar migração:
+
+  Generate migration:
   ```bash
   bun run db:generate
   bun run db:push
   ```
 - **validation**:
-  - Verificar que não há duplicados existentes (query acima)
-  - Gerar migração com `bun run db:generate`
-  - Aplicar em staging e testar criação de mentorado
+  - Verify there are no existing duplicates (query above)
+  - Generate migration with `bun run db:generate`
+  - Apply in staging and test mentee creation
 - **rollback**:
   ```bash
   bun run db:migrate:down
   ```
 - **acceptance_criteria**:
-  - [ ] Constraint UNIQUE em `mentorados.userId`
-  - [ ] Migração gerada e testada em staging
-  - [ ] Não há duplicados na base de dados
-  - [ ] Testes de carga passam (criação simultânea)
+  - [ ] UNIQUE constraint on `mentorados.userId`
+  - [ ] Migration generated and tested in staging
+  - [ ] No duplicates in the database
+  - [ ] Load tests pass (simultaneous creation)
 
-#### AT-007: Adicionar logs estruturados para monitoramento
+#### AT-007: Add structured logs for monitoring
 - **id**: AT-007
-- **title**: Implementar logging detalhado para criação de mentorado
+- **title**: Implement detailed logging for mentee creation
 - **phase**: 3
 - **priority**: medium
 - **dependencies**: []
 - **parallel_safe**: true
-- **files_to_modify**: 
+- **files_to_modify**:
   - `server/_core/context.ts`
   - `server/routers/auth.ts`
-- **validation**: 
-  - Verificar logs em desenvolvimento
-  - Confirmar estrutura JSON dos logs
-- **rollback**: Remover logs adicionais
+- **validation**:
+  - Verify logs in development
+  - Confirm JSON structure of logs
+- **rollback**: Remove additional logs
 - **acceptance_criteria**:
-  - [ ] Log de sucesso com userId e mentoradoId
-  - [ ] Log de falha com erro e contexto
-  - [ ] Log de cache hit/miss com mentorado presente/ausente
-  - [ ] Métricas para tempo de criação
+  - [ ] Success log with userId and mentoradoId
+  - [ ] Failure log with error and context
+  - [ ] Cache hit/miss log with mentee present/absent
+  - [ ] Metrics for creation time
 
 ### Phase 4: Error Handling & UX
 
-#### AT-008: Criar estado de erro no dashboard para mentorado não encontrado
+#### AT-008: Create error state in dashboard for mentee not found
 - **id**: AT-008
-- **title**: Adicionar tela de erro específica quando mentorado não existe
+- **title**: Add specific error screen when mentee does not exist
 - **phase**: 4
 - **priority**: medium
 - **dependencies**: [AT-004]
 - **parallel_safe**: true
-- **files_to_modify**: 
+- **files_to_modify**:
   - `client/src/pages/MyDashboard.tsx`
-- **validation**: 
-  - Testar cenário de erro
-  - Verificar botão de retry
-- **rollback**: Reverter para comportamento anterior
+- **validation**:
+  - Test error scenario
+  - Verify retry button
+- **rollback**: Revert to previous behavior
 - **acceptance_criteria**:
-  - [ ] Tela amigável quando mentorado não encontrado
-  - [ ] Botão "Tentar novamente"
-  - [ ] Link para contato do suporte
-  - [ ] Não mostra stack trace ou erro técnico
+  - [ ] Friendly screen when mentee not found
+  - [ ] "Try again" button
+  - [ ] Link to support contact
+  - [ ] Does not show stack trace or technical error
 
-#### AT-009: Adicionar toast de progresso durante criação
+#### AT-009: Add progress toast during creation
 - **id**: AT-009
-- **title**: Notificar usuário durante processo de criação do perfil
+- **title**: Notify user during profile creation process
 - **phase**: 4
 - **priority**: low
 - **dependencies**: [AT-004]
 - **parallel_safe**: true
-- **files_to_modify**: 
+- **files_to_modify**:
   - `client/src/components/auth/AuthSync.tsx`
-- **validation**: 
-  - Testar fluxo completo
-  - Verificar timing dos toasts
-- **rollback**: Remover toasts
+- **validation**:
+  - Test complete flow
+  - Verify toast timing
+- **rollback**: Remove toasts
 - **acceptance_criteria**:
-  - [ ] Toast "Preparando seu perfil..." durante criação
-  - [ ] Toast "Perfil criado!" em sucesso
-  - [ ] Toast "Erro, tentando novamente..." em retry
+  - [ ] Toast "Preparing your profile..." during creation
+  - [ ] Toast "Profile created!" on success
+  - [ ] Toast "Error, trying again..." on retry
 
 ---
 
 ## Validation Gates
 
 ### Automated
-- **VT-001**: `bun run build` → Exit 0
-- **VT-002**: `bun run check` → No errors
-- **VT-003**: `bun test` → All pass
-- **VT-004**: Teste de carga com 10 usuários simultâneos → Sem race conditions
-- **VT-005**: Teste de integração: fluxo completo de login → Mentorado criado
+- **VT-001**: `bun run build` -> Exit 0
+- **VT-002**: `bun run check` -> No errors
+- **VT-003**: `bun test` -> All pass
+- **VT-004**: Load test with 10 simultaneous users -> No race conditions
+- **VT-005**: Integration test: complete login flow -> Mentee created
 
 ### Manual Review
 - **reviewer**: @code-reviewer
-- **focus**: Race conditions e transações no context.ts
-- **required_if**: Alterações em AT-001 ou AT-006
+- **focus**: Race conditions and transactions in context.ts
+- **required_if**: Changes in AT-001 or AT-006
 
 ---
 
 ## Output
 
 ### Format
-- **DELIVERABLE**: Código modificado + migração de banco + testes
-- **DOCUMENTATION**: Este plano + comentários no código
+- **DELIVERABLE**: Modified code + database migration + tests
+- **DOCUMENTATION**: This plan + code comments
 
 ### Files Created
-- Nenhum arquivo novo necessário (modificações apenas)
+- No new files needed (modifications only)
 
 ### Files Modified
 | path | changes |
 |------|---------|
 | `server/_core/context.ts` | Race condition fix, logging |
-| `server/_core/sessionCache.ts` | Função de invalidação |
-| `server/routers/auth.ts` | Nova procedure `ensureMentorado` |
+| `server/_core/sessionCache.ts` | Invalidation function |
+| `server/routers/auth.ts` | New `ensureMentorado` procedure |
 | `client/src/components/auth/AuthSync.tsx` | Retry logic, invalidation |
-| `drizzle/schema.ts` | Constraint único em userId |
+| `drizzle/schema.ts` | Unique constraint on userId |
 | `client/src/pages/MyDashboard.tsx` | Error state |
 
 ### Success Definition
-1. Novo usuário faz login → mentorado criado em < 2 segundos
-2. Dashboard carrega sem loading infinito
-3. Race conditions não ocorrem em testes de carga
-4. Falhas são logadas e tratadas graciosamente
-5. Usuário recebe feedback visual durante processo
+1. New user logs in -> mentee created in < 2 seconds
+2. Dashboard loads without infinite loading
+3. Race conditions do not occur in load tests
+4. Failures are logged and handled gracefully
+5. User receives visual feedback during the process
 
 ### Failure Handling
-**If**: Mentorado não é criado após implementação
-**Then**: 
-1. Verificar logs em `server/_core/context.ts`
-2. Checar constraint de banco (AT-006)
-3. Validar cache invalidation (AT-001)
+**If**: Mentee is not created after implementation
+**Then**:
+1. Check logs in `server/_core/context.ts`
+2. Check database constraint (AT-006)
+3. Validate cache invalidation (AT-001)
 **Rollback**:
-1. Reverter para `syncUser` simples
-2. Remover constraint de banco se causando erro
-3. Reverter `AuthSync.tsx` para versão anterior
+1. Revert to simple `syncUser`
+2. Remove database constraint if causing error
+3. Revert `AuthSync.tsx` to previous version
 
 ---
 
@@ -607,19 +607,19 @@
 
 ### Critical Path
 ```
-AT-001 (cache fix) → AT-003 (ensureMentorado) → AT-004 (AuthSync update) → AT-006 (DB constraint)
+AT-001 (cache fix) -> AT-003 (ensureMentorado) -> AT-004 (AuthSync update) -> AT-006 (DB constraint)
 ```
 
 ### Testing Strategy
 1. **Unit tests**: `auth.ensureMentorado` procedure
-2. **Integration tests**: Fluxo completo login → dashboard
-3. **E2E tests**: Simular usuário novo em navegador
-4. **Load tests**: 50 logins simultâneos
+2. **Integration tests**: Complete login -> dashboard flow
+3. **E2E tests**: Simulate new user in browser
+4. **Load tests**: 50 simultaneous logins
 
 ### Monitoring
 - Log entries: `mentorado_created`, `mentorado_creation_failed`, `cache_hit_no_mentorado`
-- Métricas: Tempo médio de criação, taxa de sucesso, cache hit ratio
-- Alertas: Taxa de falha > 1%, tempo médio > 5s
+- Metrics: Average creation time, success rate, cache hit ratio
+- Alerts: Failure rate > 1%, average time > 5s
 
 ---
 
@@ -627,27 +627,27 @@ AT-001 (cache fix) → AT-003 (ensureMentorado) → AT-004 (AuthSync update) →
 
 ### Complete Rollback
 ```bash
-# 1. Reverter código
+# 1. Revert code
 git revert HEAD~N..HEAD
 
-# 2. Reverter migração
+# 2. Revert migration
 bun run db:migrate:down
 
-# 3. Reiniciar serviço
+# 3. Restart service
 bun dev
 ```
 
 ### Partial Rollback (feature flag)
-Se implementado com feature flag:
+If implemented with feature flag:
 ```typescript
 // server/_core/context.ts
 const ENABLE_AUTO_CREATE = process.env.ENABLE_AUTO_CREATE !== 'false';
 ```
 
-Desabilitar via env var sem deploy.
+Disable via env var without deploy.
 
 ---
 
-*Plan created following R.P.I.V workflow (Research → Plan → Implement → Validate)*
+*Plan created following R.P.I.V workflow (Research -> Plan -> Implement -> Validate)*
 *Research completed on: 2026-02-03*
 *Complexity: L6 - Medium-High*

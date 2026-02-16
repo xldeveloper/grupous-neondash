@@ -2,7 +2,7 @@
 description: Execute approved plan from /research via @apex-dev with parallel background task orchestration
 ---
 
-# /implement | /implementar
+# /implement
 
 ## Ultra-Think Protocol
 
@@ -25,7 +25,7 @@ Execute approved implementation plan from `implementation_plan.md` and `task.md`
 
 ## Trigger
 
-- User approves research plan: "aprovar plano", "approve", "proceed"
+- User approves research plan: "approve plan", "approve", "proceed"
 - Direct command: `/implement`
 
 ---
@@ -122,7 +122,7 @@ task_execution:
 
 ---
 
-## Referências
+## References
 
-- Princípios: `code-principles.md`
-- Pesquisa: `research.md`
+- Principles: `code-principles.md`
+- Research: `research.md`

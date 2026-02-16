@@ -1,172 +1,172 @@
-# PLAN-mentorados-evolucao-dezembro: Importar Dados de Dezembro 2025 e Melhorar Página de Evolução
+# PLAN-mentorados-evolucao-dezembro: Import December 2025 Data and Improve Evolution Page
 
-> **Goal:** Importar os dados de dezembro 2025 do arquivo `seed-dezembro.mjs` para o banco Neon e melhorar a página de evolução para exibir comparação mês-a-mês.
+> **Goal:** Import the December 2025 data from the `seed-dezembro.mjs` file into the Neon database and improve the evolution page to display month-over-month comparison.
 
 ## 0. Research Findings
 
 | # | Finding | Confidence | Source | Impact |
 |---|---------|------------|--------|--------|
-| 1 | Arquivo `seed-dezembro.mjs` contém dados de 14 mentorados (5 Estrutura + 9 Escala) | 5/5 | Codebase | Alto - dados já existem |
-| 2 | Script usa MySQL driver incorretamente (`drizzle-orm/mysql2`) | 5/5 | Codebase | Alto - precisa correção |
-| 3 | Banco atual tem 8 mentorados, nomes não correspondem ao seed | 5/5 | Neon DB | Alto - precisa mapeamento |
-| 4 | Apenas Mauricio Magalhães tem métricas (jan/fev 2026) | 5/5 | Neon DB | Médio - banco quase vazio |
-| 5 | Página `EvolucaoView.tsx` já funciona com gráfico e tabela | 5/5 | Codebase | Baixo - já implementado |
-| 6 | `SubmitMetricsForm.tsx` permite lançar métricas por mês/ano | 5/5 | Codebase | Baixo - já implementado |
-| 7 | Turma enum só tem valor "neon" (não tem "neon_estrutura"/"neon_escala") | 5/5 | Schema | Médio - dados precisam adaptar |
+| 1 | File `seed-dezembro.mjs` contains data for 14 mentees (5 Estrutura + 9 Escala) | 5/5 | Codebase | High - data already exists |
+| 2 | Script incorrectly uses MySQL driver (`drizzle-orm/mysql2`) | 5/5 | Codebase | High - needs correction |
+| 3 | Current database has 8 mentees, names do not match the seed | 5/5 | Neon DB | High - needs mapping |
+| 4 | Only Mauricio Magalhaes has metrics (Jan/Feb 2026) | 5/5 | Neon DB | Medium - database almost empty |
+| 5 | Page `EvolucaoView.tsx` already works with chart and table | 5/5 | Codebase | Low - already implemented |
+| 6 | `SubmitMetricsForm.tsx` allows submitting metrics by month/year | 5/5 | Codebase | Low - already implemented |
+| 7 | Cohort enum only has value "neon" (does not have "neon_estrutura"/"neon_escala") | 5/5 | Schema | Medium - data needs adaptation |
 
 ### Knowledge Gaps & Assumptions
 
-- **Gap:** Não está claro se os 8 mentorados atuais correspondem aos 14 do seed ou se são diferentes
-- **Assumption:** Os mentorados do seed precisam ser criados como novos registros
-- **Assumption:** O usuário quer que os mentorados possam preencher janeiro 2026 e ver comparação com dezembro 2025
+- **Gap:** It is unclear whether the 8 current mentees correspond to the 14 in the seed or are different
+- **Assumption:** The seed mentees need to be created as new records
+- **Assumption:** The user wants mentees to be able to fill in January 2026 and see the comparison with December 2025
 
 ---
 
 ## 1. User Review Required
 
 > [!IMPORTANT]
-> **Divergência de Mentorados**
-> 
-> O banco atual tem 8 mentorados:
-> - Ana Mara Santos, Bruno Paixão, Elica Pereira, Enfa Tamara Dilma
-> - Gabriela Santiago, Gabriela Alvares, Iza Rafaela, Mauricio Magalhães
+> **Mentee Discrepancy**
 >
-> O arquivo `seed-dezembro.mjs` tem 14 mentorados com **nomes diferentes**:
-> - **Estrutura:** Ana Scaravate, Tamara Martins, Élica Pires, Ana Cláudia, Iza Nunes
-> - **Escala:** Lana Máximo, Thaís Olímpia, Kleber Oliveira, Jéssica Borges, Carmen Lúcia, Alina Souza, Dra. Milena, Dra. Bruna, Dra. Jéssica
+> The current database has 8 mentees:
+> - Ana Mara Santos, Bruno Paixao, Elica Pereira, Enfa Tamara Dilma
+> - Gabriela Santiago, Gabriela Alvares, Iza Rafaela, Mauricio Magalhaes
 >
-> **Opções:**
-> 1. **Mapear nomes similares** (ex: "Elica Pereira" → "Élica Pires")
-> 2. **Criar novos mentorados** para os 14 do seed
-> 3. **Inserir dados apenas para os mentorados existentes** que tenham correspondência
+> The `seed-dezembro.mjs` file has 14 mentees with **different names**:
+> - **Estrutura:** Ana Scaravate, Tamara Martins, Elica Pires, Ana Claudia, Iza Nunes
+> - **Escala:** Lana Maximo, Thais Olimpia, Kleber Oliveira, Jessica Borges, Carmen Lucia, Alina Souza, Dra. Milena, Dra. Bruna, Dra. Jessica
+>
+> **Options:**
+> 1. **Map similar names** (e.g.: "Elica Pereira" -> "Elica Pires")
+> 2. **Create new mentees** for the 14 in the seed
+> 3. **Insert data only for existing mentees** that have a match
 
 > [!WARNING]
-> O script `seed-dezembro.mjs` usa **MySQL driver** mas o projeto usa **PostgreSQL/Neon**. Precisa ser reescrito completamente.
+> The `seed-dezembro.mjs` script uses **MySQL driver** but the project uses **PostgreSQL/Neon**. It needs to be completely rewritten.
 
 ---
 
 ## 2. Proposed Changes
 
-### Fase 1: Corrigir Script de Seed
+### Phase 1: Fix Seed Script
 
 #### [MODIFY] [seed-dezembro.mjs](file:///home/mauricio/neondash/server/seed-dezembro.mjs)
-- **Action:** Reescrever script para usar PostgreSQL/Neon
-- **Details:** 
-  - Trocar `drizzle-orm/mysql2` para `@neondatabase/serverless`
-  - Usar `upsertMetricaMensal` existente
-  - Mapear mentorados por email ou criar SQL de inserção direto
+- **Action:** Rewrite script to use PostgreSQL/Neon
+- **Details:**
+  - Replace `drizzle-orm/mysql2` with `@neondatabase/serverless`
+  - Use existing `upsertMetricaMensal`
+  - Map mentees by email or create direct SQL insertion
 
 ---
 
 #### [NEW] [seed-dezembro-neon.ts](file:///home/mauricio/neondash/server/seed-dezembro-neon.ts)
-- **Action:** Criar novo script de seed compatível com Neon
+- **Action:** Create new seed script compatible with Neon
 - **Details:**
-  - TypeScript com tipagem correta
-  - Usar pool de conexão Neon
-  - Inserir métricas de dezembro 2025 para mentorados existentes ou criar novos
+  - TypeScript with proper typing
+  - Use Neon connection pool
+  - Insert December 2025 metrics for existing mentees or create new ones
 
 ---
 
-### Fase 2: Melhorar Página de Evolução
+### Phase 2: Improve Evolution Page
 
 #### [MODIFY] [EvolucaoView.tsx](file:///home/mauricio/neondash/client/src/components/dashboard/EvolucaoView.tsx)
-- **Action:** Adicionar comparação mês-a-mês destacada
+- **Action:** Add highlighted month-over-month comparison
 - **Details:**
-  - Card com variação percentual vs mês anterior
-  - Destaque visual (verde/vermelho) para crescimento/queda
-  - Pré-selecionar janeiro 2026 no formulário de métricas
+  - Card with percentage variation vs previous month
+  - Visual highlight (green/red) for growth/decline
+  - Pre-select January 2026 in the metrics form
 
 ---
 
 #### [MODIFY] [EvolutionChart.tsx](file:///home/mauricio/neondash/client/src/components/dashboard/EvolutionChart.tsx)
-- **Action:** Melhorar visualização com indicadores de variação
+- **Action:** Improve visualization with variation indicators
 - **Details:**
-  - Adicionar labels de variação percentual nos pontos
-  - Destacar mês atual vs anterior
+  - Add percentage variation labels on data points
+  - Highlight current month vs previous
 
 ---
 
 ## 3. Atomic Implementation Tasks
 
 > [!CAUTION]
-> Cada tarefa tem subtasks. Não executar tarefas de fase 2 antes de concluir fase 1.
+> Each task has subtasks. Do not execute phase 2 tasks before completing phase 1.
 
-### AT-001: Criar Script de Seed para Neon ⚡
-**Goal:** Criar script TypeScript que insere dados de dezembro 2025 no banco Neon
+### AT-001: Create Seed Script for Neon
+**Goal:** Create TypeScript script that inserts December 2025 data into the Neon database
 **Dependencies:** None
 
 #### Subtasks:
-- [ ] ST-001.1: Criar arquivo `server/seed-dezembro-neon.ts`
+- [ ] ST-001.1: Create file `server/seed-dezembro-neon.ts`
   - **File:** `server/seed-dezembro-neon.ts`
-  - **Validation:** `bun run check` passa sem erros
-- [ ] ST-001.2: Implementar conexão com Neon usando `@neondatabase/serverless`
+  - **Validation:** `bun run check` passes without errors
+- [ ] ST-001.2: Implement connection to Neon using `@neondatabase/serverless`
   - **File:** `server/seed-dezembro-neon.ts`
-  - **Validation:** Script conecta ao banco
-- [ ] ST-001.3: Mapear dados do seed para mentorados existentes ou criar novos
+  - **Validation:** Script connects to the database
+- [ ] ST-001.3: Map seed data to existing mentees or create new ones
   - **File:** `server/seed-dezembro-neon.ts`
-  - **Validation:** Query confirma mentorados no banco
-- [ ] ST-001.4: Inserir métricas de dezembro 2025
+  - **Validation:** Query confirms mentees in the database
+- [ ] ST-001.4: Insert December 2025 metrics
   - **File:** `server/seed-dezembro-neon.ts`
-  - **Validation:** `SELECT * FROM metricas_mensais WHERE ano = 2025 AND mes = 12` retorna dados
+  - **Validation:** `SELECT * FROM metricas_mensais WHERE ano = 2025 AND mes = 12` returns data
 
 **Rollback:** `DELETE FROM metricas_mensais WHERE ano = 2025 AND mes = 12;`
 
 ---
 
-### AT-002: Executar Seed e Validar Dados
-**Goal:** Rodar o script e confirmar que os dados foram inseridos corretamente
+### AT-002: Execute Seed and Validate Data
+**Goal:** Run the script and confirm data was inserted correctly
 **Dependencies:** AT-001
 
 #### Subtasks:
-- [ ] ST-002.1: Executar script de seed
+- [ ] ST-002.1: Execute seed script
   - **File:** Terminal
-  - **Validation:** Output mostra "Migração concluída"
-- [ ] ST-002.2: Validar dados no banco via SQL
+  - **Validation:** Output shows "Migration completed"
+- [ ] ST-002.2: Validate data in the database via SQL
   - **File:** Neon Console
-  - **Validation:** Query retorna 14+ registros para dezembro 2025
-- [ ] ST-002.3: Validar na UI que dados aparecem
+  - **Validation:** Query returns 14+ records for December 2025
+- [ ] ST-002.3: Validate in the UI that data appears
   - **File:** Browser
-  - **Validation:** Página de Evolução mostra dados de dezembro
+  - **Validation:** Evolution page shows December data
 
 **Rollback:** `DELETE FROM metricas_mensais WHERE ano = 2025 AND mes = 12;`
 
 ---
 
-### AT-003: Melhorar EvolucaoView com Comparação Mês-a-Mês ⚡
-**Goal:** Adicionar visualização de variação entre meses na página de evolução
+### AT-003: Improve EvolucaoView with Month-over-Month Comparison
+**Goal:** Add variation visualization between months on the evolution page
 **Dependencies:** AT-002
 
 #### Subtasks:
-- [ ] ST-003.1: Criar componente `MonthComparison` para exibir variação
+- [ ] ST-003.1: Create `MonthComparison` component to display variation
   - **File:** `client/src/components/dashboard/MonthComparison.tsx`
-  - **Validation:** Componente renderiza sem erros
-- [ ] ST-003.2: Calcular variação percentual entre meses consecutivos
+  - **Validation:** Component renders without errors
+- [ ] ST-003.2: Calculate percentage variation between consecutive months
   - **File:** `client/src/components/dashboard/EvolucaoView.tsx`
-  - **Validation:** Cálculo correto de variação
-- [ ] ST-003.3: Adicionar indicadores visuais (verde/vermelho)
+  - **Validation:** Correct variation calculation
+- [ ] ST-003.3: Add visual indicators (green/red)
   - **File:** `client/src/components/dashboard/EvolucaoView.tsx`
-  - **Validation:** UI mostra cores corretas
+  - **Validation:** UI shows correct colors
 
-**Rollback:** Git revert do arquivo
+**Rollback:** Git revert the file
 
 ---
 
-### AT-004: Pré-selecionar Janeiro 2026 no Formulário
-**Goal:** Facilitar preenchimento de janeiro 2026 pelos mentorados
-**Dependencies:** None ⚡
+### AT-004: Pre-select January 2026 in the Form
+**Goal:** Facilitate January 2026 entry by mentees
+**Dependencies:** None
 
 #### Subtasks:
-- [ ] ST-004.1: Detectar se mentorado já tem dados de dezembro 2025
+- [ ] ST-004.1: Detect if mentee already has December 2025 data
   - **File:** `client/src/components/dashboard/SubmitMetricsForm.tsx`
-  - **Validation:** Hook retorna booleano correto
-- [ ] ST-004.2: Se sim, pré-selecionar janeiro 2026 automaticamente
+  - **Validation:** Hook returns correct boolean
+- [ ] ST-004.2: If yes, pre-select January 2026 automatically
   - **File:** `client/src/components/dashboard/SubmitMetricsForm.tsx`
-  - **Validation:** Formulário abre com janeiro 2026 selecionado
-- [ ] ST-004.3: Adicionar mensagem informativa sobre comparação
+  - **Validation:** Form opens with January 2026 selected
+- [ ] ST-004.3: Add informational message about comparison
   - **File:** `client/src/components/dashboard/SubmitMetricsForm.tsx`
-  - **Validation:** Mensagem aparece quando há dados anteriores
+  - **Validation:** Message appears when there is previous data
 
-**Rollback:** Git revert do arquivo
+**Rollback:** Git revert the file
 
 ---
 
@@ -178,24 +178,24 @@
 - `bun test` - Unit tests
 
 ### Manual Verification
-1. Executar seed script e verificar logs
-2. Consultar banco Neon para confirmar inserção
-3. Acessar `/meu-dashboard` → Evolução
-4. Verificar se gráfico mostra dezembro 2025
-5. Verificar se tabela mostra dezembro 2025
-6. Preencher dados de janeiro 2026
-7. Verificar comparação mês-a-mês
+1. Execute seed script and verify logs
+2. Query Neon database to confirm insertion
+3. Access `/meu-dashboard` -> Evolution
+4. Verify that chart shows December 2025
+5. Verify that table shows December 2025
+6. Fill in January 2026 data
+7. Verify month-over-month comparison
 
 ---
 
 ## 5. Rollback Plan
 
 ```bash
-# Se precisar reverter dados do banco:
+# If database data needs to be reverted:
 DELETE FROM metricas_mensais WHERE ano = 2025 AND mes = 12;
 DELETE FROM feedbacks WHERE ano = 2025 AND mes = 12;
 
-# Se precisar reverter código:
+# If code needs to be reverted:
 git checkout HEAD -- client/src/components/dashboard/EvolucaoView.tsx
 git checkout HEAD -- client/src/components/dashboard/SubmitMetricsForm.tsx
 ```

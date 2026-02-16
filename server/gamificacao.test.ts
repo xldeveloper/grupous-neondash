@@ -31,17 +31,17 @@ vi.mock("./services/notificationService", () => ({
   },
 }));
 
-describe("Gamificação Service", () => {
+describe("Gamification Service", () => {
   describe("BADGES_CONFIG", () => {
     it("should have all required badge categories (per new spec)", () => {
       const categories = new Set(BADGES_CONFIG.map((b) => b.categoria));
-      // New categories per Core Flows spec: consistencia, faturamento, ranking, operacional, especial
+      // New categories per Core Flows spec: consistencia (consistency), faturamento (revenue), ranking, operacional (operational), especial (special)
       expect(categories.has("consistencia")).toBe(true);
       expect(categories.has("faturamento")).toBe(true);
       expect(categories.has("ranking")).toBe(true);
       expect(categories.has("operacional")).toBe(true);
       expect(categories.has("especial")).toBe(true);
-      // Old "conteudo" category should NOT exist
+      // Old "conteudo" (content) category should NOT exist
       expect(categories.has("conteudo")).toBe(false);
     });
 
@@ -129,7 +129,7 @@ describe("Gamificação Service", () => {
 });
 
 // Integration tests for router procedures (type-level verification)
-describe("Gamificação Router Procedures", () => {
+describe("Gamification Router Procedures", () => {
   describe("getStreak procedure", () => {
     it("should return only currentStreak and longestStreak per contract", () => {
       // Type-level test: verify contract returns only required fields

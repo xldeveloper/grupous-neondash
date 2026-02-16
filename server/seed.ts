@@ -12,11 +12,11 @@ async function seedBadges() {
   }
 
   const defaultBadges = [
-    // Faturamento
+    // Revenue
     {
       codigo: "meta_faturamento",
-      nome: "Meta Batida",
-      descricao: "Atingiu a meta de faturamento do mês",
+      nome: "Goal Achieved",
+      descricao: "Achieved the monthly revenue goal",
       icone: "Trophy",
       cor: "gold",
       categoria: "faturamento" as const,
@@ -30,7 +30,7 @@ async function seedBadges() {
     {
       codigo: "super_faturamento",
       nome: "Super Performance",
-      descricao: "Ultrapassou 150% da meta de faturamento",
+      descricao: "Exceeded 150% of the revenue goal",
       icone: "Rocket",
       cor: "purple",
       categoria: "faturamento" as const,
@@ -41,11 +41,11 @@ async function seedBadges() {
       }),
       pontos: 100,
     },
-    // Conteúdo
+    // Content
     {
       codigo: "criador_conteudo",
-      nome: "Criador de Conteúdo",
-      descricao: "Publicou todos os posts e stories do mês",
+      nome: "Content Creator",
+      descricao: "Published all posts and stories for the month",
       icone: "Camera",
       cor: "blue",
       categoria: "conteudo" as const,
@@ -56,11 +56,11 @@ async function seedBadges() {
       }),
       pontos: 30,
     },
-    // Consistência
+    // Consistency
     {
       codigo: "consistente_3",
-      nome: "Consistência Bronze",
-      descricao: "Bateu a meta 3 meses consecutivos",
+      nome: "Bronze Consistency",
+      descricao: "Achieved the goal 3 consecutive months",
       icone: "Award",
       cor: "bronze",
       categoria: "consistencia" as const,
@@ -69,8 +69,8 @@ async function seedBadges() {
     },
     {
       codigo: "consistente_6",
-      nome: "Consistência Prata",
-      descricao: "Bateu a meta 6 meses consecutivos",
+      nome: "Silver Consistency",
+      descricao: "Achieved the goal 6 consecutive months",
       icone: "Medal",
       cor: "silver",
       categoria: "consistencia" as const,
@@ -79,30 +79,30 @@ async function seedBadges() {
     },
     {
       codigo: "consistente_12",
-      nome: "Consistência Ouro",
-      descricao: "Bateu a meta 12 meses consecutivos",
+      nome: "Gold Consistency",
+      descricao: "Achieved the goal 12 consecutive months",
       icone: "Crown",
       cor: "gold",
       categoria: "consistencia" as const,
       criterio: JSON.stringify({ type: "streak", months: 12 }),
       pontos: 300,
     },
-    // Operacional
+    // Operational
     {
       codigo: "leads_master",
-      nome: "Mestre dos Leads",
-      descricao: "Gerou mais de 100 leads no mês",
+      nome: "Leads Master",
+      descricao: "Generated more than 100 leads in a month",
       icone: "Users",
       cor: "blue",
       categoria: "operacional" as const,
       criterio: JSON.stringify({ type: "leads", operator: ">=", value: 100 }),
       pontos: 40,
     },
-    // Especial
+    // Special
     {
       codigo: "primeiro_lugar",
-      nome: "Campeão do Mês",
-      descricao: "Conquistou o 1º lugar no ranking mensal",
+      nome: "Champion of the Month",
+      descricao: "Won 1st place in the monthly ranking",
       icone: "Star",
       cor: "gold",
       categoria: "especial" as const,

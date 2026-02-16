@@ -221,7 +221,7 @@ export async function sendMetricsReminder(
     .where(eq(mentorados.id, mentoradoId))
     .limit(1);
 
-  const firstName = mentorado?.nomeCompleto.split(" ")[0] ?? "Mentorado";
+  const firstName = mentorado?.nomeCompleto.split(" ")[0] ?? "Mentee";
 
   // Get streak count for templates that use it
   let streakCount = 0;
@@ -256,16 +256,16 @@ export async function sendMetricsReminder(
 
   // Title and message vary by reminder type
   const titleMap: Record<ReminderType, string> = {
-    day_1: "🎯 Novo mês! Hora de registrar suas métricas",
-    day_3: "🔔 Lembrete: Registre suas métricas até dia 5",
-    day_6: "⚠️ Prazo próximo: Registre hoje para manter seu streak",
-    day_11: "🔴 Último dia para manter streak! Registre agora",
-    manual: "🔔 Lembrete: Envie suas métricas!",
+    day_1: "🎯 New month! Time to record your metrics",
+    day_3: "🔔 Reminder: Record your metrics by the 5th",
+    day_6: "⚠️ Deadline approaching: Record today to keep your streak",
+    day_11: "🔴 Last day to keep your streak! Record now",
+    manual: "🔔 Reminder: Submit your metrics!",
   };
 
   const payload: NotificationPayload = {
     title: titleMap[reminderType],
-    message: `Não se esqueça de enviar suas métricas de ${mes}/${ano}. Acesse o dashboard para registrar seu desempenho.`,
+    message: `Don't forget to submit your metrics for ${mes}/${ano}. Access the dashboard to record your performance.`,
     emailSubject: titleMap[reminderType],
     emailBody: emailHtml,
   };
@@ -318,7 +318,7 @@ export async function sendBadgeUnlocked(
     .where(eq(mentorados.id, mentoradoId))
     .limit(1);
 
-  const firstName = mentorado?.nomeCompleto.split(" ")[0] ?? "Mentorado";
+  const firstName = mentorado?.nomeCompleto.split(" ")[0] ?? "Mentee";
 
   const emailHtml = getEmailTemplate("badge_unlocked", {
     firstName,
@@ -329,9 +329,9 @@ export async function sendBadgeUnlocked(
   });
 
   const payload: NotificationPayload = {
-    title: `🏆 Parabéns! Você conquistou: ${badgeNome}`,
+    title: `🏆 Congratulations! You earned: ${badgeNome}`,
     message: badgeDescricao,
-    emailSubject: `🏆 Parabéns! Você conquistou um novo badge: ${badgeNome}`,
+    emailSubject: `🏆 Congratulations! You earned a new badge: ${badgeNome}`,
     emailBody: emailHtml,
   };
 
@@ -358,17 +358,17 @@ export async function sendInstagramReconnectNeeded(
     .where(eq(mentorados.id, mentoradoId))
     .limit(1);
 
-  const firstName = mentorado?.nomeCompleto.split(" ")[0] ?? "Mentorado";
+  const firstName = mentorado?.nomeCompleto.split(" ")[0] ?? "Mentee";
 
   const emailHtml = getEmailTemplate("instagram_reconnect", {
     firstName,
   });
 
   const payload: NotificationPayload = {
-    title: "🔗 Reconecte sua conta do Instagram",
+    title: "🔗 Reconnect your Instagram account",
     message:
-      "Seu token do Instagram expirou. Reconecte sua conta para continuar sincronizando suas métricas automaticamente.",
-    emailSubject: "🔗 Reconecte sua conta do Instagram",
+      "Your Instagram token has expired. Reconnect your account to continue syncing your metrics automatically.",
+    emailSubject: "🔗 Reconnect your Instagram account",
     emailBody: emailHtml,
   };
 

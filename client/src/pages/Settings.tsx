@@ -1,5 +1,5 @@
 /**
- * Settings Page - Configurações
+ * Settings Page
  * Manages WhatsApp Z-API connection and AI agent settings
  */
 
@@ -20,8 +20,8 @@ export function SettingsPage() {
               <Settings2 className="w-6 h-6" />
             </div>
             <div>
-              <h1 className="text-3xl font-bold tracking-tight">Configurações</h1>
-              <p className="text-muted-foreground">Gerencie suas integrações e automações</p>
+              <h1 className="text-3xl font-bold tracking-tight">Settings</h1>
+              <p className="text-muted-foreground">Manage your integrations and automations</p>
             </div>
           </div>
         </div>
@@ -32,10 +32,10 @@ export function SettingsPage() {
         <section className="space-y-4">
           <div className="flex items-center gap-2">
             <MessageCircle className="w-5 h-5 text-green-600" />
-            <h2 className="text-xl font-semibold">Integração WhatsApp</h2>
+            <h2 className="text-xl font-semibold">WhatsApp Integration</h2>
           </div>
           <p className="text-sm text-muted-foreground">
-            Conecte sua conta WhatsApp via Z-API para enviar e receber mensagens diretamente do CRM.
+            Connect your WhatsApp account via Z-API to send and receive messages directly from the CRM.
           </p>
           <WhatsAppConnectionCard />
         </section>
@@ -46,10 +46,10 @@ export function SettingsPage() {
         <section className="space-y-4">
           <div className="flex items-center gap-2">
             <Sparkles className="w-5 h-5 text-teal-600" />
-            <h2 className="text-xl font-semibold">Agente IA (SDR)</h2>
+            <h2 className="text-xl font-semibold">AI Agent (SDR)</h2>
           </div>
           <p className="text-sm text-muted-foreground">
-            Configure respostas automáticas com inteligência artificial para qualificação de leads.
+            Configure automatic AI-powered responses for lead qualification.
           </p>
           <AIAgentSettingsCard />
         </section>

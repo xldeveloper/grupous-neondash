@@ -38,11 +38,11 @@ export function NewMentoradoWelcome({
           </motion.div>
 
           <CardTitle className="text-3xl md:text-4xl font-bold text-foreground">
-            Bem-vindo à Mentoria NEON, {firstName}! 🎉
+            Welcome to NEON Mentorship, {firstName}! 🎉
           </CardTitle>
           <CardDescription className="text-lg text-muted-foreground mt-3 max-w-2xl mx-auto">
-            Estamos muito felizes em ter você conosco. Para começar a acompanhar sua evolução,
-            precisamos de algumas informações iniciais.
+            We are very happy to have you with us. To start tracking your progress,
+            we need some initial information.
           </CardDescription>
         </CardHeader>
 
@@ -63,10 +63,10 @@ export function NewMentoradoWelcome({
                     <ClipboardList className="w-7 h-7 text-slate-900" />
                   </div>
                   <h3 className="font-semibold text-foreground text-lg mb-2">
-                    1. Preencha o Diagnóstico
+                    1. Fill in the Diagnosis
                   </h3>
                   <p className="text-sm text-muted-foreground">
-                    Conte-nos sobre sua especialidade, metas e situação atual.
+                    Tell us about your specialty, goals, and current situation.
                   </p>
                 </CardContent>
               </Card>
@@ -86,10 +86,10 @@ export function NewMentoradoWelcome({
                     <TrendingUp className="w-7 h-7 text-white" />
                   </div>
                   <h3 className="font-semibold text-foreground text-lg mb-2">
-                    2. Registre suas Métricas
+                    2. Record your Metrics
                   </h3>
                   <p className="text-sm text-muted-foreground">
-                    Informe faturamento, leads e procedimentos do mês.
+                    Enter your monthly revenue, leads, and procedures.
                   </p>
                 </CardContent>
               </Card>
@@ -109,10 +109,10 @@ export function NewMentoradoWelcome({
                     <Rocket className="w-7 h-7 text-white" />
                   </div>
                   <h3 className="font-semibold text-foreground text-lg mb-2">
-                    3. Acompanhe sua Evolução
+                    3. Track your Progress
                   </h3>
                   <p className="text-sm text-muted-foreground">
-                    Veja gráficos, conquistas e o roadmap de crescimento.
+                    View charts, achievements, and the growth roadmap.
                   </p>
                 </CardContent>
               </Card>
@@ -132,10 +132,10 @@ export function NewMentoradoWelcome({
               className="bg-gradient-to-r from-[#D4AF37] to-[#AA8C2C] hover:from-[#E5C048] hover:to-[#BB9D3D] text-slate-900 font-bold px-8 py-6 text-lg rounded-xl shadow-xl shadow-[#D4AF37]/20 hover:shadow-[#D4AF37]/40 transition-all hover:scale-105"
             >
               <ClipboardList className="w-5 h-5 mr-2" />
-              Começar pelo Diagnóstico
+              Start with Diagnosis
             </Button>
             <p className="text-sm text-muted-foreground mt-4">
-              Leva menos de 5 minutos para preencher
+              Takes less than 5 minutes to fill out
             </p>
           </motion.div>
         </CardContent>

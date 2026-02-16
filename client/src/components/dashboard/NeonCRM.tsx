@@ -25,7 +25,7 @@ export function NeonCRM({ mentoradoId }: { mentoradoId?: number }) {
       <div className="grid grid-cols-2 gap-4">
         <NeonCard className="p-4 border-primary/20 bg-card hover:border-primary/50 transition-colors">
           <div className="flex flex-col">
-            <span className="text-xs text-muted-foreground font-mono uppercase">Leads Ativos</span>
+            <span className="text-xs text-muted-foreground font-mono uppercase">Active Leads</span>
             <div className="flex items-center gap-2 mt-1">
               <Users className="w-4 h-4 text-primary" />
               <span className="text-2xl font-bold text-foreground">{stats?.totalAtivos || 0}</span>
@@ -50,7 +50,7 @@ export function NeonCRM({ mentoradoId }: { mentoradoId?: number }) {
 
         <NeonCard className="p-4 border-teal-500/20 bg-card hover:border-teal-500/50 transition-colors">
           <div className="flex flex-col">
-            <span className="text-xs text-muted-foreground font-mono uppercase">Conversão</span>
+            <span className="text-xs text-muted-foreground font-mono uppercase">Conversion</span>
             <div className="flex items-center gap-2 mt-1">
               <TrendingUp className="w-4 h-4 text-teal-500" />
               <span className="text-2xl font-bold text-foreground">
@@ -62,7 +62,7 @@ export function NeonCRM({ mentoradoId }: { mentoradoId?: number }) {
 
         <NeonCard className="p-4 border-emerald-500/20 bg-card hover:border-emerald-500/50 transition-colors">
           <div className="flex flex-col">
-            <span className="text-xs text-muted-foreground font-mono uppercase">Tempo Médio</span>
+            <span className="text-xs text-muted-foreground font-mono uppercase">Avg. Time</span>
             <div className="flex items-center gap-2 mt-1">
               <Activity className="w-4 h-4 text-emerald-500" />
               <span className="text-2xl font-bold text-foreground">

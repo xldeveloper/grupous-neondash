@@ -48,37 +48,37 @@ export interface ChatResult {
 // SYSTEM PROMPT
 // ═══════════════════════════════════════════════════════════════════════════
 
-const SYSTEM_PROMPT = `Você é o **Assistente NEON**, um assistente de IA especializado em mentoria de negócios para profissionais de estética.
+const SYSTEM_PROMPT = `You are the **NEON Assistant**, an AI assistant specializing in business mentorship for aesthetics professionals.
 
-## Seu Papel
-Você ajuda mentorados da Mentoria Black da Dra. Camila a acompanhar seu progresso, analisar métricas e tomar decisões estratégicas para crescer seus negócios.
+## Your Role
+You help mentees of Dr. Camila's Black Mentorship track their progress, analyze metrics, and make strategic decisions to grow their businesses.
 
-## Ferramentas Disponíveis
-Você tem acesso às seguintes ferramentas para consultar dados do mentorado:
-- **getMyMetrics**: Ver métricas mensais (faturamento, lucro, leads, procedimentos, posts, stories)
-- **getMyLeads**: Ver leads do CRM com filtros por status
-- **searchLeads**: Buscar leads por nome, email ou telefone
-- **getLatestFeedback**: Ver o feedback mais recente do mentor
-- **getMyTasks**: Ver tarefas pendentes e seus status
-- **getMyGoals**: Ver metas atuais e progresso
-- **getDiagnostico**: Ver diagnóstico inicial de onboarding
-- **getMyAgenda**: Ver próximos eventos do Google Calendar
-- **searchWeb**: Pesquisar na web por informações atualizadas
+## Available Tools
+You have access to the following tools to query mentee data:
+- **getMyMetrics**: View monthly metrics (revenue, profit, leads, procedures, posts, stories)
+- **getMyLeads**: View CRM leads with status filters
+- **searchLeads**: Search leads by name, email, or phone
+- **getLatestFeedback**: View the most recent mentor feedback
+- **getMyTasks**: View pending tasks and their statuses
+- **getMyGoals**: View current goals and progress
+- **getDiagnostico**: View initial onboarding diagnosis
+- **getMyAgenda**: View upcoming Google Calendar events
+- **searchWeb**: Search the web for up-to-date information
 
-## Diretrizes
-1. Sempre responda em **português brasileiro**
-2. Seja objetivo e forneça **insights acionáveis**
-3. Use dados reais quando disponíveis - não invente números
-4. Se não houver dados, informe isso claramente
-5. Sugira próximos passos práticos baseados nos dados
-6. Use emojis moderadamente para tornar a conversa mais amigável
-7. Quando analisar métricas, compare com metas e meses anteriores
+## Guidelines
+1. Always respond in **Brazilian Portuguese**
+2. Be objective and provide **actionable insights**
+3. Use real data when available - do not make up numbers
+4. If there is no data, state that clearly
+5. Suggest practical next steps based on the data
+6. Use emojis sparingly to make the conversation more friendly
+7. When analyzing metrics, compare with goals and previous months
 
-## Formatação
-Use markdown para formatar respostas quando apropriado:
-- Listas para itens
-- **Negrito** para destacar
-- Tabelas para comparações
+## Formatting
+Use markdown to format responses when appropriate:
+- Lists for items
+- **Bold** for emphasis
+- Tables for comparisons
 `;
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -91,9 +91,9 @@ function createTools(ctx: ChatContext) {
   return {
     getMyMetrics: tool({
       description:
-        "Obter métricas mensais do mentorado (faturamento, lucro, leads, procedimentos, posts, stories). Use para analisar performance.",
+        "Get mentee's monthly metrics (revenue, profit, leads, procedures, posts, stories). Use to analyze performance.",
       parameters: z.object({
-        months: z.number().min(1).max(12).default(6).describe("Número de meses para buscar (1-12)"),
+        months: z.number().min(1).max(12).default(6).describe("Number of months to fetch (1-12)"),
       }),
       execute: async ({ months }) => {
         const metrics = await db
@@ -114,12 +114,12 @@ function createTools(ctx: ChatContext) {
           .limit(months);
 
         if (metrics.length === 0) {
-          return { status: "empty", message: "Nenhuma métrica registrada ainda.", data: [] };
+          return { status: "empty", message: "No metrics recorded yet.", data: [] };
         }
 
         return {
           status: "success",
-          message: `Encontradas ${metrics.length} métricas mensais.`,
+          message: `Found ${metrics.length} monthly metrics.`,
           data: metrics,
         };
       },
@@ -127,7 +127,7 @@ function createTools(ctx: ChatContext) {
 
     getMyLeads: tool({
       description:
-        "Obter leads do CRM do mentorado. Pode filtrar por status (novo, primeiro_contato, qualificado, proposta, negociacao, fechado, perdido).",
+        "Get mentee's CRM leads. Can filter by status (novo, primeiro_contato, qualificado, proposta, negociacao, fechado, perdido).",
       parameters: z.object({
         status: z
           .enum([
@@ -140,8 +140,8 @@ function createTools(ctx: ChatContext) {
             "perdido",
           ])
           .optional()
-          .describe("Filtrar por status do lead"),
-        limit: z.number().min(1).max(50).default(20).describe("Limite de resultados"),
+          .describe("Filter by lead status"),
+        limit: z.number().min(1).max(50).default(20).describe("Result limit"),
       }),
       execute: async ({ status, limit }) => {
         const conditions = [eq(leads.mentoradoId, ctx.mentoradoId)];
@@ -166,7 +166,7 @@ function createTools(ctx: ChatContext) {
           .orderBy(desc(leads.createdAt))
           .limit(limit);
 
-        // Get counts by status
+        // Get count by status
         const allLeads = await db
           .select({ status: leads.status })
           .from(leads)
@@ -187,9 +187,9 @@ function createTools(ctx: ChatContext) {
     }),
 
     searchLeads: tool({
-      description: "Buscar leads por nome, email ou telefone.",
+      description: "Search leads by name, email, or phone.",
       parameters: z.object({
-        query: z.string().min(2).describe("Termo de busca (nome, email ou telefone)"),
+        query: z.string().min(2).describe("Search term (name, email, or phone)"),
       }),
       execute: async ({ query }) => {
         const searchTerm = `%${query}%`;
@@ -220,15 +220,15 @@ function createTools(ctx: ChatContext) {
           status: foundLeads.length > 0 ? "success" : "empty",
           message:
             foundLeads.length > 0
-              ? `Encontrados ${foundLeads.length} leads para "${query}".`
-              : `Nenhum lead encontrado para "${query}".`,
+              ? `Found ${foundLeads.length} leads for "${query}".`
+              : `No leads found for "${query}".`,
           data: foundLeads,
         };
       },
     }),
 
     getLatestFeedback: tool({
-      description: "Obter o feedback mais recente do mentor sobre o mentorado.",
+      description: "Get the most recent mentor feedback about the mentee.",
       parameters: z.object({}),
       execute: async () => {
         const latestFeedback = await db
@@ -246,7 +246,7 @@ function createTools(ctx: ChatContext) {
           .limit(1);
 
         if (latestFeedback.length === 0) {
-          return { status: "empty", message: "Nenhum feedback registrado ainda.", data: null };
+          return { status: "empty", message: "No feedback recorded yet.", data: null };
         }
 
         const fb = latestFeedback[0];
@@ -259,9 +259,9 @@ function createTools(ctx: ChatContext) {
     }),
 
     getMyTasks: tool({
-      description: "Obter tarefas do mentorado. Pode filtrar por status (todo, done).",
+      description: "Get mentee's tasks. Can filter by status (todo, done).",
       parameters: z.object({
-        status: z.enum(["todo", "done"]).optional().describe("Filtrar por status da tarefa"),
+        status: z.enum(["todo", "done"]).optional().describe("Filter by task status"),
       }),
       execute: async ({ status }) => {
         const conditions = [eq(tasks.mentoradoId, ctx.mentoradoId)];
@@ -287,7 +287,7 @@ function createTools(ctx: ChatContext) {
 
         return {
           status: "success",
-          message: `Total: ${tasksList.length} tarefas (${todoCount} pendentes, ${doneCount} concluídas).`,
+          message: `Total: ${tasksList.length} tasks (${todoCount} pending, ${doneCount} completed).`,
           summary: { total: tasksList.length, todo: todoCount, done: doneCount },
           data: tasksList,
         };
@@ -296,7 +296,7 @@ function createTools(ctx: ChatContext) {
 
     getMyGoals: tool({
       description:
-        "Obter as metas atuais do mentorado (faturamento, leads, procedimentos, posts, stories).",
+        "Get the mentee's current goals (revenue, leads, procedures, posts, stories).",
       parameters: z.object({}),
       execute: async () => {
         const mentorado = ctx.mentorado;
@@ -370,7 +370,7 @@ function createTools(ctx: ChatContext) {
 
         return {
           status: "success",
-          message: `Metas de ${currentMonth}/${currentYear} para ${mentorado.nomeCompleto}.`,
+          message: `Goals for ${currentMonth}/${currentYear} for ${mentorado.nomeCompleto}.`,
           periodo: { ano: currentYear, mes: currentMonth },
           data: goals,
         };
@@ -379,7 +379,7 @@ function createTools(ctx: ChatContext) {
 
     getDiagnostico: tool({
       description:
-        "Obter o diagnóstico inicial de onboarding do mentorado (momento profissional, resultados, dores, objetivos).",
+        "Get the mentee's initial onboarding diagnosis (professional status, results, pain points, goals).",
       parameters: z.object({}),
       execute: async () => {
         const diag = await db
@@ -402,12 +402,12 @@ function createTools(ctx: ChatContext) {
           .limit(1);
 
         if (diag.length === 0) {
-          return { status: "empty", message: "Diagnóstico não preenchido ainda.", data: null };
+          return { status: "empty", message: "Diagnosis not completed yet.", data: null };
         }
 
         return {
           status: "success",
-          message: "Diagnóstico inicial do mentorado.",
+          message: "Mentee's initial diagnosis.",
           data: diag[0],
         };
       },
@@ -415,14 +415,14 @@ function createTools(ctx: ChatContext) {
 
     getMyAgenda: tool({
       description:
-        "Obter próximos eventos do Google Calendar do usuário. Retorna compromissos, reuniões e lembretes.",
+        "Get user's upcoming Google Calendar events. Returns appointments, meetings, and reminders.",
       parameters: z.object({
         days: z
           .number()
           .min(1)
           .max(30)
           .default(7)
-          .describe("Número de dias à frente para buscar (1-30)"),
+          .describe("Number of days ahead to fetch (1-30)"),
       }),
       execute: async ({ days }) => {
         // Check if user has Google Calendar connected
@@ -435,7 +435,7 @@ function createTools(ctx: ChatContext) {
           return {
             status: "not_connected",
             message:
-              "Google Calendar não conectado. O usuário precisa conectar sua conta Google na página Agenda.",
+              "Google Calendar not connected. The user needs to connect their Google account on the Calendar page.",
             data: null,
           };
         }
@@ -447,7 +447,7 @@ function createTools(ctx: ChatContext) {
             return {
               status: "expired",
               message:
-                "Sessão do Google Calendar expirou. O usuário precisa reconectar na página Agenda.",
+                "Google Calendar session expired. The user needs to reconnect on the Calendar page.",
               data: null,
             };
           }
@@ -468,7 +468,7 @@ function createTools(ctx: ChatContext) {
             return {
               status: "refresh_failed",
               message:
-                "Falha ao renovar sessão do Google Calendar. O usuário precisa reconectar na página Agenda.",
+                "Failed to refresh Google Calendar session. The user needs to reconnect on the Calendar page.",
               data: null,
             };
           }
@@ -485,14 +485,14 @@ function createTools(ctx: ChatContext) {
           if (events.length === 0) {
             return {
               status: "empty",
-              message: `Nenhum evento encontrado nos próximos ${days} dias.`,
+              message: `No events found in the next ${days} days.`,
               data: [],
             };
           }
 
           return {
             status: "success",
-            message: `Encontrados ${events.length} eventos nos próximos ${days} dias.`,
+            message: `Found ${events.length} events in the next ${days} days.`,
             data: events.map((e) => ({
               title: e.title,
               start: e.start,
@@ -504,7 +504,7 @@ function createTools(ctx: ChatContext) {
         } catch {
           return {
             status: "error",
-            message: "Erro ao buscar eventos do Google Calendar.",
+            message: "Error fetching Google Calendar events.",
             data: null,
           };
         }
@@ -513,20 +513,20 @@ function createTools(ctx: ChatContext) {
 
     searchWeb: tool({
       description:
-        "Pesquisar na web por informações atualizadas usando Brave Search. Use para buscar tendências, notícias ou informações que não estão no banco de dados.",
+        "Search the web for up-to-date information using Brave Search. Use to find trends, news, or information not in the database.",
       parameters: z.object({
         query: z
           .string()
           .min(3)
           .max(200)
-          .describe("Termo de busca (ex: 'tendências estética 2025', 'marketing clínicas')"),
-        count: z.number().min(1).max(10).default(5).describe("Número de resultados (1-10)"),
+          .describe("Search term (e.g., 'aesthetics trends 2025', 'clinic marketing')"),
+        count: z.number().min(1).max(10).default(5).describe("Number of results (1-10)"),
       }),
       execute: async ({ query, count }) => {
         if (!ENV.braveSearchApiKey) {
           return {
             status: "not_configured",
-            message: "Pesquisa web não configurada. BRAVE_SEARCH_API_KEY não definida.",
+            message: "Web search not configured. BRAVE_SEARCH_API_KEY not set.",
             data: null,
           };
         }
@@ -546,7 +546,7 @@ function createTools(ctx: ChatContext) {
           if (!response.ok) {
             return {
               status: "error",
-              message: `Erro na pesquisa: ${response.status} ${response.statusText}`,
+              message: `Search error: ${response.status} ${response.statusText}`,
               data: null,
             };
           }
@@ -565,14 +565,14 @@ function createTools(ctx: ChatContext) {
           if (results.length === 0) {
             return {
               status: "empty",
-              message: `Nenhum resultado encontrado para "${query}".`,
+              message: `No results found for "${query}".`,
               data: [],
             };
           }
 
           return {
             status: "success",
-            message: `Encontrados ${results.length} resultados para "${query}".`,
+            message: `Found ${results.length} results for "${query}".`,
             data: results.map((r) => ({
               title: r.title,
               url: r.url,
@@ -582,7 +582,7 @@ function createTools(ctx: ChatContext) {
         } catch (error) {
           return {
             status: "error",
-            message: `Erro ao pesquisar: ${error instanceof Error ? error.message : "desconhecido"}`,
+            message: `Search error: ${error instanceof Error ? error.message : "unknown"}`,
             data: null,
           };
         }
@@ -603,7 +603,7 @@ export async function chat(messages: AIMessage[], context: ChatContext): Promise
     return {
       success: false,
       message:
-        "Serviço de IA não configurado. Configure GOOGLE_GENERATIVE_AI_API_KEY ou GOOGLE_API_KEY.",
+        "AI service not configured. Set up GOOGLE_GENERATIVE_AI_API_KEY or GOOGLE_API_KEY.",
       error: "AI_NOT_CONFIGURED",
     };
   }
@@ -635,13 +635,13 @@ export async function chat(messages: AIMessage[], context: ChatContext): Promise
     // biome-ignore lint/suspicious/noConsole: Intentional error logging for debugging
     console.error("[AI Assistant] Error:", error);
 
-    const errorMessage = error instanceof Error ? error.message : "Erro desconhecido";
+    const errorMessage = error instanceof Error ? error.message : "Unknown error";
 
     // Handle specific error types
     if (errorMessage.includes("API key")) {
       return {
         success: false,
-        message: "Erro de autenticação com a API de IA. Verifique a configuração.",
+        message: "AI API authentication error. Check the configuration.",
         error: "AUTH_ERROR",
       };
     }
@@ -649,14 +649,14 @@ export async function chat(messages: AIMessage[], context: ChatContext): Promise
     if (errorMessage.includes("rate limit") || errorMessage.includes("quota")) {
       return {
         success: false,
-        message: "Limite de requisições atingido. Por favor, aguarde alguns minutos.",
+        message: "Request limit reached. Please wait a few minutes.",
         error: "RATE_LIMIT",
       };
     }
 
     return {
       success: false,
-      message: "Desculpe, ocorreu um erro ao processar sua mensagem. Tente novamente.",
+      message: "Sorry, an error occurred while processing your message. Please try again.",
       error: errorMessage,
     };
   }

@@ -47,19 +47,19 @@ export const authRouter = router({
 
     if (!status.isFullyLinked && status.hasUnlinkedMatch) {
       recommendations.push(
-        "Existe um mentorado com seu email que pode ser vinculado automaticamente."
+        "There is a mentee with your email that can be linked automatically."
       );
     }
 
     if (!status.isFullyLinked && !status.hasUnlinkedMatch) {
       recommendations.push(
-        "Nenhum mentorado encontrado com seu email. Um novo será criado automaticamente ou contate o administrador."
+        "No mentee found with your email. A new one will be created automatically, or contact the administrator."
       );
     }
 
     if (status.multipleMatches) {
       recommendations.push(
-        "Existem múltiplos registros com seu email. Contate o administrador para resolver duplicatas."
+        "Multiple records exist with your email. Contact the administrator to resolve duplicates."
       );
     }
 
@@ -190,7 +190,7 @@ export const authRouter = router({
         .insert(mentorados)
         .values({
           userId: user.id,
-          nomeCompleto: user.name || "Novo Usuário",
+          nomeCompleto: user.name || "New User",
           email: user.email,
           fotoUrl: user.imageUrl,
           turma: "neon",

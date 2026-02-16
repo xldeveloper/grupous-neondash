@@ -17,12 +17,12 @@ import { notificationService } from "./services/notificationService";
 // Badge definitions with criteria - 15 badges aligned with Core Flows spec
 export const BADGES_CONFIG = [
   // ============================================
-  // CONSISTÊNCIA (5 badges)
+  // CONSISTENCY (5 badges)
   // ============================================
   {
     codigo: "primeiro_registro",
-    nome: "Primeiro Registro",
-    descricao: "Registrou suas primeiras métricas no dashboard",
+    nome: "First Entry",
+    descricao: "Recorded your first metrics on the dashboard",
     icone: "🏆",
     cor: "gold",
     categoria: "consistencia" as const,
@@ -31,8 +31,8 @@ export const BADGES_CONFIG = [
   },
   {
     codigo: "consistencia_bronze",
-    nome: "Consistência Bronze",
-    descricao: "3 meses consecutivos registrando até dia 10",
+    nome: "Bronze Consistency",
+    descricao: "3 consecutive months recording by the 10th",
     icone: "⭐",
     cor: "bronze",
     categoria: "consistencia" as const,
@@ -41,8 +41,8 @@ export const BADGES_CONFIG = [
   },
   {
     codigo: "consistencia_prata",
-    nome: "Consistência Prata",
-    descricao: "6 meses consecutivos registrando até dia 10",
+    nome: "Silver Consistency",
+    descricao: "6 consecutive months recording by the 10th",
     icone: "🥈",
     cor: "silver",
     categoria: "consistencia" as const,
@@ -51,8 +51,8 @@ export const BADGES_CONFIG = [
   },
   {
     codigo: "consistencia_ouro",
-    nome: "Consistência Ouro",
-    descricao: "12 meses consecutivos registrando até dia 10",
+    nome: "Gold Consistency",
+    descricao: "12 consecutive months recording by the 10th",
     icone: "🥇",
     cor: "gold",
     categoria: "consistencia" as const,
@@ -61,8 +61,8 @@ export const BADGES_CONFIG = [
   },
   {
     codigo: "pontualidade",
-    nome: "Pontualidade",
-    descricao: "3 meses consecutivos registrando até dia 5",
+    nome: "Punctuality",
+    descricao: "3 consecutive months recording by the 5th",
     icone: "⏰",
     cor: "blue",
     categoria: "consistencia" as const,
@@ -71,12 +71,12 @@ export const BADGES_CONFIG = [
   },
 
   // ============================================
-  // FATURAMENTO (4 badges)
+  // REVENUE (4 badges)
   // ============================================
   {
     codigo: "meta_atingida",
-    nome: "Meta Atingida",
-    descricao: "Atingiu a meta de faturamento do mês",
+    nome: "Goal Achieved",
+    descricao: "Achieved the monthly revenue goal",
     icone: "💪",
     cor: "gold",
     categoria: "faturamento" as const,
@@ -85,8 +85,8 @@ export const BADGES_CONFIG = [
   },
   {
     codigo: "crescimento_25",
-    nome: "Crescimento 25%",
-    descricao: "Cresceu 25% ou mais em relação ao mês anterior",
+    nome: "25% Growth",
+    descricao: "Grew 25% or more compared to the previous month",
     icone: "📈",
     cor: "green",
     categoria: "faturamento" as const,
@@ -95,8 +95,8 @@ export const BADGES_CONFIG = [
   },
   {
     codigo: "crescimento_50",
-    nome: "Crescimento 50%",
-    descricao: "Cresceu 50% ou mais em relação ao mês anterior",
+    nome: "50% Growth",
+    descricao: "Grew 50% or more compared to the previous month",
     icone: "🚀",
     cor: "purple",
     categoria: "faturamento" as const,
@@ -105,8 +105,8 @@ export const BADGES_CONFIG = [
   },
   {
     codigo: "faturamento_6_digitos",
-    nome: "6 Dígitos",
-    descricao: "Faturou R$ 100.000+ em um mês",
+    nome: "6 Digits",
+    descricao: "Earned R$ 100,000+ in a single month",
     icone: "💰",
     cor: "gold",
     categoria: "faturamento" as const,
@@ -119,8 +119,8 @@ export const BADGES_CONFIG = [
   // ============================================
   {
     codigo: "top_3_turma",
-    nome: "Top 3 Turma",
-    descricao: "Ficou entre os 3 primeiros do ranking mensal",
+    nome: "Top 3 Class",
+    descricao: "Placed in the top 3 of the monthly ranking",
     icone: "🥇",
     cor: "gold",
     categoria: "ranking" as const,
@@ -129,8 +129,8 @@ export const BADGES_CONFIG = [
   },
   {
     codigo: "top_1_turma",
-    nome: "Campeão da Turma",
-    descricao: "Ficou em 1º lugar no ranking mensal",
+    nome: "Class Champion",
+    descricao: "Placed 1st in the monthly ranking",
     icone: "👑",
     cor: "gold",
     categoria: "ranking" as const,
@@ -139,8 +139,8 @@ export const BADGES_CONFIG = [
   },
   {
     codigo: "acima_media",
-    nome: "Acima da Média",
-    descricao: "Faturamento acima da média da turma por 3 meses consecutivos",
+    nome: "Above Average",
+    descricao: "Revenue above class average for 3 consecutive months",
     icone: "🎯",
     cor: "blue",
     categoria: "ranking" as const,
@@ -149,12 +149,12 @@ export const BADGES_CONFIG = [
   },
 
   // ============================================
-  // OPERACIONAL (2 badges)
+  // OPERATIONAL (2 badges)
   // ============================================
   {
     codigo: "gerador_leads",
-    nome: "Gerador de Leads",
-    descricao: "Gerou 50+ leads em um mês",
+    nome: "Lead Generator",
+    descricao: "Generated 50+ leads in a single month",
     icone: "🧒",
     cor: "blue",
     categoria: "operacional" as const,
@@ -163,8 +163,8 @@ export const BADGES_CONFIG = [
   },
   {
     codigo: "conversao_master",
-    nome: "Conversão Master",
-    descricao: "Taxa de conversão acima de 20%",
+    nome: "Conversion Master",
+    descricao: "Conversion rate above 20%",
     icone: "✨",
     cor: "purple",
     categoria: "operacional" as const,
@@ -173,12 +173,12 @@ export const BADGES_CONFIG = [
   },
 
   // ============================================
-  // ESPECIAL (2 badges)
+  // SPECIAL (2 badges)
   // ============================================
   {
     codigo: "evolucao_completa",
-    nome: "Evolução Completa",
-    descricao: "Completou todos os módulos do playbook",
+    nome: "Full Evolution",
+    descricao: "Completed all playbook modules",
     icone: "🎓",
     cor: "purple",
     categoria: "especial" as const,
@@ -187,8 +187,8 @@ export const BADGES_CONFIG = [
   },
   {
     codigo: "jornada_completa",
-    nome: "Jornada Completa",
-    descricao: "6 meses de mentoria com registro mensal",
+    nome: "Journey Complete",
+    descricao: "6 months of mentorship with monthly entries",
     icone: "🎆",
     cor: "gold",
     categoria: "especial" as const,
@@ -297,8 +297,8 @@ async function checkAcimaMedia(mentoradoId: number, monthsRequired: number): Pro
   const avgMap = new Map(avgResults.map((r) => [`${r.ano}-${r.mes}`, r.avg ?? 0]));
 
   for (const m of recentMetrics) {
-    const turmaAverage = avgMap.get(`${m.ano}-${m.mes}`) ?? 0;
-    if (m.faturamento <= turmaAverage) return false;
+    const classAverage = avgMap.get(`${m.ano}-${m.mes}`) ?? 0;
+    if (m.faturamento <= classAverage) return false;
   }
   return true;
 }
@@ -389,7 +389,7 @@ async function checkBadgeCriteria(
   }
 }
 
-// Check and award badges for a mentorado
+// Check and award badges for a mentee
 export async function checkAndAwardBadges(mentoradoId: number, ano: number, mes: number) {
   const db = getDb();
 
@@ -474,7 +474,7 @@ export async function calculateMonthlyRanking(ano: number, mes: number) {
   const db = await getDb();
   if (!db) return;
 
-  // Get all active mentorados
+  // Get all active mentees
   const mentoradosAtivos = await db.select().from(mentorados).where(eq(mentorados.ativo, "sim"));
 
   const rankings: {
@@ -508,7 +508,7 @@ export async function calculateMonthlyRanking(ano: number, mes: number) {
     let pontuacao = 0;
     let bonus = 0;
 
-    // Faturamento score (max 40 points)
+    // Revenue score (max 40 points)
     // Guard: prevent division by zero when goalFaturamento is 0
     const faturamentoPercent =
       goalFaturamento > 0 ? Math.min((metricas.faturamento / goalFaturamento) * 100, 150) : 0;
@@ -617,7 +617,7 @@ export async function calculateMonthlyRanking(ano: number, mes: number) {
   }
 }
 
-// Update progressive goals when meta is achieved
+// Update progressive goals when target is achieved
 export async function updateProgressiveGoals(mentoradoId: number, ano: number, mes: number) {
   const db = await getDb();
   if (!db) return;
@@ -738,16 +738,16 @@ export async function sendMetricsReminders() {
       await db.insert(notificacoes).values({
         mentoradoId: m.id,
         tipo: "lembrete_metricas",
-        titulo: "Lembrete: Envie suas métricas!",
-        mensagem: `Não se esqueça de enviar suas métricas de ${mesAnterior}/${anoAnterior}. Acesse o dashboard para registrar seu desempenho.`,
+        titulo: "Reminder: Submit your metrics!",
+        mensagem: `Don't forget to submit your metrics for ${mesAnterior}/${anoAnterior}. Access the dashboard to record your performance.`,
       });
 
       // Send email
       if (m.email) {
         await sendEmail({
           to: m.email,
-          subject: "Lembrete: Envie suas métricas mensais",
-          body: `Olá ${m.nomeCompleto.split(" ")[0]},\n\nNão se esqueça de enviar suas métricas de ${mesAnterior}/${anoAnterior}.\n\nAcesse o dashboard para registrar seu desempenho e acompanhar sua evolução.\n\nAbraços,\nEquipe Neon`,
+          subject: "Reminder: Submit your monthly metrics",
+          body: `Hi ${m.nomeCompleto.split(" ")[0]},\n\nDon't forget to submit your metrics for ${mesAnterior}/${anoAnterior}.\n\nAccess the dashboard to record your performance and track your progress.\n\nBest regards,\nNeon Team`,
         });
       }
     }
@@ -779,15 +779,15 @@ export async function checkUnmetGoalsAlerts(ano: number, mes: number) {
 
     if (metricas.faturamento < m.metaFaturamento * 0.8) {
       alertas.push(
-        `Faturamento (${((metricas.faturamento / m.metaFaturamento) * 100).toFixed(0)}% da meta)`
+        `Revenue (${((metricas.faturamento / m.metaFaturamento) * 100).toFixed(0)}% of goal)`
       );
     }
     if (metricas.leads < (m.metaLeads || 50) * 0.8) {
-      alertas.push(`Leads (${((metricas.leads / (m.metaLeads || 50)) * 100).toFixed(0)}% da meta)`);
+      alertas.push(`Leads (${((metricas.leads / (m.metaLeads || 50)) * 100).toFixed(0)}% of goal)`);
     }
     if (metricas.postsFeed < (m.metaPosts || 12) * 0.8) {
       alertas.push(
-        `Posts (${((metricas.postsFeed / (m.metaPosts || 12)) * 100).toFixed(0)}% da meta)`
+        `Posts (${((metricas.postsFeed / (m.metaPosts || 12)) * 100).toFixed(0)}% of goal)`
       );
     }
 
@@ -795,14 +795,14 @@ export async function checkUnmetGoalsAlerts(ano: number, mes: number) {
       await db.insert(notificacoes).values({
         mentoradoId: m.id,
         tipo: "alerta_meta",
-        titulo: "Atenção: Metas abaixo do esperado",
-        mensagem: `Suas métricas de ${mes}/${ano} estão abaixo de 80% em: ${alertas.join(", ")}. Vamos focar para o próximo mês!`,
+        titulo: "Attention: Goals below expectations",
+        mensagem: `Your metrics for ${mes}/${ano} are below 80% in: ${alertas.join(", ")}. Let's focus for next month!`,
       });
     }
   }
 }
 
-// Get mentorado badges
+// Get mentee badges
 export async function getMentoradoBadges(mentoradoId: number) {
   const db = await getDb();
   if (!db) return [];
@@ -842,7 +842,7 @@ export async function getRanking(ano: number, mes: number) {
   return result;
 }
 
-// Get notifications for a mentorado
+// Get notifications for a mentee
 export async function getNotificacoes(mentoradoId: number, apenasNaoLidas = false) {
   const db = await getDb();
   if (!db) return [];
@@ -875,7 +875,7 @@ export async function getAllBadges() {
   return db.select().from(badges).orderBy(badges.categoria, badges.pontos);
 }
 
-// Get progressive goals for a mentorado
+// Get progressive goals for a mentee
 export async function getProgressiveGoals(mentoradoId: number) {
   const db = await getDb();
   if (!db) return [];
@@ -884,12 +884,12 @@ export async function getProgressiveGoals(mentoradoId: number) {
 }
 
 /**
- * Calculate current and longest streak for a mentorado
+ * Calculate current and longest streak for a mentee
  *
  * Streak is counted as consecutive months with metrics registered by day 10.
  * Breaks if a month is skipped or registered after day 10.
  *
- * @param mentoradoId - ID of the mentorado
+ * @param mentoradoId - ID of the mentee
  * @returns Object with currentStreak, longestStreak, nextMilestone, and progressPercent
  */
 export async function calculateStreak(mentoradoId: number): Promise<{
@@ -901,7 +901,7 @@ export async function calculateStreak(mentoradoId: number): Promise<{
   const db = await getDb();
   if (!db) return { currentStreak: 0, longestStreak: 0, nextMilestone: 3, progressPercent: 0 };
 
-  // Query last 12 months of metrics ordered by ano DESC, mes DESC
+  // Query last 12 months of metrics ordered by year DESC, month DESC
   const metrics = await db
     .select()
     .from(metricasMensais)
@@ -1013,7 +1013,7 @@ export function calculateScoreFromMetrics(
   // Calculate score
   let pontuacao = 0;
 
-  // Faturamento score (max 40 points)
+  // Revenue score (max 40 points)
   // Guard: prevent division by zero when goalFaturamento is 0
   const faturamentoPercent =
     goalFaturamento > 0 ? Math.min((metricas.faturamento / goalFaturamento) * 100, 150) : 0;

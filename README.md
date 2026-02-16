@@ -8,56 +8,56 @@
 ![Bun](https://img.shields.io/badge/Bun-1.3-f9f1e1?style=for-the-badge&logo=bun&logoColor=black)
 ![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
 
-**Dashboard de Performance para Mentorias** — Plataforma fullstack para acompanhamento de métricas, gamificação e CRM de mentorados.
+**Performance Dashboard for Mentorships** — Fullstack platform for metrics tracking, gamification, and mentee CRM.
 
-[Demo](https://neondash.grupousclinicas.com.br) · [Documentação](#-documentação) · [Contribuir](#-contribuindo)
+[Demo](https://neondash.grupousclinicas.com.br) · [Documentation](#-documentation) · [Contributing](#-contributing)
 
 </div>
 
 ---
 
-## 📋 Sobre
+## 📋 About
 
-O **NEON Dashboard** é uma plataforma completa de gestão de mentorias focada no nicho de estética e saúde. Permite que mentores acompanhem o desempenho de seus mentorados através de métricas mensais, gamificação com badges, CRM integrado e análises de IA.
+**NEON Dashboard** is a complete mentorship management platform focused on the aesthetics and health niche. It allows mentors to track the performance of their mentees through monthly metrics, gamification with badges, integrated CRM, and AI-powered analysis.
 
-### ✨ Principais Funcionalidades
+### ✨ Key Features
 
-| Módulo | Descrição |
-|--------|-----------|
-| **📊 Dashboard** | Visão geral de faturamento, lucro, leads e procedimentos |
-| **📈 Métricas Mensais** | Registro e acompanhamento de KPIs mensais |
-| **🎮 Gamificação** | Sistema de badges, rankings e streaks |
-| **📱 CRM Kanban** | Gestão de leads com pipeline visual |
-| **🤖 Neon Coach** | Assistente IA para geração de tarefas e insights |
-| **🗺️ Jornada Neon** | Roadmap de atividades e módulos da mentoria |
-| **📅 Calendário** | Integração com Google Calendar |
-| **💬 WhatsApp** | Integração Z-API para comunicação |
-| **📸 Instagram** | Sync automático de métricas (posts/stories) |
+| Module | Description |
+|--------|-------------|
+| **📊 Dashboard** | Overview of revenue, profit, leads, and procedures |
+| **📈 Monthly Metrics** | Recording and tracking of monthly KPIs |
+| **🎮 Gamification** | Badge system, rankings, and streaks |
+| **📱 CRM Kanban** | Lead management with visual pipeline |
+| **🤖 Neon Coach** | AI assistant for task generation and insights |
+| **🗺️ Neon Journey** | Activity roadmap and mentorship modules |
+| **📅 Calendar** | Google Calendar integration |
+| **💬 WhatsApp** | Z-API integration for communication |
+| **📸 Instagram** | Automatic metrics sync (posts/stories) |
 
 ---
 
 ## 🛠️ Tech Stack
 
 ### Core
-| Tecnologia | Versão | Uso |
-|------------|--------|-----|
+| Technology | Version | Usage |
+|------------|---------|-------|
 | **Bun** | 1.3+ | Runtime, package manager, bundler |
 | **React** | 19.2 | Frontend SPA |
 | **Vite** | 7.x | Build tool & HMR |
 | **TypeScript** | 5.9 | Type safety |
 
 ### Backend
-| Tecnologia | Uso |
-|------------|-----|
+| Technology | Usage |
+|------------|-------|
 | **Express** | HTTP server |
 | **tRPC** | Type-safe API |
 | **Drizzle ORM** | Database queries |
 | **Neon PostgreSQL** | Serverless database |
-| **Clerk** | Autenticação JWT |
+| **Clerk** | JWT Authentication |
 
 ### Frontend
-| Tecnologia | Uso |
-|------------|-----|
+| Technology | Usage |
+|------------|-------|
 | **Tailwind CSS 4** | Styling |
 | **shadcn/ui** | Component library |
 | **TanStack Query** | Server state |
@@ -65,18 +65,18 @@ O **NEON Dashboard** é uma plataforma completa de gestão de mentorias focada n
 | **Recharts** | Data visualization |
 | **Framer Motion** | Animations |
 
-### Integrações
-| Serviço | Uso |
-|---------|-----|
+### Integrations
+| Service | Usage |
+|---------|-------|
 | **Clerk** | Auth & User management |
 | **Google APIs** | Calendar integration |
 | **Z-API** | WhatsApp Business |
-| **Instagram Graph API** | Métricas sociais |
-| **Gemini AI** | Coach inteligente |
+| **Instagram Graph API** | Social metrics |
+| **Gemini AI** | Intelligent coach |
 
 ---
 
-## 📁 Estrutura do Projeto
+## 📁 Project Structure
 
 ```
 neondash/
@@ -157,32 +157,32 @@ erDiagram
 
 ## ⚡ Quick Start
 
-### Pré-requisitos
+### Prerequisites
 
-- **Bun** 1.3+ ([instalar](https://bun.sh))
-- Conta no **Neon** para PostgreSQL
-- Conta no **Clerk** para autenticação
+- **Bun** 1.3+ ([install](https://bun.sh))
+- **Neon** account for PostgreSQL
+- **Clerk** account for authentication
 
-### 1. Clone o repositório
+### 1. Clone the repository
 
 ```bash
 git clone https://github.com/GrupoUS/neondash.git
 cd neondash
 ```
 
-### 2. Instale as dependências
+### 2. Install dependencies
 
 ```bash
 bun install
 ```
 
-### 3. Configure as variáveis de ambiente
+### 3. Configure environment variables
 
 ```bash
 cp .env.example .env
 ```
 
-Edite o `.env` com suas credenciais:
+Edit `.env` with your credentials:
 
 ```env
 # Database (Neon PostgreSQL)
@@ -199,84 +199,84 @@ JWT_SECRET="your-secret-key"
 GEMINI_API_KEY="..."
 ```
 
-### 4. Configure o banco de dados
+### 4. Set up the database
 
 ```bash
 bun run db:push
 bun run db:seed
 ```
 
-### 5. Inicie o servidor de desenvolvimento
+### 5. Start the development server
 
 ```bash
 bun dev
 ```
 
-Acesse: **http://localhost:3000**
+Access: **http://localhost:3000**
 
 ---
 
-## 📜 Scripts Disponíveis
+## 📜 Available Scripts
 
-| Comando | Descrição |
-|---------|-----------|
-| `bun dev` | Inicia servidor de desenvolvimento com HMR |
-| `bun run build` | Build de produção (Vite + Bun) |
-| `bun start` | Executa build de produção |
-| `bun run check` | Verifica tipos TypeScript |
-| `bun run lint` | Lint + format com Biome (auto-fix) |
-| `bun run lint:check` | Verifica lint sem auto-fix |
-| `bun run test` | Executa testes com Vitest |
-| `bun run test:watch` | Testes em modo watch |
-| `bun run db:push` | Aplica migrations no banco |
-| `bun run db:studio` | Abre Drizzle Studio |
-| `bun run db:seed` | Popula banco com dados iniciais |
+| Command | Description |
+|---------|-------------|
+| `bun dev` | Start development server with HMR |
+| `bun run build` | Production build (Vite + Bun) |
+| `bun start` | Run production build |
+| `bun run check` | Verify TypeScript types |
+| `bun run lint` | Lint + format with Biome (auto-fix) |
+| `bun run lint:check` | Check lint without auto-fix |
+| `bun run test` | Run tests with Vitest |
+| `bun run test:watch` | Tests in watch mode |
+| `bun run db:push` | Apply migrations to the database |
+| `bun run db:studio` | Open Drizzle Studio |
+| `bun run db:seed` | Seed the database with initial data |
 
 ---
 
-## 🔐 Autenticação
+## 🔐 Authentication
 
-O projeto utiliza **Clerk** para autenticação. O fluxo inclui:
+The project uses **Clerk** for authentication. The flow includes:
 
-1. **Frontend**: `@clerk/clerk-react` com `ClerkProvider`
-2. **Backend**: `@clerk/express` com middleware de autenticação
-3. **tRPC**: Context com `ctx.user` para procedimentos protegidos
+1. **Frontend**: `@clerk/clerk-react` with `ClerkProvider`
+2. **Backend**: `@clerk/express` with authentication middleware
+3. **tRPC**: Context with `ctx.user` for protected procedures
 
 ```tsx
-// Frontend - Componentes de auth
+// Frontend - Auth components
 import { SignInButton, UserButton } from "@clerk/clerk-react";
 
-// Backend - tRPC protegido
+// Backend - Protected tRPC
 const protectedProcedure = t.procedure.use(authMiddleware);
 ```
 
 ---
 
-## 🧪 Qualidade de Código
+## 🧪 Code Quality
 
 ### Linting & Formatting
 
-O projeto usa **Biome** para linting e formatting:
+The project uses **Biome** for linting and formatting:
 
 ```bash
-# Verificar
+# Check
 bun run lint:check
 
-# Corrigir automaticamente
+# Auto-fix
 bun run lint
 ```
 
 ### TypeScript
 
-Strict mode habilitado. Verifique tipos com:
+Strict mode enabled. Verify types with:
 
 ```bash
 bun run check
 ```
 
-### Testes
+### Tests
 
-Vitest para unit tests:
+Vitest for unit tests:
 
 ```bash
 bun run test
@@ -288,7 +288,7 @@ bun run test:coverage
 
 ## 🚀 Deploy
 
-### Produção
+### Production
 
 ```bash
 # Build
@@ -298,7 +298,7 @@ bun run build
 bun start
 ```
 
-### Variáveis de Ambiente para Produção
+### Production Environment Variables
 
 ```env
 NODE_ENV=production
@@ -310,52 +310,52 @@ JWT_SECRET="production-secret"
 
 ---
 
-## 📖 Documentação
+## 📖 Documentation
 
-| Documento | Descrição |
-|-----------|-----------|
-| [GEMINI.md](./GEMINI.md) | Guia completo para AI agents |
-| [AGENTS.md](./AGENTS.md) | Regras de código e arquitetura |
-| [docs/](./docs/) | Documentação adicional |
-
----
-
-## 🤝 Contribuindo
-
-1. Fork o repositório
-2. Crie sua branch (`git checkout -b feature/amazing-feature`)
-3. Commit suas mudanças (`git commit -m 'feat: add amazing feature'`)
-4. Push para a branch (`git push origin feature/amazing-feature`)
-5. Abra um Pull Request
-
-### Convenção de Commits
-
-Seguimos [Conventional Commits](https://www.conventionalcommits.org/):
-
-- `feat:` Nova funcionalidade
-- `fix:` Correção de bug
-- `docs:` Documentação
-- `style:` Formatação
-- `refactor:` Refatoração
-- `test:` Testes
-- `chore:` Manutenção
+| Document | Description |
+|----------|-------------|
+| [GEMINI.md](./GEMINI.md) | Complete guide for AI agents |
+| [AGENTS.md](./AGENTS.md) | Code rules and architecture |
+| [docs/](./docs/) | Additional documentation |
 
 ---
 
-## 📄 Licença
+## 🤝 Contributing
 
-Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](./LICENSE) para mais detalhes.
+1. Fork the repository
+2. Create your branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'feat: add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+### Commit Convention
+
+We follow [Conventional Commits](https://www.conventionalcommits.org/):
+
+- `feat:` New feature
+- `fix:` Bug fix
+- `docs:` Documentation
+- `style:` Formatting
+- `refactor:` Refactoring
+- `test:` Tests
+- `chore:` Maintenance
 
 ---
 
-## 👥 Time
+## 📄 License
 
-Desenvolvido por **Grupo US Clínicas** para o programa **Mentoria Black**.
+This project is licensed under the MIT License. See the [LICENSE](./LICENSE) file for more details.
+
+---
+
+## 👥 Team
+
+Developed by **Grupo US Clínicas** for the **Mentoria Black** program.
 
 ---
 
 <div align="center">
 
-**[⬆ Voltar ao topo](#-neon-dashboard)**
+**[⬆ Back to top](#-neon-dashboard)**
 
 </div>

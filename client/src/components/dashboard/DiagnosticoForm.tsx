@@ -33,31 +33,31 @@ import { trpc } from "@/lib/trpc";
 import { cn } from "@/lib/utils";
 
 // ═══════════════════════════════════════════════════════════════════════════
-// SCHEMA - 20 fields organized by discovery call methodology
+// SCHEMA - 20 fields organized by discovery call methodology (field names are database identifiers)
 // ═══════════════════════════════════════════════════════════════════════════
 
 const formSchema = z.object({
-  // Section 1: Ponto de Partida (Context)
+  // Section 1: Starting Point (Context)
   atuacaoSaude: z.string().optional(),
   tempoLivre: z.string().optional(),
   jaAtuaEstetica: z.string().optional(),
   temClinica: z.string().optional(),
-  // Section 2: Realidade Financeira (Financial Reality)
+  // Section 2: Financial Reality
   rendaMensal: z.string().optional(),
   faturaEstetica: z.string().optional(),
   contas: z.string().optional(),
   custoVida: z.string().optional(),
   capacidadeInvestimento: z.string().optional(),
-  // Section 3: Desafios Atuais (Current Challenges)
+  // Section 3: Current Challenges
   incomodaRotina: z.string().optional(),
   dificuldadeCrescer: z.string().optional(),
   tentativasAnteriores: z.string().optional(),
-  // Section 4: Visão de Sucesso (Success Vision)
+  // Section 4: Success Vision
   objetivo6Meses: z.string().optional(),
   resultadoTransformador: z.string().optional(),
   visaoUmAno: z.string().optional(),
   porqueAgora: z.string().optional(),
-  // Section 5: Compromisso (Commitment)
+  // Section 5: Commitment
   horasDisponiveis: z.string().optional(),
   nivelPrioridade: z.string().optional(),
   redeApoio: z.string().optional(),
@@ -67,7 +67,7 @@ const formSchema = z.object({
 type FormValues = z.infer<typeof formSchema>;
 
 // ═══════════════════════════════════════════════════════════════════════════
-// SECTION CONFIG - Discovery call aligned
+// SECTION CONFIG - Aligned with discovery call methodology
 // ═══════════════════════════════════════════════════════════════════════════
 
 interface SectionConfig {
@@ -82,7 +82,7 @@ interface SectionConfig {
 const SECTIONS: SectionConfig[] = [
   {
     id: "context",
-    title: "Ponto de Partida",
+    title: "Starting Point",
     icon: Target,
     colorClass: "text-primary",
     bgClass: "bg-primary/5 dark:bg-primary/10",
@@ -90,7 +90,7 @@ const SECTIONS: SectionConfig[] = [
   },
   {
     id: "financial",
-    title: "Realidade Financeira",
+    title: "Financial Reality",
     icon: DollarSign,
     colorClass: "text-amber-500 dark:text-amber-400",
     bgClass: "bg-amber-500/5 dark:bg-amber-500/10",
@@ -98,7 +98,7 @@ const SECTIONS: SectionConfig[] = [
   },
   {
     id: "challenges",
-    title: "Desafios Atuais",
+    title: "Current Challenges",
     icon: Flame,
     colorClass: "text-destructive dark:text-red-400",
     bgClass: "bg-destructive/5 dark:bg-destructive/10",
@@ -106,7 +106,7 @@ const SECTIONS: SectionConfig[] = [
   },
   {
     id: "vision",
-    title: "Visão de Sucesso",
+    title: "Success Vision",
     icon: Star,
     colorClass: "text-yellow-500 dark:text-yellow-400",
     bgClass: "bg-yellow-500/5 dark:bg-yellow-500/10",
@@ -114,7 +114,7 @@ const SECTIONS: SectionConfig[] = [
   },
   {
     id: "commitment",
-    title: "Compromisso",
+    title: "Commitment",
     icon: Rocket,
     colorClass: "text-primary",
     bgClass: "bg-primary/5 dark:bg-primary/10",
@@ -136,14 +136,14 @@ export function DiagnosticoForm({ mentoradoId }: { mentoradoId?: number }) {
 
   const upsertMutation = trpc.diagnostico.upsert.useMutation({
     onSuccess: () => {
-      toast.success("Diagnóstico salvo com sucesso!");
-      // Invalidate diagnostico query to update form
+      toast.success("Diagnosis saved successfully!");
+      // Invalidate diagnosis query to update form
       utils.diagnostico.get.invalidate();
       // Invalidate overview stats so dashboard can unlock tabs
       utils.mentorados.getOverviewStats.invalidate();
     },
     onError: (error) => {
-      toast.error(`Erro: ${error.message}`);
+      toast.error(`Error: ${error.message}`);
     },
   });
 
@@ -238,9 +238,9 @@ export function DiagnosticoForm({ mentoradoId }: { mentoradoId?: number }) {
             </div>
           </div>
           <div className="flex-1 min-w-0">
-            <h3 className="font-semibold text-foreground">Diagnóstico Inicial</h3>
+            <h3 className="font-semibold text-foreground">Initial Diagnosis</h3>
             <p className="text-sm text-muted-foreground">
-              Preencha para nos ajudar a entender seu momento atual
+              Fill in to help us understand your current situation
             </p>
           </div>
           <div className="flex items-center gap-3">
@@ -251,7 +251,7 @@ export function DiagnosticoForm({ mentoradoId }: { mentoradoId?: number }) {
 
         {/* Form Sections - Responsive Grid Layout */}
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-[repeat(auto-fit,minmax(380px,1fr))] gap-6 transition-all duration-300 ease-in-out">
-          {/* Section 1: Ponto de Partida */}
+          {/* Section 1: Starting Point */}
           <div className="h-full">
             <SectionCard section={SECTIONS[0]} delay={0.1}>
               <FormField
@@ -259,9 +259,9 @@ export function DiagnosticoForm({ mentoradoId }: { mentoradoId?: number }) {
                 name="atuacaoSaude"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Qual sua formação ou área de atuação?</FormLabel>
+                    <FormLabel>What is your background or field of work?</FormLabel>
                     <FormControl>
-                      <Input placeholder="Ex: Biomédica, Enfermeira, Esteticista..." {...field} />
+                      <Input placeholder="E.g.: Biomedical, Nurse, Aesthetician..." {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -272,9 +272,9 @@ export function DiagnosticoForm({ mentoradoId }: { mentoradoId?: number }) {
                 name="tempoLivre"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Quanto tempo livre você tem por semana?</FormLabel>
+                    <FormLabel>How much free time do you have per week?</FormLabel>
                     <FormControl>
-                      <Input placeholder="Ex: 10 horas, Apenas finais de semana..." {...field} />
+                      <Input placeholder="E.g.: 10 hours, Weekends only..." {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -285,9 +285,9 @@ export function DiagnosticoForm({ mentoradoId }: { mentoradoId?: number }) {
                 name="jaAtuaEstetica"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Você já atua na estética?</FormLabel>
+                    <FormLabel>Are you already working in aesthetics?</FormLabel>
                     <FormControl>
-                      <Input placeholder="Sim/Não/Iniciando" {...field} />
+                      <Input placeholder="Yes/No/Starting" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -298,9 +298,9 @@ export function DiagnosticoForm({ mentoradoId }: { mentoradoId?: number }) {
                 name="temClinica"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Possui clínica ou consultório?</FormLabel>
+                    <FormLabel>Do you own a clinic or office?</FormLabel>
                     <FormControl>
-                      <Input placeholder="Sim, Próprio / Alugado / Atendo a domicílio" {...field} />
+                      <Input placeholder="Yes, Own / Rented / Home service" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -309,7 +309,7 @@ export function DiagnosticoForm({ mentoradoId }: { mentoradoId?: number }) {
             </SectionCard>
           </div>
 
-          {/* Section 2: Realidade Financeira */}
+          {/* Section 2: Financial Reality */}
           <div className="h-full">
             <SectionCard section={SECTIONS[1]} delay={0.15}>
               <FormField
@@ -317,7 +317,7 @@ export function DiagnosticoForm({ mentoradoId }: { mentoradoId?: number }) {
                 name="rendaMensal"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Qual sua renda mensal atual (aprox)?</FormLabel>
+                    <FormLabel>What is your current monthly income (approx)?</FormLabel>
                     <FormControl>
                       <Input placeholder="R$ 0,00" {...field} />
                     </FormControl>
@@ -330,7 +330,7 @@ export function DiagnosticoForm({ mentoradoId }: { mentoradoId?: number }) {
                 name="faturaEstetica"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Quanto você já fatura com estética?</FormLabel>
+                    <FormLabel>How much do you already earn from aesthetics?</FormLabel>
                     <FormControl>
                       <Input placeholder="R$ 0,00" {...field} />
                     </FormControl>
@@ -343,7 +343,7 @@ export function DiagnosticoForm({ mentoradoId }: { mentoradoId?: number }) {
                 name="contas"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Valor das contas mensais (fixo + variável)?</FormLabel>
+                    <FormLabel>Monthly bills amount (fixed + variable)?</FormLabel>
                     <FormControl>
                       <Input placeholder="R$ 0,00" {...field} />
                     </FormControl>
@@ -356,7 +356,7 @@ export function DiagnosticoForm({ mentoradoId }: { mentoradoId?: number }) {
                 name="custoVida"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Qual seria seu custo de vida ideal?</FormLabel>
+                    <FormLabel>What would be your ideal cost of living?</FormLabel>
                     <FormControl>
                       <Input placeholder="R$ 0,00" {...field} />
                     </FormControl>
@@ -369,8 +369,8 @@ export function DiagnosticoForm({ mentoradoId }: { mentoradoId?: number }) {
                 name="capacidadeInvestimento"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Capacidade de investimento mensal?</FormLabel>
-                    <FormDescription>Quanto você pode investir no seu negócio</FormDescription>
+                    <FormLabel>Monthly investment capacity?</FormLabel>
+                    <FormDescription>How much can you invest in your business</FormDescription>
                     <FormControl>
                       <Input placeholder="R$ 0,00" {...field} />
                     </FormControl>
@@ -381,7 +381,7 @@ export function DiagnosticoForm({ mentoradoId }: { mentoradoId?: number }) {
             </SectionCard>
           </div>
 
-          {/* Section 3: Desafios Atuais */}
+          {/* Section 3: Current Challenges */}
           <div className="h-full">
             <SectionCard section={SECTIONS[2]} delay={0.2}>
               <FormField
@@ -389,10 +389,10 @@ export function DiagnosticoForm({ mentoradoId }: { mentoradoId?: number }) {
                 name="incomodaRotina"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Qual seu maior desafio neste momento?</FormLabel>
+                    <FormLabel>What is your biggest challenge right now?</FormLabel>
                     <FormControl>
                       <Textarea
-                        placeholder="Descreva o que mais te incomoda na sua rotina hoje..."
+                        placeholder="Describe what bothers you most about your routine today..."
                         className="min-h-24 resize-none"
                         {...field}
                       />
@@ -406,10 +406,10 @@ export function DiagnosticoForm({ mentoradoId }: { mentoradoId?: number }) {
                 name="dificuldadeCrescer"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Qual sua maior dificuldade para crescer?</FormLabel>
+                    <FormLabel>What is your biggest difficulty in growing?</FormLabel>
                     <FormControl>
                       <Textarea
-                        placeholder="Ex: Falta de clientes, Gestão, Vendas..."
+                        placeholder="E.g.: Lack of clients, Management, Sales..."
                         className="min-h-24 resize-none"
                         {...field}
                       />
@@ -423,11 +423,11 @@ export function DiagnosticoForm({ mentoradoId }: { mentoradoId?: number }) {
                 name="tentativasAnteriores"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>O que você já tentou que não funcionou?</FormLabel>
-                    <FormDescription>Cursos, mentorias, estratégias anteriores</FormDescription>
+                    <FormLabel>What have you already tried that didn't work?</FormLabel>
+                    <FormDescription>Courses, mentoring programs, previous strategies</FormDescription>
                     <FormControl>
                       <Textarea
-                        placeholder="Descreva suas tentativas anteriores..."
+                        placeholder="Describe your previous attempts..."
                         className="min-h-24 resize-none"
                         {...field}
                       />
@@ -439,7 +439,7 @@ export function DiagnosticoForm({ mentoradoId }: { mentoradoId?: number }) {
             </SectionCard>
           </div>
 
-          {/* Section 4: Visão de Sucesso */}
+          {/* Section 4: Success Vision */}
           <div className="h-full">
             <SectionCard section={SECTIONS[3]} delay={0.25}>
               <FormField
@@ -447,10 +447,10 @@ export function DiagnosticoForm({ mentoradoId }: { mentoradoId?: number }) {
                 name="objetivo6Meses"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Qual seu principal objetivo para os próximos 6 meses?</FormLabel>
+                    <FormLabel>What is your main goal for the next 6 months?</FormLabel>
                     <FormControl>
                       <Textarea
-                        placeholder="O que você quer conquistar?"
+                        placeholder="What do you want to achieve?"
                         className="min-h-24 resize-none"
                         {...field}
                       />
@@ -465,11 +465,11 @@ export function DiagnosticoForm({ mentoradoId }: { mentoradoId?: number }) {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>
-                      Se a mentoria fosse um sucesso total, como seria sua vida?
+                      If the mentoring were a total success, what would your life look like?
                     </FormLabel>
                     <FormControl>
                       <Textarea
-                        placeholder="Descreva seu cenário ideal..."
+                        placeholder="Describe your ideal scenario..."
                         className="min-h-24 resize-none"
                         {...field}
                       />
@@ -483,10 +483,10 @@ export function DiagnosticoForm({ mentoradoId }: { mentoradoId?: number }) {
                 name="visaoUmAno"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Onde você se vê daqui a 1 ano?</FormLabel>
+                    <FormLabel>Where do you see yourself 1 year from now?</FormLabel>
                     <FormControl>
                       <Textarea
-                        placeholder="Descreva sua visão de 1 ano..."
+                        placeholder="Describe your 1-year vision..."
                         className="min-h-20 resize-none"
                         {...field}
                       />
@@ -500,11 +500,11 @@ export function DiagnosticoForm({ mentoradoId }: { mentoradoId?: number }) {
                 name="porqueAgora"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Por que agora é o momento certo?</FormLabel>
-                    <FormDescription>O que te fez decidir buscar ajuda agora?</FormDescription>
+                    <FormLabel>Why is now the right time?</FormLabel>
+                    <FormDescription>What made you decide to seek help now?</FormDescription>
                     <FormControl>
                       <Textarea
-                        placeholder="O que mudou para você agir agora..."
+                        placeholder="What changed for you to take action now..."
                         className="min-h-20 resize-none"
                         {...field}
                       />
@@ -516,7 +516,7 @@ export function DiagnosticoForm({ mentoradoId }: { mentoradoId?: number }) {
             </SectionCard>
           </div>
 
-          {/* Section 5: Compromisso */}
+          {/* Section 5: Commitment */}
           <div className="h-full">
             <SectionCard section={SECTIONS[4]} delay={0.3}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -527,10 +527,10 @@ export function DiagnosticoForm({ mentoradoId }: { mentoradoId?: number }) {
                     <FormItem>
                       <FormLabel className="flex items-center gap-2">
                         <Clock className="w-4 h-4" />
-                        Quantas horas por semana você pode dedicar?
+                        How many hours per week can you dedicate?
                       </FormLabel>
                       <FormControl>
-                        <Input placeholder="Ex: 5-10 horas, 20+ horas..." {...field} />
+                        <Input placeholder="E.g.: 5-10 hours, 20+ hours..." {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -541,8 +541,8 @@ export function DiagnosticoForm({ mentoradoId }: { mentoradoId?: number }) {
                   name="nivelPrioridade"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>De 1 a 10, qual sua prioridade neste projeto?</FormLabel>
-                      <FormDescription>10 = prioridade máxima</FormDescription>
+                      <FormLabel>From 1 to 10, what is your priority for this project?</FormLabel>
+                      <FormDescription>10 = highest priority</FormDescription>
                       <FormControl>
                         <Input placeholder="1 a 10" {...field} />
                       </FormControl>
@@ -555,12 +555,12 @@ export function DiagnosticoForm({ mentoradoId }: { mentoradoId?: number }) {
                   name="redeApoio"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Você tem uma rede de apoio?</FormLabel>
+                      <FormLabel>Do you have a support network?</FormLabel>
                       <FormDescription>
-                        Família, parceiro(a), sócio(a) que apoia você
+                        Family, partner, business associate who supports you
                       </FormDescription>
                       <FormControl>
-                        <Input placeholder="Quem te apoia nessa jornada?" {...field} />
+                        <Input placeholder="Who supports you on this journey?" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -571,10 +571,10 @@ export function DiagnosticoForm({ mentoradoId }: { mentoradoId?: number }) {
                   name="organizacao"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Como você pretende se organizar?</FormLabel>
+                      <FormLabel>How do you plan to organize yourself?</FormLabel>
                       <FormControl>
                         <Textarea
-                          placeholder="Tirar do papel os fundamentos, sem antecipar estratégias..."
+                          placeholder="Put the fundamentals into practice, without rushing strategies..."
                           className="min-h-20 resize-none"
                           {...field}
                         />
@@ -604,12 +604,12 @@ export function DiagnosticoForm({ mentoradoId }: { mentoradoId?: number }) {
             {upsertMutation.isPending ? (
               <>
                 <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                Salvando...
+                Saving...
               </>
             ) : (
               <>
                 <Save className="mr-2 h-5 w-5" />
-                Salvar Diagnóstico
+                Save Diagnosis
               </>
             )}
           </Button>

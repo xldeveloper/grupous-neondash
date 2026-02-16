@@ -28,9 +28,9 @@ import { cn } from "@/lib/utils";
 
 // Schema for the edit form
 const formSchema = z.object({
-  title: z.string().min(1, "Título é obrigatório"),
-  date: z.string().min(1, "Data/Hora são obrigatórios"),
-  url: z.string().url("URL inválida"),
+  title: z.string().min(1, "Title is required"),
+  date: z.string().min(1, "Date/Time is required"),
+  url: z.string().url("Invalid URL"),
   description: z.string().optional(),
 });
 
@@ -44,7 +44,7 @@ export function NextLiveCard({ isAdmin = false }: NextLiveCardProps) {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const utils = trpc.useUtils();
 
-  // Fetch the next live session
+  // Fetch next live session
   const { data: session, isLoading } = trpc.classes.getNextLive.useQuery();
 
   // Mutation to update
@@ -132,12 +132,12 @@ export function NextLiveCard({ isAdmin = false }: NextLiveCardProps) {
           )}
 
           <h3 className="text-xl md:text-2xl font-bold text-foreground leading-tight">
-            {session?.title || "Nenhuma aula agendada"}
+            {session?.title || "No class scheduled"}
           </h3>
 
           <p className="text-muted-foreground text-sm line-clamp-2">
             {session?.description ||
-              (isAdmin ? "Configure a próxima aula..." : "Aguarde novidades!")}
+              (isAdmin ? "Set up the next class..." : "Stay tuned for updates!")}
           </p>
         </div>
 
@@ -154,7 +154,7 @@ export function NextLiveCard({ isAdmin = false }: NextLiveCardProps) {
               )}
             >
               <a href={session.url} target="_blank" rel="noopener noreferrer">
-                {isLiveNow ? "Entrar na Sessão" : "Acessar Link"}
+                {isLiveNow ? "Join Session" : "Access Link"}
               </a>
             </Button>
           )}
@@ -169,12 +169,12 @@ export function NextLiveCard({ isAdmin = false }: NextLiveCardProps) {
                   className="w-full border-border dark:border-slate-700 text-muted-foreground hover:text-foreground hover:bg-accent dark:hover:bg-slate-800"
                 >
                   <Edit2 className="w-4 h-4 mr-2" />
-                  Editar
+                  Edit
                 </Button>
               </DialogTrigger>
               <DialogContent className="sm:max-w-md bg-card dark:bg-slate-900 border-border dark:border-slate-800 text-foreground">
                 <DialogHeader>
-                  <DialogTitle>Configurar Próxima Aula</DialogTitle>
+                  <DialogTitle>Configure Next Class</DialogTitle>
                 </DialogHeader>
                 <Form {...form}>
                   <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -183,11 +183,11 @@ export function NextLiveCard({ isAdmin = false }: NextLiveCardProps) {
                       name="title"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Título</FormLabel>
+                          <FormLabel>Title</FormLabel>
                           <FormControl>
                             <Input
                               {...field}
-                              placeholder="Mentoria Coletiva..."
+                              placeholder="Group Mentorship..."
                               className="bg-slate-950 border-slate-800"
                             />
                           </FormControl>
@@ -201,7 +201,7 @@ export function NextLiveCard({ isAdmin = false }: NextLiveCardProps) {
                       name="date"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Data e Hora</FormLabel>
+                          <FormLabel>Date and Time</FormLabel>
                           <FormControl>
                             <Input
                               type="datetime-local"
@@ -237,7 +237,7 @@ export function NextLiveCard({ isAdmin = false }: NextLiveCardProps) {
                       name="description"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Descrição / Nome do Mentor</FormLabel>
+                          <FormLabel>Description / Mentor Name</FormLabel>
                           <FormControl>
                             <Input
                               {...field}
@@ -254,7 +254,7 @@ export function NextLiveCard({ isAdmin = false }: NextLiveCardProps) {
                       type="submit"
                       className="w-full bg-[#D4AF37] text-slate-900 hover:bg-[#F2D06B]"
                     >
-                      Salvar
+                      Save
                     </Button>
                   </form>
                 </Form>

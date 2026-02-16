@@ -125,10 +125,10 @@ export function GamificationSidebar({ mentoradoId, className }: GamificationSide
                   <span className="text-5xl font-bold text-primary">
                     {streakData?.currentStreak ?? 0}
                   </span>
-                  <span className="text-muted-foreground">meses</span>
+                  <span className="text-muted-foreground">months</span>
                 </div>
                 <p className="text-xs text-muted-foreground mt-1">
-                  Recorde: {streakData?.longestStreak ?? 0} meses
+                  Record: {streakData?.longestStreak ?? 0} months
                 </p>
                 {(() => {
                   // Compute nextMilestone and progressPercent locally (moved from API)
@@ -141,8 +141,8 @@ export function GamificationSidebar({ mentoradoId, className }: GamificationSide
                   return (
                     <div className="mt-3 space-y-1">
                       <div className="flex justify-between text-xs">
-                        <span className="text-muted-foreground">Próximo marco</span>
-                        <span className="font-medium">{nextMilestone} meses</span>
+                        <span className="text-muted-foreground">Next milestone</span>
+                        <span className="font-medium">{nextMilestone} months</span>
                       </div>
                       <Progress value={progressPercent} className="h-2" />
                     </div>
@@ -158,10 +158,10 @@ export function GamificationSidebar({ mentoradoId, className }: GamificationSide
           <CardHeader className="pb-2">
             <CardTitle className="flex items-center gap-2 text-lg">
               <Trophy className="size-5 text-yellow-500" />
-              Conquistas
+              Achievements
               {earnedBadges && (
                 <span className="ml-auto text-xs font-normal text-muted-foreground">
-                  {earnedBadges.length} de {allBadges?.length ?? 0}
+                  {earnedBadges.length} of {allBadges?.length ?? 0}
                 </span>
               )}
             </CardTitle>
@@ -214,7 +214,7 @@ export function GamificationSidebar({ mentoradoId, className }: GamificationSide
               </div>
             ) : (
               <p className="text-sm text-muted-foreground italic">
-                Nenhuma conquista ainda. Continue subindo suas métricas!
+                No achievements yet. Keep improving your metrics!
               </p>
             )}
           </CardContent>
@@ -225,7 +225,7 @@ export function GamificationSidebar({ mentoradoId, className }: GamificationSide
           <CardHeader className="pb-2">
             <CardTitle className="flex items-center gap-2 text-lg text-muted-foreground">
               <Lock className="size-5" />
-              Badges Bloqueadas
+              Locked Badges
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -266,7 +266,7 @@ export function GamificationSidebar({ mentoradoId, className }: GamificationSide
         {nextBadge && (
           <Card className="border-dashed border-primary/30 bg-primary/5">
             <CardHeader className="pb-2">
-              <CardTitle className="text-lg">Próxima Conquista</CardTitle>
+              <CardTitle className="text-lg">Next Achievement</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="flex items-center gap-3">
@@ -300,7 +300,7 @@ export function GamificationSidebar({ mentoradoId, className }: GamificationSide
             variant="outline"
             size="icon"
             className="fixed bottom-6 right-6 z-50 lg:hidden size-14 rounded-full shadow-lg"
-            aria-label="Ver gamificação"
+            aria-label="View gamification"
           >
             <Trophy className="size-6 text-yellow-500" />
           </Button>
@@ -309,7 +309,7 @@ export function GamificationSidebar({ mentoradoId, className }: GamificationSide
           <SheetHeader className="mb-4">
             <SheetTitle className="flex items-center gap-2">
               <Trophy className="size-5 text-yellow-500" />
-              Gamificação
+              Gamification
             </SheetTitle>
           </SheetHeader>
           {sidebarContent}

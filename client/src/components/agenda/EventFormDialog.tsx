@@ -26,7 +26,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { trpc } from "@/lib/trpc";
 
 const eventSchema = z.object({
-  title: z.string().min(1, "Título é obrigatório"),
+  title: z.string().min(1, "Title is required"),
   description: z.string().optional(),
   start: z.string(), // ISO datetime
   end: z.string(), // ISO datetime
@@ -97,13 +97,13 @@ export function EventFormDialog({
 
   const createEventMutation = trpc.calendar.createEvent.useMutation({
     onSuccess: () => {
-      toast.success("Evento criado! O novo evento foi adicionado à sua agenda.");
+      toast.success("Event created! The new event has been added to your calendar.");
       utils.calendar.getEvents.invalidate();
       onOpenChange(false);
       onSuccess?.();
     },
     onError: (error) => {
-      toast.error(`Erro ao criar evento: ${error.message}`);
+      toast.error(`Error creating event: ${error.message}`);
     },
   });
 
@@ -126,7 +126,7 @@ export function EventFormDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="bg-[#141820] border-[#C6A665]/30 text-slate-200 sm:max-w-[500px]">
         <DialogHeader>
-          <DialogTitle className="text-[#C6A665] font-serif text-xl">Novo Agendamento</DialogTitle>
+          <DialogTitle className="text-[#C6A665] font-serif text-xl">New Event</DialogTitle>
         </DialogHeader>
 
         <Form {...form}>
@@ -136,10 +136,10 @@ export function EventFormDialog({
               name="title"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Título</FormLabel>
+                  <FormLabel>Title</FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="Ex: Consulta Dr. Silva"
+                      placeholder="E.g.: Consultation Dr. Smith"
                       className="bg-[#0B0E14] border-slate-700 focus:border-[#C6A665]"
                       {...field}
                     />
@@ -155,7 +155,7 @@ export function EventFormDialog({
                 name="start"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Data Início</FormLabel>
+                    <FormLabel>Start Date</FormLabel>
                     <FormControl>
                       <Input
                         type="date"
@@ -172,7 +172,7 @@ export function EventFormDialog({
                 name="startTime"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Hora Início</FormLabel>
+                    <FormLabel>Start Time</FormLabel>
                     <FormControl>
                       <Input
                         type="time"
@@ -192,7 +192,7 @@ export function EventFormDialog({
                 name="end"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Data Fim</FormLabel>
+                    <FormLabel>End Date</FormLabel>
                     <FormControl>
                       <Input
                         type="date"
@@ -209,7 +209,7 @@ export function EventFormDialog({
                 name="endTime"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Hora Fim</FormLabel>
+                    <FormLabel>End Time</FormLabel>
                     <FormControl>
                       <Input
                         type="time"
@@ -228,10 +228,10 @@ export function EventFormDialog({
               name="location"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Local</FormLabel>
+                  <FormLabel>Location</FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="Ex: Sala 1"
+                      placeholder="E.g.: Room 1"
                       className="bg-[#0B0E14] border-slate-700 focus:border-[#C6A665]"
                       {...field}
                     />
@@ -246,10 +246,10 @@ export function EventFormDialog({
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Descrição</FormLabel>
+                  <FormLabel>Description</FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder="Detalhes do agendamento..."
+                      placeholder="Event details..."
                       className="bg-[#0B0E14] border-slate-700 focus:border-[#C6A665] min-h-[80px]"
                       {...field}
                     />
@@ -265,7 +265,7 @@ export function EventFormDialog({
               render={({ field }) => (
                 <FormItem className="flex flex-row items-center justify-between rounded-lg border border-slate-800 p-3 shadow-sm bg-[#0B0E14]">
                   <div className="space-y-0.5">
-                    <FormLabel>Dia Inteiro</FormLabel>
+                    <FormLabel>All Day</FormLabel>
                   </div>
                   <FormControl>
                     <Switch checked={field.value} onCheckedChange={field.onChange} />
@@ -281,7 +281,7 @@ export function EventFormDialog({
                 onClick={() => onOpenChange(false)}
                 className="hover:bg-slate-800 hover:text-white"
               >
-                Cancelar
+                Cancel
               </Button>
               <Button
                 type="submit"
@@ -289,7 +289,7 @@ export function EventFormDialog({
                 className="bg-[#C6A665] hover:bg-[#C6A665]/90 text-black font-bold"
               >
                 {createEventMutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                Criar Evento
+                Create Event
               </Button>
             </DialogFooter>
           </form>

@@ -49,8 +49,8 @@ export function RankingView({ selectedMonth, selectedYear }: RankingViewProps) {
     <div className="space-y-8">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-foreground tracking-tight">Ranking Mensal</h2>
-          <p className="text-muted-foreground mt-1">Classificação de performance dos mentorados</p>
+          <h2 className="text-2xl font-bold text-foreground tracking-tight">Monthly Ranking</h2>
+          <p className="text-muted-foreground mt-1">Mentee performance rankings</p>
         </div>
       </div>
 
@@ -62,8 +62,8 @@ export function RankingView({ selectedMonth, selectedYear }: RankingViewProps) {
         <Card className="border-none shadow-sm">
           <CardContent className="py-12 text-center">
             <Trophy className="w-12 h-12 mx-auto text-slate-300 mb-4" />
-            <h3 className="text-lg font-semibold text-foreground mb-2">Ranking não disponível</h3>
-            <p className="text-muted-foreground">O ranking selecionado ainda não foi calculado.</p>
+            <h3 className="text-lg font-semibold text-foreground mb-2">Ranking not available</h3>
+            <p className="text-muted-foreground">The selected ranking has not been calculated yet.</p>
           </CardContent>
         </Card>
       ) : (
@@ -124,7 +124,7 @@ export function RankingView({ selectedMonth, selectedYear }: RankingViewProps) {
                     </div>
                     {item.ranking.pontosBonus > 0 && (
                       <p className="text-xs text-emerald-600 mt-1 font-medium bg-emerald-100 dark:bg-emerald-900/20 inline-block px-2 py-0.5 rounded-full">
-                        +{item.ranking.pontosBonus} bônus
+                        +{item.ranking.pontosBonus} bonus
                       </p>
                     )}
                   </BentoCardContent>
@@ -136,7 +136,7 @@ export function RankingView({ selectedMonth, selectedYear }: RankingViewProps) {
           {/* Full Ranking List */}
           <Card className="border shadow-sm">
             <CardHeader>
-              <CardTitle className="text-lg">Classificação Completa</CardTitle>
+              <CardTitle className="text-lg">Full Rankings</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-2">
@@ -175,7 +175,7 @@ export function RankingView({ selectedMonth, selectedYear }: RankingViewProps) {
                           {item.mentorado.nomeCompleto}
                           {isCurrentUser && (
                             <Badge variant="secondary" className="ml-2 text-xs">
-                              Você
+                              You
                             </Badge>
                           )}
                         </h4>
@@ -189,7 +189,7 @@ export function RankingView({ selectedMonth, selectedYear }: RankingViewProps) {
                         </div>
                         {item.ranking.pontosBonus > 0 && (
                           <div className="flex items-center justify-end gap-1 text-xs text-emerald-600">
-                            <TrendingUp className="w-3 h-3" />+{item.ranking.pontosBonus} bônus
+                            <TrendingUp className="w-3 h-3" />+{item.ranking.pontosBonus} bonus
                           </div>
                         )}
                       </div>

@@ -84,7 +84,7 @@ export function KanbanColumn({
             className="w-full justify-start text-muted-foreground hover:text-primary hover:bg-primary/10 h-8 text-xs border border-dashed border-border/50"
             onClick={onAddLead}
           >
-            <Plus className="w-3 h-3 mr-2" /> Novo Lead
+            <Plus className="w-3 h-3 mr-2" /> New Lead
           </Button>
         )}
       </div>
@@ -114,7 +114,7 @@ export function KanbanColumn({
 
         {safeLeads.length === 0 && (
           <div className="h-24 flex items-center justify-center text-xs text-muted-foreground/50 border-2 border-dashed border-border/50 rounded-lg">
-            Arraste leads para cá
+            Drag leads here
           </div>
         )}
       </div>

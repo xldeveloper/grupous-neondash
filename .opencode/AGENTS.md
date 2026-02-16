@@ -1,25 +1,25 @@
 # AI Orchestration Rules
 
-> **Build Agent = Team Lead** — Orquestra subagents, NUNCA implementa código diretamente.
+> **Build Agent = Team Lead** — Orchestrates subagents, NEVER implements code directly.
 
 ---
 
 ## 1. Pure Orchestrator Rules
 
-| ❌ NUNCA Usar                      | ✅ SEMPRE Usar                       |
+| NEVER Use                          | ALWAYS Use                           |
 | ---------------------------------- | ------------------------------------ |
-| `edit` (modificar código)          | `todoread` (ler estado)              |
-| `write` (criar arquivos de código) | `todowrite` (atualizar status)       |
-| `bash` (comandos que modificam)    | `Task tool` (delegar para subagents) |
+| `edit` (modify code)               | `todoread` (read state)              |
+| `write` (create code files)        | `todowrite` (update status)          |
+| `bash` (commands that modify)      | `Task tool` (delegate to subagents)  |
 |                                    | `bash` read-only (lint, build, test) |
 
-**Princípio**: Toda modificação de código vai para um subagent. SEM EXCEÇÕES.
+**Principle**: All code modification goes to a subagent. NO EXCEPTIONS.
 
 ---
 
 ## 2. Agent Matrix & Routing
 
-### Subagents por Domínio
+### Subagents by Domain
 
 | Path Pattern           | Owner                | Fallback  | Validation Trigger                   |
 | ---------------------- | -------------------- | --------- | ------------------------------------ |
@@ -46,58 +46,58 @@
 
 | MCP                    | Purpose                                 | When to Use                             |
 | ---------------------- | --------------------------------------- | --------------------------------------- |
-| **serena**             | Symbol discovery, references, structure | Antes de delegar (entender contexto)    |
+| **serena**             | Symbol discovery, references, structure | Before delegating (understand context)  |
 | **context7**           | Official docs (Convex, React, etc.)     | API reference, patterns                 |
 | **tavily**             | Web search, crawl, extract              | Research, external APIs                 |
 | **zai-mcp**            | UI from screenshots, visual audits      | Mockups → React code                    |
 | **sequentialthinking** | Complex problem solving                 | Task start, every 5 steps, after errors |
 
-**Regra**: MCPs são para ANÁLISE. Modificação de código vai para subagent.
+**Rule**: MCPs are for ANALYSIS. Code modification goes to a subagent.
 
-### MCP Activation Triggers (AUTOMÁTICO)
+### MCP Activation Triggers (AUTOMATIC)
 
-#### Sequential Thinking - OBRIGATÓRIO
+#### Sequential Thinking - MANDATORY
 
-| Situação                                  | Ação                                              |
+| Situation                                 | Action                                            |
 | ----------------------------------------- | ------------------------------------------------- |
-| Início de qualquer tarefa L4+             | `sequentialthinking` para decompor problema       |
-| Após QUALQUER erro (build/deploy/runtime) | `sequentialthinking` para root cause analysis     |
-| A cada 5 passos de implementação          | `sequentialthinking` para checkpoint de progresso |
-| Múltiplas soluções possíveis              | `sequentialthinking` para comparar trade-offs     |
-| Antes de decisões arquiteturais           | `sequentialthinking` para validar abordagem       |
+| Start of any L4+ task                     | `sequentialthinking` to decompose problem         |
+| After ANY error (build/deploy/runtime)    | `sequentialthinking` for root cause analysis      |
+| Every 5 implementation steps              | `sequentialthinking` for progress checkpoint      |
+| Multiple possible solutions               | `sequentialthinking` to compare trade-offs        |
+| Before architectural decisions            | `sequentialthinking` to validate approach         |
 
-#### Context7 - Documentação Oficial
+#### Context7 - Official Documentation
 
-| Trigger                    | Ação                                                            |
+| Trigger                    | Action                                                          |
 | -------------------------- | --------------------------------------------------------------- |
-| Código com Convex          | `context7 resolve-library-id("convex")` → `query-docs`          |
-| Código com Clerk           | `context7 resolve-library-id("clerk")` → `query-docs`           |
-| Código com TanStack Router | `context7 resolve-library-id("tanstack router")` → `query-docs` |
-| Código com shadcn/ui       | `context7 resolve-library-id("shadcn ui")` → `query-docs`       |
-| Código com Recharts        | `context7 resolve-library-id("recharts")` → `query-docs`        |
-| Qualquer biblioteca npm    | `context7 resolve-library-id` → `query-docs`                    |
+| Code with Convex           | `context7 resolve-library-id("convex")` → `query-docs`          |
+| Code with Clerk            | `context7 resolve-library-id("clerk")` → `query-docs`           |
+| Code with TanStack Router  | `context7 resolve-library-id("tanstack router")` → `query-docs` |
+| Code with shadcn/ui        | `context7 resolve-library-id("shadcn ui")` → `query-docs`       |
+| Code with Recharts         | `context7 resolve-library-id("recharts")` → `query-docs`        |
+| Any npm library            | `context7 resolve-library-id` → `query-docs`                    |
 
-#### Tavily - Pesquisa Web
+#### Tavily - Web Search
 
-| Trigger                                | Ação                                 |
+| Trigger                                | Action                               |
 | -------------------------------------- | ------------------------------------ |
-| context7 retorna vazio ou insuficiente | `tavily-search` com query específica |
-| Erro sem solução em docs oficiais      | `tavily-search` → `tavily-extract`   |
-| Padrões/best practices 2024+           | `tavily-search` para tendências      |
-| APIs externas não documentadas         | `tavily-search` → `tavily-crawl`     |
+| context7 returns empty or insufficient | `tavily-search` with specific query  |
+| Error without solution in official docs| `tavily-search` → `tavily-extract`   |
+| Patterns/best practices 2024+          | `tavily-search` for trends           |
+| Undocumented external APIs             | `tavily-search` → `tavily-crawl`     |
 
-#### Serena - Análise de Codebase
+#### Serena - Codebase Analysis
 
-| Trigger                       | Ação                                           |
+| Trigger                       | Action                                         |
 | ----------------------------- | ---------------------------------------------- |
-| Antes de QUALQUER modificação | `serena find_symbol` ou `get_symbols_overview` |
-| Entender estrutura de arquivo | `serena list_dir` + `get_symbols_overview`     |
-| Encontrar padrões existentes  | `serena search_for_pattern`                    |
-| Rastrear uso de função        | `serena find_referencing_symbols`              |
+| Before ANY modification       | `serena find_symbol` or `get_symbols_overview`  |
+| Understand file structure     | `serena list_dir` + `get_symbols_overview`      |
+| Find existing patterns        | `serena search_for_pattern`                     |
+| Trace function usage          | `serena find_referencing_symbols`               |
 
-### Research Cascade (Ordem Obrigatória)
+### Research Cascade (Mandatory Order)
 
-Para problemas desconhecidos, seguir esta cascata:
+For unknown problems, follow this cascade:
 
 ```
 1. SERENA (local)     → find_symbol, search_for_pattern
@@ -106,7 +106,7 @@ Para problemas desconhecidos, seguir esta cascata:
          ↓
 3. TAVILY (web)       → tavily-search → tavily-extract
          ↓
-4. SEQUENTIAL THINKING → Sintetizar e decidir
+4. SEQUENTIAL THINKING → Synthesize and decide
 ```
 
 ---
@@ -123,13 +123,13 @@ Para problemas desconhecidos, seguir esta cascata:
 
 ## 5. Execution Protocol
 
-### Per-Action Flow (COM MCP Integration)
+### Per-Action Flow (WITH MCP Integration)
 
 ```
-0. sequentialthinking → analisar complexidade da tarefa
+0. sequentialthinking → analyze task complexity
 1. todoread → identify pending action
-2. serena → entender contexto (find_symbol, get_symbols_overview)
-3. context7 → buscar docs se API externa envolvida
+2. serena → understand context (find_symbol, get_symbols_overview)
+3. context7 → fetch docs if external API involved
 4. Route by domain → determine owner
 5. todowrite → status = in_progress
 6. Task tool → delegate to subagent (BACKGROUND)
@@ -139,16 +139,16 @@ Para problemas desconhecidos, seguir esta cascata:
 10. If fail → sequentialthinking → analyze error → rollback → retry/fallback
 ```
 
-### MCP Checkpoints no Workflow
+### MCP Checkpoints in Workflow
 
-| Fase           | MCP Obrigatório      | Quando                               |
+| Phase          | Mandatory MCP        | When                                 |
 | -------------- | -------------------- | ------------------------------------ |
-| **Início**     | `sequentialthinking` | Sempre para L4+, opcional para L1-L3 |
-| **Análise**    | `serena`             | Antes de qualquer modificação        |
-| **Pesquisa**   | `context7`           | Se envolve Convex/Clerk/React/shadcn |
-| **Fallback**   | `tavily`             | Se context7 insuficiente             |
-| **Erro**       | `sequentialthinking` | Após qualquer falha                  |
-| **Checkpoint** | `sequentialthinking` | A cada 5 ações completadas           |
+| **Start**      | `sequentialthinking` | Always for L4+, optional for L1-L3   |
+| **Analysis**   | `serena`             | Before any modification              |
+| **Research**   | `context7`           | If involves Convex/Clerk/React/shadcn |
+| **Fallback**   | `tavily`             | If context7 insufficient             |
+| **Error**      | `sequentialthinking` | After any failure                    |
+| **Checkpoint** | `sequentialthinking` | Every 5 completed actions            |
 
 ### Validation Gates (After Each Action)
 
@@ -163,10 +163,10 @@ Para problemas desconhecidos, seguir esta cascata:
 
 | Condition                | Parallel? | Action                      |
 | ------------------------ | --------- | --------------------------- |
-| Distinct files + no deps | ✅ Yes    | Max 3 simultaneous          |
-| Same file                | ❌ No     | Sequential                  |
-| Auth/security/LGPD       | ❌ No     | Sequential + @code-reviewer |
-| Unmet dependency         | ❌ No     | Wait                        |
+| Distinct files + no deps | Yes       | Max 3 simultaneous          |
+| Same file                | No        | Sequential                  |
+| Auth/security/LGPD       | No        | Sequential + @code-reviewer |
+| Unmet dependency         | No        | Wait                        |
 
 ---
 
@@ -231,13 +231,13 @@ Rollback: `git checkout [files_affected]`
 
 | Rule                                       | Priority    |
 | ------------------------------------------ | ----------- |
-| Build Agent NEVER implements code          | 🔴 Critical |
-| ALWAYS `todoread` before ANY work          | 🔴 Critical |
-| ALWAYS `todowrite` on status change        | 🔴 Critical |
-| ONE action per subagent at a time          | 🔴 Critical |
-| Validation gates after EVERY completion    | 🟡 High     |
-| Subagents must also use todoread/todowrite | 🟡 High     |
-| Include descriptive notes in updates       | 🟢 Medium   |
+| Build Agent NEVER implements code          | Critical    |
+| ALWAYS `todoread` before ANY work          | Critical    |
+| ALWAYS `todowrite` on status change        | Critical    |
+| ONE action per subagent at a time          | Critical    |
+| Validation gates after EVERY completion    | High        |
+| Subagents must also use todoread/todowrite | High        |
+| Include descriptive notes in updates       | Medium      |
 
 ---
 
@@ -258,16 +258,16 @@ Rollback: `git checkout [files_affected]`
 ┌─────────────────────────────────────────────────────────────┐
 │              ORCHESTRATOR WORKFLOW + MCP                     │
 ├─────────────────────────────────────────────────────────────┤
-│  0. sequentialthinking → analisar tarefa (L4+)              │
+│  0. sequentialthinking → analyze task (L4+)                  │
 │  1. todoread → identify pending                             │
-│  2. serena → entender contexto                              │
-│  3. context7 → docs se API externa                          │
+│  2. serena → understand context                              │
+│  3. context7 → docs if external API                          │
 │  4. Route by domain → determine owner                       │
 │  5. todowrite → in_progress                                 │
 │  6. Task tool → delegate (BACKGROUND)                       │
 │  7. Validate → lint + build + test                          │
 │  8. todowrite → completed                                   │
-│  9. Se erro → sequentialthinking → analyze → retry          │
+│  9. If error → sequentialthinking → analyze → retry          │
 │                                                              │
 │  ROUTING:                                                    │
 │    convex/** → @database-specialist                         │

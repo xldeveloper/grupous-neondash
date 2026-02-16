@@ -20,7 +20,7 @@ import { trpc } from "@/lib/trpc";
 
 const columnSchema = z.object({
   originalId: z.string(),
-  label: z.string().min(1, "Nome é obrigatório"),
+  label: z.string().min(1, "Name is required"),
   color: z.string(),
   visible: z.boolean(), // We map "sim"/"nao" to boolean for UI
   order: z.number(),
@@ -46,12 +46,12 @@ export function ColumnEditDialog({ isOpen, onClose, defaultColumns }: ColumnEdit
 
   const saveMutation = trpc.crmColumns.save.useMutation({
     onSuccess: () => {
-      toast.success("Colunas atualizadas com sucesso!");
+      toast.success("Columns updated successfully!");
       trpcUtils.crmColumns.list.invalidate();
       onClose();
     },
     onError: (err) => {
-      toast.error(`Erro ao salvar: ${err.message}`);
+      toast.error(`Error saving: ${err.message}`);
     },
   });
 
@@ -119,9 +119,9 @@ export function ColumnEditDialog({ isOpen, onClose, defaultColumns }: ColumnEdit
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[600px] max-h-[85vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Editar Colunas do Pipeline</DialogTitle>
+          <DialogTitle>Edit Pipeline Columns</DialogTitle>
           <DialogDescription>
-            Personalize os nomes, visibilidade e ordem das colunas do seu CRM.
+            Customize the names, visibility and order of your CRM columns.
           </DialogDescription>
         </DialogHeader>
 
@@ -160,7 +160,7 @@ export function ColumnEditDialog({ isOpen, onClose, defaultColumns }: ColumnEdit
                         <FormControl>
                           <Switch checked={field.value} onCheckedChange={field.onChange} />
                         </FormControl>
-                        {/* <FormLabel className="text-xs">Visível</FormLabel> */}
+                        {/* <FormLabel className="text-xs">Visible</FormLabel> */}
                       </FormItem>
                     )}
                   />
@@ -193,10 +193,10 @@ export function ColumnEditDialog({ isOpen, onClose, defaultColumns }: ColumnEdit
 
             <DialogFooter>
               <Button type="button" variant="secondary" onClick={onClose}>
-                Cancelar
+                Cancel
               </Button>
               <Button type="submit" disabled={saveMutation.isPending}>
-                {saveMutation.isPending ? "Salvando..." : "Salvar Alterações"}
+                {saveMutation.isPending ? "Saving..." : "Save Changes"}
               </Button>
             </DialogFooter>
           </form>

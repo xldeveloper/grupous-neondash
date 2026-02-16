@@ -33,25 +33,25 @@ describe("Diagnostico Upsert Data Structure Logic", () => {
       // Test the data structure logic for a new diagnostico record
       const inputData = {
         atuacaoSaude: "Dermatologia",
-        tempoLivre: "5 horas",
-        jaAtuaEstetica: "Sim",
-        temClinica: "Não",
+        tempoLivre: "5 hours",
+        jaAtuaEstetica: "Yes",
+        temClinica: "No",
         rendaMensal: "10000",
         faturaEstetica: "5000",
         contas: "2000",
         custoVida: "3000",
         capacidadeInvestimento: "2000",
-        incomodaRotina: "Falta de organização",
+        incomodaRotina: "Lack of organization",
         dificuldadeCrescer: "Marketing",
-        tentativasAnteriores: "Cursos online",
-        objetivo6Meses: "Faturar 20k",
-        resultadoTransformador: "Liberdade financeira",
-        visaoUmAno: "Ter clínica própria",
-        porqueAgora: "Momento certo",
-        horasDisponiveis: "20 horas",
-        nivelPrioridade: "Alto",
-        redeApoio: "Família",
-        organizacao: "Média",
+        tentativasAnteriores: "Online courses",
+        objetivo6Meses: "Earn 20k in revenue",
+        resultadoTransformador: "Financial freedom",
+        visaoUmAno: "Own my own clinic",
+        porqueAgora: "Right timing",
+        horasDisponiveis: "20 hours",
+        nivelPrioridade: "High",
+        redeApoio: "Family",
+        organizacao: "Medium",
       };
 
       const mentoradoId = 1;
@@ -64,8 +64,8 @@ describe("Diagnostico Upsert Data Structure Logic", () => {
 
       expect(insertData.mentoradoId).toBe(1);
       expect(insertData.atuacaoSaude).toBe("Dermatologia");
-      expect(insertData.objetivo6Meses).toBe("Faturar 20k");
-      expect(insertData.visaoUmAno).toBe("Ter clínica própria");
+      expect(insertData.objetivo6Meses).toBe("Earn 20k in revenue");
+      expect(insertData.visaoUmAno).toBe("Own my own clinic");
     });
 
     it("should exclude mentoradoId from update data", () => {
@@ -73,7 +73,7 @@ describe("Diagnostico Upsert Data Structure Logic", () => {
       const inputData = {
         mentoradoId: 1,
         atuacaoSaude: "Dermatologia Updated",
-        objetivo6Meses: "Faturar 30k",
+        objetivo6Meses: "Earn 30k in revenue",
       };
 
       // Simulate what the router does - exclude mentoradoId from update
@@ -81,7 +81,7 @@ describe("Diagnostico Upsert Data Structure Logic", () => {
 
       expect(dataToUpdate).not.toHaveProperty("mentoradoId");
       expect(dataToUpdate.atuacaoSaude).toBe("Dermatologia Updated");
-      expect(dataToUpdate.objetivo6Meses).toBe("Faturar 30k");
+      expect(dataToUpdate.objetivo6Meses).toBe("Earn 30k in revenue");
     });
 
     it("should add updatedAt timestamp on update", () => {

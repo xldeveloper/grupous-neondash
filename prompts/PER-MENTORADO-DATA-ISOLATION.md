@@ -1,8 +1,8 @@
-# PROMPT: Implementação de Isolamento de Dados por Mentorado (Row-Level Security)
+# PROMPT: Implementation of Per-Mentee Data Isolation (Row-Level Security)
 
 ## OBJECTIVE
 
-Implementar isolamento completo de dados no nível da aplicação usando **Row-Level Security (RLS)** no backend para garantir que cada mentorado veja apenas seus próprios dados e admin veja todos os dados. **ZERO** vazamento de dados entre mentorados.
+Implement complete application-level data isolation using **Row-Level Security (RLS)** on the backend to ensure that each mentee sees only their own data and admins see all data. **ZERO** data leakage between mentees.
 
 ---
 
@@ -10,8 +10,8 @@ Implementar isolamento completo de dados no nível da aplicação usando **Row-L
 
 - **Project**: NEON Dashboard (Portal mentorias.black)
 - **Tech Stack**: React 19 + Vite 7 + tRPC 11 + Drizzle ORM + Neon PostgreSQL + Express + Clerk + Bun
-- **Auth**: Clerk (clerkId → users.userId → mentorados.userId)
-- **Current Issue**: Dados não estão isolados por mentorado após login
+- **Auth**: Clerk (clerkId -> users.userId -> mentorados.userId)
+- **Current Issue**: Data is not isolated per mentee after login
 
 ---
 
@@ -19,22 +19,22 @@ Implementar isolamento completo de dados no nível da aplicação usando **Row-L
 
 ```mermaid
 erDiagram
-    users ||--|{ mentorados : "tem"
-    mentorados ||--o| metricasMensais : "possui"
-    mentorados ||--o| feedbacks : "recebe"
-    mentorados ||--o| mentoradoBadges : "ganha"
-    mentorados ||--o| metasProgressivas : "tem"
-    mentorados ||--o| notificacoes : "recebe"
-    mentorados ||--o| leads : "gerencia"
-    leads ||--o| interacoes : "tem"
-    users ||--o| moltbotSessions : "tem"
-    moltbotSessions ||--o| moltbotMessages : "possui"
+    users ||--|{ mentorados : "has"
+    mentorados ||--o| metricasMensais : "owns"
+    mentorados ||--o| feedbacks : "receives"
+    mentorados ||--o| mentoradoBadges : "earns"
+    mentorados ||--o| metasProgressivas : "has"
+    mentorados ||--o| notificacoes : "receives"
+    mentorados ||--o| leads : "manages"
+    leads ||--o| interacoes : "has"
+    users ||--o| moltbotSessions : "has"
+    moltbotSessions ||--o| moltbotMessages : "owns"
 ```
 
-**Path de Autorização:**
+**Authorization Path:**
 
 ```
-Clerk Auth → users.clerkId → users.id → mentorados.userId → mentorados.id
+Clerk Auth -> users.clerkId -> users.id -> mentorados.userId -> mentorados.id
 ```
 
 ---
@@ -45,7 +45,7 @@ Clerk Auth → users.clerkId → users.id → mentorados.userId → mentorados.i
 
 **File:** `server/_core/context.ts`
 
-Execute as alterações para resolver o erro de propriedade `clerkId`:
+Apply the changes to resolve the `clerkId` property error:
 
 ```typescript
 import { ClerkExpressRequireAuth } from "@clerk/express";
@@ -74,7 +74,7 @@ export const createContext = async (
 
     user = userRow[0] || null;
 
-    // If user exists, fetch mentorado profile by userId
+    // If user exists, fetch mentee profile by userId
     if (user) {
       const mentoradoRow = await db
         .select()
@@ -111,7 +111,7 @@ export interface TrpcContext {
 
 ---
 
-### 2. MIDDLEWARE FOR MENTORADO-AWARE PROCEDURES
+### 2. MIDDLEWARE FOR MENTEE-AWARE PROCEDURES
 
 **File:** `server/_core/trpc.ts`
 
@@ -123,21 +123,21 @@ import { mentorados } from "../drizzle/schema";
 
 // ... existing imports and middlewares ...
 
-// Require authenticated user WITH mentorado profile
+// Require authenticated user WITH mentee profile
 const requireMentorado = t.middleware(async opts => {
   const { ctx, next } = opts;
 
   if (!ctx.user) {
     throw new TRPCError({
       code: "UNAUTHORIZED",
-      message: "Usuário não autenticado",
+      message: "User not authenticated",
     });
   }
 
   if (!ctx.mentorado) {
     throw new TRPCError({
       code: "FORBIDDEN",
-      message: "Perfil de mentorado não encontrado",
+      message: "Mentee profile not found",
     });
   }
 
@@ -157,10 +157,10 @@ export const mentoradoProcedure = t.procedure.use(requireMentorado);
 
 ### 3. DATA ISOLATION PATTERNS
 
-#### PATTERN 1: Query - Single Mentorado's Data
+#### PATTERN 1: Query - Single Mentee's Data
 
 ```typescript
-// ✅ CORRECT: Filter by ctx.mentorado.id
+// CORRECT: Filter by ctx.mentorado.id
 listMine: mentoradoProcedure.query(async ({ ctx }) => {
   return await ctx.db
     .select()
@@ -168,7 +168,7 @@ listMine: mentoradoProcedure.query(async ({ ctx }) => {
     .where(eq(metricasMensais.mentoradoId, ctx.mentorado.id));
 });
 
-// ❌ INCORRECT: No isolation
+// INCORRECT: No isolation
 listAll: mentoradoProcedure.query(async ({ ctx }) => {
   return await ctx.db.select().from(metricasMensais); // VULNERABLE!
 });
@@ -177,14 +177,14 @@ listAll: mentoradoProcedure.query(async ({ ctx }) => {
 #### PATTERN 2: Mutation - Create with mentoradoId
 
 ```typescript
-// ✅ CORRECT: Auto-inject mentoradoId
+// CORRECT: Auto-inject mentoradoId
 create: mentoradoProcedure
   .input(z.object({ faturamento: z.number() }))
   .mutation(async ({ ctx, input }) => {
     const [result] = await ctx.db
       .insert(metricasMensais)
       .values({
-        mentoradoId: ctx.mentorado.id, // ← AUTOMATIC INJECTION
+        mentoradoId: ctx.mentorado.id, // <- AUTOMATIC INJECTION
         ano: new Date().getFullYear(),
         mes: new Date().getMonth() + 1,
         faturamento: input.faturamento,
@@ -198,7 +198,7 @@ create: mentoradoProcedure
 #### PATTERN 3: Mutation - Update with Ownership Check
 
 ```typescript
-// ✅ CORRECT: Verify ownership before update
+// CORRECT: Verify ownership before update
 update: mentoradoProcedure
   .input(z.object({ id: z.number(), faturamento: z.number() }))
   .mutation(async ({ ctx, input }) => {
@@ -217,7 +217,7 @@ update: mentoradoProcedure
     if (!existing[0]) {
       throw new TRPCError({
         code: "FORBIDDEN",
-        message: "Registro não encontrado ou sem permissão",
+        message: "Record not found or access denied",
       });
     }
 
@@ -235,7 +235,7 @@ update: mentoradoProcedure
 #### PATTERN 4: Admin - All Data Access
 
 ```typescript
-// ✅ CORRECT: Admin can see all data
+// CORRECT: Admin can see all data
 listAll: adminProcedure.query(async ({ ctx }) => {
   return await ctx.db
     .select()
@@ -248,7 +248,7 @@ listAll: adminProcedure.query(async ({ ctx }) => {
 
 ## ROUTER UPDATES REQUIREMENTS
 
-Execute os seguintes updates em cada router:
+Apply the following updates to each router:
 
 ### 4.1 mentoradosRouter.ts
 
@@ -258,12 +258,12 @@ import { eq, and } from "drizzle-orm";
 import { mentorados, metricasMensais, feedbacks } from "../drizzle/schema";
 
 export const mentoradosRouter = router({
-  // Mentorado: Get own profile
+  // Mentee: Get own profile
   me: mentoradoProcedure.query(async ({ ctx }) => {
     return ctx.mentorado;
   }),
 
-  // Mentorado: Get own monthly metrics
+  // Mentee: Get own monthly metrics
   getMetricas: mentoradoProcedure
     .input(
       z.object({
@@ -285,7 +285,7 @@ export const mentoradosRouter = router({
         .limit(1);
     }),
 
-  // Admin: List all mentorados
+  // Admin: List all mentees
   listAll: adminProcedure.query(async ({ ctx }) => {
     return await ctx.db
       .select()
@@ -319,7 +319,7 @@ import {
 } from "../drizzle/schema";
 
 export const gamificacaoRouter = router({
-  // Mentorado: Get own badges
+  // Mentee: Get own badges
   getBadges: mentoradoProcedure.query(async ({ ctx }) => {
     return await ctx.db
       .select({
@@ -341,7 +341,7 @@ export const gamificacaoRouter = router({
       .orderBy(desc(mentoradoBadges.conquistadoEm));
   }),
 
-  // Mentorado: Get own ranking
+  // Mentee: Get own ranking
   getRanking: mentoradoProcedure
     .input(
       z.object({
@@ -399,7 +399,7 @@ import { eq } from "drizzle-orm";
 import { leads, interacoes } from "../drizzle/schema";
 
 export const leadsRouter = router({
-  // Mentorado: List own leads
+  // Mentee: List own leads
   list: mentoradoProcedure.query(async ({ ctx }) => {
     return await ctx.db
       .select()
@@ -408,7 +408,7 @@ export const leadsRouter = router({
       .orderBy(desc(leads.createdAt));
   }),
 
-  // Mentorado: Create lead with auto-injection
+  // Mentee: Create lead with auto-injection
   create: mentoradoProcedure
     .input(
       z.object({
@@ -425,14 +425,14 @@ export const leadsRouter = router({
         .insert(leads)
         .values({
           ...input,
-          mentoradoId: ctx.mentorado.id, // ← AUTO-INJECTION
+          mentoradoId: ctx.mentorado.id, // <- AUTO-INJECTION
           status: "novo" as const,
         })
         .returning();
       return result;
     }),
 
-  // Mentorado: Update with ownership check
+  // Mentee: Update with ownership check
   update: mentoradoProcedure
     .input(
       z.object({
@@ -453,7 +453,7 @@ export const leadsRouter = router({
       if (!existing[0]) {
         throw new TRPCError({
           code: "FORBIDDEN",
-          message: "Lead não encontrado",
+          message: "Lead not found",
         });
       }
 
@@ -466,7 +466,7 @@ export const leadsRouter = router({
       return updated;
     }),
 
-  // Mentorado: Get interações for own leads
+  // Mentee: Get interactions for own leads
   getInteracoes: mentoradoProcedure
     .input(z.object({ leadId: z.number() }))
     .query(async ({ ctx, input }) => {
@@ -480,7 +480,7 @@ export const leadsRouter = router({
       if (!lead[0] || lead[0].mentoradoId !== ctx.mentorado.id) {
         throw new TRPCError({
           code: "FORBIDDEN",
-          message: "Lead não encontrado",
+          message: "Lead not found",
         });
       }
 
@@ -501,21 +501,21 @@ import { eq } from "drizzle-orm";
 import { moltbotSessions, moltbotMessages } from "../drizzle/schema";
 
 export const moltbotRouter = router({
-  // Mentorado: Get own sessions
+  // Mentee: Get own sessions
   getSessions: mentoradoProcedure.query(async ({ ctx }) => {
     return await ctx.db
       .select()
       .from(moltbotSessions)
       .where(
         and(
-          eq(moltbotSessions.userId, ctx.user.id), // ← User-level isolation
+          eq(moltbotSessions.userId, ctx.user.id), // <- User-level isolation
           eq(moltbotSessions.isActive, "sim")
         )
       )
       .orderBy(desc(moltbotSessions.lastActivityAt));
   }),
 
-  // Mentorado: Get messages for own session
+  // Mentee: Get messages for own session
   getMessages: mentoradoProcedure
     .input(z.object({ sessionId: z.number() }))
     .query(async ({ ctx, input }) => {
@@ -529,7 +529,7 @@ export const moltbotRouter = router({
       if (!session[0] || session[0].userId !== ctx.user.id) {
         throw new TRPCError({
           code: "FORBIDDEN",
-          message: "Sessão não encontrada",
+          message: "Session not found",
         });
       }
 
@@ -550,7 +550,7 @@ import { eq, and } from "drizzle-orm";
 import { notificacoes } from "../drizzle/schema";
 
 export const notificationsRouter = router({
-  // Mentorado: Get own notifications
+  // Mentee: Get own notifications
   list: mentoradoProcedure
     .input(
       z.object({
@@ -571,7 +571,7 @@ export const notificationsRouter = router({
         .orderBy(desc(notificacoes.createdAt));
     }),
 
-  // Mentorado: Mark as read with ownership check
+  // Mentee: Mark as read with ownership check
   markAsRead: mentoradoProcedure
     .input(z.object({ id: z.number() }))
     .mutation(async ({ ctx, input }) => {
@@ -590,7 +590,7 @@ export const notificationsRouter = router({
       if (!existing[0]) {
         throw new TRPCError({
           code: "FORBIDDEN",
-          message: "Notificação não encontrada",
+          message: "Notification not found",
         });
       }
 
@@ -610,8 +610,8 @@ export const notificationsRouter = router({
 ### Before Deploying:
 
 - [ ] **Context Augmentation**: Verify `ctx.mentorado` is correctly populated on every auth request
-- [ ] **All Queries**: Check that all mentorado procedures filter by `ctx.mentorado.id`
-- [ ] **All Mutations**: Check that all mentorado procedures inject `ctx.mentorado.id` on create and verify ownership on update/delete
+- [ ] **All Queries**: Check that all mentee procedures filter by `ctx.mentorado.id`
+- [ ] **All Mutations**: Check that all mentee procedures inject `ctx.mentorado.id` on create and verify ownership on update/delete
 - [ ] **Admin Procedures**: Verify admin procedures use `adminProcedure` and can access all data
 - [ ] **Type Safety**: Verify TypeScript compilation passes (`bun run check`)
 - [ ] **Database Access**: Verify no direct database access bypasses tRPC procedures
@@ -621,15 +621,15 @@ export const notificationsRouter = router({
 
 ## TESTING STRATEGY
 
-### Test 1: Mentorado Can Only Access Own Data
+### Test 1: Mentee Can Only Access Own Data
 
 ```typescript
 // server/mentorados.test.ts
 describe("mentoradoRouter - Data Isolation", () => {
-  it("should only return mentorado's own metrics", async () => {
+  it("should only return mentee's own metrics", async () => {
     const ctx = createTestContext({
       user: { id: 1, clerkId: "mentorado1", role: "user" },
-      mentorado: { id: 100, userId: 1, nomeCompleto: "Mentorado 1" },
+      mentorado: { id: 100, userId: 1, nomeCompleto: "Mentee 1" },
     });
 
     const result = await mentoradosRouter.getMetricas({
@@ -647,7 +647,7 @@ describe("mentoradoRouter - Data Isolation", () => {
 
 ```typescript
 describe("adminRouter - Full Access", () => {
-  it("should return all mentorados", async () => {
+  it("should return all mentees", async () => {
     const ctx = createTestContext({
       user: { id: 999, clerkId: "admin", role: "admin" },
     });
@@ -663,7 +663,7 @@ describe("adminRouter - Full Access", () => {
 
 ```typescript
 describe("leadsRouter - Ownership Check", () => {
-  it("should fail when accessing another mentorado's lead", async () => {
+  it("should fail when accessing another mentee's lead", async () => {
     const ctx = createTestContext({
       user: { id: 1 },
       mentorado: { id: 100 },
@@ -673,7 +673,7 @@ describe("leadsRouter - Ownership Check", () => {
       leadsRouter.update({
         ctx,
         input: {
-          id: 999, // Lead owned by another mentorado
+          id: 999, // Lead owned by another mentee
           status: "fechado_ganho",
         },
       })
@@ -688,14 +688,14 @@ describe("leadsRouter - Ownership Check", () => {
 
 After implementing, verify:
 
-✅ **Type Checking**: `bun run check` passes with no errors
-✅ **Context**: `ctx.mentorado` is populated for all auth requests
-✅ **Isolation**: Every `mentoradoProcedure` filters by `ctx.mentorado.id`
-✅ **Ownership**: Every update/delete verifies ownership before modifying
-✅ **Auto-Injection**: Every create injects `ctx.mentorado.id`
-✅ **Admin Access**: `adminProcedure` can access all mentorado data
-✅ **Tests**: All isolation tests pass
-✅ **Manual Audit**: Review all routers for security violations
+- **Type Checking**: `bun run check` passes with no errors
+- **Context**: `ctx.mentorado` is populated for all auth requests
+- **Isolation**: Every `mentoradoProcedure` filters by `ctx.mentorado.id`
+- **Ownership**: Every update/delete verifies ownership before modifying
+- **Auto-Injection**: Every create injects `ctx.mentorado.id`
+- **Admin Access**: `adminProcedure` can access all mentee data
+- **Tests**: All isolation tests pass
+- **Manual Audit**: Review all routers for security violations
 
 ---
 
@@ -703,7 +703,7 @@ After implementing, verify:
 
 ### Modify:
 
-1. `server/_core/context.ts` - Add mentorado loading
+1. `server/_core/context.ts` - Add mentee loading
 2. `server/_core/trpc.ts` - Add `mentoradoProcedure` middleware
 3. `server/mentoradosRouter.ts` - Apply isolation patterns
 4. `server/gamificacaoRouter.ts` - Apply isolation patterns
@@ -720,23 +720,23 @@ After implementing, verify:
 ## COMMIT MESSAGE
 
 ```
-feat: implement row-level security for mentorado data isolation
+feat: implement row-level security for mentee data isolation
 
-- Add mentorado loading to tRPC context
-- Create mentoradoProcedure middleware for authenticated mentorado routes
+- Add mentee loading to tRPC context
+- Create mentoradoProcedure middleware for authenticated mentee routes
 - Apply data isolation patterns to all routers (mentorados, gamificacao, leads, moltbot)
 - Implement ownership verification for all update/delete operations
 - Auto-inject mentoradoId on create operations
 - Add admin procedures for full data access
 
-SECURITY: Zero data leakage between mentorados verified
-BREAKING CHANGE: All mentorado procedures now require mentorado profile
+SECURITY: Zero data leakage between mentees verified
+BREAKING CHANGE: All mentee procedures now require mentee profile
 ```
 
 ---
 
 ## EXECUTE NOW
 
-Implemente o isolamento de dados seguindo este plano passo a passo. Verifique cada router e aplique os padrões de segurança. Não pule as validações.
+Implement data isolation following this plan step by step. Check each router and apply the security patterns. Do not skip the validations.
 
-Execute `bun run check` após cada router modificado para garantir type safety.
+Run `bun run check` after each modified router to ensure type safety.

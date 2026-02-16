@@ -1,6 +1,6 @@
 # PLAN-diagnostico-persistence: Fix Diagnostico Persistence & Enable Tab Activation
 
-> **Goal:** Ensure diagnostico data is properly saved to the database and activate "Visão Geral" and "Evolução" tabs after diagnostico completion.
+> **Goal:** Ensure diagnostico data is properly saved to the database and activate "Overview" and "Evolution" tabs after diagnostico completion.
 
 ## 0. Research Findings
 
@@ -17,7 +17,7 @@
 ### Knowledge Gaps & Assumptions
 
 - **Gap:** Need to verify actual database writes via browser testing
-- **Assumption:** User perceives diagnostico as "not saving" because visão geral shows welcome screen (no metrics yet)
+- **Assumption:** User perceives diagnostico as "not saving" because Overview shows welcome screen (no metrics yet)
 - **Assumption:** User wants tabs to be gated/locked until diagnostico is completed
 
 ### Edge Cases
@@ -33,7 +33,7 @@
 ## 1. User Review Required
 
 > [!NOTE]
-> **Decision:** User selected **Option B** - Gate/lock "Visão Geral" and "Evolução" tabs until diagnostico exists.
+> **Decision:** User selected **Option B** - Gate/lock "Overview" and "Evolution" tabs until diagnostico exists.
 > 
 > Implementation will disable these tabs with a visual lock indicator and tooltip prompting user to complete diagnostico first.
 
@@ -53,7 +53,7 @@
 
 ---
 
-### Phase 2: Display Diagnostico in Visão Geral
+### Phase 2: Display Diagnostico in Overview
 
 #### [MODIFY] [MenteeOverview.tsx](file:///home/mauricio/neondash/client/src/components/dashboard/MenteeOverview.tsx)
 
@@ -157,7 +157,7 @@
 #### Subtasks:
 - [ ] ST-004.1: Add `getOverviewStats` invalidation to mutation onSuccess
   - **File:** `client/src/components/dashboard/DiagnosticoForm.tsx`
-  - **Validation:** After save, switch to visão geral → shows updated data
+  - **Validation:** After save, switch to Overview → shows updated data
 - [ ] ST-004.2: Verify toast notification shows on save
   - **File:** `client/src/components/dashboard/DiagnosticoForm.tsx`
   - **Validation:** Green success toast appears
@@ -189,23 +189,23 @@ bun run lint:check
 **Test Flow 1: New User Experience**
 1. Login as a new user (email not in system)
 2. Navigate to `/meu-dashboard`
-3. Click "Diagnóstico" tab
+3. Click "Diagnostic" tab
 4. Fill out form fields
-5. Click "Salvar Diagnóstico"
-6. ✅ Verify: Toast shows "Diagnóstico salvo com sucesso!"
-7. Click "Visão Geral" tab
+5. Click "Save Diagnostic"
+6. ✅ Verify: Toast shows "Diagnostic saved successfully!"
+7. Click "Overview" tab
 8. ✅ Verify: DiagnosticoSummaryCard shows with your answers (not NewMentoradoWelcome)
 
 **Test Flow 2: Existing User with Diagnostico**
 1. Login as test user with existing diagnostico
-2. Navigate to `/meu-dashboard` → "Visão Geral"
+2. Navigate to `/meu-dashboard` → "Overview"
 3. ✅ Verify: If no metrics, DiagnosticoSummaryCard shows
 4. ✅ Verify: If has metrics, full overview shows
 
 **Test Flow 3: Admin View**
 1. Login as admin
 2. Select a mentorado from floating dock
-3. Click "Diagnóstico" tab
+3. Click "Diagnostic" tab
 4. ✅ Verify: Form shows mentorado's diagnostico data
 5. Edit and save
 6. ✅ Verify: Data persists on refresh
